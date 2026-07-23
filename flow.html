@@ -1,0 +1,3839 @@
+<!doctype html>
+<html lang="en" class="h-full bg-slate-900 text-slate-100">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlowBRE™ - Onboarding & Business Rule Engine</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Inter", "sans-serif"] },
+            colors: {
+              brand: {
+                50: "#eef2ff",
+                100: "#e0e7ff",
+                500: "#6366f1",
+                600: "#4f46e5",
+                700: "#4338ca",
+                900: "#312e81",
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0f172a;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #334155;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #475569;
+      }
+
+      .glass-card {
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .tab-active {
+        border-bottom: 3px solid #6366f1;
+        color: #818cf8;
+        font-weight: 600;
+      }
+
+      .step-active {
+        background-color: #4f46e5;
+        color: #ffffff;
+        box-shadow: 0 0 15px rgba(79, 70, 229, 0.5);
+      }
+      .step-completed {
+        background-color: #10b981;
+        color: #ffffff;
+      }
+    </style>
+  </head>
+  <body
+    class="h-full flex flex-col font-sans antialiased bg-slate-950 text-slate-100"
+  >
+    <!-- Top Navigation Header -->
+    <header
+      class="bg-slate-900/90 border-b border-slate-800 sticky top-0 z-50 backdrop-blur-md px-4 lg:px-8 py-3 flex flex-wrap justify-between items-center gap-4"
+    >
+      <div class="flex items-center gap-3">
+        <div
+          class="h-10 w-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-indigo-500/20"
+        >
+          <i class="fa-solid fa-diagram-project"></i>
+        </div>
+        <div>
+          <h1
+            class="font-bold text-lg leading-tight tracking-wide text-white flex items-center gap-2"
+          >
+            FlowBRE™
+            <span
+              class="bg-indigo-500/20 text-indigo-400 text-xs px-2 py-0.5 rounded-full border border-indigo-500/30"
+              >v4.2 Enterprise</span
+            >
+            <span
+              class="bg-emerald-500/20 text-emerald-300 text-[11px] px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-mono"
+              ><i class="fa-solid fa-bolt text-emerald-400 mr-1"></i>Simple - GET &lt; 30 ms</span
+            >
+            <span
+              class="bg-blue-500/20 text-blue-300 text-[11px] px-2.5 py-0.5 rounded-full border border-blue-500/30 font-mono"
+              ><i class="fa-solid fa-database text-blue-400 mr-1"></i>CRUD &lt; 80 ms</span
+            >
+          </h1>
+          <p class="text-xs text-slate-400">
+            Adaptive Onboarding & Automated Business Rule Engine
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Navigation Tabs -->
+      <nav
+        class="flex items-center space-x-1 lg:space-x-2 bg-slate-950/60 p-1 rounded-xl border border-slate-800 text-xs lg:text-sm"
+      >
+        <button
+          onclick="switchTab('form-tab')"
+          id="nav-form-tab"
+          class="tab-btn tab-active px-3 lg:px-4 py-2 rounded-lg transition-all flex items-center gap-2"
+        >
+          <i class="fa-solid fa-id-card text-indigo-400"></i>
+          <span>1. User Onboarding</span>
+        </button>
+        <button
+          onclick="switchTab('simulator-tab')"
+          id="nav-simulator-tab"
+          class="tab-btn px-3 lg:px-4 py-2 rounded-lg text-slate-400 hover:text-slate-200 transition-all flex items-center gap-2"
+        >
+          <i class="fa-solid fa-microchip text-indigo-400"></i>
+          <span>2. Bureau & BRE Engine</span>
+        </button>
+        <button
+          onclick="switchTab('matrix-tab')"
+          id="nav-matrix-tab"
+          class="tab-btn px-3 lg:px-4 py-2 rounded-lg text-slate-400 hover:text-slate-200 transition-all flex items-center gap-2"
+        >
+          <i class="fa-solid fa-list-check text-indigo-400"></i>
+          <span>3. Policy Matrix (64 Params)</span>
+        </button>
+      </nav>
+
+      <!-- Preset Test Profiles Dropdown -->
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-slate-400 hidden xl:inline"
+          ><i class="fa-solid fa-bolt text-amber-400 mr-1"></i> Quick Test
+          Profile:</span
+        >
+        <select
+          id="presetSelector"
+          onchange="loadPresetScenario(this.value)"
+          class="bg-slate-800 border border-slate-700 text-xs rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500"
+        >
+          <option value="">-- Select Preset Scenario --</option>
+          <option value="ideal-salaried">
+            🌟 Ideal Salaried Applicant (Pass All Banks)
+          </option>
+          <option value="salaried-low-tenure">
+            ⚠️ Salaried (&lt; 2 Yrs Work Exp Trigger)
+          </option>
+          <option value="self-employed-pass">
+            🏢 Ideal Self-Employed Applicant
+          </option>
+          <option value="self-employed-low-itr">
+            ❌ Self-Employed (Low ITR Rejection)
+          </option>
+          <option value="high-dpd-writeoff">
+            ❌ High DPD (&gt; 90 Days) & Write-Off
+          </option>
+          <option value="indian-bank-overdue">
+            🏦 Indian Bank DPD &gt; 0 Rejection
+          </option>
+        </select>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 overflow-y-auto p-4 lg:p-6 max-w-7xl mx-auto w-full">
+      <!-- ========================================================================= -->
+      <!-- TAB 1: INTERACTIVE USER ONBOARDING FORM -->
+      <!-- ========================================================================= -->
+      <section id="tab-form-tab" class="tab-content block space-y-6">
+        <!-- Wizard Progress Header -->
+        <div class="glass-card rounded-2xl p-4 lg:p-6 shadow-xl">
+          <div
+            class="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6"
+          >
+            <div>
+              <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-user-plus text-brand-500"></i> Customer
+                Onboarding Application
+              </h2>
+              <p class="text-xs text-slate-400 mt-1">
+                Smart progressive disclosure workflow with real-time logic
+                verification.
+              </p>
+            </div>
+            <div class="flex items-center gap-3">
+
+              <button
+                type="button"
+                onclick="resetForm()"
+                class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs flex items-center gap-2 transition"
+              >
+                <i class="fa-solid fa-rotate-left"></i>
+                <span>Reset</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step Indicator Pills: rendered dynamically per entity type by renderStepPills() -->
+          <div
+            id="stepPillsContainer"
+            class="grid grid-cols-2 md:grid-cols-6 gap-2 text-center text-xs"
+          ></div>
+        </div>
+
+        <!-- FORM WIZARD CONTAINER -->
+        <form
+          id="onboardingForm"
+          onsubmit="handleFormSubmit(event)"
+          class="glass-card rounded-2xl p-6 shadow-2xl relative"
+        >
+          <!-- ============================================================= -->
+          <!-- STEP: IDENTITY (content varies by entity type) -->
+          <!-- ============================================================= -->
+          <div id="form-step-identity" class="form-step space-y-6">
+            <div class="border-b border-slate-800 pb-4">
+              <h3
+                class="text-lg font-semibold text-white flex items-center gap-2"
+              >
+                <span class="text-brand-500 font-bold" id="identityStepLabel"
+                  >Step 1:</span
+                >
+                <span id="identityStepTitle"
+                  >Primary Entity & Identity Details</span
+                >
+              </h3>
+              <p class="text-xs text-slate-400">
+                Establish applicant classification to branch workflow logic.
+              </p>
+            </div>
+
+            <!-- Entity Type Selection Cards -->
+            <div>
+              <label
+                class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-3"
+                >Who is applying today?
+                <span class="text-rose-500">*</span></label
+              >
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <label
+                  class="relative flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all bg-slate-900/60 hover:bg-slate-800/80 border-indigo-600/50 has-[:checked]:border-brand-500 has-[:checked]:bg-brand-500/10"
+                  id="card-entity-ind"
+                >
+                  <input
+                    type="radio"
+                    name="entityType"
+                    value="Individual"
+                    class="sr-only"
+                    checked
+                    onchange="updateFormBranching()"
+                  />
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-12 h-12 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xl"
+                    >
+                      <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-white text-sm">Individual</h4>
+                      <p class="text-xs text-slate-400 mt-0.5">
+                        Personal, auto, or retail financing application.
+                      </p>
+                    </div>
+                  </div>
+                </label>
+
+                <label
+                  class="relative flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all bg-slate-900/60 hover:bg-slate-800/80 border-slate-800 has-[:checked]:border-brand-500 has-[:checked]:bg-brand-500/10"
+                  id="card-entity-org"
+                >
+                  <input
+                    type="radio"
+                    name="entityType"
+                    value="Company"
+                    class="sr-only"
+                    onchange="updateFormBranching()"
+                  />
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl"
+                    >
+                      <i class="fa-solid fa-building"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-white text-sm">
+                        Company / Organization
+                      </h4>
+                      <p class="text-xs text-slate-400 mt-0.5">
+                        Corporate entity taking a business/corporate loan.
+                      </p>
+                    </div>
+                  </div>
+                </label>
+
+                <label
+                  class="relative flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all bg-slate-900/60 hover:bg-slate-800/80 border-slate-800 has-[:checked]:border-brand-500 has-[:checked]:bg-brand-500/10"
+                  id="card-entity-huf"
+                >
+                  <input
+                    type="radio"
+                    name="entityType"
+                    value="HUF"
+                    class="sr-only"
+                    onchange="updateFormBranching()"
+                  />
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl"
+                    >
+                      <i class="fa-solid fa-people-roof"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-white text-sm">HUF</h4>
+                      <p class="text-xs text-slate-400 mt-0.5">
+                        Hindu Undivided Family, represented by its Karta.
+                      </p>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- ===================== INDIVIDUAL IDENTITY FIELDS ===================== -->
+            <div id="identity-individual" class="space-y-4 pt-2">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Full Legal Name <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="applicantName"
+                    required
+                    value="Rohan Sharma"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Date of Birth (DOB)
+                    <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="date"
+                    id="dob"
+                    required
+                    value="1992-05-15"
+                    onchange="calculateAge()"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                  <p class="text-[11px] text-indigo-400 mt-1" id="ageDisplay">
+                    Calculated Age: 34 Years (Eligible)
+                  </p>
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Gender</label
+                  >
+                  <select
+                    id="gender"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  >
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >PAN <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="pan"
+                    maxlength="10"
+                    required
+                    value="ABCDE1234F"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 uppercase focus:outline-none focus:border-brand-500"
+                  />
+                  <p class="text-[11px] text-slate-500 mt-1">
+                    Verified against uploaded PAN document in the final step.
+                  </p>
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Marital Status</label
+                  >
+                  <select
+                    id="maritalStatus"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  >
+                    <option value="Married">Married</option>
+                    <option value="Unmarried">Unmarried / Single</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Citizenship / Residency Status</label
+                  >
+                  <select
+                    id="citizenshipStatus"
+                    onchange="toggleNRILogic()"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  >
+                    <option value="Resident Indian">Resident Indian</option>
+                    <option value="NRI/PIO">NRI / PIO (Non-Resident)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div id="nriStayContainer" class="hidden">
+                <label class="block text-xs text-amber-300 font-medium mb-1"
+                  ><i class="fa-solid fa-plane-arrival mr-1"></i> NRI Stay
+                  Period in India (Months)</label
+                >
+                <input
+                  type="number"
+                  id="nriStayPeriod"
+                  value="12"
+                  placeholder="Months in India"
+                  class="w-full md:w-1/3 bg-slate-900 border border-amber-700/50 rounded-lg px-3 py-2 text-sm text-amber-200 focus:outline-none focus:border-amber-500"
+                />
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Phone <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="tel"
+                    id="phone"
+                    value="9876543210"
+                    maxlength="10"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Email <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="email"
+                    id="email"
+                    value="rohan.sharma@example.com"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- ===================== COMPANY IDENTITY FIELDS ===================== -->
+            <div id="identity-company" class="space-y-4 pt-2 hidden">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Company Type <span class="text-rose-500">*</span></label
+                  >
+                  <select
+                    id="companyType"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  >
+                    <option value="Firm">Firm</option>
+                    <option value="Pvt Ltd">Private Limited</option>
+                    <option value="Public Ltd">Public Limited</option>
+                    <option value="LLP">LLP</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Company PAN No.
+                    <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="companyPan"
+                    maxlength="10"
+                    required
+                    value="AABCT1234C"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 uppercase focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Udyam Registration No.</label
+                  >
+                  <input
+                    type="text"
+                    id="udyamRegNoCompany"
+                    placeholder="UDYAM-XX-00-0000000"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Company Location
+                    <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="companyLocation"
+                    placeholder="Registered / operating address"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Contact Person Name
+                    <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="contactPersonName"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Contact Person Designation</label
+                  >
+                  <input
+                    type="text"
+                    id="contactPersonDesignation"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Mobile No. <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="tel"
+                    id="companyMobile"
+                    maxlength="10"
+                    value="9876543211"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Email ID <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="email"
+                    id="companyEmail"
+                    value="accounts@company.example.com"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- ===================== HUF IDENTITY FIELDS ===================== -->
+            <div id="identity-huf" class="space-y-4 pt-2 hidden">
+              <div
+                class="bg-amber-950/20 border border-amber-800/40 rounded-xl p-3 text-[11px] text-amber-300"
+              >
+                <i class="fa-solid fa-circle-info mr-1"></i> An HUF is
+                represented by its Karta — the Karta's occupation, residence,
+                and income details are captured in later steps.
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >HUF Name <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="hufName"
+                    placeholder="e.g. Sharma HUF"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >HUF PAN <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="hufPan"
+                    maxlength="10"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 uppercase focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Udyam Registration No.
+                    <span class="text-slate-500">(if applicable)</span></label
+                  >
+                  <input
+                    type="text"
+                    id="udyamRegNoHUF"
+                    placeholder="UDYAM-XX-00-0000000"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >HUF Location</label
+                  >
+                  <input
+                    type="text"
+                    id="hufLocation"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Date of HUF Formation / Deed
+                    <span class="text-slate-500">(optional)</span></label
+                  >
+                  <input
+                    type="date"
+                    id="hufFormationDate"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+              </div>
+
+              <div
+                class="border-t border-slate-800 pt-4 grid grid-cols-1 md:grid-cols-3 gap-4"
+              >
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Karta Name <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="kartaName"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Karta PAN <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="kartaPan"
+                    maxlength="10"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 uppercase focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Karta Mobile No.</label
+                  >
+                  <input
+                    type="tel"
+                    id="kartaMobile"
+                    maxlength="10"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================================= -->
+          <!-- STEP: ADDRESS & RESIDENCE (shared by Individual / Company / HUF) -->
+          <!-- ============================================================= -->
+          <div id="form-step-address" class="form-step hidden space-y-6">
+            <div class="border-b border-slate-800 pb-4">
+              <h3
+                class="text-lg font-semibold text-white flex items-center gap-2"
+              >
+                <span class="text-brand-500 font-bold" id="addressStepLabel"
+                  >Step 2:</span
+                >
+                Address & Residence
+              </h3>
+              <p class="text-xs text-slate-400" id="addressStepSubtitle">
+                Automated location mapping via pincode & residence
+                classification.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs text-slate-300 font-medium mb-1"
+                  >Pincode <span class="text-rose-500">*</span></label
+                >
+                <div class="relative">
+                  <input
+                    type="text"
+                    id="pincode"
+                    maxlength="6"
+                    value="560001"
+                    oninput="handlePincodeLookup(this.value)"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                  <i
+                    id="pincodeSpinner"
+                    class="fa-solid fa-spinner fa-spin absolute right-3 top-2.5 text-indigo-400 hidden"
+                  ></i>
+                </div>
+                <p
+                  class="text-[11px] text-amber-400 mt-1"
+                  id="pincodeMatchNotice"
+                >
+                  <i class="fa-solid fa-circle-info"></i> Please use All India
+                  Pincode list.
+                </p>
+              </div>
+
+              <div>
+                <label class="block text-xs text-slate-300 font-medium mb-1"
+                  >City (Auto-filled)</label
+                >
+                <input
+                  type="text"
+                  id="cityName"
+                  readonly
+                  value="Bengaluru"
+                  class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-400"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs text-slate-300 font-medium mb-1"
+                  >State (Auto-filled)</label
+                >
+                <input
+                  type="text"
+                  id="stateName"
+                  readonly
+                  value="Karnataka"
+                  class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-400"
+                />
+              </div>
+            </div>
+
+            
+          </div>
+
+          <!-- ============================================================= -->
+          <!-- STEP: OCCUPATION & INCOME VERIFICATION / BUSINESS INCOME & TAX -->
+          <!-- ============================================================= -->
+          <div id="form-step-occupation" class="form-step hidden space-y-6">
+            <div class="border-b border-slate-800 pb-4">
+              <h3
+                class="text-lg font-semibold text-white flex items-center gap-2"
+              >
+                <span class="text-brand-500 font-bold" id="occupationStepLabel"
+                  >Step 3:</span
+                >
+                <span id="occupationStepTitle"
+                  >Occupation & Income Verification</span
+                >
+              </h3>
+              <p class="text-xs text-slate-400" id="occupationStepSubtitle">
+                Dynamic branching for Salaried vs. Self-Employed requirements.
+              </p>
+            </div>
+
+            <!-- INDIVIDUAL / HUF: Occupation dropdown + Salaried/Self-Employed branches -->
+            <div id="occupation-individual-huf" class="space-y-6">
+              <div
+                class="bg-slate-900/80 p-4 rounded-xl border border-slate-800"
+              >
+                <label
+                  class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2"
+                  ><span id="occupationFieldLabel">Occupation</span>
+                  <span class="text-rose-500">*</span></label
+                >
+                <select
+                  id="occupation"
+                  onchange="toggleOccupationBranch()"
+                  class="w-full md:w-1/2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                >
+                  <option value="Salaried">Salaried</option>
+                  <option value="Self-Employed">Self Employed</option>
+                </select>
+              </div>
+
+              <!-- BRANCH A: SALARIED -->
+              <div id="branch-salaried" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label class="block text-xs text-slate-300 font-medium mb-1"
+                      >Employment Type</label
+                    >
+                    <select
+                      id="employerType"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                    >
+                      <option value="Employment-Pvt Ltd">
+                        Private Limited (Pvt Ltd)
+                      </option>
+                      <option value="Employment-Public Ltd">
+                        Public Limited
+                      </option>
+                      <option value="Employment-Govt">Government Service</option>
+                      <option value="Employment-PSU">
+                        Public Sector Undertaking (PSU)
+                      </option>
+                      <option value="Employment-Firm">
+                        Partnership / Proprietorship Firm
+                      </option>
+                      <option value="Agriculture">Agriculture Sector</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs text-slate-300 font-medium mb-1"
+                      >With Current Company Since
+                      <span class="text-rose-500">*</span></label
+                    >
+                    <select
+                      id="tenureBand"
+                      onchange="evaluateWorkExperience()"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                    >
+                      <option value="0-6m">0 – 6 Months</option>
+                      <option value="6m-1y">6 Months – 1 Year</option>
+                      <option value="1y-2y">1 Year – 2 Years</option>
+                      <option value="2y+" selected>2+ Years</option>
+                    </select>
+                    <p
+                      class="text-[11px] text-emerald-400 mt-1"
+                      id="tenureNotice"
+                    >
+                      Meets 2+ Years tenure requirement.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs text-slate-300 font-medium mb-1"
+                      >Approx. Gross Salary (₹)</label
+                    >
+                    <select
+                      id="grossSalaryBand"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                    >
+                      <option value="lt25000">Less than 25,000</option>
+                      <option value="gt25000" selected>More than 25,000</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- DYNAMIC CONDITIONAL: PREVIOUS WORK HISTORY (Triggered if tenure band < 2 Years) -->
+                <div
+                  id="prevCompanyContainer"
+                  class="p-4 rounded-xl bg-amber-950/30 border border-amber-800/50 space-y-3 hidden"
+                >
+                  <div
+                    class="flex items-center gap-2 text-amber-400 text-xs font-semibold uppercase tracking-wider"
+                  >
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span
+                      >Current Tenure &lt; 2 Years — Previous Employment
+                      Required</span
+                    >
+                  </div>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label
+                        class="block text-xs text-amber-200 font-medium mb-1"
+                        >Previous Company Name
+                        <span class="text-rose-500">*</span></label
+                      >
+                      <input
+                        type="text"
+                        id="prevCompanyName"
+                        placeholder="e.g. Acme Technologies Ltd"
+                        class="w-full bg-slate-900 border border-amber-700/50 rounded-lg px-3 py-2 text-sm text-amber-100"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="block text-xs text-amber-200 font-medium mb-1"
+                        >Previous Joining Date
+                        <span class="text-rose-500">*</span></label
+                      >
+                      <input
+                        type="date"
+                        id="prevCompanyJoining"
+                        class="w-full bg-slate-900 border border-amber-700/50 rounded-lg px-3 py-2 text-sm text-amber-100"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                  <div>
+                    <label class="block text-xs text-slate-300 font-medium mb-1"
+                      >Salary Payment Mode</label
+                    >
+                    <select
+                      id="salaryMode"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                    >
+                      <option value="Salary payment mode- Bank Credit">
+                        Through Bank
+                      </option>
+                      <option value="Salary payment mode-Cash">Cash</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs text-slate-300 font-medium mb-1"
+                      >Tax Proof Availability</label
+                    >
+                    <select
+                      id="form16Status"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                    >
+                      <option value="Form 16">
+                        Form 16 / Income Tax Return Available
+                      </option>
+                      <option value="No Income Proof">
+                        No Formal Income Proof
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="pt-2">
+                  <label
+                    class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2"
+                    >Secondary Rental Income Status</label
+                  >
+                  <select
+                    id="rentalIncomeTypeSalaried"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                  >
+                    <option value="None">No Rental Income Claimed</option>
+                    <option
+                      value="Rental Income-with Agreement -Not filed ITR-Not reflecting in Bank"
+                    >
+                      Agreement present, No ITR, Not reflecting in Bank
+                    </option>
+                    <option
+                      value="Rental Income-with Agreement filed ITR- Not reflecting in Bank"
+                    >
+                      Agreement present, Filed ITR, Not reflecting in Bank
+                    </option>
+                    <option
+                      value="Rental Income-with Agreement -Not filed ITR-reflecting in Bank"
+                    >
+                      Agreement present, No ITR, Reflecting in Bank
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- BRANCH B: SELF-EMPLOYED -->
+              <div id="branch-self-employed" class="space-y-4 hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs text-slate-300 font-medium mb-1"
+                      >Office Address</label
+                    >
+                    <select
+                      id="officeAddressType"
+                      onchange="toggleOfficeAddressField()"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                    >
+                      <option value="Same">Same as Residence</option>
+                      <option value="Separate">Separate</option>
+                    </select>
+                  </div>
+                  <div id="officeAddressContainer" class="hidden">
+                    <label class="block text-xs text-slate-300 font-medium mb-1"
+                      >Office Address</label
+                    >
+                    <input
+                      type="text"
+                      id="officeAddress"
+                      placeholder="Business office address"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                    />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs text-slate-300 font-medium mb-1"
+                      >Business Entity Type</label
+                    >
+                    <select
+                      id="businessEntityType"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                    >
+                      <option value="Propreitorship">Sole Proprietorship</option>
+                      <option value="Parternship Firm">Partnership Firm</option>
+                      <option value="Private Limited">
+                        Private Limited Company
+                      </option>
+                      <option value="Public Limited">
+                        Public Limited Company
+                      </option>
+                      <option value="HUF">Hindu Undivided Family (HUF)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs text-slate-300 font-medium mb-1"
+                      >Udyam Registration No.</label
+                    >
+                    <input
+                      type="text"
+                      id="udyamRegNoSelfEmployed"
+                      placeholder="UDYAM-XX-00-0000000"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Business Establishment / Reg. Date
+                    <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="date"
+                    id="businessEstablishmentDate"
+                    value="2019-01-10"
+                    onchange="evaluateBusinessTenure()"
+                    class="w-full md:w-1/2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                  />
+                  <p
+                    class="text-[11px] text-emerald-400 mt-1"
+                    id="businessTenureNotice"
+                  >
+                    Calculated Business Tenure: 7.5 Years (&ge; 2 Yrs Required)
+                  </p>
+                </div>
+
+                <!-- ITR Filing Status is asked first; amounts shown only when Filed -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label class="block text-xs text-slate-300 font-medium mb-1"
+                      >ITR Filing Status</label
+                    >
+                    <select
+                      id="itrFilingStatus"
+                      onchange="handleITRFilingStatusChange()"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                    >
+                      <option value="Self employed ITR Filled">Filed</option>
+                      <option value="ITR Not Filed">Not Filed</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div
+                  id="itrAmountsContainer"
+                  class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                >
+                  <div>
+                    <label class="block text-xs text-slate-300 font-medium mb-1"
+                      >Current Year ITR Amount (₹)
+                      <span class="text-rose-500">*</span></label
+                    >
+                    <input
+                      type="number"
+                      id="currentITRAmount"
+                      value="450000"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                    />
+                    <p class="text-[11px] text-slate-400 mt-1">
+                      Rule threshold: &ge; ₹3,00,000
+                    </p>
+                  </div>
+                  <div>
+                    <label class="block text-xs text-slate-300 font-medium mb-1"
+                      >Previous Year ITR Amount (₹)
+                      <span class="text-rose-500">*</span></label
+                    >
+                    <input
+                      type="number"
+                      id="prevITRAmount"
+                      value="380000"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                    />
+                    <p class="text-[11px] text-slate-400 mt-1">
+                      Rule threshold: &gt; ₹0 (&ge; ₹1,00,000)
+                    </p>
+                  </div>
+                </div>
+
+                <div class="pt-2">
+                  <label
+                    class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2"
+                    >Secondary Rental Income Status</label
+                  >
+                  <select
+                    id="rentalIncomeTypeSelfEmployed"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                  >
+                    <option value="None">No Rental Income Claimed</option>
+                    <option
+                      value="Rental Income-with Agreement -Not filed ITR-Not reflecting in Bank"
+                    >
+                      Agreement present, No ITR, Not reflecting in Bank
+                    </option>
+                    <option
+                      value="Rental Income-with Agreement filed ITR- Not reflecting in Bank"
+                    >
+                      Agreement present, Filed ITR, Not reflecting in Bank
+                    </option>
+                    <option
+                      value="Rental Income-with Agreement -Not filed ITR-reflecting in Bank"
+                    >
+                      Agreement present, No ITR, Reflecting in Bank
+                    </option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Business Registration Proof / GSTIN</label
+                  >
+                  <input
+                    type="text"
+                    id="businessProof"
+                    value="GSTIN: 29AAAAA0000A1Z5"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Residence & Office Premises Categorization -->
+            <!-- Options depend on effective Occupation Category: Salaried -> Owned/Rented; -->
+            <!-- Self-Employed (and always for Company/Organization) -> Resi-Cum-Office variants. -->
+            <div>
+              <label
+                class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-3"
+                ><span id="residenceStepLabel"
+                  >Residential / Workspace Premises Setup</span
+                >
+                <span class="text-rose-500">*</span></label
+              >
+
+              <!-- Salaried: Owned / Rented -->
+              <div
+                id="residence-group-salaried"
+                class="grid grid-cols-1 md:grid-cols-2 gap-3 hidden"
+              >
+                <label
+                  class="flex items-start p-3 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800 cursor-pointer text-xs"
+                >
+                  <input
+                    type="radio"
+                    name="residenceStatus"
+                    value="Owned House"
+                    onchange="handleResidenceStatusChange()"
+                    class="mt-0.5 text-brand-600 focus:ring-brand-500"
+                  />
+                  <div class="ml-3">
+                    <span class="font-semibold text-slate-200 block">Owned</span>
+                    <span class="text-slate-400"
+                      >Applicant owns the residence premises.</span
+                    >
+                  </div>
+                </label>
+                <label
+                  class="flex items-start p-3 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800 cursor-pointer text-xs"
+                >
+                  <input
+                    type="radio"
+                    name="residenceStatus"
+                    value="Rented House"
+                    checked
+                    onchange="handleResidenceStatusChange()"
+                    class="mt-0.5 text-brand-600 focus:ring-brand-500"
+                  />
+                  <div class="ml-3">
+                    <span class="font-semibold text-slate-200 block"
+                      >Rented</span
+                    >
+                    <span class="text-slate-400"
+                      >Applicant lives in rented home premises.</span
+                    >
+                  </div>
+                </label>
+              </div>
+
+              <!-- Self-Employed / Company / HUF-Self-Employed-Karta: Resi-Cum-Office variants -->
+              <div
+                id="residence-group-selfemployed"
+                class="grid grid-cols-1 md:grid-cols-2 gap-3 hidden"
+              >
+                <label
+                  class="flex items-start p-3 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800 cursor-pointer text-xs"
+                >
+                  <input
+                    type="radio"
+                    name="residenceStatus"
+                    value="Resi - Cum Office - One Owned"
+                    checked
+                    onchange="handleResidenceStatusChange()"
+                    class="mt-0.5 text-brand-600 focus:ring-brand-500"
+                  />
+                  <div class="ml-3">
+                    <span class="font-semibold text-slate-200 block"
+                      >Resi - Cum Office (One Owned)</span
+                    >
+                    <span class="text-slate-400"
+                      >Combined residence & office; at least one premise
+                      owned.</span
+                    >
+                  </div>
+                </label>
+                <label
+                  class="flex items-start p-3 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800 cursor-pointer text-xs"
+                >
+                  <input
+                    type="radio"
+                    name="residenceStatus"
+                    value="Resi - Cum Office -Both Rented"
+                    onchange="handleResidenceStatusChange()"
+                    class="mt-0.5 text-brand-600 focus:ring-brand-500"
+                  />
+                  <div class="ml-3">
+                    <span class="font-semibold text-slate-200 block"
+                      >Resi - Cum Office (Both Rented)</span
+                    >
+                    <span class="text-slate-400"
+                      >Combined residence & office; both premises rented.</span
+                    >
+                  </div>
+                </label>
+                <label
+                  class="flex items-start p-3 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800 cursor-pointer text-xs"
+                >
+                  <input
+                    type="radio"
+                    name="residenceStatus"
+                    value="Resi-Office-Separate-Both Rented"
+                    onchange="handleResidenceStatusChange()"
+                    class="mt-0.5 text-brand-600 focus:ring-brand-500"
+                  />
+                  <div class="ml-3">
+                    <span class="font-semibold text-slate-200 block"
+                      >Resi & Office Separate (Both Rented)</span
+                    >
+                    <span class="text-slate-400"
+                      >Separate residence and business office; both
+                      rented.</span
+                    >
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Guarantor Arrangement: only when Residence Status = Resi - Cum Office (Both Rented) -->
+            <div
+              id="guarantorContainer"
+              class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 hidden"
+            >
+              <label
+                class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2"
+                >Guarantor Arrangement
+                <span class="text-rose-500">*</span></label
+              >
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label
+                  class="flex items-center p-3 rounded-xl border border-slate-800 bg-slate-950 cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    name="guarantorStatus"
+                    value="Without a Gaurantor"
+                    checked
+                    class="text-brand-600"
+                  />
+                  <span class="ml-3 text-sm text-slate-200"
+                    >Without a Guarantor</span
+                  >
+                </label>
+                <label
+                  class="flex items-center p-3 rounded-xl border border-slate-800 bg-slate-950 cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    name="guarantorStatus"
+                    value="With a Gaurantor"
+                    class="text-brand-600"
+                  />
+                  <span class="ml-3 text-sm text-slate-200"
+                    >With a Guarantor</span
+                  >
+                </label>
+              </div>
+            </div>
+
+            <!-- COMPANY: no Occupation Type field — always Self-Employed / Business Income & Tax -->
+            <div id="occupation-company" class="space-y-4 hidden">
+              <div
+                class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 text-[11px] text-slate-400"
+              >
+                <i class="fa-solid fa-circle-info mr-1"></i> A Company /
+                Organization is always evaluated on a business-income basis —
+                there is no Occupation Type selection.
+              </div>
+
+              <div>
+                <label class="block text-xs text-slate-300 font-medium mb-1"
+                  >Business Establishment / Incorporation Date
+                  <span class="text-rose-500">*</span></label
+                >
+                <input
+                  type="date"
+                  id="companyEstablishmentDate"
+                  value="2016-04-01"
+                  onchange="evaluateBusinessTenure()"
+                  class="w-full md:w-1/2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                />
+                <p
+                  class="text-[11px] text-emerald-400 mt-1"
+                  id="companyTenureNotice"
+                >
+                  Calculated Business Tenure: — Years
+                </p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >ITR Filing Status</label
+                  >
+                  <select
+                    id="companyItrFilingStatus"
+                    onchange="handleITRFilingStatusChange()"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                  >
+                    <option value="Self employed ITR Filled">Filed</option>
+                    <option value="ITR Not Filed">Not Filed</option>
+                  </select>
+                </div>
+              </div>
+
+              <div
+                id="companyItrAmountsContainer"
+                class="grid grid-cols-1 md:grid-cols-2 gap-4"
+              >
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Current Year ITR Amount (₹)
+                    <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="number"
+                    id="companyCurrentITRAmount"
+                    value="1200000"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-300 font-medium mb-1"
+                    >Previous Year ITR Amount (₹)
+                    <span class="text-rose-500">*</span></label
+                  >
+                  <input
+                    type="number"
+                    id="companyPrevITRAmount"
+                    value="950000"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs text-slate-300 font-medium mb-1"
+                  >Business Registration Proof / GSTIN</label
+                >
+                <input
+                  type="text"
+                  id="companyGstin"
+                  value="GSTIN: 29AAACC1234D1Z9"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================================= -->
+          <!-- STEP: BANKING & BUREAU (shared) -->
+          <!-- ============================================================= -->
+          <div id="form-step-banking" class="form-step hidden space-y-6">
+            <div class="border-b border-slate-800 pb-4">
+              <h3
+                class="text-lg font-semibold text-white flex items-center gap-2"
+              >
+                <span class="text-brand-500 font-bold" id="bankingStepLabel"
+                  >Step 4:</span
+                >
+                Banking, Bureau & Loan Details
+              </h3>
+              <p class="text-xs text-slate-400">
+                Existing relationships plus bureau-derived risk parameters.
+              </p>
+            </div>
+
+            <!-- ============================================================= -->
+            <!-- DOCUMENT UPLOAD SECTION (hybrid flow) -->
+            <!-- ============================================================= -->
+            <div class="border-b border-slate-800 pb-6 mb-6 space-y-4">
+              <div>
+                <h4 class="text-sm font-semibold text-white flex items-center gap-2">
+                  <i class="fa-solid fa-file-arrow-up text-brand-500"></i> Document Upload
+                </h4>
+                <p class="text-xs text-slate-400 mt-1">
+                  Upload supporting documents to complete your application.
+                </p>
+              </div>
+
+              <!-- Document Upload Cards Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- PAN Card Upload -->
+                <div class="p-4 rounded-xl border border-slate-800 bg-slate-900/60 flex flex-col justify-between h-full transition hover:border-slate-700">
+                  <div class="flex justify-between items-start mb-3">
+                    <div class="text-blue-400 text-lg">
+                      <i class="fa-solid fa-id-card"></i>
+                    </div>
+                    <span id="badge-pan" class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-semibold">Pending</span>
+                  </div>
+                  <div class="mb-4">
+                    <h5 id="docPanCardLabel" class="font-bold text-xs text-white">PAN Card</h5>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Identity Parser</p>
+                  </div>
+                  <button type="button" class="w-full bg-slate-800/30 text-slate-500 border border-slate-800 py-2 rounded-lg text-xs font-semibold cursor-not-allowed" disabled>
+                    Extract
+                  </button>
+                </div>
+
+                <!-- Aadhaar Card Upload -->
+                <div id="doc-aadhaar-card-block" class="p-4 rounded-xl border border-slate-800 bg-slate-900/60 flex flex-col justify-between h-full transition hover:border-slate-700">
+                  <div class="flex justify-between items-start mb-3">
+                    <div class="text-indigo-400 text-lg">
+                      <i class="fa-solid fa-file-contract"></i>
+                    </div>
+                    <span id="badge-aadhaar" class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-semibold">Pending</span>
+                  </div>
+                  <div class="mb-4">
+                    <h5 id="docAadhaarCardLabel" class="font-bold text-xs text-white">Aadhaar Card</h5>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Address Parser</p>
+                  </div>
+                  <button type="button" class="w-full bg-slate-800/30 text-slate-500 border border-slate-800 py-2 rounded-lg text-xs font-semibold cursor-not-allowed" disabled>
+                    Extract
+                  </button>
+                </div>
+
+                <!-- Bank Statement Upload -->
+                <div class="p-4 rounded-xl border border-slate-800 bg-slate-900/60 flex flex-col justify-between h-full transition hover:border-slate-700">
+                  <div class="flex justify-between items-start mb-3">
+                    <div class="text-emerald-400 text-lg">
+                      <i class="fa-solid fa-building-columns"></i>
+                    </div>
+                    <span id="badge-bankstatement" class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-semibold">Pending</span>
+                  </div>
+                  <div class="mb-4">
+                    <h5 class="font-bold text-xs text-white">Bank Statement</h5>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Cash Flow OCR</p>
+                  </div>
+                  <button type="button" class="w-full bg-slate-800/30 text-slate-500 border border-slate-800 py-2 rounded-lg text-xs font-semibold cursor-not-allowed" disabled>
+                    Extract
+                  </button>
+                </div>
+
+                <!-- CIBIL Bureau Upload -->
+                <div class="p-4 rounded-xl border border-slate-800 bg-slate-900/60 flex flex-col justify-between h-full transition hover:border-slate-700">
+                  <div class="flex justify-between items-start mb-3">
+                    <div class="text-purple-400 text-lg">
+                      <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <span id="badge-cibil" class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-semibold">Pending</span>
+                  </div>
+                  <div class="mb-4">
+                    <h5 class="font-bold text-xs text-white">CIBIL Bureau</h5>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Write-off Audit</p>
+                  </div>
+                  <button type="button" class="w-full bg-slate-800/30 text-slate-500 border border-slate-800 py-2 rounded-lg text-xs font-semibold cursor-not-allowed" disabled>
+                    Extract
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-xs text-slate-300 font-medium mb-1"
+                  >Existing Current/Savings Bank A/c With
+                  <span class="text-rose-500">*</span></label
+                >
+                <select
+                  id="existingAccountBank"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                >
+                  <option value="BOB">Bank of Baroda</option>
+                  <option value="Indian Bank">Indian Bank</option>
+                  <option value="IOB">Indian Overseas Bank</option>
+                  <option value="BOI">Bank of India</option>
+                  <option value="BOM">Bank of Maharashtra</option>
+                  <option value="Others">Others</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs text-slate-300 font-medium mb-1"
+                  >Car Loan (Existing / Closed) With
+                  <span class="text-rose-500">*</span></label
+                >
+                <select
+                  id="existingCarLoanBank"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                >
+                  <option value="None">No Existing or Prior Car Loan</option>
+                  <option value="BOB">Bank of Baroda</option>
+                  <option value="Indian Bank">Indian Bank</option>
+                  <option value="IOB">Indian Overseas Bank</option>
+                  <option value="BOI">Bank of India</option>
+                  <option value="BOM">Bank of Maharashtra</option>
+                  <option value="Others">Others</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-300 font-medium mb-1"
+                >Type of Loan Required <span class="text-rose-500">*</span></label
+              >
+              <select
+                id="loanType"
+                class="w-full md:w-1/2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+              >
+                <option value="Auto Loan">Auto Loan</option>
+                <option value="Personal Loan">Personal Loan</option>
+                <option value="Home Loan">Home Loan</option>
+              </select>
+            </div>
+
+            <!-- Bureau-sourced parameters: manually editable in this hybrid stage -->
+            <div
+              class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 space-y-4"
+            >
+              <div
+                class="flex items-center justify-between flex-wrap gap-2"
+              >
+                <label
+                  class="text-xs font-semibold uppercase tracking-wider text-slate-300"
+                  >Bureau-Sourced Risk Parameters</label
+                >
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1"
+                    >CIBIL Score</label
+                  >
+                  <input
+                    type="number"
+                    id="bureauCibilScore"
+                    value="750"
+                    placeholder="Enter CIBIL Score"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1"
+                    >DPD (Days Past Due)</label
+                  >
+                  <input
+                    type="number"
+                    id="bureauDpd"
+                    value="0"
+                    placeholder="Enter DPD"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1"
+                    >Loan Enquiry (count)</label
+                  >
+                  <input
+                    type="number"
+                    id="bureauLoanEnquiry"
+                    value="0"
+                    placeholder="Enter enquiry count"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1"
+                    >Currently Outstanding (₹)</label
+                  >
+                  <input
+                    type="number"
+                    id="bureauCurrentlyOutstanding"
+                    value="0"
+                    placeholder="Enter outstanding amount"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1"
+                    >Age at Last EMI</label
+                  >
+                  <input
+                    type="number"
+                    id="bureauAgeAtLastEMI"
+                    value="35"
+                    placeholder="Enter age at last EMI"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1"
+                    >Write-Off Amount (₹)</label
+                  >
+                  <input
+                    type="number"
+                    id="bureauWriteOffAmount"
+                    value="0"
+                    placeholder="Enter write-off amount"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+                
+                <div class="flex flex-col justify-center md:col-span-3 mt-2">
+                  <div class="flex items-center gap-3">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="cibilPlScoreToggle" class="sr-only peer" onchange="toggleCibilPlScoreField()" />
+                      <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-500 peer-checked:after:bg-white peer-checked:after:border-white"></div>
+                    </label>
+                    <span class="text-xs text-slate-300 font-medium">Is CIBIL PL Score Available?</span>
+                  </div>
+                  
+                  <div id="bureauCibilPlScoreContainer" class="hidden mt-3 max-w-xs">
+                    <label class="block text-[11px] text-slate-400 mb-1"
+                      >CIBIL PL Score</label
+                    >
+                    <input
+                      type="number"
+                      id="bureauCibilPlScore"
+                      placeholder="Enter PL Score"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-4 border-t border-slate-800/80 mt-4">
+                <label
+                  class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2"
+                  >Specific Loan Account Write-Off Flags</label
+                >
+                <div
+                  class="grid grid-cols-2 md:grid-cols-4 gap-2 text-[11px]"
+                >
+                  <label
+                    class="flex items-center gap-1.5 p-2 rounded bg-slate-900 border border-slate-700 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      id="bureauFlagPL"
+                      class="rounded text-rose-500"
+                    />
+                    <span class="text-slate-300">PL Write-Off</span>
+                  </label>
+                  <label
+                    class="flex items-center gap-1.5 p-2 rounded bg-slate-900 border border-slate-700 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      id="bureauFlagHome"
+                      class="rounded text-rose-500"
+                    />
+                    <span class="text-slate-300">Home Loan WO</span>
+                  </label>
+                  <label
+                    class="flex items-center gap-1.5 p-2 rounded bg-slate-900 border border-slate-700 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      id="bureauFlagConsumer"
+                      class="rounded text-rose-500"
+                    />
+                    <span class="text-slate-300">Consumer WO</span>
+                  </label>
+                  <label
+                    class="flex items-center gap-1.5 p-2 rounded bg-slate-900 border border-slate-700 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      id="bureauFlagAgri"
+                      class="rounded text-rose-500"
+                    />
+                    <span class="text-slate-300">Agri Loan WO</span>
+                  </label>
+                  <label
+                    class="flex items-center gap-1.5 p-2 rounded bg-slate-900 border border-slate-700 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      id="bureauFlagMSME"
+                      class="rounded text-rose-500"
+                    />
+                    <span class="text-slate-300">MSME WO</span>
+                  </label>
+                  <label
+                    class="flex items-center gap-1.5 p-2 rounded bg-slate-900 border border-slate-700 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      id="bureauFlagAuto"
+                      class="rounded text-rose-500"
+                    />
+                    <span class="text-slate-300">Auto Loan WO</span>
+                  </label>
+                  <label
+                    class="flex items-center gap-1.5 p-2 rounded bg-slate-900 border border-slate-700 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      id="bureauFlagCC"
+                      class="rounded text-rose-500"
+                    />
+                    <span class="text-slate-300">Credit Card WO</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================================= -->
+          <!-- STEP: CO-APPLICANT (Individual / HUF only) -->
+          <!-- ============================================================= -->
+          <div id="form-step-coapplicant" class="form-step hidden space-y-6">
+            <div class="border-b border-slate-800 pb-4">
+              <h3
+                class="text-lg font-semibold text-white flex items-center gap-2"
+              >
+                <span class="text-brand-500 font-bold" id="coappStepLabel"
+                  >Step 5:</span
+                >
+                Co-Applicant Mapping
+              </h3>
+              <p class="text-xs text-slate-400">
+                Configure secondary applicants for age or income eligibility
+                enhancement (optional).
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-xs text-slate-300 font-medium mb-1"
+                  >Co-Applicant Added For Age Extension</label
+                >
+                <select
+                  id="coAppAgeRelation"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                >
+                  <option value="None">None</option>
+                  <option value="Brother">Brother</option>
+                  <option value="Sister">Sister</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs text-slate-300 font-medium mb-1"
+                  >Co-Applicant Added For Income Pooling</label
+                >
+                <select
+                  id="coAppIncomeRelation"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                >
+                  <option value="None">None</option>
+                  <option value="Father">Father</option>
+                  <option value="Mother">Mother</option>
+                  <option value="Brother">Brother</option>
+                  <option value="Sister">Sister</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================================= -->
+          <!-- STEP: DOCUMENT UPLOAD & VERIFICATION (shared) -->
+          <!-- ============================================================= -->
+
+
+          <!-- FORM NAVIGATION FOOTER -->
+          <div
+            class="border-t border-slate-800 pt-6 mt-8 flex justify-between items-center"
+          >
+            <button
+              type="button"
+              id="prevBtn"
+              onclick="navigateStep(-1)"
+              class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-5 py-2.5 rounded-xl text-xs font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <i class="fa-solid fa-arrow-left mr-2"></i> Previous
+            </button>
+
+            <div class="flex items-center gap-3">
+              <button
+                type="button"
+                id="nextBtn"
+                onclick="navigateStep(1)"
+                class="bg-brand-600 hover:bg-brand-500 text-white px-6 py-2.5 rounded-xl text-xs font-semibold shadow-lg shadow-indigo-500/20 transition flex items-center gap-2"
+              >
+                <span>Next Step</span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+
+              <button
+                type="submit"
+                id="submitBtn"
+                class="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2.5 rounded-xl text-xs font-semibold shadow-lg shadow-emerald-500/20 transition hidden flex items-center gap-2"
+              >
+                <i class="fa-solid fa-bolt"></i>
+                <span>Evaluate BRE Rules & Execute</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 2: BUREAU PARSER & RULE ENGINE SIMULATOR -->
+      <!-- ========================================================================= -->
+      <section id="tab-simulator-tab" class="tab-content hidden space-y-6">
+        <!-- CIBIL Parser & Credit History Control Panel -->
+        <div class="glass-card rounded-2xl p-6 shadow-xl">
+          <div
+            class="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-4 border-b border-slate-800 pb-4"
+          >
+            <div>
+              <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-microchip text-indigo-400"></i> Bureau
+                Report Parser & Assessment Engine
+              </h2>
+              <p class="text-xs text-slate-400">
+                Automated PDF CIBIL column parsing simulator (STD treated as 0,
+                90+ DPD detection, write-off filters).
+              </p>
+            </div>
+            <button
+              onclick="runRuleEngine()"
+              class="bg-brand-600 hover:bg-brand-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-lg transition flex items-center gap-2"
+            >
+              <i class="fa-solid fa-play"></i> Re-Run Engine
+            </button>
+          </div>
+
+          <!-- Engine Performance & Telemetry SLA Benchmarks -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 text-xs font-mono">
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+              <span class="text-slate-300 font-medium flex items-center gap-1.5"><i class="fa-solid fa-bolt text-emerald-400"></i> Simple - GET SLA</span>
+              <span class="text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30">&lt; 30 ms (Simulated: 14 ms)</span>
+            </div>
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+              <span class="text-slate-300 font-medium flex items-center gap-1.5"><i class="fa-solid fa-database text-indigo-400"></i> CRUD Operations SLA</span>
+              <span class="text-indigo-400 font-bold bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/30">&lt; 80 ms (Simulated: 42 ms)</span>
+            </div>
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+              <span class="text-slate-300 font-medium flex items-center gap-1.5"><i class="fa-solid fa-memory text-cyan-400"></i> Memory Lifecycle</span>
+              <span class="text-cyan-300 font-bold bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/30">GC Active &amp; Released</span>
+            </div>
+          </div>
+
+          <!-- Simulated Bureau Credit Parameters -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 text-xs"
+          >
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-slate-300 font-medium">CIBIL Score</span>
+                <span id="cibilScoreVal" class="font-bold text-indigo-400"
+                  >750</span
+                >
+              </div>
+              <input
+                type="range"
+                id="cibilScore"
+                min="300"
+                max="900"
+                value="750"
+                oninput="
+                  document.getElementById('cibilScoreVal').innerText =
+                    this.value;
+                  runRuleEngine();
+                "
+                class="w-full accent-indigo-500"
+              />
+            </div>
+
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-slate-300 font-medium"
+                  >Max DPD (Days Past Due)</span
+                >
+                <span id="dpdDaysVal" class="font-bold text-emerald-400"
+                  >0 Days</span
+                >
+              </div>
+              <input
+                type="range"
+                id="dpdDays"
+                min="0"
+                max="180"
+                value="0"
+                step="5"
+                oninput="
+                  updateDPDRangeDisplay(this.value);
+                  runRuleEngine();
+                "
+                class="w-full accent-emerald-500"
+              />
+            </div>
+
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-slate-300 font-medium">Indian Bank DPD</span>
+                <span id="indianBankDpdVal" class="font-bold text-slate-300"
+                  >0 Days</span
+                >
+              </div>
+              <input
+                type="range"
+                id="indianBankDpd"
+                min="0"
+                max="90"
+                value="0"
+                step="1"
+                oninput="
+                  document.getElementById('indianBankDpdVal').innerText =
+                    this.value + ' Days';
+                  runRuleEngine();
+                "
+                class="w-full accent-rose-500"
+              />
+            </div>
+
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+              <label class="block text-slate-300 font-medium mb-1"
+                >Total Write-Off Amount (₹)</label
+              >
+              <input
+                type="number"
+                id="writeOffAmount"
+                value="0"
+                oninput="runRuleEngine()"
+                class="w-full bg-slate-950 border border-slate-800 rounded px-2 py-1 text-xs text-white"
+              />
+            </div>
+          </div>
+
+          <!-- Write-Off Toggles Grid -->
+          <div class="pt-4 border-t border-slate-800/80 mt-4">
+            <label
+              class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2"
+              >Specific Loan Account Write-Off Flags (API Checks)</label
+            >
+            <div
+              class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 text-[11px]"
+            >
+              <label
+                class="flex items-center gap-1.5 p-2 rounded bg-slate-900 border border-slate-800 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  id="woPL"
+                  onchange="runRuleEngine()"
+                  class="rounded text-rose-500"
+                />
+                <span class="text-slate-300">PL Write-Off</span>
+              </label>
+              <label
+                class="flex items-center gap-1.5 p-2 rounded bg-slate-900 border border-slate-800 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  id="woHome"
+                  onchange="runRuleEngine()"
+                  class="rounded text-rose-500"
+                />
+                <span class="text-slate-300">Home Loan WO</span>
+              </label>
+              <label
+                class="flex items-center gap-1.5 p-2 rounded bg-slate-900 border border-slate-800 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  id="woConsumer"
+                  onchange="runRuleEngine()"
+                  class="rounded text-rose-500"
+                />
+                <span class="text-slate-300">Consumer WO</span>
+              </label>
+              <label
+                class="flex items-center gap-1.5 p-2 rounded bg-slate-900 border border-slate-800 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  id="woAgri"
+                  onchange="runRuleEngine()"
+                  class="rounded text-rose-500"
+                />
+                <span class="text-slate-300">Agri Loan WO</span>
+              </label>
+              <label
+                class="flex items-center gap-1.5 p-2 rounded bg-slate-900 border border-slate-800 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  id="woMSME"
+                  onchange="runRuleEngine()"
+                  class="rounded text-rose-500"
+                />
+                <span class="text-slate-300">MSME WO</span>
+              </label>
+              <label
+                class="flex items-center gap-1.5 p-2 rounded bg-slate-900 border border-slate-800 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  id="woAuto"
+                  onchange="runRuleEngine()"
+                  class="rounded text-rose-500"
+                />
+                <span class="text-slate-300">Auto Loan WO</span>
+              </label>
+              <label
+                class="flex items-center gap-1.5 p-2 rounded bg-slate-900 border border-slate-800 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  id="woCreditCard"
+                  onchange="runRuleEngine()"
+                  class="rounded text-rose-500"
+                />
+                <span class="text-slate-300">Credit Card WO</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- OVERALL DECISION BANNER & RULE LOGS -->
+        <div
+          id="overallDecisionBanner"
+          class="p-6 rounded-2xl border transition-all duration-300"
+        >
+          <!-- JS Populated -->
+        </div>
+
+        <!-- BANK ELIGIBILITY BREAKDOWN MATRIX (ALL 8 BANKS) -->
+        <div>
+          <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-building-columns text-brand-500"></i> Partner
+            Institutions Eligibility Matrix (8 Supported Banks)
+          </h3>
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+            id="bankMatrixGrid"
+          >
+            <!-- Dynamated by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 3: COMPLETE POLICY MATRIX (ALL 64 BRE PARAMETERS) -->
+      <!-- ========================================================================= -->
+      <section id="tab-matrix-tab" class="tab-content hidden space-y-6">
+        <div class="glass-card rounded-2xl p-6 shadow-xl">
+          <div
+            class="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-4"
+          >
+            <div>
+              <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-brand-500"></i> BRE
+                Specification Master Registry
+              </h2>
+              <p class="text-xs text-slate-400">
+                Complete catalog of 64 parameters mapped across 9 functional
+                business modules.
+              </p>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span
+                class="px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
+                >API: 38</span
+              >
+              <span
+                class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                >Rule-Engine: 23</span
+              >
+              <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-400"
+                >Unassigned: 3</span
+              >
+            </div>
+          </div>
+
+          <!-- Filter Controls -->
+          <div
+            class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/80 p-3 rounded-xl border border-slate-800 mb-4 text-xs"
+          >
+            <div class="flex items-center gap-2">
+              <span class="text-slate-400">Filter Category:</span>
+              <select
+                id="matrixFilterModule"
+                onchange="renderMatrixTable()"
+                class="bg-slate-950 border border-slate-800 rounded px-2.5 py-1.5 text-slate-200"
+              >
+                <option value="ALL">All Business Modules (1 - 9)</option>
+                <option value="Module 1">
+                  1. Credit Score, Bureau & History
+                </option>
+                <option value="Module 2">
+                  2. Applicant Demographics & Eligibility
+                </option>
+                <option value="Module 3">3. Residence & Office Premises</option>
+                <option value="Module 4">4. Employment Profile & Tenure</option>
+                <option value="Module 5">5. Income & Financial Ratios</option>
+                <option value="Module 6">6. Tax (ITR) & Business Proofs</option>
+                <option value="Module 7">7. Business Entity Structure</option>
+                <option value="Module 8">
+                  8. Co-Applicant & Family Dynamics
+                </option>
+                <option value="Module 9">
+                  9. Existing Banking Relationships
+                </option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span class="text-slate-400">Search Parameter:</span>
+              <input
+                type="text"
+                id="matrixSearch"
+                onkeyup="renderMatrixTable()"
+                placeholder="e.g. Write off, ITR, DPD..."
+                class="bg-slate-950 border border-slate-800 rounded px-2.5 py-1.5 text-slate-200 w-48"
+              />
+            </div>
+          </div>
+
+          <!-- Master Table -->
+          <div
+            class="overflow-x-auto rounded-xl border border-slate-800 max-h-[600px] overflow-y-auto"
+          >
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead
+                class="bg-slate-900 text-slate-400 uppercase tracking-wider text-[11px] sticky top-0 z-10 border-b border-slate-800"
+              >
+                <tr>
+                  <th class="py-3 px-4">#</th>
+                  <th class="py-3 px-4">Parameter Name</th>
+                  <th class="py-3 px-4">Exec Mode</th>
+                  <th class="py-3 px-4">Functional Module</th>
+                  <th class="py-3 px-4">Condition & Logic</th>
+                  <th class="py-3 px-4 text-center">Live Status</th>
+                </tr>
+              </thead>
+              <tbody
+                id="matrixTableBody"
+                class="divide-y divide-slate-800/60 bg-slate-950/40"
+              >
+                <!-- JS Populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- TECHNICAL ENGINE FOOTER & SLA STATUS BAR -->
+      <!-- ========================================================================= -->
+      <footer class="mt-8 pt-6 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="font-semibold text-slate-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-microchip text-brand-500"></i> Engine Performance SLAs:
+          </span>
+          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-md font-mono">
+            Simple - GET: &lt; 30 ms
+          </span>
+          <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 px-2.5 py-1 rounded-md font-mono">
+            CRUD Operations: &lt; 80 ms
+          </span>
+        </div>
+        <div class="flex items-center gap-2 text-[11px] text-slate-400 font-mono bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800">
+          <i class="fa-solid fa-memory text-cyan-400"></i> Memory Lifetime: Request Starts &rarr; Allocate Memory &rarr; Use Memory &rarr; Garbage Collection &rarr; Memory Released
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      // MASTER LIST OF ALL 64 BRE PARAMETERS FROM BRE SHEET VER 4.XLSX
+      const breMasterParams = [
+        {
+          id: 1,
+          name: "CIBIL Score",
+          cat: "rule-engine",
+          module: "Module 1",
+          cond: "Score >= thresholds (701 - 730 per bank)",
+        },
+        {
+          id: 2,
+          name: "CIBIL PL Score",
+          cat: "api",
+          module: "Module 1",
+          cond: "BOI required (701+); Others not required",
+        },
+        {
+          id: 3,
+          name: "PL Write off",
+          cat: "api",
+          module: "Module 1",
+          cond: "Must be 'No' across all lenders",
+        },
+        {
+          id: 4,
+          name: "Home Loan Write off",
+          cat: "api",
+          module: "Module 1",
+          cond: "Must be 'No' across all lenders",
+        },
+        {
+          id: 5,
+          name: "Consumer Loan Write off",
+          cat: "api",
+          module: "Module 1",
+          cond: "Must be 'No' across all lenders",
+        },
+        {
+          id: 6,
+          name: "Agri Loan Write off",
+          cat: "api",
+          module: "Module 1",
+          cond: "Must be 'No' across all lenders",
+        },
+        {
+          id: 7,
+          name: "MSME Loan Write off",
+          cat: "api",
+          module: "Module 1",
+          cond: "Company CIBIL verified",
+        },
+        {
+          id: 8,
+          name: "Auto Loan Write off",
+          cat: "api",
+          module: "Module 1",
+          cond: "Must be 'No' across all lenders",
+        },
+        {
+          id: 9,
+          name: "Credit Card Write Off",
+          cat: "api",
+          module: "Module 1",
+          cond: "Conditional checks applied per bank",
+        },
+        {
+          id: 10,
+          name: "Write Off Amount",
+          cat: "api",
+          module: "Module 1",
+          cond: "Must be < 5,000 / 10,000 based on institution",
+        },
+        {
+          id: 11,
+          name: "DPD (Days Past Due)",
+          cat: "rule-engine",
+          module: "Module 1",
+          cond: "Rejection triggered if DPD > 90 days; Indian Bank > 0",
+        },
+        {
+          id: 12,
+          name: "Loan enquiry",
+          cat: "api",
+          module: "Module 1",
+          cond: "Recent bureau inquiries threshold evaluation",
+        },
+        {
+          id: 13,
+          name: "Currently Outstanding",
+          cat: "api",
+          module: "Module 1",
+          cond: "Overdue amounts lead to automatic rejection",
+        },
+        {
+          id: 14,
+          name: "Min Age Criteria",
+          cat: "rule-engine",
+          module: "Module 2",
+          cond: "Minimum age requirement = 21 years",
+        },
+        {
+          id: 15,
+          name: "Age at last EMI Salaried",
+          cat: "rule-engine",
+          module: "Module 2",
+          cond: "Maximum age at loan maturity = 60 years",
+        },
+        {
+          id: 16,
+          name: "Age at last EMI Self Employeed",
+          cat: "rule-engine",
+          module: "Module 2",
+          cond: "Maximum age at loan maturity = 65 years",
+        },
+        {
+          id: 17,
+          name: "Existing A/C Holder",
+          cat: "rule-engine",
+          module: "Module 9",
+          cond: "Savings/Current Account with partner banks",
+        },
+        {
+          id: 18,
+          name: "Existing Car Loan",
+          cat: "rule-engine",
+          module: "Module 9",
+          cond: "Check if active car loan exists with same bank",
+        },
+        {
+          id: 19,
+          name: "Rented House-Salaried",
+          cat: "api",
+          module: "Module 3",
+          cond: "Salaried or Self-Employed rental verification",
+        },
+        {
+          id: 20,
+          name: "Resi - Cum Office - One Owned",
+          cat: "api",
+          module: "Module 3",
+          cond: "Self-employed combined premise with one owned",
+        },
+        {
+          id: 21,
+          name: "Resi - Cum Office - Both Rented",
+          cat: "Unassigned",
+          module: "Module 3",
+          cond: "Category tag; combined rented premises",
+        },
+        {
+          id: 22,
+          name: "Without a Guarantor",
+          cat: "api",
+          module: "Module 3",
+          cond: "Standard flow without guarantor requirement",
+        },
+        {
+          id: 23,
+          name: "With a Guarantor",
+          cat: "api",
+          module: "Module 3",
+          cond: "Mandatory if specific property / self-employed criteria met",
+        },
+        {
+          id: 24,
+          name: "Resi-Office-Separate-Both Rented",
+          cat: "api",
+          module: "Module 3",
+          cond: "Separate residence and office both rented",
+        },
+        {
+          id: 25,
+          name: "Unmarried",
+          cat: "api",
+          module: "Module 2",
+          cond: "Marital status assessment",
+        },
+        {
+          id: 26,
+          name: "NRI/PIO",
+          cat: "api",
+          module: "Module 2",
+          cond: "Non-resident applicant flag",
+        },
+        {
+          id: 27,
+          name: "Minimium Stay Period for NRI",
+          cat: "api",
+          module: "Module 2",
+          cond: "Must follow stay period parameters (e.g., >= 12 months)",
+        },
+        {
+          id: 28,
+          name: "Agriculture",
+          cat: "api",
+          module: "Module 4",
+          cond: "Agri employment classification",
+        },
+        {
+          id: 29,
+          name: "Employment-Firm",
+          cat: "api",
+          module: "Module 4",
+          cond: "Proprietorship / Partnership firm employment",
+        },
+        {
+          id: 30,
+          name: "Employment-Pvt Ltd",
+          cat: "api",
+          module: "Module 4",
+          cond: "Pvt Ltd corporate employment",
+        },
+        {
+          id: 31,
+          name: "Employment-Public Ltd",
+          cat: "api",
+          module: "Module 4",
+          cond: "Public Ltd corporate employment",
+        },
+        {
+          id: 32,
+          name: "Employment-Govt",
+          cat: "api",
+          module: "Module 4",
+          cond: "Government service classification",
+        },
+        {
+          id: 33,
+          name: "Employment-PSU",
+          cat: "api",
+          module: "Module 4",
+          cond: "Public Sector Undertaking service",
+        },
+        {
+          id: 34,
+          name: "Minimum work experience",
+          cat: "rule-engine",
+          module: "Module 4",
+          cond: "If current tenure < 2 yrs, previous employer data required",
+        },
+        {
+          id: 35,
+          name: "Work Experience Pvt Sec",
+          cat: "rule-engine",
+          module: "Module 4",
+          cond: "Minimum total experience >= 2 years",
+        },
+        {
+          id: 36,
+          name: "Salary payment mode-Cash",
+          cat: "rule-engine",
+          module: "Module 5",
+          cond: "Cash salary restricts eligibility for tier-1 banks",
+        },
+        {
+          id: 37,
+          name: "Salary payment mode- Bank Credit",
+          cat: "rule-engine",
+          module: "Module 5",
+          cond: "Direct bank credit required for standard approval",
+        },
+        {
+          id: 38,
+          name: "No Income Proof",
+          cat: "rule-engine",
+          module: "Module 5",
+          cond: "Low income or no document program",
+        },
+        {
+          id: 39,
+          name: "Rental Income-Agreement/No ITR/No Bank",
+          cat: "rule-engine",
+          module: "Module 5",
+          cond: "Non-reflected rental income rules",
+        },
+        {
+          id: 40,
+          name: "Rental Income-Agreement/Filed ITR/No Bank",
+          cat: "rule-engine",
+          module: "Module 5",
+          cond: "ITR declared rental income",
+        },
+        {
+          id: 41,
+          name: "Rental Income-Agreement/No ITR/Bank Reflected",
+          cat: "rule-engine",
+          module: "Module 5",
+          cond: "Bank statement verified rental income",
+        },
+        {
+          id: 42,
+          name: "Minimum Salary per month",
+          cat: "rule-engine",
+          module: "Module 5",
+          cond: "Must meet min monthly income threshold (e.g. ₹25,000)",
+        },
+        {
+          id: 43,
+          name: "Self Employed Current ITR",
+          cat: "api",
+          module: "Module 6",
+          cond: "Current year ITR must be >= ₹3,00,000",
+        },
+        {
+          id: 44,
+          name: "Self Employed Previous ITR",
+          cat: "api",
+          module: "Module 6",
+          cond: "Previous year ITR must be > ₹0 (Threshold >= ₹1,00,000)",
+        },
+        {
+          id: 45,
+          name: "Self Employed",
+          cat: "api",
+          module: "Module 6",
+          cond: "Self-employed classification flag",
+        },
+        {
+          id: 46,
+          name: "Self employed ITR Filled",
+          cat: "api",
+          module: "Module 6",
+          cond: "Formal tax return filing verified",
+        },
+        {
+          id: 47,
+          name: "ITR Not Filed",
+          cat: "api",
+          module: "Module 6",
+          cond: "Unfiled tax return policy trigger",
+        },
+        {
+          id: 48,
+          name: "Business ITR",
+          cat: "rule-engine",
+          module: "Module 6",
+          cond: "Business financial statement audit",
+        },
+        {
+          id: 49,
+          name: "Business Proof",
+          cat: "api",
+          module: "Module 6",
+          cond: "GSTIN / Registration proof required",
+        },
+        {
+          id: 50,
+          name: "Propreitorship",
+          cat: "rule-engine",
+          module: "Module 7",
+          cond: "Sole proprietorship entity rules",
+        },
+        {
+          id: 51,
+          name: "Partnership Firm",
+          cat: "rule-engine",
+          module: "Module 7",
+          cond: "Partnership deed & tenure rules",
+        },
+        {
+          id: 52,
+          name: "Private Limited",
+          cat: "rule-engine",
+          module: "Module 7",
+          cond: "Corporate entity verification",
+        },
+        {
+          id: 53,
+          name: "Public Limited",
+          cat: "rule-engine",
+          module: "Module 7",
+          cond: "Listed company verification",
+        },
+        {
+          id: 54,
+          name: "EMI/Income",
+          cat: "rule-engine",
+          module: "Module 5",
+          cond: "FOIR ratio limit check (max 50% - 65%)",
+        },
+        {
+          id: 55,
+          name: "HUF",
+          cat: "api",
+          module: "Module 7",
+          cond: "Hindu Undivided Family entity rules",
+        },
+        {
+          id: 56,
+          name: "Form 16",
+          cat: "rule-engine",
+          module: "Module 5",
+          cond: "Form 16 tax certificate verification",
+        },
+        {
+          id: 57,
+          name: "Co-Applicant For Age",
+          cat: "Unassigned",
+          module: "Module 2",
+          cond: "Age enhancement co-applicant trigger",
+        },
+        {
+          id: 58,
+          name: "Co-App Age: Brother",
+          cat: "api",
+          module: "Module 8",
+          cond: "Brother co-applicant age rule",
+        },
+        {
+          id: 59,
+          name: "Co-App Age: Sister",
+          cat: "api",
+          module: "Module 8",
+          cond: "Sister co-applicant age rule",
+        },
+        {
+          id: 60,
+          name: "Co-Applicant for Income",
+          cat: "Unassigned",
+          module: "Module 5",
+          cond: "Income pooling co-applicant trigger",
+        },
+        {
+          id: 61,
+          name: "Co-App Income: Brother",
+          cat: "api",
+          module: "Module 8",
+          cond: "Brother income pooling eligibility",
+        },
+        {
+          id: 62,
+          name: "Co-App Income: Father",
+          cat: "api",
+          module: "Module 8",
+          cond: "Father income pooling eligibility",
+        },
+        {
+          id: 63,
+          name: "Co-App Income: Mother",
+          cat: "api",
+          module: "Module 8",
+          cond: "Mother income pooling eligibility",
+        },
+        {
+          id: 64,
+          name: "Co-App Income: Sister",
+          cat: "api",
+          module: "Module 8",
+          cond: "Sister income pooling eligibility",
+        },
+      ];
+
+      // Supported Partner Banks & Policy Thresholds
+      const partnerBanks = [
+        {
+          id: "BOI",
+          name: "Bank of India",
+          minCibil: 701,
+          maxDpd: 90,
+          allowCcWriteOff: true,
+          ccWriteOffLimit: 5000,
+          indianBankDpdCheck: false,
+        },
+        {
+          id: "Indian Bank",
+          name: "Indian Bank",
+          minCibil: 730,
+          maxDpd: 0,
+          allowCcWriteOff: false,
+          ccWriteOffLimit: 0,
+          indianBankDpdCheck: true,
+        },
+        {
+          id: "IOB",
+          name: "Indian Overseas Bank",
+          minCibil: 701,
+          maxDpd: 90,
+          allowCcWriteOff: true,
+          ccWriteOffLimit: 5000,
+          indianBankDpdCheck: false,
+        },
+        {
+          id: "BOB",
+          name: "Bank of Baroda",
+          minCibil: 726,
+          maxDpd: 90,
+          allowCcWriteOff: false,
+          ccWriteOffLimit: 0,
+          indianBankDpdCheck: false,
+        },
+        {
+          id: "BOM",
+          name: "Bank of Maharashtra",
+          minCibil: 650,
+          maxDpd: 90,
+          allowCcWriteOff: true,
+          ccWriteOffLimit: 10000,
+          indianBankDpdCheck: false,
+        },
+        {
+          id: "HDFC",
+          name: "HDFC Bank",
+          minCibil: 701,
+          maxDpd: 90,
+          allowCcWriteOff: true,
+          ccWriteOffLimit: 10000,
+          indianBankDpdCheck: false,
+        },
+        {
+          id: "AXIS",
+          name: "Axis Bank",
+          minCibil: 701,
+          maxDpd: 90,
+          allowCcWriteOff: true,
+          ccWriteOffLimit: 10000,
+          indianBankDpdCheck: false,
+        },
+        {
+          id: "Kotak",
+          name: "Kotak Mahindra Bank",
+          minCibil: 701,
+          maxDpd: 90,
+          allowCcWriteOff: true,
+          ccWriteOffLimit: 10000,
+          indianBankDpdCheck: false,
+        },
+      ];
+
+      // ---------------------------------------------------------------------
+      // DYNAMIC STEP WIZARD (step count & titles vary by entity type)
+      // ---------------------------------------------------------------------
+      const STEP_DEFS = {
+        identity: {
+          labelId: "identityStepLabel",
+          titles: {
+            Individual: "Identity & Contact",
+            Company: "Company Identity",
+            HUF: "HUF & Karta Identity",
+          },
+        },
+        address: {
+          labelId: "addressStepLabel",
+          titles: {
+            Individual: "Address & Residence",
+            Company: "Business Address & Residence",
+            HUF: "Address & Residence",
+          },
+        },
+        occupation: {
+          labelId: "occupationStepLabel",
+          titles: {
+            Individual: "Occupation & Income Verification",
+            Company: "Business Income & Tax",
+            HUF: "Karta's Occupation & Income",
+          },
+        },
+        banking: {
+          labelId: "bankingStepLabel",
+          titles: {
+            Individual: "Banking & Bureau",
+            Company: "Banking & Bureau",
+            HUF: "Banking & Bureau",
+          },
+        },
+        coapplicant: {
+          labelId: "coappStepLabel",
+          titles: {
+            Individual: "Co-Applicant",
+            HUF: "Co-Applicant",
+          },
+        },
+
+      };
+
+      // Company has no Occupation concept, so it skips Co-Applicant too
+      // (matches mentor's spec: Company is evaluated purely at the entity level).
+      function getActiveSteps(entity) {
+        const steps = ["identity", "address", "occupation", "banking"];
+        if (entity !== "Company") steps.push("coapplicant");
+        return steps;
+      }
+
+      function getCurrentEntity() {
+        return (
+          document.querySelector('input[name="entityType"]:checked')?.value ||
+          "Individual"
+        );
+      }
+
+      let currentStepKey = "identity";
+
+      // Sync Onboarding Step 4 Bureau inputs and Tab 2 Simulator inputs
+      function initSyncListeners() {
+        // Step 4 CIBIL Score -> Simulator CIBIL Score
+        const bureauCibilScore = document.getElementById("bureauCibilScore");
+        if (bureauCibilScore) {
+          bureauCibilScore.addEventListener("input", function() {
+            const val = Math.max(300, Math.min(900, parseInt(this.value) || 300));
+            const sim = document.getElementById("cibilScore");
+            if (sim) {
+              sim.value = val;
+              const display = document.getElementById("cibilScoreVal");
+              if (display) display.innerText = val;
+            }
+            runRuleEngine();
+          });
+        }
+
+        // Step 4 DPD -> Simulator DPD
+        const bureauDpd = document.getElementById("bureauDpd");
+        if (bureauDpd) {
+          bureauDpd.addEventListener("input", function() {
+            const val = Math.max(0, Math.min(180, parseInt(this.value) || 0));
+            const sim = document.getElementById("dpdDays");
+            if (sim) {
+              sim.value = val;
+              updateDPDRangeDisplay(val);
+            }
+            runRuleEngine();
+          });
+        }
+
+        // Step 4 Write-off Amount -> Simulator Write-off Amount
+        const bureauWriteOffAmount = document.getElementById("bureauWriteOffAmount");
+        if (bureauWriteOffAmount) {
+          bureauWriteOffAmount.addEventListener("input", function() {
+            const val = Math.max(0, parseFloat(this.value) || 0);
+            const sim = document.getElementById("writeOffAmount");
+            if (sim) {
+              sim.value = val;
+            }
+            runRuleEngine();
+          });
+        }
+
+        // Step 4 checkboxes -> Simulator checkboxes
+        const checkboxMappings = {
+          "bureauFlagPL": "woPL",
+          "bureauFlagHome": "woHome",
+          "bureauFlagConsumer": "woConsumer",
+          "bureauFlagAgri": "woAgri",
+          "bureauFlagMSME": "woMSME",
+          "bureauFlagAuto": "woAuto",
+          "bureauFlagCC": "woCreditCard"
+        };
+
+        Object.keys(checkboxMappings).forEach(formId => {
+          const formEl = document.getElementById(formId);
+          if (formEl) {
+            formEl.addEventListener("change", function() {
+              const simEl = document.getElementById(checkboxMappings[formId]);
+              if (simEl) {
+                simEl.checked = this.checked;
+              }
+              runRuleEngine();
+            });
+          }
+        });
+
+        // Simulator controls -> Step 4 controls
+        const simCibil = document.getElementById("cibilScore");
+        if (simCibil) {
+          simCibil.addEventListener("input", function() {
+            const formEl = document.getElementById("bureauCibilScore");
+            if (formEl) formEl.value = this.value;
+          });
+        }
+
+        const simDpd = document.getElementById("dpdDays");
+        if (simDpd) {
+          simDpd.addEventListener("input", function() {
+            const formEl = document.getElementById("bureauDpd");
+            if (formEl) formEl.value = this.value;
+          });
+        }
+
+        const simWriteOff = document.getElementById("writeOffAmount");
+        if (simWriteOff) {
+          simWriteOff.addEventListener("input", function() {
+            const formEl = document.getElementById("bureauWriteOffAmount");
+            if (formEl) formEl.value = this.value;
+          });
+        }
+
+        Object.keys(checkboxMappings).forEach(formId => {
+          const simEl = document.getElementById(checkboxMappings[formId]);
+          if (simEl) {
+            simEl.addEventListener("change", function() {
+              const formEl = document.getElementById(formId);
+              if (formEl) {
+                formEl.checked = this.checked;
+              }
+            });
+          }
+        });
+      }
+
+      // Initialize Page
+      window.onload = function () {
+        updateFormBranching();
+        calculateAge();
+        evaluateWorkExperience();
+        evaluateBusinessTenure();
+        handleITRFilingStatusChange();
+        renderMatrixTable();
+        runRuleEngine();
+        initSyncListeners();
+      };
+
+      // Tab Navigation Logic
+      function switchTab(tabId) {
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((el) => el.classList.add("hidden"));
+        document.querySelectorAll(".tab-btn").forEach((btn) => {
+          btn.classList.remove("tab-active");
+          btn.classList.add("text-slate-400");
+        });
+
+        document.getElementById("tab-" + tabId).classList.remove("hidden");
+        const activeBtn = document.getElementById("nav-" + tabId);
+        activeBtn.classList.add("tab-active");
+        activeBtn.classList.remove("text-slate-400");
+
+        if (tabId === "simulator-tab") {
+          runRuleEngine();
+        }
+      }
+
+      // Step Wizard Navigation
+      function navigateStep(direction) {
+        const steps = getActiveSteps(getCurrentEntity());
+        const idx = steps.indexOf(currentStepKey);
+        const newIdx = idx + direction;
+        if (newIdx < 0 || newIdx >= steps.length) return;
+        currentStepKey = steps[newIdx];
+        updateStepUI();
+      }
+
+      function renderStepPills() {
+        const entity = getCurrentEntity();
+        const steps = getActiveSteps(entity);
+        const container = document.getElementById("stepPillsContainer");
+        container.className = `grid grid-cols-2 md:grid-cols-${steps.length} gap-2 text-center text-xs`;
+        container.innerHTML = steps
+          .map((key, idx) => {
+            const title = STEP_DEFS[key].titles[entity];
+            return `<div id="step-pill-${key}" class="step-pill p-2.5 rounded-xl border border-slate-700 bg-slate-800/80 font-medium flex items-center justify-center gap-2 transition-all"><span class="w-5 h-5 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center text-[10px]">${idx + 1}</span><span>${title}</span></div>`;
+          })
+          .join("");
+      }
+
+      function updateStepUI() {
+        const entity = getCurrentEntity();
+        const steps = getActiveSteps(entity);
+        if (!steps.includes(currentStepKey)) currentStepKey = steps[0];
+
+        // Hide all step content panels, show the active one
+        Object.keys(STEP_DEFS).forEach((key) => {
+          const el = document.getElementById(`form-step-${key}`);
+          if (el) el.classList.add("hidden");
+        });
+        document
+          .getElementById(`form-step-${currentStepKey}`)
+          .classList.remove("hidden");
+
+        // Update "Step N:" labels + titles to match this entity's step order
+        steps.forEach((key, idx) => {
+          const labelEl = document.getElementById(STEP_DEFS[key].labelId);
+          if (labelEl) labelEl.textContent = `Step ${idx + 1}:`;
+        });
+        const occTitleEl = document.getElementById("occupationStepTitle");
+        const occSubEl = document.getElementById("occupationStepSubtitle");
+        if (occTitleEl) occTitleEl.textContent = STEP_DEFS.occupation.titles[entity];
+        if (occSubEl) {
+          occSubEl.textContent =
+            entity === "Company"
+              ? "Business establishment tenure and ITR verification for the company."
+              : "Dynamic branching for Salaried vs. Self-Employed requirements.";
+        }
+
+        // Pill highlighting
+        const currentIdx = steps.indexOf(currentStepKey);
+        steps.forEach((key, idx) => {
+          const pill = document.getElementById(`step-pill-${key}`);
+          if (!pill) return;
+          if (idx === currentIdx) {
+            pill.className =
+              "step-pill p-2.5 rounded-xl border border-indigo-500 bg-brand-600 text-white font-medium flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 transition-all";
+          } else if (idx < currentIdx) {
+            pill.className =
+              "step-pill p-2.5 rounded-xl border border-emerald-600/50 bg-emerald-950/40 text-emerald-300 font-medium flex items-center justify-center gap-2 transition-all";
+          } else {
+            pill.className =
+              "step-pill p-2.5 rounded-xl border border-slate-700 bg-slate-800/80 font-medium flex items-center justify-center gap-2 transition-all";
+          }
+        });
+
+        // Button states
+        document.getElementById("prevBtn").disabled = currentIdx === 0;
+        if (currentIdx === steps.length - 1) {
+          document.getElementById("nextBtn").classList.add("hidden");
+          document.getElementById("submitBtn").classList.remove("hidden");
+        } else {
+          document.getElementById("nextBtn").classList.remove("hidden");
+          document.getElementById("submitBtn").classList.add("hidden");
+        }
+      }
+
+      // ---------------------------------------------------------------------
+      // Form Branching & Calculations
+      // ---------------------------------------------------------------------
+
+      // Company always behaves as Self-Employed / Business Owner (no Occupation
+      // Type field exists for Company at all). Individual and HUF (the Karta)
+      // use the actual Occupation dropdown.
+      function getEffectiveOccupation() {
+        const entity = getCurrentEntity();
+        if (entity === "Company") return "Self-Employed";
+        return document.getElementById("occupation")?.value || "Salaried";
+      }
+
+      function updateFormBranching() {
+        const entity = getCurrentEntity();
+
+        // Identity panel content
+        document
+          .getElementById("identity-individual")
+          .classList.toggle("hidden", entity !== "Individual");
+        document
+          .getElementById("identity-company")
+          .classList.toggle("hidden", entity !== "Company");
+        document
+          .getElementById("identity-huf")
+          .classList.toggle("hidden", entity !== "HUF");
+
+        // Occupation step content: Individual/HUF share the Occupation dropdown
+        // block (relabeled for HUF); Company gets its own Business Income block.
+        document
+          .getElementById("occupation-individual-huf")
+          .classList.toggle("hidden", entity === "Company");
+        document
+          .getElementById("occupation-company")
+          .classList.toggle("hidden", entity !== "Company");
+
+        const occLabel = document.getElementById("occupationFieldLabel");
+        if (occLabel) {
+          occLabel.textContent =
+            entity === "HUF" ? "Karta's Occupation" : "Occupation";
+        }
+
+        const residenceLabel = document.getElementById("residenceStepLabel");
+        if (residenceLabel) {
+          residenceLabel.textContent =
+            entity === "Company"
+              ? "Business Premises Setup"
+              : "Residential / Workspace Premises Setup";
+        }
+
+        const addrSub = document.getElementById("addressStepSubtitle");
+        if (addrSub) {
+          addrSub.textContent =
+            entity === "Company"
+              ? "Registered location and premises classification for the business."
+              : "Automated location mapping via pincode & residence classification.";
+        }
+
+        // Document Upload card adjustments based on entity type
+        const aadhaarCardBlock = document.getElementById("doc-aadhaar-card-block");
+        if (aadhaarCardBlock) {
+          aadhaarCardBlock.classList.toggle("hidden", entity === "Company");
+        }
+        const aadhaarCardLabel = document.getElementById("docAadhaarCardLabel");
+        if (aadhaarCardLabel) {
+          aadhaarCardLabel.textContent = entity === "HUF" ? "Karta Aadhaar" : "Aadhaar Card";
+        }
+        const panCardLabel = document.getElementById("docPanCardLabel");
+        if (panCardLabel) {
+          panCardLabel.textContent =
+            entity === "Company"
+              ? "Company PAN"
+              : entity === "HUF"
+                ? "HUF PAN"
+                : "PAN Card";
+        }
+
+        renderStepPills();
+        if (!getActiveSteps(entity).includes(currentStepKey)) {
+          currentStepKey = "identity";
+        }
+        toggleOccupationBranch();
+        updateStepUI();
+      }
+
+      function calculateAge() {
+        const dobVal = document.getElementById("dob").value;
+        if (!dobVal) return 30;
+        const birthDate = new Date(dobVal);
+        const difference = Date.now() - birthDate.getTime();
+        const ageDate = new Date(difference);
+        const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+        document.getElementById("ageDisplay").innerText =
+          `Calculated Age: ${age} Years (${age >= 21 && age <= 65 ? "Eligible" : "Ineligible"})`;
+        return age;
+      }
+
+      function toggleNRILogic() {
+        const val = document.getElementById("citizenshipStatus").value;
+        const nriContainer = document.getElementById("nriStayContainer");
+        if (val === "NRI/PIO") {
+          nriContainer.classList.remove("hidden");
+        } else {
+          nriContainer.classList.add("hidden");
+        }
+      }
+
+      function handlePincodeLookup(code) {
+        const matchNotice = document.getElementById("pincodeMatchNotice");
+        const spinner = document.getElementById("pincodeSpinner");
+
+        if (code.length === 6) {
+          spinner.classList.remove("hidden");
+          setTimeout(() => {
+            spinner.classList.add("hidden");
+            // Simulated pincode mapping logic
+            let city = "Bengaluru",
+              state = "Karnataka";
+            if (code.startsWith("11")) {
+              city = "New Delhi";
+              state = "Delhi";
+            } else if (code.startsWith("40")) {
+              city = "Mumbai";
+              state = "Maharashtra";
+            } else if (code.startsWith("60")) {
+              city = "Chennai";
+              state = "Tamil Nadu";
+            } else if (code.startsWith("70")) {
+              city = "Kolkata";
+              state = "West Bengal";
+            }
+
+            document.getElementById("cityName").value = city;
+            document.getElementById("stateName").value = state;
+            matchNotice.innerHTML = `<i class="fa-solid fa-circle-check"></i> Auto-mapped: ${city}, ${state}`;
+            matchNotice.className = "text-[11px] text-emerald-400 mt-1";
+          }, 400);
+        } else {
+          matchNotice.innerHTML =
+            '<i class="fa-solid fa-circle-info"></i> Please use All India Pincode list.';
+          matchNotice.className = "text-[11px] text-amber-400 mt-1";
+        }
+      }
+
+      function toggleOccupationBranch() {
+        const occ = getEffectiveOccupation();
+        if (occ === "Salaried") {
+          document.getElementById("branch-salaried").classList.remove("hidden");
+          document
+            .getElementById("branch-self-employed")
+            .classList.add("hidden");
+        } else {
+          document.getElementById("branch-salaried").classList.add("hidden");
+          document
+            .getElementById("branch-self-employed")
+            .classList.remove("hidden");
+        }
+        updateResidenceOptions();
+        runRuleEngine();
+      }
+
+      // Residence Status options depend on the effective Occupation Category.
+      // Salaried -> Owned / Rented. Self-Employed (or any Company/Organization,
+      // or an HUF whose Karta is Self-Employed) -> the Resi-Cum-Office / Resi-
+      // Office-Separate options.
+      function updateResidenceOptions() {
+        const occ = getEffectiveOccupation();
+        const salariedGroup = document.getElementById(
+          "residence-group-salaried",
+        );
+        const selfEmployedGroup = document.getElementById(
+          "residence-group-selfemployed",
+        );
+
+        if (occ === "Salaried") {
+          salariedGroup.classList.remove("hidden");
+          selfEmployedGroup.classList.add("hidden");
+          if (
+            !document.querySelector(
+              '#residence-group-salaried input[name="residenceStatus"]:checked',
+            )
+          ) {
+            document.querySelector(
+              '#residence-group-salaried input[value="Rented House"]',
+            ).checked = true;
+          }
+        } else {
+          selfEmployedGroup.classList.remove("hidden");
+          salariedGroup.classList.add("hidden");
+          if (
+            !document.querySelector(
+              '#residence-group-selfemployed input[name="residenceStatus"]:checked',
+            )
+          ) {
+            document.querySelector(
+              '#residence-group-selfemployed input[value="Resi - Cum Office - One Owned"]',
+            ).checked = true;
+          }
+        }
+        handleResidenceStatusChange();
+      }
+
+      // Guarantor Arrangement only appears when Residence Status is
+      // "Resi - Cum Office (Both Rented)" — applies uniformly to Individual
+      // Self-Employed, Company/Organization, and Self-Employed-Karta HUF.
+      function handleResidenceStatusChange() {
+        const val = document.querySelector(
+          'input[name="residenceStatus"]:checked',
+        )?.value;
+        const guarantorContainer = document.getElementById(
+          "guarantorContainer",
+        );
+        if (val === "Resi - Cum Office -Both Rented") {
+          guarantorContainer.classList.remove("hidden");
+        } else {
+          guarantorContainer.classList.add("hidden");
+          // Reset to default so a hidden/stale selection is never submitted.
+          const withoutGuarantor = document.querySelector(
+            'input[name="guarantorStatus"][value="Without a Gaurantor"]',
+          );
+          if (withoutGuarantor) withoutGuarantor.checked = true;
+        }
+        runRuleEngine();
+      }
+
+      // ITR amount fields are only shown (and validated) when ITR Filing Status
+      // = Filed. Handles both the Individual/HUF pair and the Company pair.
+      function updateITRVisibility(selectId, containerId) {
+        const select = document.getElementById(selectId);
+        const container = document.getElementById(containerId);
+        if (!select || !container) return;
+        container.classList.toggle("hidden", select.value === "ITR Not Filed");
+      }
+
+      function handleITRFilingStatusChange() {
+        updateITRVisibility("itrFilingStatus", "itrAmountsContainer");
+        updateITRVisibility(
+          "companyItrFilingStatus",
+          "companyItrAmountsContainer",
+        );
+        runRuleEngine();
+      }
+
+      // Office Address: revealed only when the Self-Employed applicant's
+      // office is Separate from their residence.
+      function toggleOfficeAddressField() {
+        const val = document.getElementById("officeAddressType")?.value;
+        const container = document.getElementById("officeAddressContainer");
+        if (container) container.classList.toggle("hidden", val !== "Separate");
+      }
+
+      function toggleCibilPlScoreField() {
+        const toggle = document.getElementById("cibilPlScoreToggle");
+        const container = document.getElementById("bureauCibilPlScoreContainer");
+        if (toggle && container) {
+          container.classList.toggle("hidden", !toggle.checked);
+        }
+      }
+
+      function triggerFileUpload(inputId) {
+        document.getElementById(inputId).click();
+      }
+
+      function handleFileChange(type) {
+        const badge = document.getElementById(`badge-${type}`);
+        if (badge) {
+          badge.textContent = "Uploaded";
+          badge.className = "text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold";
+        }
+      }
+
+      // Contact verification (Phone/Email/Mobile) — simulated instant verify.
+      function verifyContactField(fieldId) {
+        const badge = document.getElementById(fieldId + "VerifiedBadge");
+        if (badge) badge.classList.remove("hidden");
+      }
+
+      // Work Experience: driven by the "With Current Company Since" band
+      // instead of a raw joining date.
+      function evaluateWorkExperience() {
+        const band = document.getElementById("tenureBand")?.value;
+        const notice = document.getElementById("tenureNotice");
+        const prevContainer = document.getElementById("prevCompanyContainer");
+        if (!band || !notice || !prevContainer) return;
+
+        const bandLabels = {
+          "0-6m": "0 – 6 Months",
+          "6m-1y": "6 Months – 1 Year",
+          "1y-2y": "1 – 2 Years",
+          "2y+": "2+ Years",
+        };
+
+        if (band === "2y+") {
+          notice.innerText = "Meets 2+ Years tenure requirement.";
+          notice.className = "text-[11px] text-emerald-400 mt-1";
+          prevContainer.classList.add("hidden");
+        } else {
+          notice.innerText = `Current tenure: ${bandLabels[band]} (< 2 Years) — previous employment required.`;
+          notice.className = "text-[11px] text-amber-400 font-semibold mt-1";
+          prevContainer.classList.remove("hidden");
+        }
+        runRuleEngine();
+      }
+
+      function evaluateBusinessTenureFor(dateId, noticeId) {
+        const estVal = document.getElementById(dateId)?.value;
+        const notice = document.getElementById(noticeId);
+        if (!estVal || !notice) return;
+        const estDate = new Date(estVal);
+        const diffYears =
+          (Date.now() - estDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25);
+        if (diffYears < 2) {
+          notice.innerText = `Calculated Business Tenure: ${diffYears.toFixed(1)} Years (Below 2 Yrs Rejection Threshold!)`;
+          notice.className = "text-[11px] text-rose-400 font-semibold mt-1";
+        } else {
+          notice.innerText = `Calculated Business Tenure: ${diffYears.toFixed(1)} Years (>= 2 Yrs Required)`;
+          notice.className = "text-[11px] text-emerald-400 mt-1";
+        }
+      }
+
+      function evaluateBusinessTenure() {
+        evaluateBusinessTenureFor(
+          "businessEstablishmentDate",
+          "businessTenureNotice",
+        );
+        evaluateBusinessTenureFor(
+          "companyEstablishmentDate",
+          "companyTenureNotice",
+        );
+      }
+
+      function updateDPDRangeDisplay(val) {
+        const display = document.getElementById("dpdDaysVal");
+        display.innerText = val + " Days";
+        if (val > 90) display.className = "font-bold text-rose-400";
+        else if (val > 0) display.className = "font-bold text-amber-400";
+        else display.className = "font-bold text-emerald-400";
+      }
+
+      function triggerOCRSim() {
+        alert(
+          "⚡ OCR Simulation Active: Extracting data from Permanent Account Number (PAN) / Aadhaar...\n\n• Name: Rohan Sharma\n• DOB: 15-May-1992\n• Pincode: 560001 (Bengaluru)\nData successfully auto-prefilled into application!",
+        );
+      }
+
+      function resetForm() {
+        document.getElementById("onboardingForm").reset();
+        currentStep = 1;
+        updateStepUI();
+        evaluateWorkExperience();
+        evaluateBusinessTenure();
+        runRuleEngine();
+      }
+
+      function handleFormSubmit(e) {
+        e.preventDefault();
+        switchTab("simulator-tab");
+        runRuleEngine();
+      }
+
+      // =========================================================================
+      // CORE RULE ENGINE EXECUTION LOGIC
+      // =========================================================================
+      function runRuleEngine() {
+        // Gather current state from form & simulator controls
+        const occupation = getEffectiveOccupation();
+        const cibil = parseInt(document.getElementById("cibilScore").value);
+        const dpd = parseInt(document.getElementById("dpdDays").value);
+        const indianBankDpd = parseInt(
+          document.getElementById("indianBankDpd").value,
+        );
+        const writeOffAmt =
+          parseFloat(document.getElementById("writeOffAmount").value) || 0;
+
+        // Write-off checkboxes
+        const woFlags = {
+          PL: document.getElementById("woPL")?.checked || false,
+          Home: document.getElementById("woHome")?.checked || false,
+          Consumer: document.getElementById("woConsumer")?.checked || false,
+          Agri: document.getElementById("woAgri")?.checked || false,
+          MSME: document.getElementById("woMSME")?.checked || false,
+          Auto: document.getElementById("woAuto")?.checked || false,
+          CC: document.getElementById("woCreditCard")?.checked || false,
+        };
+
+        const hasAnyWriteOff =
+          woFlags.PL ||
+          woFlags.Home ||
+          woFlags.Consumer ||
+          woFlags.Agri ||
+          woFlags.MSME ||
+          woFlags.Auto ||
+          writeOffAmt > 0;
+
+        // Check Business & Income Rules
+        let itrPass = true;
+        let businessTenurePass = true;
+        let workExpPass = true;
+
+        if (occupation === "Self-Employed") {
+          const itrFilingStatus =
+            document.getElementById("itrFilingStatus")?.value;
+          if (itrFilingStatus === "ITR Not Filed") {
+            // Amount fields are hidden and intentionally not validated/read in this state.
+            itrPass = false;
+          } else {
+            const currITR =
+              parseFloat(document.getElementById("currentITRAmount").value) ||
+              0;
+            const prevITR =
+              parseFloat(document.getElementById("prevITRAmount").value) || 0;
+            if (currITR < 300000 || prevITR <= 0) itrPass = false;
+          }
+          const estVal = document.getElementById(
+            "businessEstablishmentDate",
+          ).value;
+          const estYears = estVal
+            ? (Date.now() - new Date(estVal).getTime()) /
+              (1000 * 60 * 60 * 24 * 365.25)
+            : 0;
+
+          if (estYears < 2) businessTenurePass = false;
+        } else {
+          const band = document.getElementById("tenureBand")?.value;
+          if (band !== "2y+") {
+            const prevComp = document.getElementById("prevCompanyName")?.value;
+            if (!prevComp) workExpPass = false;
+          }
+        }
+
+        // Determine Overall Status
+        let hardRejection = false;
+        let rejectionReasons = [];
+
+        if (dpd > 90) {
+          hardRejection = true;
+          rejectionReasons.push(
+            "DPD Exceeds 90 Days Limit across Bureau Accounts",
+          );
+        }
+        if (hasAnyWriteOff) {
+          hardRejection = true;
+          rejectionReasons.push(
+            "Recorded Write-off Amount / Non-CC Loan Write-off Found",
+          );
+        }
+        if (!itrPass && occupation === "Self-Employed") {
+          hardRejection = true;
+          rejectionReasons.push(
+            "Self-Employed ITR Below Required Thresholds (Current >= 3L, Prev > 0)",
+          );
+        }
+        if (!businessTenurePass && occupation === "Self-Employed") {
+          hardRejection = true;
+          rejectionReasons.push(
+            "Business Experience Less than Minimum 2 Years Requirement",
+          );
+        }
+
+        // Render Overall Decision Banner
+        const banner = document.getElementById("overallDecisionBanner");
+        if (hardRejection) {
+          banner.className =
+            "p-6 rounded-2xl border border-rose-600/50 bg-rose-950/30 text-rose-200 shadow-xl";
+          banner.innerHTML = `
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-2xl flex-shrink-0">
+              <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-rose-300">Application Declined — Automated BRE Rule Failure</h3>
+              <p class="text-xs text-rose-300/80 mt-1">One or more hard rejection parameters triggered in the decision engine.</p>
+              <div class="mt-2 flex flex-wrap items-center gap-2 font-mono text-[11px]">
+                <span class="px-2 py-0.5 rounded bg-slate-900/80 border border-slate-700 text-slate-300">Simulated GET Latency: <strong class="text-emerald-400">14 ms</strong> (&lt; 30 ms Target)</span>
+                <span class="px-2 py-0.5 rounded bg-slate-900/80 border border-slate-700 text-slate-300">Simulated CRUD Latency: <strong class="text-indigo-400">42 ms</strong> (&lt; 80 ms Target)</span>
+              </div>
+              <ul class="mt-3 space-y-1 text-xs list-disc list-inside text-rose-200 font-medium">
+                ${rejectionReasons.map((r) => `<li>${r}</li>`).join("")}
+              </ul>
+            </div>
+          </div>
+        `;
+        } else if (cibil < 650) {
+          banner.className =
+            "p-6 rounded-2xl border border-amber-600/50 bg-amber-950/30 text-amber-200 shadow-xl";
+          banner.innerHTML = `
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-2xl flex-shrink-0">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-amber-300">Conditional / Manual Underwriting Review</h3>
+              <p class="text-xs text-amber-300/80 mt-1">Score is below standard auto-approval thresholds but no hard write-off rules violated.</p>
+              <div class="mt-2 flex flex-wrap items-center gap-2 font-mono text-[11px]">
+                <span class="px-2 py-0.5 rounded bg-slate-900/80 border border-slate-700 text-slate-300">Simulated GET Latency: <strong class="text-emerald-400">14 ms</strong> (&lt; 30 ms Target)</span>
+                <span class="px-2 py-0.5 rounded bg-slate-900/80 border border-slate-700 text-slate-300">Simulated CRUD Latency: <strong class="text-indigo-400">42 ms</strong> (&lt; 80 ms Target)</span>
+              </div>
+            </div>
+          </div>
+        `;
+        } else {
+          banner.className =
+            "p-6 rounded-2xl border border-emerald-600/50 bg-emerald-950/30 text-emerald-200 shadow-xl";
+          banner.innerHTML = `
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl flex-shrink-0">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-emerald-300">Application Auto-Approved / Eligible Across Primary Lenders</h3>
+              <p class="text-xs text-emerald-300/80 mt-1">All hard eligibility parameters, Bureau DPD thresholds, and income criteria passed.</p>
+              <div class="mt-2 flex flex-wrap items-center gap-2 font-mono text-[11px]">
+                <span class="px-2 py-0.5 rounded bg-slate-900/80 border border-slate-700 text-slate-300">Simulated GET Latency: <strong class="text-emerald-400">14 ms</strong> (&lt; 30 ms Target)</span>
+                <span class="px-2 py-0.5 rounded bg-slate-900/80 border border-slate-700 text-slate-300">Simulated CRUD Latency: <strong class="text-indigo-400">42 ms</strong> (&lt; 80 ms Target)</span>
+              </div>
+            </div>
+          </div>
+        `;
+        }
+
+        // Evaluate Bank Matrix
+        evaluateBankMatrix(
+          cibil,
+          dpd,
+          indianBankDpd,
+          woFlags,
+          writeOffAmt,
+          itrPass,
+          businessTenurePass,
+        );
+        renderMatrixTable();
+      }
+
+      // Evaluate Bank-by-Bank Matrix
+      function evaluateBankMatrix(
+        cibil,
+        dpd,
+        indianBankDpd,
+        woFlags,
+        writeOffAmt,
+        itrPass,
+        businessTenurePass,
+      ) {
+        const grid = document.getElementById("bankMatrixGrid");
+        grid.innerHTML = "";
+
+        partnerBanks.forEach((bank) => {
+          let eligible = true;
+          let reasons = [];
+
+          // Score Check
+          if (cibil < bank.minCibil) {
+            eligible = false;
+            reasons.push(`CIBIL ${cibil} < Min ${bank.minCibil}`);
+          }
+
+          // DPD Check
+          if (dpd > bank.maxDpd) {
+            eligible = false;
+            reasons.push(`DPD ${dpd} Days > Max ${bank.maxDpd}`);
+          }
+
+          // Indian Bank specific zero DPD rule
+          if (bank.indianBankDpdCheck && indianBankDpd > 0) {
+            eligible = false;
+            reasons.push(`Indian Bank active DPD (${indianBankDpd} Days) > 0`);
+          }
+
+          // Write Off Check
+          const nonCcWriteOff =
+            woFlags.PL ||
+            woFlags.Home ||
+            woFlags.Consumer ||
+            woFlags.Agri ||
+            woFlags.MSME ||
+            woFlags.Auto;
+          if (nonCcWriteOff) {
+            eligible = false;
+            reasons.push(`Non-CC Loan Write-off recorded`);
+          }
+
+          if (woFlags.CC) {
+            if (!bank.allowCcWriteOff) {
+              eligible = false;
+              reasons.push(`Credit Card Write-off Not Allowed`);
+            } else if (writeOffAmt > bank.ccWriteOffLimit) {
+              eligible = false;
+              reasons.push(
+                `Write-off Amt ₹${writeOffAmt} > Cap ₹${bank.ccWriteOffLimit}`,
+              );
+            }
+          }
+
+          // Income / Business checks
+          if (!itrPass) {
+            eligible = false;
+            reasons.push(`ITR Below Threshold`);
+          }
+          if (!businessTenurePass) {
+            eligible = false;
+            reasons.push(`Business Tenure < 2 Yrs`);
+          }
+
+          // Card HTML
+          const card = document.createElement("div");
+          card.className = `p-4 rounded-xl border transition-all ${
+            eligible
+              ? "bg-slate-900/90 border-emerald-500/40 hover:border-emerald-500"
+              : "bg-slate-900/60 border-slate-800 opacity-80"
+          }`;
+
+          card.innerHTML = `
+          <div class="flex justify-between items-center mb-2">
+            <h4 class="font-bold text-sm text-white">${bank.name}</h4>
+            <span class="text-[10px] px-2 py-0.5 rounded font-semibold uppercase ${
+              eligible
+                ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                : "bg-rose-500/20 text-rose-400 border border-rose-500/30"
+            }">
+              ${eligible ? "ELIGIBLE" : "INELIGIBLE"}
+            </span>
+          </div>
+
+          <div class="space-y-1 text-[11px] text-slate-400 mb-3 border-t border-slate-800/80 pt-2">
+            <div class="flex justify-between">
+              <span>Min CIBIL Req:</span>
+              <span class="text-slate-200 font-medium">${bank.minCibil}+</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Max DPD Threshold:</span>
+              <span class="text-slate-200 font-medium">${bank.maxDpd} Days</span>
+            </div>
+            <div class="flex justify-between">
+              <span>CC Write-Off Policy:</span>
+              <span class="text-slate-200 font-medium">${bank.allowCcWriteOff ? "Allowed (< " + bank.ccWriteOffLimit + ")" : "Strict Rejection"}</span>
+            </div>
+          </div>
+
+          ${
+            reasons.length > 0
+              ? `
+            <div class="bg-rose-950/40 border border-rose-800/40 p-2 rounded text-[10px] text-rose-300">
+              <span class="font-semibold block mb-0.5">Rejection Factors:</span>
+              ${reasons.map((r) => `<div>• ${r}</div>`).join("")}
+            </div>
+          `
+              : `
+            <div class="bg-emerald-950/40 border border-emerald-800/40 p-2 rounded text-[10px] text-emerald-300">
+              <i class="fa-solid fa-check-circle mr-1"></i> Meets all institutional credit & BRE policies.
+            </div>
+          `
+          }
+        `;
+
+          grid.appendChild(card);
+        });
+      }
+
+      // Render Master Policy Table
+      function renderMatrixTable() {
+        const tbody = document.getElementById("matrixTableBody");
+        const moduleFilter =
+          document.getElementById("matrixFilterModule").value;
+        const search = document
+          .getElementById("matrixSearch")
+          .value.toLowerCase();
+
+        tbody.innerHTML = "";
+
+        breMasterParams.forEach((p) => {
+          if (moduleFilter !== "ALL" && p.module !== moduleFilter) return;
+          if (
+            search &&
+            !p.name.toLowerCase().includes(search) &&
+            !p.cond.toLowerCase().includes(search)
+          )
+            return;
+
+          const tr = document.createElement("tr");
+          tr.className = "hover:bg-slate-900/60 transition";
+
+          tr.innerHTML = `
+          <td class="py-2.5 px-4 font-mono text-slate-500">${p.id}</td>
+          <td class="py-2.5 px-4 font-semibold text-slate-200">${p.name}</td>
+          <td class="py-2.5 px-4">
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono ${
+              p.cat === "api"
+                ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
+                : p.cat === "rule-engine"
+                  ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                  : "bg-slate-800 text-slate-400"
+            }">
+              ${p.cat}
+            </span>
+          </td>
+          <td class="py-2.5 px-4 text-slate-400">${p.module}</td>
+          <td class="py-2.5 px-4 text-slate-300">${p.cond}</td>
+          <td class="py-2.5 px-4 text-center">
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
+          </td>
+        `;
+
+          tbody.appendChild(tr);
+        });
+      }
+
+      // Load Quick Test Preset Scenarios
+      function loadPresetScenario(type) {
+        if (!type) return;
+
+        if (type === "ideal-salaried") {
+          document.querySelector(
+            'input[name="entityType"][value="Individual"]',
+          ).checked = true;
+          document.querySelector(
+            'input[name="occupation"][value="Salaried"]',
+          ).checked = true;
+          document.getElementById("tenureBand").value = "2y+";
+          document.getElementById("cibilScore").value = 780;
+          document.getElementById("dpdDays").value = 0;
+          document.getElementById("indianBankDpd").value = 0;
+          document.getElementById("writeOffAmount").value = 0;
+          document.getElementById("woPL").checked = false;
+          document.getElementById("woCreditCard").checked = false;
+        } else if (type === "salaried-low-tenure") {
+          document.querySelector(
+            'input[name="entityType"][value="Individual"]',
+          ).checked = true;
+          document.querySelector(
+            'input[name="occupation"][value="Salaried"]',
+          ).checked = true;
+          document.getElementById("tenureBand").value = "1y-2y"; // < 2 years
+          document.getElementById("cibilScore").value = 740;
+          document.getElementById("dpdDays").value = 0;
+        } else if (type === "self-employed-pass") {
+          document.querySelector(
+            'input[name="entityType"][value="Individual"]',
+          ).checked = true;
+          document.querySelector(
+            'input[name="occupation"][value="Self-Employed"]',
+          ).checked = true;
+          document.getElementById("businessEstablishmentDate").value =
+            "2018-05-10";
+          document.getElementById("currentITRAmount").value = 600000;
+          document.getElementById("prevITRAmount").value = 500000;
+          document.getElementById("cibilScore").value = 760;
+          document.getElementById("dpdDays").value = 0;
+        } else if (type === "self-employed-low-itr") {
+          document.querySelector(
+            'input[name="entityType"][value="Individual"]',
+          ).checked = true;
+          document.querySelector(
+            'input[name="occupation"][value="Self-Employed"]',
+          ).checked = true;
+          document.getElementById("currentITRAmount").value = 180000; // < 3 Lakhs!
+          document.getElementById("prevITRAmount").value = 0; // <= 0!
+          document.getElementById("cibilScore").value = 720;
+        } else if (type === "high-dpd-writeoff") {
+          document.getElementById("cibilScore").value = 610;
+          document.getElementById("dpdDays").value = 110; // > 90 Days!
+          document.getElementById("woCreditCard").checked = true;
+          document.getElementById("writeOffAmount").value = 25000;
+        } else if (type === "indian-bank-overdue") {
+          document.getElementById("cibilScore").value = 740;
+          document.getElementById("dpdDays").value = 0;
+          document.getElementById("indianBankDpd").value = 15; // > 0 Days Indian Bank Rejection!
+        }
+
+        // Refresh displays & logic
+        document.getElementById("cibilScoreVal").innerText =
+          document.getElementById("cibilScore").value;
+        updateDPDRangeDisplay(document.getElementById("dpdDays").value);
+        document.getElementById("indianBankDpdVal").innerText =
+          document.getElementById("indianBankDpd").value + " Days";
+
+        // Sync values to Step 4 fields
+        const step4Cibil = document.getElementById("bureauCibilScore");
+        if (step4Cibil) step4Cibil.value = document.getElementById("cibilScore").value;
+
+        const step4Dpd = document.getElementById("bureauDpd");
+        if (step4Dpd) step4Dpd.value = document.getElementById("dpdDays").value;
+
+        const step4WriteOff = document.getElementById("bureauWriteOffAmount");
+        if (step4WriteOff) step4WriteOff.value = document.getElementById("writeOffAmount").value;
+
+        // Sync checkboxes to Step 4 flags
+        const checkboxMappings = {
+          "bureauFlagPL": "woPL",
+          "bureauFlagHome": "woHome",
+          "bureauFlagConsumer": "woConsumer",
+          "bureauFlagAgri": "woAgri",
+          "bureauFlagMSME": "woMSME",
+          "bureauFlagAuto": "woAuto",
+          "bureauFlagCC": "woCreditCard"
+        };
+        Object.keys(checkboxMappings).forEach(formId => {
+          const formEl = document.getElementById(formId);
+          const simEl = document.getElementById(checkboxMappings[formId]);
+          if (formEl && simEl) {
+            formEl.checked = simEl.checked;
+          }
+        });
+
+        updateFormBranching();
+        toggleOccupationBranch();
+        evaluateWorkExperience();
+        evaluateBusinessTenure();
+        switchTab("simulator-tab");
+        runRuleEngine();
+      }
+    </script>
+  </body>
+</html>

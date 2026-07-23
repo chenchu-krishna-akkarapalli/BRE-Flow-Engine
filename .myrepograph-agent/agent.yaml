@@ -1,0 +1,37 @@
+# Repo Graph agent workspace descriptor.
+# Generated once; edit freely — re-indexing never overwrites this file.
+name: onboarding-bre-engine
+version: 0.2.0
+architecture: "CEPA-v1.1"
+
+performance_slas:
+  simple_get_ms: 30
+  crud_operations_ms: 80
+  zen_engine_eval_ms: 10
+  total_end_to_end_ms: 100
+
+database_pool:
+  pool_size: 20
+  max_overflow: 10
+  pool_recycle: 3600
+  pool_pre_ping: true
+
+memory_lifecycle: "Request Starts -> Allocate Memory -> Use Memory -> Garbage Collection -> Memory Released"
+
+context_stack:
+  instructions: RULES.md
+  duties: DUTIES.md
+  persona: SOUL.md
+  short_term_memory: memory/runtime/context.md
+  long_term_memory: knowledge/
+
+discovery_sequence:
+  - repograph_status
+  - repograph_files
+  - repograph_search
+  - repograph_explore  # signature_only: true
+
+agents:
+  - agents/fact-checker
+skills:
+  - skills/code-review

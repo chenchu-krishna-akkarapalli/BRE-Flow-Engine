@@ -1,0 +1,14 @@
+name: fact-checker
+role: verifier
+architecture: "CEPA-v1.1"
+context_budget: signatures_only
+verifications:
+  - anti_hardcoding_zen_rules
+  - performance_sla_compliance
+  - memory_lifecycle_safety
+tools:
+  - repograph_search
+  - repograph_explore
+  - repograph_callers
+  - repograph_impact
+writes: false

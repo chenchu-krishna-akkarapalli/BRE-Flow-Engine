@@ -1,0 +1,115 @@
+{
+  "name": "applicant_eligibility",
+  "description": "Demographics, NRI status, residence/office premises, and guarantor rules (DEM-### / RES-###)",
+  "rules": [
+    {
+      "id": "DEM-101",
+      "category": "Demographics",
+      "condition": "age < 21",
+      "result": {
+        "status": "REJECT",
+        "reason": "Applicant age is below the minimum requirement (21 years)."
+      }
+    },
+    {
+      "id": "DEM-102",
+      "category": "Demographics",
+      "condition": "occupation == 'SALARIED' && age_at_last_emi_salaried > 60",
+      "result": {
+        "status": "REJECT",
+        "reason": "Age at final EMI maturity exceeds 60 years for salaried applicants."
+      }
+    },
+    {
+      "id": "DEM-103",
+      "category": "Demographics",
+      "condition": "occupation == 'SELF_EMPLOYED' && age_at_last_emi_self_employed > 65",
+      "result": {
+        "status": "REJECT",
+        "reason": "Age at final EMI maturity exceeds 65 years for self-employed applicants."
+      }
+    },
+    {
+      "id": "DEM-104",
+      "category": "Demographics",
+      "condition": "is_nri == true",
+      "result": {
+        "status": "FLAG",
+        "reason": "NRI/PIO applicant — triggers minimum_stay_period_nri check.",
+        "triggers": ["DEM-105"]
+      }
+    },
+    {
+      "id": "DEM-105",
+      "category": "Demographics",
+      "condition": "is_nri == true && minimum_stay_period_nri_days < 182",
+      "result": {
+        "status": "REJECT",
+        "reason": "NRI/PIO applicant does not meet minimum in-country stay period (182 days)."
+      }
+    },
+    {
+      "id": "DEM-106",
+      "category": "Demographics",
+      "condition": "marital_status == 'UNMARRIED'",
+      "result": {
+        "status": "FLAG",
+        "reason": "Unmarried applicant — informational flag for underwriting."
+      }
+    },
+    {
+      "id": "RES-201",
+      "category": "Residence & Premises",
+      "condition": "property_status == 'RENTED' && occupation == 'SALARIED'",
+      "result": {
+        "status": "FLAG",
+        "reason": "Rented residence for salaried applicant — no guarantor required by default."
+      }
+    },
+    {
+      "id": "RES-202",
+      "category": "Residence & Premises",
+      "condition": "property_status == 'RESI_CUM_OFFICE_OWNED' && occupation == 'SELF_EMPLOYED'",
+      "result": {
+        "status": "PASS",
+        "reason": "Owned resi-cum-office premises satisfies collateral comfort."
+      }
+    },
+    {
+      "id": "RES-203",
+      "category": "Residence & Premises",
+      "condition": "property_status == 'RESI_CUM_OFFICE_RENTED'",
+      "result": {
+        "status": "REQUIRE_GUARANTOR",
+        "reason": "Both residence and office rented — guarantor mandatory."
+      }
+    },
+    {
+      "id": "RES-204",
+      "category": "Residence & Premises",
+      "condition": "property_status == 'SEPARATE_BOTH_RENTED'",
+      "result": {
+        "status": "REQUIRE_GUARANTOR",
+        "reason": "Separate rented residence and office — guarantor mandatory."
+      }
+    },
+    {
+      "id": "RES-205",
+      "category": "Residence & Premises",
+      "condition": "(property_status == 'RESI_CUM_OFFICE_RENTED' || property_status == 'SEPARATE_BOTH_RENTED') && guarantor_provided == false",
+      "result": {
+        "status": "REJECT",
+        "reason": "Guarantor is mandatory for this property configuration."
+      }
+    },
+    {
+      "id": "RES-206",
+      "category": "Residence & Premises",
+      "condition": "guarantor_provided == true",
+      "result": {
+        "status": "PASS",
+        "reason": "Guarantor condition satisfied."
+      }
+    }
+  ]
+}
