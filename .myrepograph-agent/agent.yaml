@@ -1,7 +1,7 @@
 # Repo Graph agent workspace descriptor.
 # Generated once; edit freely — re-indexing never overwrites this file.
 name: onboarding-bre-engine
-version: 0.2.0
+version: 0.5.0
 architecture: "CEPA-v1.1"
 
 performance_slas:
@@ -43,5 +43,22 @@ discovery_sequence:
 
 agents:
   - agents/fact-checker
+
 skills:
   - skills/code-review
+  - skills/multi-tenant-backend
+  - skills/anthropic-frontend-design
+  - skills/caveman
+  - skills/code-simplifier
+  - skills/context-mode
+  - skills/document-skills
+  - skills/firecrawl
+  - skills/grill-me
+  - skills/handoff
+  - skills/impeccable
+  - skills/karpathy-guidelines
+  - skills/superpowers
+  - skills/taste-skill
+  - skills/trail-of-bits-security
+  - skills/vercel-web-design-guidelines
+  - skills/webapp-testing

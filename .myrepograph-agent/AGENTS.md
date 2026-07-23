@@ -4,12 +4,14 @@ Agent roles for this workspace, context budgets, and mandatory architectural gua
 
 ---
 
-## 1. Agent Roles & Context Budget Matrix
+## 1. Agent Roles & Skill Suite Matrix
 
-| Agent Role | Primary Purpose | Allowed Context Budget | Mandatory Architectural Alignment |
-| :--- | :--- | :--- | :--- |
-| **`coordinator`** *(default)* | Architectural planning, task delegation, multi-file code editing | Manifest + signatures + full implementation bodies for edited symbols | Strictly enforces SLAs (`GET < 30 ms`, `CRUD < 80 ms`), $O(1)$ data structures, and memory flow |
-| **`agents/fact-checker`** | Audits claims, schema fidelity, SLA benchmarks, and memory safety against indexed graph | Signatures only + `repograph_*` tools | Verifies zero inline rule hardcoding and 5-stage Memory Lifetime compliance |
+| Agent Role | Primary Purpose | Allowed Context Budget | Assigned Active Skill Suites | Mandatory Architectural Alignment |
+| :--- | :--- | :--- | :--- | :--- |
+| **`coordinator`** *(default)* | Architectural planning, task delegation, multi-file code editing | Manifest + signatures + full implementation bodies for edited symbols | `multi-tenant-backend`, `superpowers`, `karpathy-guidelines`, `grill-me`, `handoff`, `context-mode`, `caveman`, `code-simplifier` | Enforces SLAs (`GET < 30 ms`, `CRUD < 80 ms`), $O(1)$ data structures, multi-tenant SWR caching, and memory flow |
+| **`agents/fact-checker`** | Audits claims, schema fidelity, SLA benchmarks, and security against indexed graph | Signatures only + `repograph_*` tools | `trail-of-bits-security`, `code-review` | Verifies zero inline rule hardcoding, 5-stage Memory Lifetime, and vulnerability safety |
+| **`frontend-specialist`** *(role)* | Building, refining, testing, and optimizing single-file `flow.html` UI components | Component bodies + design specs | `anthropic-frontend-design`, `taste-skill`, `impeccable`, `vercel-web-design-guidelines`, `webapp-testing` | Enforces a11y, glassmorphic theme, high-contrast, Playwright E2E SLA checks |
+| **`document-specialist`** *(role)* | Programmatic office file generation, extraction, and web research crawling | File schemas + Python scripts | `document-skills`, `firecrawl` | Real PDF, DOCX, XLSX, PPTX manipulation, and Firecrawl CLI web crawling |
 
 ---
 
@@ -54,7 +56,7 @@ Request Starts → Allocate Memory → Use Memory → Garbage Collection → Mem
 
 Partition what you put in front of the model; when a turn goes wrong you want to know which layer was wrong.
 
-1. **Instructions** — `RULES.md` (guardrails, SLA targets, memory lifecycle flow)
+1. **Instructions** — `RULES.md` (guardrails, SLA targets, skill trigger matrix)
 2. **User Input** — the task, one paragraph
 3. **Retrieved Facts** — verbatim `repograph_explore` output, never paraphrased
 4. **Tools** — the `repograph_*` schemas
