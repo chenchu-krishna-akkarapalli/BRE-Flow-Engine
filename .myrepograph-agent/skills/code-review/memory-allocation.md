@@ -1,20 +1,12 @@
 # Memory Lifetime & Dynamic Allocation Architecture for FlowBRE Engine
 
-## 1. Memory Lifetime Lifecycle Flow
+## 1. Memory Lifetime Lifecycle Flowchart
 
-To consistently satisfy FlowBRE's target performance SLAs (**Simple - GET < 30 ms**, **CRUD Operations < 80 ms**), memory management across the FastAPI and CPython execution stack follows a deterministic 5-stage lifecycle flow:
+To consistently satisfy FlowBRE's target performance SLAs (**Simple - GET < 30 ms**, **CRUD Operations < 80 ms**, **Zen-Engine < 10 ms**, **Total End-to-End < 100 ms**), memory management across the FastAPI and CPython execution stack follows a deterministic 5-stage lifecycle flow:
 
 ```
 Memory Lifetime
-Request Starts
-      ↓
-Allocate Memory
-      ↓
-  Use Memory
-      ↓
-Garbage Collection
-      ↓
-Memory Released
+Request Starts → Allocate Memory → Use Memory → Garbage Collection → Memory Released
 ```
 
 ---
@@ -28,14 +20,14 @@ Memory Released
 
 ### 📦 Stage 2: Allocate Memory
 - **CPython Private Heap**: The CPython memory manager allocates space in a **private heap** exclusively reserved for Python objects (Small Object Allocator `PyObject_Malloc` for objects $\le 512$ bytes).
-- **Request Pydantic Models**: incoming JSON payloads are deserialized into Pydantic v2 schemas (`OnboardingEvaluationRequest`), instantiating transient field strings, integers, and nested lists.
+- **Request Pydantic Models**: Incoming JSON payloads are deserialized into Pydantic v2 schemas (`OnboardingEvaluationRequest`), instantiating transient field strings, integers, and nested lists.
 - **Heap Overhead Control**: Pre-compiling Zen-Engine JSON decision graphs in RAM at startup prevents per-request heap allocation spikes.
 
 ### ⚙️ Stage 3: Use Memory
 - **Execution & Reference Counting**: Zen-Engine Rust core evaluates candidate parameters against rules in RAM. Each created variable or reference increments Python's internal reference count (`ob_refcnt`).
 - **Target SLA Performance**:
   - **Simple GET Requests (< 30 ms)**: Served directly from in-memory LRU cache or pre-allocated hash maps without hitting database layers.
-  - **CRUD Operations (< 80 ms)**: Executed in Rust RAM core; evaluated state and audit log objects are passed to `asyncpg` for single-transaction persistence.
+  - **CRUD Operations (< 80 ms)**: Executed in Rust RAM core; evaluated state and audit log objects are passed to SQLAlchemy `asyncpg` (`pool_size=20`, `max_overflow=10`) for single-transaction persistence.
 
 ### 🧹 Stage 4: Garbage Collection
 - **Immediate Reference Counting Cleanup**: When the API response is returned and the endpoint function frame terminates, local variable scopes close. Reference counts for temporary Pydantic models and intermediate dicts drop to zero, prompting CPython to immediately deallocate memory blocks.
@@ -49,7 +41,7 @@ Memory Released
 
 ## 3. Dynamic Memory Allocation vs. Low-Latency Performance
 
-Because FastAPI runs on CPython, dynamic memory allocation carries reference count overhead (every object tracks data type, value, and reference count). 
+Because FastAPI runs on CPython, dynamic memory allocation carries reference count overhead (every object tracks data type, value, and reference count).
 
 By structuring the FlowBRE Engine around pre-loaded RAM decision graphs and lightweight request models:
 1. **Per-Request Heap Allocation** is kept minimal during **Stage 2 (Allocate)**.

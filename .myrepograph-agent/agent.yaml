@@ -11,12 +11,22 @@ performance_slas:
   total_end_to_end_ms: 100
 
 database_pool:
+  driver: "asyncpg"
   pool_size: 20
   max_overflow: 10
   pool_recycle: 3600
   pool_pre_ping: true
 
-memory_lifecycle: "Request Starts -> Allocate Memory -> Use Memory -> Garbage Collection -> Memory Released"
+memory_lifecycle:
+  diagram: "Request Starts -> Allocate Memory -> Use Memory -> Garbage Collection -> Memory Released"
+  allocation_heap: "CPython private heap (PyObject_Malloc)"
+  garbage_collection: "Immediate reference-counting + generational mark-and-sweep"
+
+governance_pillars:
+  - anti_assumption_source_inspection
+  - zero_inline_hardcoding_zen_rules
+  - o1_hash_map_lookups
+  - zero_hot_path_disk_io
 
 context_stack:
   instructions: RULES.md
