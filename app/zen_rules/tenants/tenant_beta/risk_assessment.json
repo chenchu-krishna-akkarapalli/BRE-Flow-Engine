@@ -1,0 +1,15 @@
+{
+  "name": "risk_assessment",
+  "description": "Tenant Beta custom relaxed risk assessment rule override",
+  "rules": [
+    {
+      "id": "BETA-RSK-001",
+      "category": "Tenant Beta Risk",
+      "condition": "cibil_score < 680",
+      "result": {
+        "status": "REJECT",
+        "reason": "Tenant Beta requires a minimum CIBIL score of 680."
+      }
+    }
+  ]
+}

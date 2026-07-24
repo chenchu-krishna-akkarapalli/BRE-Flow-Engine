@@ -1,0 +1,106 @@
+{
+  "name": "bank_policy_matrix",
+  "description": "Per-bank policy thresholds (BANK-001) plus existing-banking-relationship rules (EXB-###) for all 8 partner banks.",
+  "bank_policies": {
+    "BOI": {
+      "display_name": "Bank of India",
+      "min_cibil_score": 701,
+      "allow_write_offs": false,
+      "max_write_off_amount": 0,
+      "strict_zero_dpd": false,
+      "allow_existing_car_loan": true,
+      "max_foir_ratio": 0.55,
+      "min_business_itr_floor": 300000
+    },
+    "INDIAN_BANK": {
+      "display_name": "Indian Bank",
+      "min_cibil_score": 730,
+      "allow_write_offs": false,
+      "max_write_off_amount": 0,
+      "strict_zero_dpd": true,
+      "allow_existing_car_loan": true,
+      "max_foir_ratio": 0.50,
+      "min_business_itr_floor": 300000
+    },
+    "IOB": {
+      "display_name": "Indian Overseas Bank",
+      "min_cibil_score": 700,
+      "allow_write_offs": false,
+      "max_write_off_amount": 0,
+      "strict_zero_dpd": false,
+      "allow_existing_car_loan": true,
+      "max_foir_ratio": 0.55,
+      "min_business_itr_floor": 300000
+    },
+    "BOB": {
+      "display_name": "Bank of Baroda",
+      "min_cibil_score": 700,
+      "allow_write_offs": false,
+      "max_write_off_amount": 5000,
+      "strict_zero_dpd": false,
+      "allow_existing_car_loan": true,
+      "max_foir_ratio": 0.55,
+      "min_business_itr_floor": 300000
+    },
+    "BOM": {
+      "display_name": "Bank of Maharashtra",
+      "min_cibil_score": 700,
+      "allow_write_offs": false,
+      "max_write_off_amount": 5000,
+      "strict_zero_dpd": false,
+      "allow_existing_car_loan": true,
+      "max_foir_ratio": 0.55,
+      "min_business_itr_floor": 300000
+    },
+    "HDFC": {
+      "display_name": "HDFC Bank",
+      "min_cibil_score": 701,
+      "allow_write_offs": true,
+      "max_write_off_amount": 10000,
+      "strict_zero_dpd": false,
+      "allow_existing_car_loan": true,
+      "max_foir_ratio": 0.60,
+      "min_business_itr_floor": 300000
+    },
+    "AXIS": {
+      "display_name": "Axis Bank",
+      "min_cibil_score": 700,
+      "allow_write_offs": true,
+      "max_write_off_amount": 10000,
+      "strict_zero_dpd": false,
+      "allow_existing_car_loan": true,
+      "max_foir_ratio": 0.60,
+      "min_business_itr_floor": 300000
+    },
+    "KOTAK": {
+      "display_name": "Kotak Mahindra Bank",
+      "min_cibil_score": 701,
+      "allow_write_offs": true,
+      "max_write_off_amount": 10000,
+      "strict_zero_dpd": false,
+      "allow_existing_car_loan": false,
+      "max_foir_ratio": 0.50,
+      "min_business_itr_floor": 300000
+    }
+  },
+  "rules": [
+    {
+      "id": "EXB-701",
+      "category": "Existing Banking Relationship",
+      "condition": "existing_account.status == 'ACTIVE' && existing_account.bank == selected_bank",
+      "result": {
+        "status": "PASS",
+        "reason": "Existing relationship with selected bank — eligible for pre-approved fast-track."
+      }
+    },
+    {
+      "id": "EXB-702",
+      "category": "Existing Banking Relationship",
+      "condition": "existing_car_loan.active == true && bank_policy.allow_existing_car_loan == false",
+      "result": {
+        "status": "REJECT",
+        "reason": "Selected bank does not permit an existing active car loan alongside this application."
+      }
+    }
+  ]
+}

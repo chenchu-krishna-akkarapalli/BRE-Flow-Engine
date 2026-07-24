@@ -1,0 +1,15 @@
+{
+  "name": "risk_assessment",
+  "description": "Tenant Alpha custom strict risk assessment rule override",
+  "rules": [
+    {
+      "id": "ALPHA-RSK-001",
+      "category": "Tenant Alpha Risk",
+      "condition": "cibil_score < 720",
+      "result": {
+        "status": "REJECT",
+        "reason": "Tenant Alpha requires a minimum CIBIL score of 720 for prime onboarding."
+      }
+    }
+  ]
+}

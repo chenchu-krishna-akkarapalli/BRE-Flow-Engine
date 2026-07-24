@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: flowbre_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-bre_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bre_password}
+      POSTGRES_DB: ${POSTGRES_DB:-bre_db}
+    ports:
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-bre_user} -d ${POSTGRES_DB:-bre_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    container_name: flowbre_redis
+    ports:
+      - "127.0.0.1:${REDIS_HOST_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flowbre_fastapi_app
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      - PROJECT_NAME=${PROJECT_NAME:-FlowBRE Onboarding BRE Engine}
+      - API_V1_STR=${API_V1_STR:-/api/v1}
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_USER=${POSTGRES_USER:-bre_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-bre_password}
+      - POSTGRES_DB=${POSTGRES_DB:-bre_db}
+      - POSTGRES_PORT=5432
+      - DB_POOL_SIZE=${DB_POOL_SIZE:-20}
+      - DB_MAX_OVERFLOW=${DB_MAX_OVERFLOW:-10}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - SECRET_KEY=${SECRET_KEY:-super-secret-jwt-key-flowbre-enterprise-2026}
+      - ALGORITHM=${ALGORITHM:-HS256}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-1440}
+    volumes:
+      - ./app/zen_rules:/app/app/zen_rules:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: always
+
+volumes:
+  postgres_data:
+  redis_data:
