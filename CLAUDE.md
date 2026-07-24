@@ -1,112 +1,123 @@
-# CLAUDE.md — FlowBRE Onboarding & Business Rule Engine
+# 🚀 FlowBRE Master Developer & Agent Guidance (`CLAUDE.md`)
 
-This file orients Claude (or any agent) working in this repository. Read this
-first, then `Backend-Playbook.md` and `Rules.md` before touching code or rule
-files.
+Welcome to **FlowBRE (Flow Business Rules Engine)**. This document provides core architectural directives, command references, coding standards, and compliance rules for developer pair programming and automated coding agents.
 
-## 1. What this project is
+---
 
-FlowBRE is a loan-onboarding platform with two halves:
+## 🛠️ CLI Command Reference
 
-1. **Frontend onboarding flow** (`flowbre_onboarding_rule_engine.html`) — a
-   multi-step, branching form (Individual vs. Company, Salaried vs.
-   Self-Employed) plus a Bureau/BRE simulator and a 64-parameter policy
-   matrix inspector.
-2. **Backend BRE service** (`app/`) — FastAPI + PostgreSQL + Zen-Engine that
-   evaluates a submitted application against JSON decision rules and returns
-   an eligibility verdict per partner bank, in **under 100 ms end-to-end**.
-
-The business logic evaluates **64 parameters across 9 functional modules**
-(Credit Bureau, Demographics, Residence, Employment, Income, Tax/ITR,
-Business Entity, Co-Applicant, Existing Banking) for **8 partner banks**:
-BOI, Indian Bank, IOB, BOB, BOM, HDFC, AXIS, Kotak.
-
-## 2. Source-of-truth documents (read in this order)
-
-| File | Purpose |
-|---|---|
-| `Rules.md` | The canonical rule specification — every rule ID, condition, threshold, and rejection message. **Never hand-edit `zen_rules/*.json` without updating `Rules.md` first**, and vice versa — they must stay in sync. |
-| `Backend-Playbook.md` | Architecture, folder layout, dependency pins, latency SLA, Docker/Compose setup. |
-| `SKILL.md` | Step-by-step procedure for adding, changing, or testing a rule in this engine. Follow it whenever a task involves `zen_rules/`. |
-| `zen_rules/*.json` | The executable rule sets loaded by Zen-Engine at service boot. |
-
-## 3. Non-negotiable constraints
-
-- **Latency SLA: < 100 ms total** per `/api/v1/onboarding/evaluate` call
-  (rule eval < 10 ms, DB txn < 15 ms, network/serialization < 30 ms). Any
-  change that adds synchronous I/O, blocking calls, or per-request disk
-  reads inside the hot path is a regression — flag it, don't silently ship it.
-- **Rule IDs are stable identifiers.** Never renumber or reuse an existing
-  rule ID (`DEM-###`, `EMP-SAL-###`, `EMP-SE-###`, `BUR-###`, `BANK-###`,
-  `RES-###`, `ENT-###`, `COAPP-###`, `EXB-###`). Deprecate instead of delete;
-  add new IDs for new logic.
-- **Every rule change must update three places together**: `Rules.md`
-  (human-readable spec), the relevant `zen_rules/*.json` file (executable),
-  and the rejection-reason string surfaced to the applicant.
-- **DPD parsing convention**: `"STD"` in bureau data always maps to `0` DPD.
-  Indian Bank enforces zero-tolerance DPD (`> 0` days = reject); all other
-  banks use the `> 90` day threshold unless `Rules.md` says otherwise for
-  that bank.
-- **PII handling**: PAN, Aadhaar, DOB, and bureau report data are sensitive.
-  Never log raw payloads containing these fields; use `app/core/logging.py`
-  redaction helpers. Never write sample PII into test fixtures — use
-  obviously-fake values (e.g. `PAN: AAAAA0000A`).
-
-## 4. Repository layout
-
-See `Backend-Playbook.md §1` for the full annotated tree. Quick map:
-
-```
-onboarding-bre-engine/
-├── app/
-│   ├── api/v1/endpoints/      # onboarding.py, rules.py, bureau.py, health.py
-│   ├── services/               # bre_engine.py, bureau_parser.py, pincode_service.py
-│   ├── db/models/               # application.py, rule_execution.py, audit_log.py
-│   └── zen_rules/                # executable JSON decision/rule sets
-├── requirements/                # base.in / base.txt, compile script
-├── alembic/                     # migrations
-├── Rules.md                     # canonical rule spec
-├── Backend-Playbook.md          # architecture & ops playbook
-├── SKILL.md                     # how to safely modify the rule engine
-└── flowbre_onboarding_rule_engine.html  # standalone frontend prototype
-```
-
-## 5. Common tasks & where they live
-
-| Task | Files to touch |
-|---|---|
-| Add a new BRE parameter/rule | `Rules.md` → `zen_rules/<relevant>.json` → `SKILL.md` test checklist |
-| Change a bank's policy threshold | `zen_rules/bank_policy_matrix.json` + `Rules.md §4` |
-| Add a new API field | `app/api/v1/schemas/onboarding.py` → `app/services/bre_engine.py` evaluation_input mapping |
-| Change onboarding UX/branching | `flowbre_onboarding_rule_engine.html` (frontend prototype) |
-| Add a migration | `alembic/versions/` via `alembic revision --autogenerate` |
-
-## 6. Build & run
-
+### Local Development
 ```bash
-bash requirements/scripts/compile_requirements.sh   # compile base.in -> base.txt
-docker-compose up --build -d                        # start API + Postgres
-curl http://localhost:8000/api/v1/health             # health check
-open http://localhost:8000/docs                      # interactive API docs
+# Run local ASGI development server (hot-reloading enabled)
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+
+# Copy environment template
+cp .env.example .env
 ```
 
-## 7. Testing expectations
+### Automated Testing & SLA Verification
+```bash
+# Run complete test suite via uv (11/11 tests)
+uv run --with fastapi --with uvicorn --with pydantic --with pydantic-settings --with sqlalchemy --with asyncpg --with redis --with pytest --with httpx --with pyjwt pytest app/tests/ -v
 
-- Every new/changed rule needs at least one **pass** and one **reject**
-  fixture in the evaluator test suite (see `SKILL.md §Testing`).
-- Run the full 8-bank matrix against each of the four preset scenarios
-  (Ideal Salaried, Low-Tenure Salaried, Self-Employed edge case, High-DPD
-  reject) before merging changes to `zen_rules/`.
-- Confirm `execution_time_ms` returned by `/evaluate` stays under the
-  budget in `Backend-Playbook.md §8` after any rule-engine change.
+# Run single test module
+uv run --with fastapi --with uvicorn --with pydantic --with pydantic-settings --with sqlalchemy --with asyncpg --with redis --with pytest --with httpx --with pyjwt pytest app/tests/test_bre_engine.py -v
 
-## 8. What NOT to do
+# Execute via Makefile shortcuts
+make test
+make check-sla
+```
 
-- Don't inline business thresholds (age, CIBIL score, FOIR %, ITR minimums)
-  directly in Python — they belong in `zen_rules/*.json` so they can change
-  without a redeploy.
-- Don't add a new partner bank without adding its full policy block to
-  `bank_policy_matrix.json` **and** the bank-eligibility map in the output
-  schema (`Rules.md §5`).
-- Don't collapse the two ITR checks (current-year vs. previous-year) into
-  one rule — banks read them independently.
+### Container Orchestration (Docker Compose)
+```bash
+# Build and start container stack (Postgres on 127.0.0.1:5435, Redis on 127.0.0.1:6379, FastAPI on 127.0.0.1:8000)
+docker-compose up -d --build
+
+# Check status & liveness healthchecks
+docker-compose ps
+
+# Stop container stack
+docker-compose down
+
+# Tail application logs
+docker-compose logs -f --tail=100
+```
+
+### Async Database Migrations (Alembic)
+```bash
+# Execute migrations inside running web container
+docker-compose exec web alembic upgrade head
+
+# Generate a new migration revision
+alembic revision --autogenerate -m "describe_migration_changes"
+
+# Upgrade local database offline
+alembic upgrade head
+```
+
+---
+
+## 🏛️ Architectural Directives & Non-Negotiables
+
+1. **Zero Hot-Path Disk I/O**:
+   - Zen-Engine JDM decision trees (`app/zen_rules/`) MUST be compiled into memory during lifespan boot.
+   - Hot-path requests evaluate strictly in RAM (`< 0.5 ms` evaluation latency). Never perform disk reads inside API route handlers.
+
+2. **PostgreSQL Row-Level Security (RLS)**:
+   - All tenant queries MUST set session state via:
+     `SELECT set_config('app.current_tenant_id', :tenant_id, true)`
+   - Never issue multi-tenant queries without explicitly running `set_tenant_rls_context(db, tenant_id)`.
+
+3. **Connection Pool Bounds**:
+   - SQLAlchemy Async Engine pool limits: `pool_size=20`, `max_overflow=10`, `pool_pre_ping=True`, `pool_recycle=3600`.
+   - Never instantiate ad-hoc engine pools outside `app/core/database.py`.
+
+4. **5-Stage Request Memory Lifecycle**:
+   - `Request Starts`: Instantiate request object and Pydantic validation.
+   - `Allocate Memory`: Bind tenant ContextVar to request async task.
+   - `Use Memory`: Evaluate payload against compiled RAM AST decision trees.
+   - `Garbage Collection`: Close and flush database sessions in teardown.
+   - `Memory Released`: Event loop frees request-scoped objects back to runtime heap.
+
+---
+
+## 🔒 PII Security & Logging Standards
+
+All user-identifiable data MUST be redacted prior to logging:
+
+* **PAN Format**: `AB******4F` (`redact_pii()`)
+* **Date of Birth**: `****-**-15`
+* **Aadhaar ID**: `****-****-1234`
+* Never log raw request bodies containing unredacted credit bureau responses or tax documentation.
+
+---
+
+## 📐 Python Coding Style Guide
+
+* **Typing & Validation**: Use Python 3.11+ syntax, strict type hints (`typing` module), and Pydantic v2 `BaseModel` / `BaseSettings`.
+* **Async Core**: Use `async`/`await` for all DB, Redis, and I/O tasks. Do not call blocking sync operations on the main event loop.
+* **Error Handling**: Throw custom domain exceptions defined in `app/core/exceptions.py`. Never swallow runtime exceptions silently or return generic fallback 0s.
+* **Constants**: Load business constants, messages, error codes, and regexes strictly from `app/constants/` — zero inline hardcoding.
+
+---
+
+## ⏱️ SLA Latency Ceilings
+
+| Operation | SLA Budget | Action if Exceeded |
+|---|---|---|
+| Simple GET (`/health`) | `< 30.0 ms` | Reject commit / Profile ASGI middleware |
+| Zen RAM Rules Eval | `< 10.0 ms` | Optimize JDM AST expression nodes |
+| CRUD Evaluation & Audit Log | `< 80.0 ms` | Optimize SQL index / Async DB flush batching |
+| Total Round-Trip Ceiling | `< 100.0 ms` | Full trace analysis required |
+
+---
+
+## ✅ Pre-Commit Developer Checklist
+
+Before submitting code or merging pull requests, ensure the following pass cleanly:
+
+- [ ] All 11 unit tests pass (`make test` or `uv run pytest app/tests/ -v`).
+- [ ] No unredacted PII is output in `logger.info()` or exception traces.
+- [ ] `docker-compose config` parses without syntax warnings.
+- [ ] New database model changes are captured in Alembic migrations (`alembic upgrade head`).
+- [ ] Evaluation latency remains within SLA thresholds (`< 80 ms` CRUD, `< 10 ms` RAM rules).

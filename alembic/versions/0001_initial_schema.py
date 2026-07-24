@@ -5,6 +5,7 @@ Revises:
 Create Date: 2026-07-23
 """
 from typing import Sequence, Union
+from datetime import datetime, timezone
 from alembic import op
 import sqlalchemy as sa
 
@@ -15,7 +16,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     # Tenant Registry Table
-    op.create_table(
+    tenant_table = op.create_table(
         'tenant',
         sa.Column('id', sa.String(length=64), nullable=False),
         sa.Column('name', sa.String(length=128), nullable=False),
@@ -27,6 +28,38 @@ def upgrade() -> None:
         sa.UniqueConstraint('code')
     )
     op.create_index('idx_tenant_code', 'tenant', ['code'])
+
+    # Seed initial tenants so foreign keys validate cleanly
+    now = datetime.now(timezone.utc)
+    op.bulk_insert(
+        tenant_table,
+        [
+            {
+                'id': '00000000-0000-0000-0000-000000000000',
+                'name': 'Default Tenant',
+                'code': 'default',
+                'is_active': True,
+                'created_at': now,
+                'updated_at': now,
+            },
+            {
+                'id': 'tenant_alpha',
+                'name': 'Tenant Alpha',
+                'code': 'tenant_alpha',
+                'is_active': True,
+                'created_at': now,
+                'updated_at': now,
+            },
+            {
+                'id': 'tenant_beta',
+                'name': 'Tenant Beta',
+                'code': 'tenant_beta',
+                'is_active': True,
+                'created_at': now,
+                'updated_at': now,
+            },
+        ]
+    )
 
     # Application State Table
     op.create_table(
