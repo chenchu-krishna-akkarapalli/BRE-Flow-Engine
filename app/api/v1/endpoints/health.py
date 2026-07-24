@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.deps import get_db
 from app.constants import MSG_HEALTH_OK, MSG_READY_OK, SLA_TARGET_SIMPLE_GET_MS
 from app.core.redis import get_redis
-from app.services.bre_engine import bre_engine_service
+from app.services.bre_engine import BANK_MATRIX_RULES, bre_engine_service
 
 router = APIRouter()
 
@@ -47,8 +47,11 @@ async def readiness_check(db: AsyncSession = Depends(get_db)):
     except Exception:
         checks["redis"] = False
 
-    # Check BRE Engine RAM cache
-    checks["bre_engine"] = len(bre_engine_service._compiled_default_rules) > 0
+    # Check BRE Engine readiness against the ACTUAL evaluation dependency: the
+    # in-memory bank policy matrix that evaluate_application() consults. (The
+    # optional JDM/JSON rulesets are tenant metadata only and are NOT the source
+    # of truth for evaluation, so their presence must not gate readiness.)
+    checks["bre_engine"] = len(BANK_MATRIX_RULES) == 8
 
     all_ready = all(checks.values())
     exec_time_ms = round((time.perf_counter() - start_time) * 1000, 3)

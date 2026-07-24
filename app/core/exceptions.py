@@ -66,6 +66,22 @@ class RuleEvaluationError(FlowBREException):
         )
 
 
+class InvalidPayloadError(FlowBREException):
+    """Raised when an onboarding payload is structurally malformed (wrong
+    field types / shapes) such that the rule engine cannot safely evaluate it.
+
+    Fails closed with a 422 rather than letting a raw AttributeError/TypeError
+    escape or — worse — silently treating malformed bureau data as clean.
+    """
+
+    def __init__(self, detail: str):
+        super().__init__(
+            message=f"Invalid onboarding payload: {detail}",
+            error_code=ErrorCode.VALIDATION_ERROR,
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        )
+
+
 async def flowbre_exception_handler(request: Request, exc: FlowBREException) -> JSONResponse:
     return JSONResponse(
         status_code=exc.status_code,

@@ -1,13 +1,62 @@
-import json
+import asyncio
 import time
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
+from app.core.exceptions import InvalidPayloadError
 from app.core.logging import logger, redact_pii
 
-ZEN_RULES_DIR = Path(__file__).parent.parent / "zen_rules"
+# Bureau cells that represent a clean / on-time (0-day) status. The parser maps
+# any of these to a 0 DPD value; every other cell must be numerically coercible.
+CLEAN_DPD_TOKENS = frozenset({"STD", "XXX", "*", "-", ""})
 
-# Canonical Bank Policy Matrix derived from Bank_Eligibility_Matrix_v1.xlsx (62 columns)
+
+def _coerce_dpd_value(value: Any) -> int:
+    """Coerce a single bureau DPD cell to an integer day-count.
+
+    Recognized clean/standard tokens (e.g. "STD") map to 0; ints, floats and
+    numeric strings ("120") are coerced to int. Anything else is rejected
+    loudly via InvalidPayloadError rather than being silently dropped — a
+    silently-dropped "120" would let a real 120-day delinquency masquerade as
+    clean history and wrongly approve the applicant.
+    """
+    # bool is an int subclass; a boolean DPD cell is malformed bureau data.
+    if isinstance(value, bool):
+        raise InvalidPayloadError(f"boolean is not a valid DPD value: {value!r}")
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        return int(value)
+    if isinstance(value, str):
+        token = value.strip().upper()
+        if token in CLEAN_DPD_TOKENS:
+            return 0
+        try:
+            return int(float(token))
+        except ValueError:
+            raise InvalidPayloadError(f"unparseable DPD token: {value!r}")
+    raise InvalidPayloadError(f"unsupported DPD entry type: {type(value).__name__}")
+
+
+def _normalize_dpd_history(dpd_values: Any) -> List[int]:
+    """Coerce a raw dpd_history array into a list of integer day-counts.
+
+    None/absent entries are skipped (no data point), not treated as 0-risk.
+    """
+    if dpd_values is None:
+        return []
+    if not isinstance(dpd_values, (list, tuple)):
+        raise InvalidPayloadError(
+            f"dpd_history must be a list, got {type(dpd_values).__name__}"
+        )
+    return [_coerce_dpd_value(v) for v in dpd_values if v is not None]
+
+# Canonical Bank Policy Matrix derived from Bank_Eligibility_Matrix_v1.xlsx (62 columns).
+#
+# SOURCE OF TRUTH: this dict is the authoritative, code-defined ruleset that
+# evaluate_application() evaluates against. Rule changes are code changes and
+# ship via redeploy. (W4: the previous JDM/JSON loader and /rules API implied
+# rules could be hot-reloaded into evaluation — they never were — and have been
+# removed to make the code-defined matrix the single, honest source of truth.)
 BANK_MATRIX_RULES = {
     "BOI": {
         "min_cibil": 701,
@@ -237,79 +286,25 @@ BANK_MATRIX_RULES = {
 
 
 class BREEngineService:
-    """Zen-Engine Decision Rule Evaluator (PyO3 Rust Bindings Integration).
+    """In-memory bank onboarding rule evaluator.
 
-    Pre-compiles all JSON decision ASTs (JDMs) into RAM at startup to enforce
-    zero hot-path disk I/O and achieve < 10 ms rule evaluation latency across all 8 partner banks.
+    Rules are the code-defined BANK_MATRIX_RULES matrix, resident in RAM at
+    import time — evaluation performs zero hot-path disk I/O and targets
+    < 10 ms latency across all 8 partner banks.
     """
 
-    def __init__(self):
-        self._compiled_default_rules: Dict[str, Any] = {}
-        self._compiled_tenant_rules: Dict[str, Dict[str, Any]] = {}
-        self._zen_engine: Optional[Any] = None
-        self._init_engine()
-        self.load_all_rules()
-
-    def _init_engine(self) -> None:
-        """Initialize Rust-core ZenEngine instance if zen PyO3 module is installed."""
-        try:
-            import zen
-            self._zen_engine = zen.ZenEngine()
-            logger.info("Zen-Engine Rust core PyO3 bindings initialized successfully.")
-        except ImportError:
-            self._zen_engine = None
-            logger.warning("zen-engine PyO3 module not installed. Operating in high-speed in-memory JDM AST simulation mode.")
-
-    def load_all_rules(self) -> None:
-        """Pre-compile default and tenant-specific JDM JSON rules into RAM."""
-        start_time = time.perf_counter()
-        
-        default_dir = ZEN_RULES_DIR / "default"
-        if default_dir.exists():
-            for rule_file in default_dir.glob("*.json"):
-                try:
-                    with open(rule_file, "r", encoding="utf-8") as f:
-                        content = f.read()
-                        data = json.loads(content)
-                        key = rule_file.stem
-                        if self._zen_engine:
-                            try:
-                                self._compiled_default_rules[key] = self._zen_engine.create_decision(content)
-                            except Exception as ze:
-                                logger.debug(f"Zen PyO3 graph compilation skipped for {rule_file.name}, using JSON fallback: {ze}")
-                                self._compiled_default_rules[key] = data
-                        else:
-                            self._compiled_default_rules[key] = data
-                except Exception as e:
-                    logger.error(f"Failed to load default rule file {rule_file.name}: {e}")
-
-        tenants_dir = ZEN_RULES_DIR / "tenants"
-        if tenants_dir.exists():
-            for tenant_folder in tenants_dir.iterdir():
-                if tenant_folder.is_dir():
-                    tenant_id = tenant_folder.name
-                    self._compiled_tenant_rules[tenant_id] = {}
-                    for rule_file in tenant_folder.glob("*.json"):
-                        try:
-                            with open(rule_file, "r", encoding="utf-8") as f:
-                                content = f.read()
-                                data = json.loads(content)
-                                key = rule_file.stem
-                                if self._zen_engine:
-                                    try:
-                                        self._compiled_tenant_rules[tenant_id][key] = self._zen_engine.create_decision(content)
-                                    except Exception as ze:
-                                        logger.debug(f"Zen PyO3 graph compilation skipped for tenant {tenant_id}/{rule_file.name}, using JSON fallback: {ze}")
-                                        self._compiled_tenant_rules[tenant_id][key] = data
-                                else:
-                                    self._compiled_tenant_rules[tenant_id][key] = data
-                        except Exception as e:
-                            logger.error(f"Failed to load tenant rule file {rule_file.name} for tenant {tenant_id}: {e}")
-
-        elapsed_ms = (time.perf_counter() - start_time) * 1000
-        logger.info(f"Pre-compiled BRE decision models ({len(self._compiled_default_rules)} default rulesets) into RAM in {elapsed_ms:.2f} ms.")
-
     async def evaluate_application(self, payload: Dict[str, Any], tenant_id: str = "default") -> Dict[str, Any]:
+        """Async entry point for onboarding evaluation.
+
+        The rule evaluation is pure CPU work with no awaitable I/O. Running it
+        inline on the event loop would let a batch of concurrent evaluations
+        monopolize the loop and starve latency-sensitive coroutines (e.g. the
+        /health probe). Offloading to a worker thread keeps the loop responsive
+        while preserving the awaitable contract every call site already uses.
+        """
+        return await asyncio.to_thread(self._evaluate_application_sync, payload, tenant_id)
+
+    def _evaluate_application_sync(self, payload: Dict[str, Any], tenant_id: str = "default") -> Dict[str, Any]:
         """Evaluates an onboarding application payload against 62-column Bank Eligibility Matrix in RAM (< 10 ms)."""
         start_time = time.perf_counter()
         rejection_reasons: List[Dict[str, str]] = []
@@ -320,11 +315,19 @@ class BREEngineService:
         logger.debug(f"Evaluating application payload for tenant '{tenant_id}': {safe_log_payload}")
 
         # Normalize Input Fields
-        bureau = payload.get("credit_bureau", {})
-        dpd_values = bureau.get("dpd_history", [])
-        clean_dpd_values = [0 if v == "STD" else v for v in dpd_values if isinstance(v, (int, str))]
-        max_dpd_value = max([v for v in clean_dpd_values if isinstance(v, int)], default=0)
-        
+        # A missing credit_bureau key falls back to documented defaults, but a
+        # present-yet-malformed value (None/list/str/int) fails closed.
+        if "credit_bureau" in payload:
+            bureau = payload["credit_bureau"]
+            if not isinstance(bureau, dict):
+                raise InvalidPayloadError(
+                    f"credit_bureau must be an object, got {type(bureau).__name__}"
+                )
+        else:
+            bureau = {}
+        clean_dpd_values = _normalize_dpd_history(bureau.get("dpd_history", []))
+        max_dpd_value = max(clean_dpd_values, default=0)
+
         cibil_score = bureau.get("cibil_score", payload.get("cibil_score", 750))
         write_off_amount = bureau.get("write_off_amount", payload.get("write_off_amount", 0.0))
         pl_write_off = bureau.get("pl_write_off", False) or (write_off_amount > 0 and bureau.get("write_off_type") == "PL")
@@ -339,7 +342,22 @@ class BREEngineService:
         age = payload.get("age", 30)
         occupation = payload.get("occupation", "Salaried")
         is_nri = payload.get("is_nri", False)
-        nri_stay_years = payload.get("minimum_stay_period_nri_years", payload.get("minimum_stay_period_nri_days", 0) / 365.0)
+        # NRI stay is only evaluated for NRI applicants; coerce defensively so a
+        # non-numeric value raises a typed error instead of an unhandled TypeError.
+        nri_stay_years = 0.0
+        if is_nri:
+            if "minimum_stay_period_nri_years" in payload:
+                raw_nri = payload["minimum_stay_period_nri_years"]
+                field_name = "minimum_stay_period_nri_years"
+                divisor = 1.0
+            else:
+                raw_nri = payload.get("minimum_stay_period_nri_days", 0)
+                field_name = "minimum_stay_period_nri_days"
+                divisor = 365.0
+            try:
+                nri_stay_years = float(raw_nri) / divisor
+            except (TypeError, ValueError):
+                raise InvalidPayloadError(f"{field_name} must be numeric")
 
         # 1. Demographics Check
         if age < 21:
@@ -400,6 +418,30 @@ class BREEngineService:
             })
             executed_rules_count += 1
 
+        # Max Age at Final EMI Check (DEM-102 salaried / DEM-103 self-employed).
+        # Falls back to current age when the projected maturity age is absent —
+        # an applicant already past the ceiling cannot be under it at maturity.
+        if occupation == "Salaried":
+            age_at_last_emi = payload.get("age_at_last_emi_salaried", age)
+            max_emi_age = target_bank_policy["max_age_emi_salaried"]
+            if age_at_last_emi > max_emi_age:
+                rejection_reasons.append({
+                    "rule_id": "DEM-102",
+                    "category": "Demographics",
+                    "message": f"Age at final EMI maturity ({age_at_last_emi}) exceeds {selected_bank} limit of {max_emi_age} years for salaried applicants."
+                })
+                executed_rules_count += 1
+        else:
+            age_at_last_emi = payload.get("age_at_last_emi_self_employed", age)
+            max_emi_age = target_bank_policy["max_age_emi_self_employed"]
+            if age_at_last_emi > max_emi_age:
+                rejection_reasons.append({
+                    "rule_id": "DEM-103",
+                    "category": "Demographics",
+                    "message": f"Age at final EMI maturity ({age_at_last_emi}) exceeds {selected_bank} limit of {max_emi_age} years for self-employed applicants."
+                })
+                executed_rules_count += 1
+
         # Write-Off Floor Check
         if write_off_amount > 0:
             if not target_bank_policy["allow_cc_write_off"] and cc_write_off:
@@ -421,6 +463,17 @@ class BREEngineService:
                     "rule_id": "BUR-401C",
                     "category": "Credit Bureau History",
                     "message": f"Personal Loan write-offs are not permitted by {selected_bank}."
+                })
+                executed_rules_count += 1
+            elif not cc_write_off and not pl_write_off:
+                # W5 fail-closed: a recorded write-off with no classifiable type
+                # (write_off_type absent / unrecognized) cannot be validated
+                # against the bank's per-product tolerances, so it must not be
+                # allowed to slip through under the generic matrix ceiling.
+                rejection_reasons.append({
+                    "rule_id": "BUR-401D",
+                    "category": "Credit Bureau History",
+                    "message": f"Unclassified write-off (₹{write_off_amount:,.2f}) recorded; write-off type could not be validated against {selected_bank} policy."
                 })
                 executed_rules_count += 1
 
@@ -479,19 +532,6 @@ class BREEngineService:
             "rejection_reasons": rejection_reasons,
             "bank_eligibility": bank_eligibility,
         }
-
-    def _get_compiled_decision(self, rule_name: str, tenant_id: str = "default") -> Any:
-        """Fetch tenant-override or default pre-compiled Decision object."""
-        if tenant_id in self._compiled_tenant_rules and rule_name in self._compiled_tenant_rules[tenant_id]:
-            return self._compiled_tenant_rules[tenant_id][rule_name]
-        return self._compiled_default_rules.get(rule_name)
-
-    def _get_rule_set(self, rule_name: str, tenant_id: str = "default") -> Any:
-        """Fetch raw JSON rule dictionary fallback."""
-        decision = self._get_compiled_decision(rule_name, tenant_id)
-        if isinstance(decision, dict):
-            return decision
-        return self._compiled_default_rules.get(rule_name, {})
 
 
 bre_engine_service = BREEngineService()

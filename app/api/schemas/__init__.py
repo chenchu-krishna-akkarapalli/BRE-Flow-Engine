@@ -5,11 +5,6 @@ from app.api.schemas.onboarding import (
     OnboardingEvaluationResponse,
     RejectionReasonDetail,
 )
-from app.api.schemas.rules import (
-    JDMRuleDeployRequest,
-    JDMRuleDeployResponse,
-    RuleMetadataResponse,
-)
 
 __all__ = [
     "APIResponse",
@@ -18,7 +13,4 @@ __all__ = [
     "OnboardingEvaluationRequest",
     "OnboardingEvaluationResponse",
     "RejectionReasonDetail",
-    "JDMRuleDeployRequest",
-    "JDMRuleDeployResponse",
-    "RuleMetadataResponse",
 ]

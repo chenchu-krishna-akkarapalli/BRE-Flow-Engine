@@ -10,16 +10,15 @@ from app.core.redis import close_redis, init_redis
 from app.middleware.rate_limiter import TenantRateLimiterMiddleware
 from app.middleware.swr_cache_headers import SWRCacheHeadersMiddleware
 from app.middleware.tenant_context import TenantContextMiddleware
-from app.services.bre_engine import bre_engine_service
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application startup and shutdown lifecycle events."""
     logger.info("Initializing FlowBRE Enterprise Engine...")
-    
-    # Pre-compile JSON decision ASTs into RAM at startup
-    bre_engine_service.load_all_rules()
+
+    # Bank policy rules are the code-defined BANK_MATRIX_RULES matrix, resident
+    # in RAM at import time — no rule pre-compilation step is required at boot.
 
     # WARM Redis Connection Pool
     try:
