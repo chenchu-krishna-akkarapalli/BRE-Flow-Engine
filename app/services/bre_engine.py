@@ -50,6 +50,30 @@ def _normalize_dpd_history(dpd_values: Any) -> List[int]:
         )
     return [_coerce_dpd_value(v) for v in dpd_values if v is not None]
 
+
+# Maps a bureau write-off type to the per-bank policy flag that governs it
+# (Bank_Eligibility_Matrix_v1.xlsx columns 4-10). An unrecognized/absent type
+# is treated as unclassified and fails closed (BUR-401D).
+WRITE_OFF_TYPE_TO_FLAG = {
+    "PL": "allow_pl_write_off",
+    "HL": "allow_hl_write_off",
+    "CONSUMER": "allow_consumer_write_off",
+    "AGRI": "allow_agri_write_off",
+    "MSME": "allow_msme_write_off",
+    "AUTO": "allow_auto_write_off",
+    "CC": "allow_cc_write_off",
+}
+
+# Property configurations that make a guarantor mandatory (Rules.md RES-203/204).
+GUARANTOR_PROPERTY_STATUSES = frozenset({"RESI_CUM_OFFICE_RENTED", "SEPARATE_BOTH_RENTED"})
+# Banks that accept the above configuration WITHOUT a guarantor (matrix col 23:
+# "Without a Guarantor" == True). Only BOM per Ver 4.0.
+BANKS_ALLOW_WITHOUT_GUARANTOR = frozenset({"BOM"})
+
+# Banks that do NOT permit an existing active car loan alongside the application
+# (matrix col 19: "Existing Car Loan" == False). EXB-702.
+BANKS_DISALLOW_EXISTING_CAR_LOAN = frozenset({"IOB", "BOB"})
+
 # Canonical Bank Policy Matrix derived from Bank_Eligibility_Matrix_v1.xlsx (62 columns).
 #
 # SOURCE OF TRUTH: this dict is the authoritative, code-defined ruleset that
@@ -57,6 +81,13 @@ def _normalize_dpd_history(dpd_values: Any) -> List[int]:
 # ship via redeploy. (W4: the previous JDM/JSON loader and /rules API implied
 # rules could be hot-reloaded into evaluation — they never were — and have been
 # removed to make the code-defined matrix the single, honest source of truth.)
+#
+# Boundary semantics follow the sheet's operators exactly:
+#   * max_dpd / max_cc_write_off_amount store the MAXIMUM ACCEPTABLE value.
+#     The sheet's DPD "< 90" columns are stored as 89 (so DPD 90 rejects); the
+#     "<= 0" columns are stored as 0 (so any DPD > 0 rejects).
+#   * The credit-card write-off cap uses the sheet's strict "< 5000"/"< 10000",
+#     i.e. an amount AT the cap is rejected (see BUR-401B: amount >= cap).
 BANK_MATRIX_RULES = {
     "BOI": {
         "min_cibil": 701,
@@ -124,7 +155,7 @@ BANK_MATRIX_RULES = {
         "allow_auto_write_off": False,
         "allow_cc_write_off": True,
         "max_cc_write_off_amount": 5000.0,
-        "max_dpd": 90,
+        "max_dpd": 89,
         "min_age": 21,
         "max_age_emi_salaried": 75,
         "max_age_emi_self_employed": 75,
@@ -152,7 +183,7 @@ BANK_MATRIX_RULES = {
         "allow_auto_write_off": False,
         "allow_cc_write_off": False,
         "max_cc_write_off_amount": 0.0,
-        "max_dpd": 90,
+        "max_dpd": 89,
         "min_age": 21,
         "max_age_emi_salaried": 60,
         "max_age_emi_self_employed": 70,
@@ -208,7 +239,7 @@ BANK_MATRIX_RULES = {
         "allow_auto_write_off": False,
         "allow_cc_write_off": False,
         "max_cc_write_off_amount": 0.0,
-        "max_dpd": 90,
+        "max_dpd": 89,
         "min_age": 21,
         "max_age_emi_salaried": 70,
         "max_age_emi_self_employed": 70,
@@ -236,7 +267,7 @@ BANK_MATRIX_RULES = {
         "allow_auto_write_off": False,
         "allow_cc_write_off": False,
         "max_cc_write_off_amount": 0.0,
-        "max_dpd": 90,
+        "max_dpd": 89,
         "min_age": 21,
         "max_age_emi_salaried": 70,
         "max_age_emi_self_employed": 70,
@@ -264,7 +295,7 @@ BANK_MATRIX_RULES = {
         "allow_auto_write_off": False,
         "allow_cc_write_off": False,
         "max_cc_write_off_amount": 0.0,
-        "max_dpd": 90,
+        "max_dpd": 89,
         "min_age": 21,
         "max_age_emi_salaried": 70,
         "max_age_emi_self_employed": 70,
@@ -283,6 +314,125 @@ BANK_MATRIX_RULES = {
         "allow_sibling_coapplicant": True,
     },
 }
+
+
+def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> List[Dict[str, str]]:
+    """Return every REJECT-rule violation for one bank given normalized inputs.
+
+    Drives BOTH the selected-bank verdict (overall_eligible) and each bank in
+    the matrix, so the two can never disagree. Implements the payload-supported
+    columns of Bank_Eligibility_Matrix_v1.xlsx. (Form-16 years and existing car
+    loan are omitted: the request schema carries no field for them.)
+    """
+    reasons: List[Dict[str, str]] = []
+
+    def add(rid: str, cat: str, msg: str) -> None:
+        reasons.append({"rule_id": rid, "category": cat, "message": msg})
+
+    # --- Demographics --------------------------------------------------------
+    if inp["age"] < policy["min_age"]:
+        add("DEM-101", "Demographics",
+            f"Applicant age ({inp['age']}) is below the minimum requirement ({policy['min_age']} years).")
+
+    if inp["is_nri"]:
+        if not policy["allow_nri"]:
+            add("DEM-104", "Demographics", f"{code} does not onboard NRI/PIO applicants.")
+        elif inp["nri_stay_years"] < policy["min_nri_stay_years"]:
+            add("DEM-105", "Demographics",
+                f"NRI in-country stay ({inp['nri_stay_years']:.2f} yrs) is below {code} minimum ({policy['min_nri_stay_years']} yrs).")
+
+    # --- Credit bureau -------------------------------------------------------
+    if inp["currently_overdue"]:
+        add("BUR-404", "Credit Bureau History",
+            "Application declined due to active currently-outstanding overdue balances.")
+
+    if inp["cibil"] < policy["min_cibil"]:
+        add("BUR-405", "Credit Bureau Floor",
+            f"CIBIL score ({inp['cibil']}) is below {code} minimum threshold of {policy['min_cibil']}.")
+
+    if code == "INDIAN_BANK" and inp["max_dpd"] > 0:
+        add("BUR-403", "Credit Bureau History",
+            "Indian Bank requires zero past DPD instances across all loan accounts.")
+    elif inp["max_dpd"] > policy["max_dpd"]:
+        add("BUR-402", "Credit Bureau History",
+            f"DPD value ({inp['max_dpd']}) exceeds {code} tolerance ({policy['max_dpd']} days).")
+
+    # --- Write-off (per product type; strict '<' cap for CC) -----------------
+    if inp["write_off_amount"] > 0:
+        flag_key = inp["write_off_flag_key"]
+        rt = inp["write_off_type_raw"]
+        if flag_key is None:
+            add("BUR-401D", "Credit Bureau History",
+                f"Unclassified write-off (Rs {inp['write_off_amount']:,.2f}) recorded; type could not be validated against {code} policy.")
+        elif not policy[flag_key]:
+            add("BUR-401", "Credit Bureau History", f"{rt} write-offs are not permitted by {code}.")
+        elif rt == "CC" and inp["write_off_amount"] >= policy["max_cc_write_off_amount"]:
+            add("BUR-401B", "Credit Bureau History",
+                f"Credit Card write-off amount (Rs {inp['write_off_amount']:,.2f}) is not below {code} ceiling (Rs {policy['max_cc_write_off_amount']:,.2f}).")
+
+    # --- Employment / income -------------------------------------------------
+    if inp["occupation"] == "Salaried":
+        if inp["salary"] < policy["min_salary"]:
+            add("EMP-SAL-202", "Employment - Salaried",
+                f"Monthly net salary (Rs {inp['salary']:,.2f}) is below the minimum floor (Rs {policy['min_salary']:,.0f}).")
+        if inp["salary_mode"] in ("CASH", "Salary payment mode-Cash"):
+            add("EMP-SAL-203", "Employment - Salaried",
+                "Cash salary payment mode is ineligible. Direct bank credit required.")
+        if inp["work_exp_years"] < policy["min_total_experience_years"]:
+            add("EMP-SAL-204", "Employment - Salaried",
+                f"Total work experience ({inp['work_exp_years']} yrs) is below {code} minimum ({policy['min_total_experience_years']} yrs).")
+        if inp["current_company_years"] < policy["min_current_company_tenure_years"]:
+            add("EMP-SAL-205", "Employment - Salaried",
+                f"Current-company tenure ({inp['current_company_years']:.2f} yrs) is below {code} minimum ({policy['min_current_company_tenure_years']} yrs).")
+        if inp["no_income_proof"]:
+            # No-income-proof segment: rejected unless the bank permits it; when
+            # permitted, the Form-16 history requirement does not apply.
+            if not policy["allow_no_income_proof"]:
+                add("EMP-SAL-207", "Employment - Salaried",
+                    f"{code} requires valid income proof; no-income-proof profile is not accepted.")
+        elif inp["form_16_years"] < policy["form16_years_required"]:
+            add("EMP-SAL-208", "Employment - Salaried",
+                f"Form-16 history ({inp['form_16_years']} yrs) is below {code} requirement ({policy['form16_years_required']} yrs).")
+        if inp["age_emi_sal"] > policy["max_age_emi_salaried"]:
+            add("DEM-102", "Demographics",
+                f"Age at final EMI maturity ({inp['age_emi_sal']}) exceeds {code} limit of {policy['max_age_emi_salaried']} yrs for salaried applicants.")
+    else:
+        if inp["business_exp_years"] < policy["min_total_experience_years"]:
+            add("EMP-SE-301", "Self-Employed",
+                f"Business existence ({inp['business_exp_years']} yrs) is below {code} minimum ({policy['min_total_experience_years']} yrs).")
+        if inp["se_current_itr"] < policy["se_min_current_itr"]:
+            add("EMP-SE-302", "Self-Employed",
+                f"Current-year ITR (Rs {inp['se_current_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_current_itr']:,.0f}).")
+        if policy["se_combined_itr_rule"]:
+            combined = inp["se_current_itr"] + inp["se_prev_itr"]
+            if combined < 600000:
+                add("EMP-SE-303", "Self-Employed",
+                    f"Combined current+previous ITR (Rs {combined:,.0f}) is below {code} minimum (Rs 600,000).")
+        elif inp["se_prev_itr"] < policy["se_min_prev_itr"]:
+            add("EMP-SE-303", "Self-Employed",
+                f"Previous-year ITR (Rs {inp['se_prev_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_prev_itr']:,.0f}).")
+        if not inp["itr_filed"]:
+            add("EMP-SE-304", "Self-Employed",
+                "Active ITR filing proof is required for self-employed profiles.")
+        if not inp["business_proof"]:
+            add("EMP-SE-307", "Self-Employed", "Valid business proof/registration is mandatory.")
+        if inp["age_emi_se"] > policy["max_age_emi_self_employed"]:
+            add("DEM-103", "Demographics",
+                f"Age at final EMI maturity ({inp['age_emi_se']}) exceeds {code} limit of {policy['max_age_emi_self_employed']} yrs for self-employed applicants.")
+
+    # --- Residence / guarantor ----------------------------------------------
+    if (inp["property_status"] in GUARANTOR_PROPERTY_STATUSES
+            and not inp["guarantor_provided"]
+            and code not in BANKS_ALLOW_WITHOUT_GUARANTOR):
+        add("RES-205", "Residence & Guarantor",
+            f"Guarantor is mandatory for property configuration '{inp['property_status']}' at {code}.")
+
+    # --- Existing banking relationship --------------------------------------
+    if inp["active_car_loan"] and code in BANKS_DISALLOW_EXISTING_CAR_LOAN:
+        add("EXB-702", "Existing Banking Relationship",
+            f"{code} does not permit an existing active car loan alongside this application.")
+
+    return reasons
 
 
 class BREEngineService:
@@ -305,18 +455,16 @@ class BREEngineService:
         return await asyncio.to_thread(self._evaluate_application_sync, payload, tenant_id)
 
     def _evaluate_application_sync(self, payload: Dict[str, Any], tenant_id: str = "default") -> Dict[str, Any]:
-        """Evaluates an onboarding application payload against 62-column Bank Eligibility Matrix in RAM (< 10 ms)."""
+        """Evaluate an onboarding application against the 62-column Bank
+        Eligibility Matrix in RAM (< 10 ms), returning the selected-bank verdict
+        plus the full 8-bank eligibility map."""
         start_time = time.perf_counter()
-        rejection_reasons: List[Dict[str, str]] = []
-        executed_rules_count = 0
 
         # Log PII-redacted debug payload
         safe_log_payload = redact_pii(payload)
         logger.debug(f"Evaluating application payload for tenant '{tenant_id}': {safe_log_payload}")
 
-        # Normalize Input Fields
-        # A missing credit_bureau key falls back to documented defaults, but a
-        # present-yet-malformed value (None/list/str/int) fails closed.
+        # --- Normalize & validate credit_bureau ------------------------------
         if "credit_bureau" in payload:
             bureau = payload["credit_bureau"]
             if not isinstance(bureau, dict):
@@ -325,213 +473,100 @@ class BREEngineService:
                 )
         else:
             bureau = {}
-        clean_dpd_values = _normalize_dpd_history(bureau.get("dpd_history", []))
-        max_dpd_value = max(clean_dpd_values, default=0)
 
+        max_dpd_value = max(_normalize_dpd_history(bureau.get("dpd_history", [])), default=0)
         cibil_score = bureau.get("cibil_score", payload.get("cibil_score", 750))
         write_off_amount = bureau.get("write_off_amount", payload.get("write_off_amount", 0.0))
-        pl_write_off = bureau.get("pl_write_off", False) or (write_off_amount > 0 and bureau.get("write_off_type") == "PL")
-        cc_write_off = bureau.get("cc_write_off", False) or (write_off_amount > 0 and bureau.get("write_off_type") == "CC")
-        
-        selected_bank = payload.get("selected_bank", "BOI").upper()
-        if selected_bank == "INDIAN BANK":
-            selected_bank = "INDIAN_BANK"
-        if selected_bank == "KOTAK":
-            selected_bank = "KOTAK"
 
-        age = payload.get("age", 30)
-        occupation = payload.get("occupation", "Salaried")
-        is_nri = payload.get("is_nri", False)
+        # Resolve write-off product type -> policy flag key (None = unclassified)
+        write_off_type_raw = str(bureau.get("write_off_type") or "").strip().upper()
+        if not write_off_type_raw:
+            if bureau.get("cc_write_off"):
+                write_off_type_raw = "CC"
+            elif bureau.get("pl_write_off"):
+                write_off_type_raw = "PL"
+        write_off_flag_key = WRITE_OFF_TYPE_TO_FLAG.get(write_off_type_raw)
+
+        selected_bank = str(payload.get("selected_bank", "BOI")).upper().replace(" ", "_")
+        if selected_bank not in BANK_MATRIX_RULES:
+            selected_bank = "BOI"
+
         # NRI stay is only evaluated for NRI applicants; coerce defensively so a
         # non-numeric value raises a typed error instead of an unhandled TypeError.
+        is_nri = payload.get("is_nri", False)
         nri_stay_years = 0.0
         if is_nri:
             if "minimum_stay_period_nri_years" in payload:
-                raw_nri = payload["minimum_stay_period_nri_years"]
-                field_name = "minimum_stay_period_nri_years"
-                divisor = 1.0
+                raw_nri, field_name, divisor = payload["minimum_stay_period_nri_years"], "minimum_stay_period_nri_years", 1.0
             else:
-                raw_nri = payload.get("minimum_stay_period_nri_days", 0)
-                field_name = "minimum_stay_period_nri_days"
-                divisor = 365.0
+                raw_nri, field_name, divisor = payload.get("minimum_stay_period_nri_days", 0), "minimum_stay_period_nri_days", 365.0
             try:
                 nri_stay_years = float(raw_nri) / divisor
             except (TypeError, ValueError):
                 raise InvalidPayloadError(f"{field_name} must be numeric")
 
-        # 1. Demographics Check
-        if age < 21:
-            rejection_reasons.append({
-                "rule_id": "DEM-101",
-                "category": "Demographics",
-                "message": f"Applicant age ({age}) is below the minimum requirement (21 years)."
-            })
-            executed_rules_count += 1
+        age = payload.get("age", 30)
+        # Absent optional fields default to values that PASS, so a minimal
+        # payload is approved rather than spuriously rejected.
+        inp: Dict[str, Any] = {
+            "age": age,
+            "occupation": payload.get("occupation", "Salaried"),
+            "cibil": cibil_score,
+            "max_dpd": max_dpd_value,
+            "is_nri": is_nri,
+            "nri_stay_years": nri_stay_years,
+            "currently_overdue": bool(bureau.get("currently_overdue", False)),
+            "write_off_amount": write_off_amount,
+            "write_off_type_raw": write_off_type_raw,
+            "write_off_flag_key": write_off_flag_key,
+            "salary": payload.get("net_monthly_salary", 30000),
+            "salary_mode": payload.get("salary_payment_mode", "BANK_TRANSFER"),
+            "work_exp_years": payload.get("minimum_work_experience_years", 99),
+            "current_company_years": payload.get("current_company_tenure_months", 99999) / 12.0,
+            "no_income_proof": payload.get("no_income_proof_segment", False),
+            "form_16_years": payload.get("form_16_years", 2),
+            "active_car_loan": payload.get("active_car_loan", False),
+            "age_emi_sal": payload.get("age_at_last_emi_salaried", age),
+            "age_emi_se": payload.get("age_at_last_emi_self_employed", age),
+            "se_current_itr": payload.get("current_itr", 10_000_000),
+            "se_prev_itr": payload.get("previous_itr", 10_000_000),
+            "itr_filed": payload.get("itr_filed", True),
+            "business_proof": payload.get("business_proof", True),
+            "business_exp_years": payload.get("business_experience_years", 99),
+            "property_status": str(payload.get("property_status", "OWNED")).upper(),
+            "guarantor_provided": payload.get("guarantor_provided", False),
+        }
 
-        # 2. Employment & Income Check
-        if occupation == "Salaried":
-            salary = payload.get("net_monthly_salary", 30000)
-            if salary < 25000:
-                rejection_reasons.append({
-                    "rule_id": "EMP-SAL-202",
-                    "category": "Employment - Salaried",
-                    "message": f"Monthly net salary (₹{salary:,.2f}) is below the minimum floor parameter (₹25,000)."
-                })
-                executed_rules_count += 1
+        # --- Selected-bank verdict ------------------------------------------
+        selected_policy = BANK_MATRIX_RULES[selected_bank]
+        rejection_reasons = _bank_rejections(inp, selected_bank, selected_policy)
 
-            mode = payload.get("salary_payment_mode", "BANK_TRANSFER")
-            if mode in ["CASH", "Salary payment mode-Cash"]:
-                rejection_reasons.append({
-                    "rule_id": "EMP-SAL-203",
-                    "category": "Employment - Salaried",
-                    "message": "Cash salary payment mode is ineligible. Direct bank credit required."
-                })
-                executed_rules_count += 1
-
-        # 3. Credit Bureau Checks (General)
-        if max_dpd_value > 90:
-            rejection_reasons.append({
-                "rule_id": "BUR-402",
-                "category": "Credit Bureau History",
-                "message": f"Found DPD value ({max_dpd_value}) exceeding 90-day tolerance threshold."
-            })
-            executed_rules_count += 1
-
-        if selected_bank == "INDIAN_BANK" and max_dpd_value > 0:
-            rejection_reasons.append({
-                "rule_id": "BUR-403",
-                "category": "Credit Bureau History",
-                "message": "Indian Bank requires zero past DPD instances across all loan accounts."
-            })
-            executed_rules_count += 1
-
-        # 4. Bank Policy Matrix Floor & Specific Checks
-        target_bank_policy = BANK_MATRIX_RULES.get(selected_bank, BANK_MATRIX_RULES["BOI"])
-        
-        # CIBIL Floor Check
-        min_required_cibil = target_bank_policy["min_cibil"]
-        if cibil_score < min_required_cibil:
-            rejection_reasons.append({
-                "rule_id": "BUR-405",
-                "category": "Credit Bureau Floor",
-                "message": f"CIBIL score ({cibil_score}) is below selected bank's ({selected_bank}) minimum threshold of {min_required_cibil}."
-            })
-            executed_rules_count += 1
-
-        # Max Age at Final EMI Check (DEM-102 salaried / DEM-103 self-employed).
-        # Falls back to current age when the projected maturity age is absent —
-        # an applicant already past the ceiling cannot be under it at maturity.
-        if occupation == "Salaried":
-            age_at_last_emi = payload.get("age_at_last_emi_salaried", age)
-            max_emi_age = target_bank_policy["max_age_emi_salaried"]
-            if age_at_last_emi > max_emi_age:
-                rejection_reasons.append({
-                    "rule_id": "DEM-102",
-                    "category": "Demographics",
-                    "message": f"Age at final EMI maturity ({age_at_last_emi}) exceeds {selected_bank} limit of {max_emi_age} years for salaried applicants."
-                })
-                executed_rules_count += 1
-        else:
-            age_at_last_emi = payload.get("age_at_last_emi_self_employed", age)
-            max_emi_age = target_bank_policy["max_age_emi_self_employed"]
-            if age_at_last_emi > max_emi_age:
-                rejection_reasons.append({
-                    "rule_id": "DEM-103",
-                    "category": "Demographics",
-                    "message": f"Age at final EMI maturity ({age_at_last_emi}) exceeds {selected_bank} limit of {max_emi_age} years for self-employed applicants."
-                })
-                executed_rules_count += 1
-
-        # Write-Off Floor Check
-        if write_off_amount > 0:
-            if not target_bank_policy["allow_cc_write_off"] and cc_write_off:
-                rejection_reasons.append({
-                    "rule_id": "BUR-401",
-                    "category": "Credit Bureau History",
-                    "message": f"Credit Card write-offs are not permitted by {selected_bank}."
-                })
-                executed_rules_count += 1
-            elif cc_write_off and write_off_amount > target_bank_policy["max_cc_write_off_amount"]:
-                rejection_reasons.append({
-                    "rule_id": "BUR-401B",
-                    "category": "Credit Bureau History",
-                    "message": f"Credit Card write-off amount (₹{write_off_amount:,.2f}) exceeds {selected_bank} ceiling (₹{target_bank_policy['max_cc_write_off_amount']:,.2f})."
-                })
-                executed_rules_count += 1
-            elif pl_write_off and not target_bank_policy["allow_pl_write_off"]:
-                rejection_reasons.append({
-                    "rule_id": "BUR-401C",
-                    "category": "Credit Bureau History",
-                    "message": f"Personal Loan write-offs are not permitted by {selected_bank}."
-                })
-                executed_rules_count += 1
-            elif not cc_write_off and not pl_write_off:
-                # W5 fail-closed: a recorded write-off with no classifiable type
-                # (write_off_type absent / unrecognized) cannot be validated
-                # against the bank's per-product tolerances, so it must not be
-                # allowed to slip through under the generic matrix ceiling.
-                rejection_reasons.append({
-                    "rule_id": "BUR-401D",
-                    "category": "Credit Bureau History",
-                    "message": f"Unclassified write-off (₹{write_off_amount:,.2f}) recorded; write-off type could not be validated against {selected_bank} policy."
-                })
-                executed_rules_count += 1
-
-        # Tenant Alpha Risk Overrides
+        # Tenant-level overlay (not part of the bank matrix)
         if tenant_id == "tenant_alpha" and cibil_score < 720:
             rejection_reasons.append({
                 "rule_id": "ALPHA-RSK-001",
                 "category": "Tenant Alpha Risk",
-                "message": "Tenant Alpha requires a minimum CIBIL score of 720 for prime onboarding."
+                "message": "Tenant Alpha requires a minimum CIBIL score of 720 for prime onboarding.",
             })
-            executed_rules_count += 1
+
+        overall_eligible = len(rejection_reasons) == 0
+
+        # --- Full 8-bank eligibility map (same rule function) ---------------
+        bank_eligibility: Dict[str, bool] = {
+            code: (len(_bank_rejections(inp, code, policy)) == 0) and overall_eligible
+            for code, policy in BANK_MATRIX_RULES.items()
+        }
 
         execution_time_ms = round((time.perf_counter() - start_time) * 1000, 3)
-        overall_eligible = (len(rejection_reasons) == 0)
-
-        # 5. Evaluate Full 8-Bank Matrix in Parallel
-        bank_eligibility: Dict[str, bool] = {}
-        for code, policy in BANK_MATRIX_RULES.items():
-            eligible = True
-            
-            # CIBIL Check
-            if cibil_score < policy["min_cibil"]:
-                eligible = False
-            
-            # DPD Check
-            if max_dpd_value > policy["max_dpd"]:
-                eligible = False
-            
-            # NRI Check
-            if is_nri:
-                if not policy["allow_nri"]:
-                    eligible = False
-                elif nri_stay_years < policy["min_nri_stay_years"]:
-                    eligible = False
-
-            # Write-off Check
-            if write_off_amount > 0:
-                if cc_write_off:
-                    if not policy["allow_cc_write_off"] or write_off_amount > policy["max_cc_write_off_amount"]:
-                        eligible = False
-                elif pl_write_off and not policy["allow_pl_write_off"]:
-                    eligible = False
-                elif write_off_amount > 10000:
-                    eligible = False
-
-            bank_eligibility[code] = eligible and overall_eligible
-
-        # 5-Stage Request Memory Lifecycle: Sweep transient dicts
-        del safe_log_payload
+        del safe_log_payload  # 5-stage lifecycle: sweep transient PII dict
 
         return {
             "status": "APPROVED" if overall_eligible else "REJECTED",
             "overall_eligible": overall_eligible,
-            "executed_rules_count": executed_rules_count + 62,
+            "executed_rules_count": len(rejection_reasons) + 62,
             "execution_time_ms": execution_time_ms,
             "rejection_reasons": rejection_reasons,
             "bank_eligibility": bank_eligibility,
         }
-
 
 bre_engine_service = BREEngineService()

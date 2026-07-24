@@ -138,7 +138,7 @@ def test_bva_salary_floor(salary, expect_reject):
     [
         (0, False),       # no write-off block entered at all
         (4999, False),
-        (5000, False),    # exactly at ceiling -> accept (uses '>' not '>=')
+        (5000, True),     # exactly at ceiling -> REJECT (sheet says "< 5000")
         (5001, True),     # over ceiling
         (10001, True),
     ],
@@ -337,3 +337,137 @@ def test_rejected_application_disqualifies_all_banks():
     result = _evaluate(_base_payload(age=19))
     assert result["overall_eligible"] is False
     assert all(v is False for v in result["bank_eligibility"].values())
+
+
+# --------------------------------------------------------------------------- #
+# 9. Full Excel-matrix fidelity (Bank_Eligibility_Matrix_v1.xlsx) regression set
+# --------------------------------------------------------------------------- #
+def _se_payload(**overrides):
+    """A clean self-employed applicant that APPROVES by default."""
+    p = _base_payload(**overrides)
+    p["occupation"] = "Self-Employed"
+    p.setdefault("current_itr", 500000)
+    p.setdefault("previous_itr", 450000)
+    p.setdefault("itr_filed", True)
+    p.setdefault("business_proof", True)
+    p.setdefault("business_experience_years", 5)
+    return p
+
+
+def test_currently_overdue_rejects_bur404():
+    p = _base_payload()
+    p["credit_bureau"]["currently_overdue"] = True
+    assert "BUR-404" in _rule_ids(_evaluate(p))
+
+
+def test_min_work_experience_rejects_boi():
+    assert "EMP-SAL-204" in _rule_ids(_evaluate(_base_payload(minimum_work_experience_years=1)))
+
+
+def test_current_company_tenure_rejects_boi():
+    # BOI requires >= 2 yrs; 12 months = 1 yr.
+    assert "EMP-SAL-205" in _rule_ids(_evaluate(_base_payload(current_company_tenure_months=12)))
+
+
+def test_no_income_proof_bank_specific():
+    # BOI forbids no-income-proof; HDFC permits it.
+    assert "EMP-SAL-207" in _rule_ids(_evaluate(_base_payload(no_income_proof_segment=True)))
+    ok = _evaluate(_base_payload(selected_bank="HDFC", no_income_proof_segment=True))
+    assert "EMP-SAL-207" not in _rule_ids(ok)
+    assert ok["overall_eligible"] is True
+
+
+def test_nri_not_allowed_and_stay_floor():
+    # BOI does not onboard NRIs at all.
+    assert "DEM-104" in _rule_ids(_evaluate(_base_payload(is_nri=True, minimum_stay_period_nri_years=5)))
+    # HDFC allows NRI but requires >= 2 yrs stay.
+    p = _base_payload(selected_bank="HDFC", is_nri=True, minimum_stay_period_nri_years=1)
+    assert "DEM-105" in _rule_ids(_evaluate(p))
+
+
+def test_guarantor_mandatory_bank_specific():
+    # Both-rented config needs a guarantor at BOI; BOM waives it.
+    assert "RES-205" in _rule_ids(_evaluate(_base_payload(property_status="SEPARATE_BOTH_RENTED")))
+    ok = _evaluate(_base_payload(selected_bank="BOM", property_status="SEPARATE_BOTH_RENTED"))
+    assert ok["overall_eligible"] is True
+
+
+@pytest.mark.parametrize(
+    "field, value, rule_id",
+    [
+        ("current_itr", 200000, "EMP-SE-302"),   # BOI SE current ITR >= 300000
+        ("previous_itr", 50000, "EMP-SE-303"),   # BOI SE previous ITR >= 100000
+        ("itr_filed", False, "EMP-SE-304"),
+        ("business_proof", False, "EMP-SE-307"),
+        ("business_experience_years", 1, "EMP-SE-301"),
+    ],
+)
+def test_self_employed_suite_rejects_boi(field, value, rule_id):
+    assert rule_id in _rule_ids(_evaluate(_se_payload(**{field: value})))
+
+
+def test_self_employed_clean_approves():
+    assert _evaluate(_se_payload())["overall_eligible"] is True
+
+
+def test_bob_combined_itr_rule():
+    # BOB uses current+previous >= 600000 instead of a flat previous floor.
+    fail = _se_payload(selected_bank="BOB", current_itr=300000, previous_itr=100000)
+    assert "EMP-SE-303" in _rule_ids(_evaluate(fail))
+    ok = _se_payload(selected_bank="BOB", current_itr=400000, previous_itr=250000)
+    assert "EMP-SE-303" not in _rule_ids(_evaluate(ok))
+
+
+@pytest.mark.parametrize(
+    "bank, dpd, reject",
+    [
+        ("IOB", 89, False),   # "< 90" -> 89 passes
+        ("IOB", 90, True),    # 90 rejects
+        ("BOI", 0, False),    # "<= 0" -> 0 passes
+        ("BOI", 1, True),     # any DPD rejects for a zero-tolerance bank
+    ],
+)
+def test_dpd_boundary_matches_sheet(bank, dpd, reject):
+    p = _base_payload(selected_bank=bank)
+    p["credit_bureau"]["dpd_history"] = [dpd]
+    assert ("BUR-402" in _rule_ids(_evaluate(p))) is reject
+
+
+def test_write_off_type_specific_rejection():
+    # A home-loan write-off (never permitted) rejects via generic BUR-401.
+    p = _base_payload()
+    p["credit_bureau"].update({"write_off_amount": 3000.0, "write_off_type": "HL"})
+    assert "BUR-401" in _rule_ids(_evaluate(p))
+
+
+def test_selected_bank_and_matrix_are_consistent():
+    """The selected-bank verdict must equal that bank's entry in the 8-bank map
+    (both now come from the same rule function)."""
+    p = _base_payload(selected_bank="IOB")
+    p["credit_bureau"]["cibil_score"] = 700  # below IOB floor 701
+    result = _evaluate(p)
+    assert result["overall_eligible"] is False
+    assert result["bank_eligibility"]["IOB"] is False
+
+
+def test_form_16_years_bank_specific():
+    # BOI requires >= 2 Form-16 years; 1 rejects, 2 passes.
+    assert "EMP-SAL-208" in _rule_ids(_evaluate(_base_payload(form_16_years=1)))
+    assert "EMP-SAL-208" not in _rule_ids(_evaluate(_base_payload(form_16_years=2)))
+    # BOB only needs 1 year.
+    assert "EMP-SAL-208" not in _rule_ids(_evaluate(_base_payload(selected_bank="BOB", form_16_years=1)))
+
+
+def test_form_16_skipped_on_accepted_no_income_proof():
+    # HDFC accepts a no-income-proof profile, so Form-16 history is not required.
+    ok = _evaluate(_base_payload(selected_bank="HDFC", no_income_proof_segment=True, form_16_years=0))
+    assert "EMP-SAL-208" not in _rule_ids(ok)
+    assert ok["overall_eligible"] is True
+
+
+def test_existing_car_loan_bank_specific():
+    # IOB and BOB forbid an existing active car loan; others allow it.
+    assert "EXB-702" in _rule_ids(_evaluate(_base_payload(selected_bank="IOB", active_car_loan=True)))
+    assert "EXB-702" in _rule_ids(_evaluate(_base_payload(selected_bank="BOB", active_car_loan=True)))
+    assert _evaluate(_base_payload(selected_bank="BOI", active_car_loan=True))["overall_eligible"] is True
+    assert _evaluate(_base_payload(selected_bank="HDFC", active_car_loan=True))["overall_eligible"] is True
