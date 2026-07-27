@@ -54,3 +54,16 @@
 - PAN: `AB******4F` (`f"{pan[:2]}******{pan[-2:]}"`)
 - DOB: `****-**-15` (`f"****-**-{dob[-2:]}"`)
 - Aadhaar: `****-****-1234`
+
+### 6. Claude Opus 5 System Prompt Engineering Rules
+- **Conciseness**: Effort controls thinking volume, not answer length — conciseness must be prompted explicitly:
+  "Keep responses focused, brief, and concise. Keep disclaimers and caveats short..."
+- **Narration Cadence**: Control verbose updates:
+  "Before your first tool call, say in one sentence what you're about to do. While working, give a brief update only when you find something important..."
+- **Task Scope Constraint**: Prevent scope widening or editorializing:
+  "Deliver what was asked, at the scope intended... stop short of actions that are clearly beyond what was asked."
+- **Subagent Delegation Caps**: Define strict criteria/limits for subagents.
+- **Thinking-Disabled Leakage Prevention**: When effort is low, avoid system XML tags leakage:
+  "Do not include internal or system XML tags in your response." (Avoid saying "don't think").
+- **Delete Legacy Scaffolding**: Remove older instructions like "double check your work" or "use a subagent to verify" when moving to Opus 5.
+

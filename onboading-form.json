@@ -1,0 +1,805 @@
+{
+  "onboardingForm": {
+    "steps": [
+      {
+        "step": 1,
+        "name": "Identity Details",
+        "description": "Establish applicant name, classification and capture core identity details.",
+        "fields": [
+          {
+            "id": "applicantName",
+            "label": "Full Name",
+            "type": "text",
+            "required": true,
+            "description": "Entering a name triggers the display of applicant entity options."
+          },
+          {
+            "id": "entityType",
+            "label": "Who is applying today?",
+            "type": "radio",
+            "required": true,
+            "defaultValue": "",
+            "options": [
+              { "value": "Individual", "label": "Individual" },
+              { "value": "Company", "label": "Company / Organization" },
+              { "value": "HUF", "label": "HUF" }
+            ]
+          }
+        ],
+        "conditionalSections": {
+          "entityType": {
+            "Individual": [
+              {
+                "id": "dob",
+                "label": "Date of Birth (DOB)",
+                "type": "date",
+                "required": true,
+                "defaultValue": "1992-05-15"
+              },
+              {
+                "id": "gender",
+                "label": "Gender",
+                "type": "select",
+                "required": false,
+                "defaultValue": "Male",
+                "options": ["Male", "Female", "Other"]
+              },
+              {
+                "id": "pan",
+                "label": "PAN",
+                "type": "text",
+                "required": true,
+                "maxLength": 10,
+                "defaultValue": "ABCDE1234F",
+                "actions": [
+                  { "type": "upload", "id": "panFileIndividual" },
+                  { "type": "verify", "enabled": true }
+                ]
+              },
+              {
+                "id": "maritalStatus",
+                "label": "Marital Status",
+                "type": "select",
+                "required": false,
+                "defaultValue": "Married",
+                "options": ["Married", "Unmarried"]
+              },
+              {
+                "id": "citizenshipStatus",
+                "label": "Citizenship / Residency Status",
+                "type": "select",
+                "required": false,
+                "defaultValue": "Resident Indian",
+                "options": ["Resident Indian", "NRI/PIO"],
+                "conditionals": {
+                  "NRI/PIO": [
+                    {
+                      "id": "nriStayPeriod",
+                      "label": "NRI Stay Period in India (Months)",
+                      "type": "number",
+                      "required": true,
+                      "defaultValue": 12
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "phone",
+                "label": "Phone",
+                "type": "tel",
+                "required": true,
+                "maxLength": 10,
+                "defaultValue": "9876543210"
+              },
+              {
+                "id": "email",
+                "label": "Email",
+                "type": "email",
+                "required": true,
+                "defaultValue": "rohan.sharma@example.com"
+              }
+            ],
+            "Company": [
+              {
+                "id": "companyName",
+                "label": "Registered Company Name",
+                "type": "text",
+                "required": true
+              },
+              {
+                "id": "companyIndustryType",
+                "label": "Industry Type",
+                "type": "select",
+                "required": true,
+                "options": ["Manufacturing", "Services", "Trading", "Real Estate", "Others"]
+              },
+              {
+                "id": "companyPan",
+                "label": "Company PAN No.",
+                "type": "text",
+                "required": true,
+                "maxLength": 10,
+                "defaultValue": "AABCT1234C",
+                "actions": [
+                  { "type": "upload", "id": "panFileCompany" },
+                  { "type": "verify", "enabled": true }
+                ]
+              },
+              {
+                "id": "companyLocation",
+                "label": "Company Location",
+                "type": "text",
+                "required": true,
+                "placeholder": "Registered / operating address"
+              },
+              {
+                "id": "contactPersonName",
+                "label": "Contact Person Name",
+                "type": "text",
+                "required": true
+              },
+              {
+                "id": "contactPersonDesignation",
+                "label": "Contact Person Designation",
+                "type": "text",
+                "required": false
+              },
+              {
+                "id": "companyMobile",
+                "label": "Mobile No.",
+                "type": "tel",
+                "required": true,
+                "maxLength": 10,
+                "defaultValue": "9876543211"
+              },
+              {
+                "id": "companyEmail",
+                "label": "Email ID",
+                "type": "email",
+                "required": true,
+                "defaultValue": "accounts@company.example.com"
+              },
+              {
+                "id": "companyEmployees",
+                "label": "No. of Employees",
+                "type": "number",
+                "required": false
+              }
+            ],
+            "HUF": [
+              {
+                "id": "hufName",
+                "label": "HUF Name",
+                "type": "text",
+                "required": true,
+                "placeholder": "e.g. Sharma HUF"
+              },
+              {
+                "id": "hufPan",
+                "label": "HUF PAN",
+                "type": "text",
+                "required": true,
+                "maxLength": 10
+              },
+              {
+                "id": "udyamRegNoHUF",
+                "label": "Udyam Registration No.",
+                "type": "text",
+                "required": false,
+                "placeholder": "UDYAM-XX-00-0000000"
+              },
+              {
+                "id": "hufLocation",
+                "label": "HUF Location",
+                "type": "text",
+                "required": false
+              },
+              {
+                "id": "hufFormationDate",
+                "label": "Date of HUF Formation / Deed",
+                "type": "date",
+                "required": false
+              },
+              {
+                "id": "kartaName",
+                "label": "Karta Name",
+                "type": "text",
+                "required": true
+              },
+              {
+                "id": "kartaPan",
+                "label": "Karta PAN",
+                "type": "text",
+                "required": true,
+                "maxLength": 10
+              },
+              {
+                "id": "kartaMobile",
+                "label": "Karta Mobile No.",
+                "type": "tel",
+                "required": false,
+                "maxLength": 10
+              }
+            ]
+          }
+        }
+      },
+      {
+        "step": 2,
+        "name": "Address & Residence",
+        "description": "Capture localization details and auto-fill address mappings. (Note: Skipped entirely for Company / Organization).",
+        "fields": [
+          {
+            "id": "pincode",
+            "label": "Pincode",
+            "type": "text",
+            "required": true,
+            "maxLength": 6,
+            "defaultValue": "560001"
+          },
+          {
+            "id": "cityName",
+            "label": "City",
+            "type": "text",
+            "readonly": true,
+            "defaultValue": "Bengaluru"
+          },
+          {
+            "id": "stateName",
+            "label": "State",
+            "type": "text",
+            "readonly": true,
+            "defaultValue": "Karnataka"
+          },
+          {
+            "id": "residentDetails",
+            "label": "Resident Details",
+            "type": "select",
+            "required": true,
+            "defaultValue": "Owned House",
+            "options": [
+              { "value": "Owned House", "label": "Owned House" },
+              { "value": "Rented House", "label": "Rented House" }
+            ]
+          }
+        ]
+      },
+      {
+        "step": 3,
+        "name": "Occupation & Business Income Setup",
+        "description": "Branching fields based on business type, income proofs, and workspace properties. (This runs as Step 2 for Company profiles).",
+        "conditionalSections": {
+          "entityType": {
+            "Individual": [
+              {
+                "id": "occupation",
+                "label": "Occupation",
+                "type": "select",
+                "required": true,
+                "defaultValue": "Salaried",
+                "options": ["Salaried", "Self-Employed"],
+                "conditionals": {
+                  "Salaried": [
+                    {
+                      "id": "employerType",
+                      "label": "Employment Type",
+                      "type": "select",
+                      "required": false,
+                      "options": [
+                        { "value": "Employment-Pvt Ltd", "label": "Private Limited (Pvt Ltd)" },
+                        { "value": "Employment-Public Ltd", "label": "Public Limited" },
+                        { "value": "Employment-Govt", "label": "Government Service" },
+                        { "value": "Employment-PSU", "label": "Public Sector Undertaking (PSU)" },
+                        { "value": "Employment-Firm", "label": "Partnership / Proprietorship Firm" }
+                      ]
+                    },
+                    {
+                      "id": "tenureBand",
+                      "label": "With Current Company Since",
+                      "type": "select",
+                      "required": true,
+                      "defaultValue": "2y+",
+                      "options": [
+                        { "value": "0-6m", "label": "0 – 6 Months" },
+                        { "value": "6m-1y", "label": "6 Months – 1 Year" },
+                        { "value": "1y-2y", "label": "1 Year – 2 Years" },
+                        { "value": "2y+", "label": "2+ Years" }
+                      ],
+                      "conditionals": {
+                        "0-6m": [
+                          { "id": "prevCompanyName", "label": "Previous Company Name", "type": "text", "required": true },
+                          { "id": "prevCompanyJoining", "label": "Previous Joining Date", "type": "date", "required": true }
+                        ],
+                        "6m-1y": [
+                          { "id": "prevCompanyName", "label": "Previous Company Name", "type": "text", "required": true },
+                          { "id": "prevCompanyJoining", "label": "Previous Joining Date", "type": "date", "required": true }
+                        ],
+                        "1y-2y": [
+                          { "id": "prevCompanyName", "label": "Previous Company Name", "type": "text", "required": true },
+                          { "id": "prevCompanyJoining", "label": "Previous Joining Date", "type": "date", "required": true }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "grossSalaryBand",
+                      "label": "Approx. Gross Salary (₹)",
+                      "type": "select",
+                      "required": false,
+                      "defaultValue": "gt25000",
+                      "options": [
+                        { "value": "lt25000", "label": "Less than 25,000" },
+                        { "value": "gt25000", "label": "More than 25,000" }
+                      ]
+                    },
+                    {
+                      "id": "salaryMode",
+                      "label": "Salary Payment Mode",
+                      "type": "select",
+                      "required": false,
+                      "defaultValue": "Salary payment mode- Bank Credit",
+                      "options": [
+                        { "value": "Salary payment mode- Bank Credit", "label": "Through Bank" },
+                        { "value": "Salary payment mode-Cash", "label": "Cash" }
+                      ]
+                    },
+                    {
+                      "id": "form16Status",
+                      "label": "Tax Proof Availability",
+                      "type": "select",
+                      "required": false,
+                      "defaultValue": "Form 16",
+                      "options": [
+                        { "value": "Form 16", "label": "Form 16 / Income Tax Return Available" },
+                        { "value": "No Income Proof", "label": "No Formal Income Proof" }
+                      ]
+                    },
+                    {
+                      "id": "rentalIncomeTypeSalaried",
+                      "label": "Secondary Rental Income Status",
+                      "type": "select",
+                      "required": false,
+                      "defaultValue": "None",
+                      "options": [
+                        { "value": "None", "label": "No Rental Income Claimed" },
+                        { "value": "Rental Income-with Agreement -Not filed ITR-Not reflecting in Bank", "label": "Agreement present, No ITR, Not reflecting in Bank" },
+                        { "value": "Rental Income-with Agreement filed ITR- Not reflecting in Bank", "label": "Agreement present, Filed ITR, Not reflecting in Bank" },
+                        { "value": "Rental Income-with Agreement -Not filed ITR-reflecting in Bank", "label": "Agreement present, No ITR, Reflecting in Bank" }
+                      ]
+                    }
+                  ],
+                  "Self-Employed": [
+                    {
+                      "id": "officeAddressType",
+                      "label": "Office Address Type",
+                      "type": "select",
+                      "required": false,
+                      "defaultValue": "Same",
+                      "options": [
+                        { "value": "Same", "label": "Same as Residence" },
+                        { "value": "Separate", "label": "Separate" }
+                      ],
+                      "conditionals": {
+                        "Separate": [
+                          { "id": "officeAddress", "label": "Office Address", "type": "text", "required": true },
+                          {
+                            "id": "officePremisesStatus",
+                            "label": "Office Premises Status",
+                            "type": "select",
+                            "required": true,
+                            "options": [
+                              { "value": "Owned", "label": "Owned" },
+                              { "value": "Rented", "label": "Rented" }
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "guarantorStatus",
+                      "label": "Guarantor Arrangement",
+                      "type": "select",
+                      "required": false,
+                      "description": "Triggered conditionally only when both Residence (Step 2) and Office (Step 3) are Rented.",
+                      "options": [
+                        { "value": "Without a Gaurantor", "label": "Without a Guarantor" },
+                        { "value": "With a Gaurantor", "label": "With a Guarantor" }
+                      ]
+                    },
+                    {
+                      "id": "businessEntityType",
+                      "label": "Business Entity Type",
+                      "type": "select",
+                      "required": false,
+                      "defaultValue": "Propreitorship",
+                      "options": [
+                        { "value": "Propreitorship", "label": "Sole Proprietorship" },
+                        { "value": "Parternship Firm", "label": "Partnership Firm" },
+                        { "value": "Private Limited", "label": "Private Limited Company" },
+                        { "value": "Public Limited", "label": "Public Limited Company" },
+                        { "value": "HUF", "label": "Hindu Undivided Family (HUF)" },
+                        { "value": "Agriculture", "label": "Agriculture Sector" }
+                      ]
+                    },
+                    {
+                      "id": "businessProof",
+                      "label": "Udyam Registration No. / GSTIN / Business Proof",
+                      "type": "text",
+                      "required": false,
+                      "defaultValue": "GSTIN: 29AAAAA0000A1Z5",
+                      "placeholder": "Enter Udyam Registration No. or GSTIN or Business Proof"
+                    },
+                    {
+                      "id": "businessEstablishmentDate",
+                      "label": "Business Establishment / Reg. Date",
+                      "type": "date",
+                      "required": true,
+                      "defaultValue": "2019-01-10"
+                    },
+                    {
+                      "id": "currentITRAmount",
+                      "label": "Current Year ITR Amount (₹)",
+                      "type": "number",
+                      "required": true,
+                      "defaultValue": 450000
+                    },
+                    {
+                      "id": "prevITRAmount",
+                      "label": "Previous Year ITR Amount (₹)",
+                      "type": "number",
+                      "required": true,
+                      "defaultValue": 380000
+                    },
+                    {
+                      "id": "businessItrAmount",
+                      "label": "Business ITR (₹)",
+                      "type": "number",
+                      "required": true,
+                      "placeholder": "Enter Business ITR Amount",
+                      "actions": [
+                        { "type": "upload", "id": "itrFileSelfEmployed" },
+                        { "type": "verify", "enabled": false }
+                      ]
+                    },
+                    {
+                      "id": "rentalIncomeTypeSelfEmployed",
+                      "label": "Secondary Rental Income Status",
+                      "type": "select",
+                      "required": false,
+                      "defaultValue": "None",
+                      "options": [
+                        { "value": "None", "label": "No Rental Income Claimed" },
+                        { "value": "Rental Income-with Agreement -Not filed ITR-Not reflecting in Bank", "label": "Agreement present, No ITR, Not reflecting in Bank" },
+                        { "value": "Rental Income-with Agreement filed ITR- Not reflecting in Bank", "label": "Agreement present, Filed ITR, Not reflecting in Bank" },
+                        { "value": "Rental Income-with Agreement -Not filed ITR-reflecting in Bank", "label": "Agreement present, No ITR, Reflecting in Bank" }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ],
+            "HUF": [
+              {
+                "id": "officeAddressType",
+                "label": "Office Address Type",
+                "type": "select",
+                "required": false,
+                "defaultValue": "Same",
+                "options": [
+                  { "value": "Same", "label": "Same as Residence" },
+                  { "value": "Separate", "label": "Separate" }
+                ],
+                "conditionals": {
+                  "Separate": [
+                    { "id": "officeAddress", "label": "Office Address", "type": "text", "required": true }
+                  ]
+                }
+              },
+              {
+                "id": "udyamRegNoSelfEmployed",
+                "label": "Udyam Registration No.",
+                "type": "text",
+                "required": false,
+                "placeholder": "UDYAM-XX-00-0000000"
+              },
+              {
+                "id": "businessEstablishmentDate",
+                "label": "Business Establishment / Reg. Date",
+                "type": "date",
+                "required": true,
+                "defaultValue": "2019-01-10"
+              },
+              {
+                "id": "itrFilingStatus",
+                "label": "ITR Filing Status",
+                "type": "select",
+                "required": false,
+                "defaultValue": "Self employed ITR Filled",
+                "options": [
+                  { "value": "Self employed ITR Filled", "label": "Filed" },
+                  { "value": "ITR Not Filed", "label": "Not Filed" }
+                ],
+                "conditionals": {
+                  "Self employed ITR Filled": [
+                    { "id": "currentITRAmount", "label": "Current Year ITR Amount (₹)", "type": "number", "required": true, "defaultValue": 450000 },
+                    { "id": "prevITRAmount", "label": "Previous Year ITR Amount (₹)", "type": "number", "required": true, "defaultValue": 380000 }
+                  ]
+                }
+              },
+              {
+                "id": "rentalIncomeTypeSelfEmployed",
+                "label": "Secondary Rental Income Status",
+                "type": "select",
+                "required": false,
+                "defaultValue": "None",
+                "options": [
+                  { "value": "None", "label": "No Rental Income Claimed" },
+                  { "value": "Rental Income-with Agreement -Not filed ITR-Not reflecting in Bank", "label": "Agreement present, No ITR, Not reflecting in Bank" },
+                  { "value": "Rental Income-with Agreement filed ITR- Not reflecting in Bank", "label": "Agreement present, Filed ITR, Not reflecting in Bank" },
+                  { "value": "Rental Income-with Agreement -Not filed ITR-reflecting in Bank", "label": "Agreement present, No ITR, Reflecting in Bank" }
+                ]
+              },
+              {
+                "id": "businessProof",
+                "label": "Business Registration Proof / GSTIN",
+                "type": "text",
+                "required": false,
+                "defaultValue": "GSTIN: 29AAAAA0000A1Z5"
+              }
+            ],
+            "Company": [
+              {
+                "id": "companyEstablishmentDate",
+                "label": "Business Establishment / Incorporation Date",
+                "type": "date",
+                "required": true,
+                "defaultValue": "2016-04-01"
+              },
+              {
+                "id": "companyGstin",
+                "label": "Udyam Registration No. / GSTIN No.",
+                "type": "text",
+                "required": true,
+                "placeholder": "UDYAM-XX-00-0000000 or GSTIN"
+              },
+              {
+                "id": "companyCurrentITRAmount",
+                "label": "Current Year ITR Amount (₹)",
+                "type": "number",
+                "required": true,
+                "defaultValue": 1200000
+              },
+              {
+                "id": "companyPrevITRAmount",
+                "label": "Previous Year ITR Amount (₹)",
+                "type": "number",
+                "required": true,
+                "defaultValue": 950000
+              },
+              {
+                "id": "businessItrAmountCompany",
+                "label": "Business ITR (₹)",
+                "type": "number",
+                "required": true,
+                "placeholder": "Enter Business ITR Amount",
+                "actions": [
+                  { "type": "upload", "id": "itrFileCompany" },
+                  { "type": "verify", "enabled": false }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "step": 4,
+        "name": "Banking, Bureau & Loan Details",
+        "description": "Establish bank relationships, requested loan metrics, and bureau assessment variables.",
+        "fields": [
+          {
+            "id": "existingAccountBank",
+            "label": "Existing Current/Savings Bank A/c With",
+            "type": "select",
+            "required": true,
+            "defaultValue": "BOB",
+            "options": ["BOB", "Indian Bank", "IOB", "BOI", "BOM", "Others"]
+          },
+          {
+            "id": "existingCarLoanBank",
+            "label": "Car Loan (Existing / Closed) With",
+            "type": "select",
+            "required": true,
+            "defaultValue": "None",
+            "options": ["None", "BOB", "Indian Bank", "IOB", "BOI", "BOM", "Others"]
+          },
+          {
+            "id": "loanType",
+            "label": "Type of Loan Required",
+            "type": "select",
+            "required": true,
+            "defaultValue": "Auto Loan",
+            "options": ["Auto Loan", "Personal Loan", "Home Loan"]
+          },
+          {
+            "id": "bureauCibilScore",
+            "label": "CIBIL Score",
+            "type": "number",
+            "required": false,
+            "defaultValue": 750
+          },
+          {
+            "id": "bureauDpd",
+            "label": "DPD (Days Past Due)",
+            "type": "number",
+            "required": false,
+            "defaultValue": 0
+          },
+          {
+            "id": "bureauLoanEnquiry",
+            "label": "Loan Enquiry (count)",
+            "type": "number",
+            "required": false,
+            "defaultValue": 0
+          },
+          {
+            "id": "bureauCurrentlyOutstanding",
+            "label": "Currently Outstanding (₹)",
+            "type": "number",
+            "required": false,
+            "defaultValue": 0
+          },
+          {
+            "id": "bureauAgeAtLastEMI",
+            "label": "Age at Last EMI",
+            "type": "number",
+            "required": false,
+            "defaultValue": 35
+          },
+          {
+            "id": "cibilPlScoreToggle",
+            "label": "Is CIBIL PL Score Available?",
+            "type": "checkbox",
+            "required": false,
+            "defaultValue": false,
+            "conditionals": {
+              "true": [
+                {
+                  "id": "bureauCibilPlScore",
+                  "label": "CIBIL PL Score",
+                  "type": "number",
+                  "required": true
+                }
+              ]
+            }
+          },
+          {
+            "id": "bureauFlagPL",
+            "label": "PL Write-Off",
+            "type": "checkbox",
+            "required": false,
+            "defaultValue": false
+          },
+          {
+            "id": "bureauFlagHome",
+            "label": "Home Loan WO",
+            "type": "checkbox",
+            "required": false,
+            "defaultValue": false
+          },
+          {
+            "id": "bureauFlagConsumer",
+            "label": "Consumer WO",
+            "type": "checkbox",
+            "required": false,
+            "defaultValue": false
+          },
+          {
+            "id": "bureauFlagAgri",
+            "label": "Agri Loan WO",
+            "type": "checkbox",
+            "required": false,
+            "defaultValue": false
+          },
+          {
+            "id": "bureauFlagMSME",
+            "label": "MSME WO",
+            "type": "checkbox",
+            "required": false,
+            "defaultValue": false
+          },
+          {
+            "id": "bureauFlagAuto",
+            "label": "Auto Loan WO",
+            "type": "checkbox",
+            "required": false,
+            "defaultValue": false
+          },
+          {
+            "id": "bureauFlagCC",
+            "label": "Credit Card WO",
+            "type": "checkbox",
+            "required": false,
+            "defaultValue": false,
+            "conditionals": {
+              "true": [
+                {
+                  "id": "bureauWriteOffAmount",
+                  "label": "Write-Off Amount (₹)",
+                  "type": "number",
+                  "required": true,
+                  "defaultValue": 0
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "step": 5,
+        "name": "Co-Applicant Mapping",
+        "description": "Configure secondary applicant relationships for age or income pooling (skipped for Companies).",
+        "conditionalSections": {
+          "entityType": {
+            "Individual": [
+              {
+                "id": "coAppAgeRelation",
+                "label": "Co-Applicant Added For Age Extension",
+                "type": "select",
+                "required": false,
+                "defaultValue": "None",
+                "options": ["None", "Brother", "Sister"]
+              },
+              {
+                "id": "coAppIncomeRelation",
+                "label": "Co-Applicant Added For Income Pooling",
+                "type": "select",
+                "required": false,
+                "defaultValue": "None",
+                "options": ["None", "Father", "Mother", "Brother", "Sister"],
+                "conditionals": {
+                  "Father": [
+                    { "id": "coApplicantName", "label": "Co-Applicant Name", "type": "text", "required": true },
+                    { "id": "coApplicantDob", "label": "Co-Applicant DOB", "type": "date", "required": true },
+                    { "id": "coApplicantOccupation", "label": "Co-Applicant Occupation Type", "type": "select", "required": true, "options": ["Salaried", "Self-Employed"] }
+                  ],
+                  "Mother": [
+                    { "id": "coApplicantName", "label": "Co-Applicant Name", "type": "text", "required": true },
+                    { "id": "coApplicantDob", "label": "Co-Applicant DOB", "type": "date", "required": true },
+                    { "id": "coApplicantOccupation", "label": "Co-Applicant Occupation Type", "type": "select", "required": true, "options": ["Salaried", "Self-Employed"] }
+                  ],
+                  "Brother": [
+                    { "id": "coApplicantName", "label": "Co-Applicant Name", "type": "text", "required": true },
+                    { "id": "coApplicantDob", "label": "Co-Applicant DOB", "type": "date", "required": true },
+                    { "id": "coApplicantOccupation", "label": "Co-Applicant Occupation Type", "type": "select", "required": true, "options": ["Salaried", "Self-Employed"] }
+                  ],
+                  "Sister": [
+                    { "id": "coApplicantName", "label": "Co-Applicant Name", "type": "text", "required": true },
+                    { "id": "coApplicantDob", "label": "Co-Applicant DOB", "type": "date", "required": true },
+                    { "id": "coApplicantOccupation", "label": "Co-Applicant Occupation Type", "type": "select", "required": true, "options": ["Salaried", "Self-Employed"] }
+                  ]
+                }
+              }
+            ],
+            "HUF": [
+              {
+                "id": "coAppAgeRelation",
+                "label": "Co-Applicant Added For Age Extension",
+                "type": "select",
+                "required": false,
+                "defaultValue": "None",
+                "options": ["None", "Brother", "Sister"]
+              },
+              {
+                "id": "coAppIncomeRelation",
+                "label": "Co-Applicant Added For Income Pooling",
+                "type": "select",
+                "required": false,
+                "defaultValue": "None",
+                "options": ["None", "Father", "Mother", "Brother", "Sister"]
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

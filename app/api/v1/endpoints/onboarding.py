@@ -1,19 +1,46 @@
 import json
 import time
-from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, Header, status
+from typing import Any, Dict, Optional, Tuple
+
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_current_tenant, get_db
-from app.api.schemas.onboarding import OnboardingEvaluationRequest, OnboardingEvaluationResponse, RejectionReasonDetail
+from app.api.deps import get_current_tenant
+from app.api.schemas.onboarding import (
+    CompanyIdentity,
+    HUFIdentity,
+    IndividualIdentity,
+    OnboardingEvaluationRequest,
+    OnboardingEvaluationResponse,
+    OnboardingFormEvaluationResponse,
+    OnboardingFormRequest,
+    RejectionReasonDetail,
+)
 from app.core.database import get_db
-from app.core.logging import logger, redact_pii
+from app.core.logging import logger, redact_pan, redact_pii
 from app.db.models.application import ApplicationModel
+from app.db.models.audit_log import AuditLogModel
 from app.db.models.rule_execution import RuleExecutionModel
 from app.db.rls import set_tenant_rls_context
 from app.services.bre_engine import bre_engine_service
 
 router = APIRouter()
+
+# The seeded default tenant carries a UUID primary key; the header value
+# "default" is its human-facing code.
+DEFAULT_TENANT_ROW_ID = "00000000-0000-0000-0000-000000000000"
+AUDIT_ACTION_FORM_EVALUATION = "ONBOARDING_FORM_EVALUATION"
+
+
+def _tenant_row_id(tenant_id: str) -> str:
+    return DEFAULT_TENANT_ROW_ID if tenant_id == "default" else tenant_id
+
+
+def _rejection_details(evaluation: Dict[str, Any]) -> list[RejectionReasonDetail]:
+    return [
+        RejectionReasonDetail(rule_id=r["rule_id"], category=r["category"], message=r["message"])
+        for r in evaluation["rejection_reasons"]
+    ]
 
 
 @router.post("/evaluate", response_model=OnboardingEvaluationResponse)
@@ -38,14 +65,21 @@ async def evaluate_onboarding_application(
     # Persist Application record and RuleExecution audit log in single DB transaction (< 15 ms)
     try:
         app_record = ApplicationModel(
-            tenant_id=tenant_id if tenant_id != "default" else "00000000-0000-0000-0000-000000000000",
+            tenant_id=_tenant_row_id(tenant_id),
             entity_type=payload.entity_type.value,
             applicant_name=payload.applicant_name,
+            pan_masked=redact_pan(payload.pan) if payload.pan else None,
+            occupation=payload.occupation.value,
+            property_status=payload.property_status.value,
+            guarantor_provided=payload.guarantor_provided,
+            is_nri=payload.is_nri,
             selected_bank=payload.selected_bank.value,
             cibil_score=payload.credit_bureau.cibil_score,
             dpd_count=len(payload.credit_bureau.dpd_history),
             write_off_amount=payload.credit_bureau.write_off_amount,
+            write_off_type=payload.credit_bureau.write_off_type,
             status=evaluation["status"],
+            overall_eligible=evaluation["overall_eligible"],
         )
         db.add(app_record)
         await db.flush()
@@ -56,8 +90,10 @@ async def evaluate_onboarding_application(
             bank_code=payload.selected_bank.value,
             eligible=evaluation["overall_eligible"],
             rejection_count=len(evaluation["rejection_reasons"]),
+            executed_rules_count=evaluation["executed_rules_count"],
             execution_time_ms=evaluation["execution_time_ms"],
             rejection_reasons_json=json.dumps(evaluation["rejection_reasons"]),
+            bank_eligibility_json=evaluation["bank_eligibility"],
         )
         db.add(exec_record)
     except Exception as e:
@@ -72,11 +108,187 @@ async def evaluate_onboarding_application(
         overall_eligible=evaluation["overall_eligible"],
         executed_rules_count=evaluation["executed_rules_count"],
         execution_time_ms=total_time_ms,
-        rejection_reasons=[
-            RejectionReasonDetail(
-                rule_id=r["rule_id"], category=r["category"], message=r["message"]
-            )
-            for r in evaluation["rejection_reasons"]
-        ],
+        rejection_reasons=_rejection_details(evaluation),
         bank_eligibility=evaluation["bank_eligibility"],
+    )
+
+
+def _build_application_record(
+    form: OnboardingFormRequest,
+    engine_payload: Dict[str, Any],
+    evaluation: Dict[str, Any],
+    tenant_row_id: str,
+) -> ApplicationModel:
+    """Project the polymorphic submission onto the application table.
+
+    Queryable attributes become typed columns; the entity-specific remainder is
+    kept verbatim (PII-redacted) in `entity_detail_json`, so a Company row does
+    not carry a dozen NULL Individual columns and vice versa.
+    """
+    identity = form.identity
+    banking = form.banking
+    bureau = engine_payload["credit_bureau"]
+
+    contact_email: Optional[str] = None
+    contact_phone: Optional[str] = None
+    if isinstance(identity, IndividualIdentity):
+        contact_email, contact_phone = identity.email, identity.phone
+    elif isinstance(identity, CompanyIdentity):
+        contact_email, contact_phone = identity.company_email, identity.company_mobile
+    elif isinstance(identity, HUFIdentity):
+        contact_phone = identity.karta_mobile
+
+    # Redacting the detail document keeps raw PAN/DOB out of the database
+    # entirely — the masked PAN column is the only identity token persisted.
+    entity_detail = redact_pii(
+        {
+            "identity": identity.model_dump(mode="json", by_alias=True),
+            "occupation": form.occupation.model_dump(mode="json", by_alias=True),
+            "banking": banking.model_dump(mode="json", by_alias=True),
+            "co_applicant": (
+                form.co_applicant.model_dump(mode="json", by_alias=True) if form.co_applicant else None
+            ),
+        }
+    )
+
+    return ApplicationModel(
+        tenant_id=tenant_row_id,
+        entity_type=identity.entity_type.value,
+        applicant_name=identity.display_name,
+        pan_masked=redact_pan(identity.primary_pan),
+        contact_email=contact_email,
+        contact_phone=contact_phone,
+        is_nri=engine_payload["is_nri"],
+        pincode=form.address.pincode if form.address else None,
+        city_name=form.address.city_name if form.address else None,
+        state_name=form.address.state_name if form.address else None,
+        resident_details=form.address.resident_details.value if form.address else None,
+        profile_type=form.occupation.profile_type,
+        occupation=engine_payload["occupation"],
+        property_status=engine_payload["property_status"],
+        guarantor_provided=engine_payload["guarantor_provided"],
+        business_establishment_date=engine_payload.get("business_establishment_date"),
+        current_itr_amount=engine_payload.get("current_itr"),
+        prev_itr_amount=engine_payload.get("previous_itr"),
+        selected_bank=banking.selected_bank.value,
+        loan_type=banking.loan_type.value,
+        existing_account_bank=banking.existing_account_bank.value,
+        existing_car_loan_bank=banking.existing_car_loan_bank.value,
+        cibil_score=banking.cibil_score,
+        cibil_pl_score=banking.cibil_pl_score,
+        dpd_count=len(bureau["dpd_history"]),
+        max_dpd_days=banking.dpd,
+        loan_enquiry_count=banking.loan_enquiry_count,
+        currently_outstanding=banking.currently_outstanding,
+        write_off_amount=bureau["write_off_amount"],
+        write_off_type=bureau["write_off_type"],
+        co_applicant_age_relation=(
+            form.co_applicant.age_relation.value if form.co_applicant else None
+        ),
+        co_applicant_income_relation=(
+            form.co_applicant.income_relation.value if form.co_applicant else None
+        ),
+        status=evaluation["status"],
+        overall_eligible=evaluation["overall_eligible"],
+        entity_detail_json=entity_detail,
+    )
+
+
+async def _persist_form_evaluation(
+    db: AsyncSession,
+    form: OnboardingFormRequest,
+    engine_payload: Dict[str, Any],
+    evaluation: Dict[str, Any],
+    tenant_id: str,
+) -> Tuple[Optional[str], bool]:
+    """Write the application, its rule-execution trail and the compliance audit
+    row in one transaction. Returns (application_id, persisted)."""
+    tenant_row_id = _tenant_row_id(tenant_id)
+    try:
+        app_record = _build_application_record(form, engine_payload, evaluation, tenant_row_id)
+        db.add(app_record)
+        await db.flush()
+
+        db.add(
+            RuleExecutionModel(
+                application_id=app_record.id,
+                tenant_id=tenant_row_id,
+                bank_code=app_record.selected_bank,
+                eligible=evaluation["overall_eligible"],
+                rejection_count=len(evaluation["rejection_reasons"]),
+                executed_rules_count=evaluation["executed_rules_count"],
+                execution_time_ms=evaluation["execution_time_ms"],
+                rejection_reasons_json=json.dumps(evaluation["rejection_reasons"]),
+                bank_eligibility_json=evaluation["bank_eligibility"],
+            )
+        )
+        db.add(
+            AuditLogModel(
+                tenant_id=tenant_row_id,
+                action=AUDIT_ACTION_FORM_EVALUATION,
+                performed_by=tenant_id,
+                entity_type=app_record.entity_type,
+                resource_id=app_record.id,
+                details_document={
+                    "status": evaluation["status"],
+                    "selected_bank": app_record.selected_bank,
+                    "profile_type": app_record.profile_type,
+                    "rejection_reasons": evaluation["rejection_reasons"],
+                    "bank_eligibility": evaluation["bank_eligibility"],
+                    "submission": app_record.entity_detail_json,
+                },
+            )
+        )
+        return app_record.id, True
+    except Exception as e:
+        await db.rollback()
+        logger.warning(f"DB persistence bypassed for form evaluation due to schema / connection state: {e}")
+        return None, False
+
+
+@router.post("/evaluate/form", response_model=OnboardingFormEvaluationResponse)
+async def evaluate_onboarding_form(
+    form: OnboardingFormRequest,
+    tenant_id: str = Depends(get_current_tenant),
+    db: AsyncSession = Depends(get_db),
+):
+    """Evaluate a 5-step onboarding wizard submission (Individual / Company / HUF).
+
+    The polymorphic payload is validated against the entity-type branch it
+    declares, flattened into the bank-matrix input vocabulary in memory, scored
+    against the RAM ruleset (< 10 ms), and persisted with a PII-redacted audit
+    trail — all inside the 80 ms CRUD budget.
+    """
+    start_time = time.perf_counter()
+
+    engine_payload = form.to_engine_payload()
+
+    log_safe_payload = redact_pii(engine_payload)
+    logger.info(
+        f"Evaluating {form.identity.entity_type.value} onboarding form for tenant "
+        f"'{tenant_id}': {log_safe_payload}"
+    )
+
+    await set_tenant_rls_context(db, tenant_id)
+
+    evaluation = await bre_engine_service.evaluate_application(engine_payload, tenant_id=tenant_id)
+
+    application_id, persisted = await _persist_form_evaluation(
+        db, form, engine_payload, evaluation, tenant_id
+    )
+
+    total_time_ms = round((time.perf_counter() - start_time) * 1000, 3)
+
+    return OnboardingFormEvaluationResponse(
+        success=True,
+        status=evaluation["status"],
+        overall_eligible=evaluation["overall_eligible"],
+        executed_rules_count=evaluation["executed_rules_count"],
+        execution_time_ms=total_time_ms,
+        rejection_reasons=_rejection_details(evaluation),
+        bank_eligibility=evaluation["bank_eligibility"],
+        application_id=application_id,
+        entity_type=form.identity.entity_type,
+        selected_bank=form.banking.selected_bank,
+        persisted=persisted,
     )
