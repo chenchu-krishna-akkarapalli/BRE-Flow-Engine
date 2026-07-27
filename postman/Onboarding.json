@@ -1,0 +1,812 @@
+{
+  "info": {
+    "_postman_id": "b18b6ce8-64db-40a2-a89e-2fe4ea3ba439",
+    "name": "FlowBRE Bank Matrix Conformance Suite",
+    "description": "Postman Collection generated from app/tests/test_bank_matrix_conformance.py for API conformance validation.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "BOI",
+      "item": [
+        {
+          "name": "BOI/clean-salaried",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOI\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOI/cibil-at-floor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOI\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 701,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOI/cibil-below-floor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOI\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 700,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOI/dpd-1",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOI\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 1,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOI/cc-write-off-4999",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOI\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55,\n    \"bureauFlagCC\": true,\n    \"bureauWriteOffAmount\": 4999.0\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOI/cc-write-off-5000",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOI\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55,\n    \"bureauFlagCC\": true,\n    \"bureauWriteOffAmount\": 5000.0\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOI/emi-age-61",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOI\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 61\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOI/coapp-age-brother",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOI\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"Brother\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Indian Bank",
+      "item": [
+        {
+          "name": "Indian Bank/clean-salaried",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"Indian Bank\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "Indian Bank/cibil-at-floor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"Indian Bank\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 730,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "Indian Bank/cibil-below-floor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"Indian Bank\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 729,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "Indian Bank/cc-write-off-100",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"Indian Bank\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55,\n    \"bureauFlagCC\": true,\n    \"bureauWriteOffAmount\": 100.0\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "Indian Bank/dpd-1",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"Indian Bank\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 1,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "Indian Bank/emi-age-61",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"Indian Bank\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 61\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "Indian Bank/coapp-age-brother",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"Indian Bank\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"Brother\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "IOB",
+      "item": [
+        {
+          "name": "IOB/clean-salaried",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"IOB\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "IOB/cibil-at-floor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"IOB\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 701,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "IOB/cibil-below-floor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"IOB\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 700,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "IOB/dpd-89",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"IOB\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 89,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "IOB/dpd-90",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"IOB\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 90,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "IOB/emi-age-76",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"IOB\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 76\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "BOB",
+      "item": [
+        {
+          "name": "BOB/clean-salaried",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOB\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOB/cibil-at-floor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOB\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 726,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOB/cibil-below-floor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOB\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 725,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOB/dpd-89",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOB\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 89,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOB/dpd-90",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOB\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 90,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOB/clean-self-employed",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Self-Employed\",\n    \"businessEntityType\": \"Propreitorship\",\n    \"businessEstablishmentDate\": \"2016-07-27\",\n    \"currentITRAmount\": 500000.0,\n    \"prevITRAmount\": 350000.0,\n    \"businessItrAmount\": 500000.0,\n    \"businessProof\": \"GSTIN: 29AAAAA0000A1Z5\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOB\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOB/se-itr-boundary-low",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Self-Employed\",\n    \"businessEntityType\": \"Propreitorship\",\n    \"businessEstablishmentDate\": \"2016-07-27\",\n    \"currentITRAmount\": 250000.0,\n    \"prevITRAmount\": 250000.0,\n    \"businessItrAmount\": 250000.0,\n    \"businessProof\": \"GSTIN: 29AAAAA0000A1Z5\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOB\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOB/se-itr-boundary-clean",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Self-Employed\",\n    \"businessEntityType\": \"Propreitorship\",\n    \"businessEstablishmentDate\": \"2016-07-27\",\n    \"currentITRAmount\": 300000.0,\n    \"prevITRAmount\": 300000.0,\n    \"businessItrAmount\": 300000.0,\n    \"businessProof\": \"GSTIN: 29AAAAA0000A1Z5\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOB\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "BOM",
+      "item": [
+        {
+          "name": "BOM/clean-salaried",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOM\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOM/cibil-at-floor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOM\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 650,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOM/cibil-below-floor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOM\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 649,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOM/cc-write-off-9999",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOM\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55,\n    \"bureauFlagCC\": true,\n    \"bureauWriteOffAmount\": 9999.0\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOM/cc-write-off-10000",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOM\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55,\n    \"bureauFlagCC\": true,\n    \"bureauWriteOffAmount\": 10000.0\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOM/dpd-1",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Salaried\",\n    \"tenureBand\": \"2y+\",\n    \"grossSalaryBand\": \"gt25000\",\n    \"salaryMode\": \"Salary payment mode- Bank Credit\",\n    \"form16Status\": \"Form 16\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOM\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 1,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOM/se-agriculture",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"Individual\",\n    \"applicantName\": \"Rohan Sharma\",\n    \"dob\": \"1992-07-27\",\n    \"pan\": \"ABCDE1234F\",\n    \"phone\": \"9876543210\",\n    \"email\": \"rohan.sharma@example.com\",\n    \"citizenshipStatus\": \"Resident Indian\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"Self-Employed\",\n    \"businessEntityType\": \"Agriculture\",\n    \"businessEstablishmentDate\": \"2016-07-27\",\n    \"currentITRAmount\": 500000.0,\n    \"prevITRAmount\": 350000.0,\n    \"businessItrAmount\": 500000.0,\n    \"businessProof\": \"GSTIN: 29AAAAA0000A1Z5\"\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOM\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        },
+        {
+          "name": "BOM/huf-entity",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-ID", "value": "tenant_beta" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"entityType\": \"HUF\",\n    \"applicantName\": \"Sharma HUF\",\n    \"hufName\": \"Sharma HUF\",\n    \"hufPan\": \"AAAHS1234F\",\n    \"kartaName\": \"Rakesh Sharma\",\n    \"kartaPan\": \"ABCDE1234F\"\n  },\n  \"address\": {\n    \"pincode\": \"560001\",\n    \"residentDetails\": \"Owned House\"\n  },\n  \"occupation\": {\n    \"profileType\": \"HUF\",\n    \"officeAddressType\": \"Same\",\n    \"businessEstablishmentDate\": \"2016-07-27\",\n    \"itrFilingStatus\": \"Self employed ITR Filled\",\n    \"businessProof\": \"GSTIN: 29AAAAA0000A1Z5\",\n    \"currentITRAmount\": 500000.0,\n    \"prevITRAmount\": 350000.0\n  },\n  \"banking\": {\n    \"existingAccountBank\": \"BOM\",\n    \"existingCarLoanBank\": \"None\",\n    \"loanType\": \"Auto Loan\",\n    \"bureauCibilScore\": 800,\n    \"bureauDpd\": 0,\n    \"bureauLoanEnquiry\": 0,\n    \"bureauCurrentlyOutstanding\": 0.0,\n    \"bureauAgeAtLastEMI\": 55\n  },\n  \"coApplicant\": {\n    \"coAppAgeRelation\": \"None\",\n    \"coAppIncomeRelation\": \"None\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/onboarding/evaluate/form",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "v1", "onboarding", "evaluate", "form"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
