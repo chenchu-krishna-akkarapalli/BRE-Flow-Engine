@@ -1,26 +1,97 @@
 @import "tailwindcss";
 
+/* Design tokens — single source of truth, per the ui_ux_design skill.
+   Exposed through @theme so Tailwind generates bg-/text-/border-/rounded-
+   utilities from them. No component may hardcode a hex value. */
+@theme {
+  --color-bg-deep: #0f172a;
+  --color-bg-surface: #1e293b;
+  --color-bg-raised: #334155;
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line-strong: rgba(255, 255, 255, 0.16);
+
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-400: #818cf8;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
+  --color-brand-900: #312e81;
+
+  --color-ink: #f1f5f9;
+  --color-ink-muted: #94a3b8;
+  --color-ink-subtle: #64748b;
+
+  --color-success: #4ade80;
+  --color-success-bg: rgba(74, 222, 128, 0.12);
+  --color-danger: #f87171;
+  --color-danger-bg: rgba(248, 113, 113, 0.12);
+  --color-warning: #fbbf24;
+  --color-warning-bg: rgba(251, 191, 36, 0.12);
+  --color-info: #38bdf8;
+  --color-info-bg: rgba(56, 189, 248, 0.12);
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.28);
+  --shadow-float: 0 12px 40px rgba(0, 0, 0, 0.4);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --dur-instant: 120ms;
+  --dur-fast: 180ms;
+  --dur-step: 240ms;
+  --shell-max: 1200px;
+  --form-col: 640px;
+  --telemetry-col: 380px;
+  --glass-fill: rgba(30, 41, 59, 0.7);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg-deep);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+/* Scores, currency and rule IDs must align vertically in the matrix and review card. */
+.numeric {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.glass {
+  background: var(--glass-fill);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-line);
+}
+
+/* CLS reservation — these panels populate after a round trip (ui_ux_design §3). */
+.validation-slot { min-height: 96px; }
+.matrix-slot { min-height: 320px; }
+
+.step-enter { animation: step-in var(--dur-step) var(--ease-in-out); }
+@keyframes step-in {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

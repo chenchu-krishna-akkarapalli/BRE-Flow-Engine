@@ -7,11 +7,6 @@ description: Focused readability-preserving cleanup pass on recently written Fas
 
 A focused cleanup pass for recently written FastAPI backend and FlowBRE engine code, preserving behavior while improving readability and enforcing architectural performance constraints.
 
-## When to use this
-
-- Immediately after writing or editing Python backend code or Vanilla JS engine logic.
-- When cleaning up code readability while protecting latency SLA targets.
-
 ## Architectural Constraints to Enforce
 
 1. **Zero Synchronous / Hot-Path Disk I/O**: Flag and eliminate any blocking synchronous file I/O (`open()`, `read()`) inside FastAPI endpoint handlers or Zen-Engine evaluation loops.

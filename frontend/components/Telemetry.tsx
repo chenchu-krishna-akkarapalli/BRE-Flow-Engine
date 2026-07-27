@@ -1,0 +1,172 @@
+"use client";
+
+import { AlertOctagon, CheckCircle2, CircleSlash, Minus, XCircle } from "lucide-react";
+import { BANK_LABELS, stepForRule } from "@/lib/form-schema";
+import { BANK_CODES } from "@/lib/types";
+import type { EvaluationResponse, RejectionReason } from "@/lib/types";
+
+/** Live 8-bank eligibility panel.
+ *
+ * bank_eligibility[X] is bank X's verdict ANDed with the SELECTED bank's, so
+ * once the selected bank rejects every entry reads false — including banks
+ * that would have accepted on their own policy. Rendering eight red rows would
+ * tell the applicant no bank will take them, which is not what the API means.
+ * The panel is therefore titled by primary bank, and collapses to the blocking
+ * reason instead of showing a wall of false. */
+export function BankMatrix({ result }: { result: EvaluationResponse | null }) {
+  return (
+    <section
+      aria-label="Bank eligibility"
+      className="matrix-slot glass rounded-lg p-6"
+    >
+      <h2 className="text-[1.25rem] font-semibold">
+        {result
+          ? `Eligibility with ${BANK_LABELS[result.selected_bank]} as primary`
+          : "Bank eligibility"}
+      </h2>
+
+      {!result && (
+        <p className="mt-2 text-[0.8125rem] text-ink-subtle">
+          Evaluated across all 8 partner banks when you submit.
+        </p>
+      )}
+
+      {result && !result.overall_eligible && (
+        <p className="mt-3 rounded-md bg-warning-bg p-3 text-[0.8125rem] text-warning">
+          Other banks are evaluated once your primary bank&apos;s checks pass.
+        </p>
+      )}
+
+      <ul className="mt-4 flex flex-col gap-1">
+        {BANK_CODES.map((code) => {
+          const evaluated = result !== null && result.overall_eligible;
+          const eligible = result?.bank_eligibility[code] ?? false;
+          return (
+            <li
+              key={code}
+              className="flex min-h-[44px] items-center justify-between rounded-sm px-3"
+            >
+              <span className="text-[0.9375rem] text-ink-muted">{BANK_LABELS[code]}</span>
+              {!evaluated ? (
+                <span className="flex items-center gap-2 text-ink-subtle">
+                  <Minus size={16} aria-hidden />
+                  <span className="numeric text-[0.8125rem]">—</span>
+                </span>
+              ) : eligible ? (
+                <span className="flex items-center gap-2 text-success">
+                  <CheckCircle2 size={16} aria-hidden />
+                  <span className="text-[0.8125rem] font-medium">ELIGIBLE</span>
+                </span>
+              ) : (
+                <span className="flex items-center gap-2 text-danger">
+                  <XCircle size={16} aria-hidden />
+                  <span className="text-[0.8125rem] font-medium">NOT ELIGIBLE</span>
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+
+      {result && (
+        <p className="numeric mt-4 border-t border-line pt-3 text-[0.8125rem] text-info">
+          {result.executed_rules_count} rules · {result.execution_time_ms.toFixed(1)} ms
+        </p>
+      )}
+    </section>
+  );
+}
+
+/** Grouped rule failures. Shows the rule ID and a deep link back to the step
+ *  that owns the field, rather than collapsing everything to "ineligible". */
+export function ValidationBanner({
+  reasons, onJump,
+}: {
+  reasons: RejectionReason[]; onJump: (stepId: number) => void;
+}) {
+  if (reasons.length === 0) return null;
+
+  const byCategory = reasons.reduce<Record<string, RejectionReason[]>>((acc, r) => {
+    (acc[r.category] ??= []).push(r);
+    return acc;
+  }, {});
+
+  return (
+    <div className="validation-slot flex flex-col gap-3" aria-live="assertive">
+      {Object.entries(byCategory).map(([category, items]) => (
+        <div
+          key={category}
+          className="rounded-md border border-danger/40 bg-danger-bg p-4"
+        >
+          <div className="flex items-center gap-2 text-danger">
+            <AlertOctagon size={16} aria-hidden />
+            <h3 className="text-[0.9375rem] font-semibold">{category}</h3>
+          </div>
+          <ul className="mt-2 flex flex-col gap-2">
+            {items.map((r) => (
+              <li key={r.rule_id} className="flex flex-col gap-1">
+                <div className="flex items-baseline justify-between gap-4">
+                  <span className="text-[0.9375rem] text-ink">{r.message}</span>
+                  <span className="numeric shrink-0 text-[0.8125rem] text-ink-muted">
+                    {r.rule_id}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onJump(stepForRule(r.rule_id))}
+                  className="self-start text-[0.8125rem] text-brand-400 underline underline-offset-2"
+                >
+                  Review step {stepForRule(r.rule_id)} →
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function DecisionPanel({ result }: { result: EvaluationResponse }) {
+  const approved = result.status === "APPROVED";
+  return (
+    <section
+      role="status"
+      aria-live="polite"
+      className={`rounded-lg border p-6 ${
+        approved
+          ? "border-success/40 bg-success-bg"
+          : "border-danger/40 bg-danger-bg"
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        {approved ? (
+          <CheckCircle2 className="text-success" aria-hidden />
+        ) : (
+          <CircleSlash className="text-danger" aria-hidden />
+        )}
+        <h2
+          className={`text-[1.75rem] font-bold ${approved ? "text-success" : "text-danger"}`}
+        >
+          {result.status}
+        </h2>
+      </div>
+      <p className="mt-2 text-[0.9375rem] text-ink-muted">
+        {approved
+          ? `Approved with ${BANK_LABELS[result.selected_bank]}.`
+          : `Not approved with ${BANK_LABELS[result.selected_bank]}.`}
+      </p>
+      {result.application_id && (
+        <p className="numeric mt-3 text-[0.8125rem] text-ink-subtle">
+          Reference {result.application_id}
+        </p>
+      )}
+      {!result.persisted && (
+        <p className="mt-3 rounded-md bg-warning-bg p-3 text-[0.8125rem] text-warning">
+          Verdict is valid, but the audit trail did not write — quote this to support
+          before relying on the reference.
+        </p>
+      )}
+    </section>
+  );
+}

@@ -7,12 +7,6 @@ description: Teaches use of the Firecrawl CLI for reliable web scraping, recursi
 
 Reliable web scraping and crawling via the Firecrawl CLI, producing clean local markdown output from live web content.
 
-## When to use this
-
-- Scraping a single page's content into clean markdown (especially JS-rendered pages where a plain fetch returns mostly empty markup).
-- Recursively crawling a site (e.g. "grab all docs pages under /docs") rather than one URL at a time.
-- Any task requiring browser-level interaction to reach the actual content (waiting for JS render, following redirects, handling pagination).
-
 ## Core commands
 
 ### Single-page scrape

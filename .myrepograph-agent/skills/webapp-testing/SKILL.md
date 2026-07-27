@@ -7,12 +7,6 @@ description: Playwright browser-driven end-to-end testing of single-file web app
 
 Browser-driven and API testing using Playwright to verify `flow.html` UI interaction, FastAPI endpoint correctness, latency SLAs, and memory garbage collection baseline.
 
-## When to use this
-
-- Verifying `flow.html` simulator rendering, tab switching, and real-time decision updates in a real browser.
-- Running load & latency benchmarks against FastAPI backend endpoints.
-- Verifying memory reference counts return to baseline after request execution.
-
 ## Testing & Audit Directives
 
 1. **Automated Latency SLA Verification Under Load**:

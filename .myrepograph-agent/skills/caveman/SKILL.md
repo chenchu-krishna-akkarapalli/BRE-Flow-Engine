@@ -7,12 +7,6 @@ description: Reduces output tokens by an average of 65% by stripping narration, 
 
 Strips responses down to the technical substance only. Same facts, same code, none of the surrounding narration.
 
-## When to use this
-
-- The user explicitly asks for terse output, "no fluff," or "caveman mode."
-- A long multi-turn or agentic session where verbose narration between steps adds cost without adding value.
-- The user is clearly optimizing for token/time efficiency over conversational tone.
-
 ## What to strip
 
 - Opening acknowledgments ("Sure, I'd be happy to help with that!", "Great question!").

@@ -7,11 +7,6 @@ description: Tool-backed security auditing using Semgrep, CodeQL, and variant an
 
 Structured, tool-backed security auditing targeting FastAPI backend endpoints, Zen-Engine input parsing, and PII protection in FlowBRE.
 
-## When to use this
-
-- Performing security reviews on FastAPI endpoints (`POST /evaluate`, `GET /health`).
-- Auditing authentication, input validation, SQL query construction, and PII data handling.
-
 ## Focus Audit Areas
 
 1. **Un-Redacted PII Logging Protection**: Audit logger output to guarantee raw Applicant PAN, Aadhaar, DOB, or financial metrics are masked/redacted (`***XXXX`) before being written to stdout or log files.

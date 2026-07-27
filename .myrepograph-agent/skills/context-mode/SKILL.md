@@ -7,12 +7,6 @@ description: Solves long sessions dying from accumulated noise by filtering verb
 
 Keeps long sessions alive by filtering noisy tool/shell output before it enters context, and maintaining a compact running log that allows exact resumption after a reset.
 
-## When to use this
-
-- Long agentic sessions that run many shell commands (tests, builds, linters) whose full output is mostly noise.
-- Sessions at risk of running out of context due to accumulated verbose logs.
-- Any point where the user mentions resuming after a crash, reset, or context limit.
-
 ## Filtering shell/tool output
 
 Before letting verbose command output enter context:

@@ -7,12 +7,6 @@ description: Parametric UI design equalizer allowing tuning of 11 perceptual sli
 
 A parametric approach to UI aesthetics for `flow.html` — dial specific perceptual sliders to shape how FlowBRE's single-file Tailwind CSS + Vanilla JS interface feels.
 
-## When to use this
-
-- Tuning visual density, motion, contrast, or glassmorphism depth in `flow.html`.
-- Refining simulator cards, decision output banners, or SLA telemetry indicators.
-- Adjusting visual feel based on user feedback ("make it feel cleaner", "too dense", "needs stronger contrast").
-
 ## The 11 FlowBRE Sliders
 
 1. **Glassmorphism Depth**: Opacity of backdrop blur (`backdrop-blur-sm` vs `backdrop-blur-xl`), border translucency, and panel elevation cues.

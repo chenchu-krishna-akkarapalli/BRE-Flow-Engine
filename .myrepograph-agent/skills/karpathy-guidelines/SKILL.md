@@ -5,26 +5,19 @@ description: Encodes 4 strict behavioral rules (Think before coding, Simplicity 
 
 # Andrej Karpathy's Guidelines (FlowBRE Edition)
 
-Four core behavioral rules adapted for FlowBRE development to prevent silent wrong assumptions, scope creep, and performance SLA regressions.
-
 ## The Four Rules
 
 ### 1. Think Before Coding
 Restate the actual goal and inspect authoritative source files (`zen_rules/*.json`, `Backend-Playbook.md`, `flow.html`). Never guess schemas, variable names, or rule thresholds.
 
-### 2. Simplicity First & Sub-100ms SLA Protection
-Default to the smallest, most boring solution that satisfies the requirement:
-- Simple GET requests: **`< 30 ms`**
-- CRUD & Transactions: **`< 80 ms`**
-- Zen-Engine evaluations: **`< 10 ms`**
-- Total end-to-end latency: **`< 100 ms`**
+### 2. Simplicity First
+Default to the smallest, most boring solution that meets the CLAUDE.md SLA budgets.
 
 ### 3. Surgical Changes & Zero Inline Hardcoding
 Touch only what the task requires. Load all business rules and thresholds (CIBIL, DPD, ITR, FOIR) dynamically from `zen_rules/*.json` — never hardcode inline in Python handlers.
 
 ### 4. Goal-Driven Execution & Memory Safety
-Keep the original goal visible and verify against the 5-stage request memory lifecycle:
-`Request Starts` → `Allocate Memory` → `Use Memory` → `Garbage Collection` → `Memory Released`
+Keep the original goal visible; verify against the 5-stage memory lifecycle in CLAUDE.md.
 
 ## Anti-Patterns to Catch
 

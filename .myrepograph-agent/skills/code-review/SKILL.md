@@ -14,14 +14,10 @@ Load full implementation bodies (`signature_only` omitted) for every symbol or f
 ## 3. Verify Core Governance & Performance Guardrails
 For every modified symbol, verify compliance against FlowBRE's 4 core pillars:
 - **Anti-Assumption & Zero Hardcoding**: Confirm zero inline hardcoded business rules or policy thresholds (CIBIL, DPD, ITR, FOIR). Ensure all rules load dynamically from `zen_rules/*.json`.
-- **Latency SLA Targets**: Verify performance latency budgets:
-  - Simple GET Operations: **`< 30 ms`**
-  - CRUD & Transactions: **`< 80 ms`**
-  - Zen-Engine Evaluation: **`< 10 ms`**
-  - Total End-to-End: **`< 100 ms`**
+- **Latency SLA Targets**: Verify against the budgets in CLAUDE.md.
 - **Data Structure & Database Pool**: Confirm $O(1)$ Hash Maps (`dict`), pre-warmed SQLAlchemy `asyncpg` pools (`pool_size=20`, `max_overflow=10`, `pool_recycle=3600`, `pool_pre_ping=True`), pre-compiled RAM decision graphs, and zero per-request hot-path disk I/O.
 - **Zero-PII Logging Audit**: Verify that log statements do not print raw Applicant PAN, DOB, or unmasked Aadhaar data.
-- **5-Stage Memory Lifetime Flow**: Verify post-GC memory cleanup adhering to `Request Starts` → `Allocate Memory` → `Use Memory` → `Garbage Collection` → `Memory Released`.
+- **5-Stage Memory Lifetime Flow**: Verify post-GC cleanup per the lifecycle in CLAUDE.md.
 
 ## 4. Run Mechanical Pre-Review Checks
 Execute `./.myrepograph-agent/skills/code-review/review.sh` to trigger mechanical syntax, build, rule JSON validation, and anti-hardcoding grep checks.

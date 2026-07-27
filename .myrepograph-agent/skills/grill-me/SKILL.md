@@ -7,12 +7,6 @@ description: Planning tool used before any code is written that forces a relentl
 
 An interview-first planning skill. The point is to resolve ambiguity through structured questioning *before* any code exists, not to guess and course-correct later.
 
-## When to use this
-
-- The user describes a system, feature, or architecture they want built, but key decisions (data model, boundaries, failure modes, scale) are unstated.
-- The cost of a wrong assumption is high (shared infra, public API, data migrations, security-sensitive flows).
-- The user says something like "help me design X" rather than "just build X."
-
 ## How to run the interview
 
 1. **Map the design tree.** From the initial request, enumerate the major branch points: architecture choices, data model choices, integration points, failure/edge-case handling, non-functional requirements (performance, security, cost).

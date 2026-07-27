@@ -5,13 +5,6 @@ description: Audits single-file web UI markup (flow.html) against accessibility 
 
 # Web Design & Accessibility Guidelines (FlowBRE Single-File Edition)
 
-Accessibility and semantic HTML audit rules for single-file web UI (`flow.html`).
-
-## When to use this
-
-- Writing or reviewing markup inside `flow.html`.
-- Auditing form input controls, accessibility labels, and keyboard navigation order.
-
 ## Core Audit Rules
 
 1. **Semantic Form Controls**: Ensure all onboarding input fields (`input`, `select`) in `flow.html` have associated `<label>` tags with matching `for` attributes.

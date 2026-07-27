@@ -7,12 +7,6 @@ description: Official Anthropic collection that executes Python scripts to extra
 
 An umbrella skill covering real, structured file manipulation for the four major office document formats — actual files, not text approximations of them.
 
-## When to use this
-
-- The user uploads a PDF/DOCX/XLSX/PPTX and wants content read, extracted, or summarized from it.
-- The user wants a new document produced in one of these formats (a report as a Word doc, a model as a spreadsheet, a deck as PowerPoint, a form-fillable PDF).
-- The user wants an existing document edited, reformatted, or restructured while remaining a real file of the same type.
-
 ## Format-specific coverage
 
 ### PDF

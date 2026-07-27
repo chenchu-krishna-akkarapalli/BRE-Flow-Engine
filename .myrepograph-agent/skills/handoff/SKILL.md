@@ -7,12 +7,6 @@ description: Compresses a long session into a structured markdown handoff docume
 
 Compresses an in-progress session into a structured, self-contained markdown document so work can continue cleanly elsewhere — a new session, a new git worktree, or a different agent.
 
-## When to use this
-
-- The session has grown long enough that earlier decisions or context are at risk of being forgotten or contradicted.
-- The user is about to switch to a fresh session, a new worktree, or a different tool/agent and needs continuity.
-- The user explicitly asks for a summary/handoff of the work so far.
-
 ## What the handoff document must contain
 
 1. **Goal** — the original task/objective in one or two sentences, plus any changes to scope agreed along the way.

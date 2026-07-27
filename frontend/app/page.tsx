@@ -1,65 +1,112 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import type { JSX } from "react";
+import { ReviewCard } from "@/components/ReviewCard";
+import { Stepper } from "@/components/Stepper";
+import { BankMatrix, DecisionPanel, ValidationBanner } from "@/components/Telemetry";
+import {
+  Step1Identity, Step2Address, Step3Occupation, Step4Banking, Step5CoApplicant,
+} from "@/components/steps/Steps";
+import { STEP_PLAN } from "@/lib/form-schema";
+import { useOnboardingStore } from "@/store/useOnboardingStore";
+
+const STEP_COMPONENTS: Record<number, () => JSX.Element> = {
+  1: Step1Identity,
+  2: Step2Address,
+  3: Step3Occupation,
+  4: Step4Banking,
+  5: Step5CoApplicant,
+};
+
+export default function OnboardingWizard() {
+  const draft = useOnboardingStore((s) => s.draft);
+  const stepId = useOnboardingStore((s) => s.stepId);
+  const submitting = useOnboardingStore((s) => s.submitting);
+  const result = useOnboardingStore((s) => s.result);
+  const error = useOnboardingStore((s) => s.error);
+  const goTo = useOnboardingStore((s) => s.goTo);
+  const next = useOnboardingStore((s) => s.next);
+  const prev = useOnboardingStore((s) => s.prev);
+  const submit = useOnboardingStore((s) => s.submit);
+  const reset = useOnboardingStore((s) => s.reset);
+
+  const plan = STEP_PLAN[draft.entityType];
+  const isFirst = plan.indexOf(stepId) === 0;
+  const isLast = plan.indexOf(stepId) === plan.length - 1;
+  const StepBody = STEP_COMPONENTS[stepId];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="mx-auto flex w-full max-w-[var(--shell-max)] flex-col gap-8 px-6 py-12 lg:flex-row lg:items-start">
+      <div className="flex w-full flex-col gap-6 lg:max-w-[var(--form-col)]">
+        <Stepper entityType={draft.entityType} stepId={stepId} onJump={goTo} />
+
+        <section key={stepId} className="step-enter glass rounded-lg p-6">
+          <StepBody />
+        </section>
+
+        {isLast && <ReviewCard draft={draft} onEdit={goTo} />}
+
+        {result && <DecisionPanel result={result} />}
+
+        {/* Height reserved up front so the panel fills in place (no CLS). */}
+        <div className="validation-slot">
+          {result && !result.overall_eligible && (
+            <ValidationBanner reasons={result.rejection_reasons} onJump={goTo} />
+          )}
+          {error && (
+            <p role="alert" className="rounded-md border border-danger/40 bg-danger-bg p-4 text-[0.9375rem] text-danger">
+              {error}
+            </p>
+          )}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        <div className="flex items-center justify-between gap-4">
+          <button
+            type="button"
+            onClick={prev}
+            disabled={isFirst}
+            className="min-h-[44px] rounded-md border border-line px-6 py-3 text-[0.9375rem] text-ink-muted transition-colors hover:border-line-strong disabled:opacity-40"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Back
+          </button>
+
+          {isLast ? (
+            <div className="flex gap-3">
+              {result && (
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="min-h-[44px] rounded-md border border-line px-6 py-3 text-[0.9375rem] text-ink-muted"
+                >
+                  Start over
+                </button>
+              )}
+              {/* No spinner: the verdict returns inside the ~100 ms SLA, where a
+                  spinner would flash and read as a glitch (ui_ux_design §3.4). */}
+              <button
+                type="button"
+                onClick={submit}
+                disabled={submitting}
+                className="min-h-[44px] rounded-md bg-brand-600 px-6 py-3 text-[0.9375rem] font-medium text-white transition-colors hover:bg-brand-700 disabled:opacity-60"
+              >
+                {submitting ? "Evaluating…" : "Submit application"}
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={next}
+              className="min-h-[44px] rounded-md bg-brand-600 px-6 py-3 text-[0.9375rem] font-medium text-white transition-colors hover:bg-brand-700"
+            >
+              Continue
+            </button>
+          )}
         </div>
-      </main>
-    </div>
+      </div>
+
+      <aside className="w-full lg:sticky lg:top-12 lg:max-w-[var(--telemetry-col)]">
+        <BankMatrix result={result} />
+      </aside>
+    </main>
   );
 }

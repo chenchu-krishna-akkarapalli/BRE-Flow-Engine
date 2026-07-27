@@ -7,12 +7,6 @@ description: Pushes past generic "AI slop" aesthetics by banning overused fonts 
 
 Forces an explicit, committed aesthetic direction for single-file HTML/JS interfaces (`flow.html`) using Tailwind CSS and Vanilla JavaScript.
 
-## When to use this
-
-- Building or modifying any section, telemetry card, rule banner, or simulator UI inside `flow.html`.
-- Reworking visual presentation, glassmorphism layers, or interactive components in FlowBRE.
-- Ensuring bidirectional sync between Step 4 onboarding inputs and Tab 2 simulator cards remains unbroken.
-
 ## Banned defaults
 
 - Default purple-to-blue gradients as a stand-in for "modern."
