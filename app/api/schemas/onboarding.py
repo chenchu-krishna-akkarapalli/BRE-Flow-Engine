@@ -47,14 +47,15 @@ from app.constants import (
     TenureBand,
 )
 from app.constants.form_mappings import (
-    DAYS_PER_MONTH,
-    DAYS_PER_YEAR,
     DEFAULT_SELECTED_BANK,
     EXISTING_BANK_TO_BANK_CODE,
     FORM_16_ABSENT_YEARS,
     FORM_16_AVAILABLE_YEARS,
+    MONTHS_PER_YEAR,
     NON_INDIVIDUAL_PROXY_AGE,
     PROPERTY_STATUS_MATRIX,
+    RENTAL_INCOME_TO_CLASS,
+    SIBLING_RELATIONS,
     SALARY_BAND_TO_MONTHLY_AMOUNT,
     SALARY_MODE_TO_ENGINE_MODE,
     TENURE_BAND_TO_MONTHS,
@@ -164,10 +165,19 @@ class OnboardingEvaluationRequest(BaseModel):
 # --------------------------------------------------------------------------- #
 
 
-def _years_between(start: date, end: Optional[date] = None) -> float:
-    """Elapsed years between two dates, floored at 0 for future-dated inputs."""
+def _completed_years(start: date, end: Optional[date] = None) -> int:
+    """Whole years elapsed, counted on the calendar.
+
+    Day-count division (days / 365.25) truncates an exact N-year anniversary to
+    N-1 once leap days accumulate — a business incorporated exactly 2 years ago
+    scored as 1 year and was rejected against the matrix's ">= 2" floor. The
+    calendar comparison has no such drift.
+    """
     reference = end or datetime.now(timezone.utc).date()
-    return max((reference - start).days / DAYS_PER_YEAR, 0.0)
+    years = reference.year - start.year
+    if (reference.month, reference.day) < (start.month, start.day):
+        years -= 1
+    return max(years, 0)
 
 
 class FormModel(BaseModel):
@@ -223,9 +233,9 @@ class IndividualIdentity(FormModel):
             "applicant_name": self.applicant_name,
             "pan": self.pan,
             "dob": self.dob.isoformat(),
-            "age": int(_years_between(self.dob)),
+            "age": _completed_years(self.dob),
             "is_nri": self.citizenship_status is CitizenshipStatus.NRI_PIO,
-            "minimum_stay_period_nri_days": (self.nri_stay_period_months or 0) * DAYS_PER_MONTH,
+            "minimum_stay_period_nri_years": (self.nri_stay_period_months or 0) / MONTHS_PER_YEAR,
         }
 
 
@@ -262,7 +272,7 @@ class CompanyIdentity(FormModel):
             "dob": None,
             "age": NON_INDIVIDUAL_PROXY_AGE,
             "is_nri": False,
-            "minimum_stay_period_nri_days": 0,
+            "minimum_stay_period_nri_years": 0.0,
         }
 
 
@@ -294,7 +304,7 @@ class HUFIdentity(FormModel):
             "dob": None,
             "age": NON_INDIVIDUAL_PROXY_AGE,
             "is_nri": False,
-            "minimum_stay_period_nri_days": 0,
+            "minimum_stay_period_nri_years": 0.0,
         }
 
 
@@ -361,7 +371,7 @@ class SalariedOccupation(FormModel):
         # Total experience runs from the previous employer's joining date when
         # one is on file; otherwise only the current tenure is provable.
         if self.prev_company_joining is not None:
-            work_experience_years = int(_years_between(self.prev_company_joining))
+            work_experience_years = (_completed_years(self.prev_company_joining))
         else:
             work_experience_years = tenure_months // 12
         no_income_proof = self.form_16_status is Form16Status.NO_INCOME_PROOF
@@ -373,6 +383,7 @@ class SalariedOccupation(FormModel):
             "salary_payment_mode": SALARY_MODE_TO_ENGINE_MODE[self.salary_mode],
             "form_16_years": FORM_16_ABSENT_YEARS if no_income_proof else FORM_16_AVAILABLE_YEARS,
             "no_income_proof_segment": no_income_proof,
+            "rental_income_class": RENTAL_INCOME_TO_CLASS[self.rental_income_type],
         }
 
 
@@ -420,11 +431,13 @@ class SelfEmployedOccupation(FormModel):
         return {
             "occupation": OccupationType.SELF_EMPLOYED.value,
             "business_establishment_date": self.business_establishment_date.isoformat(),
-            "business_experience_years": int(_years_between(self.business_establishment_date)),
+            "business_experience_years": (_completed_years(self.business_establishment_date)),
             "current_itr": self.current_itr_amount,
             "previous_itr": self.prev_itr_amount,
             "itr_filed": True,
             "business_proof": bool(self.business_proof),
+            "business_entity_type": self.business_entity_type.value,
+            "rental_income_class": RENTAL_INCOME_TO_CLASS[self.rental_income_type],
         }
 
 
@@ -470,13 +483,14 @@ class HUFBusiness(FormModel):
         return {
             "occupation": OccupationType.SELF_EMPLOYED.value,
             "business_establishment_date": self.business_establishment_date.isoformat(),
-            "business_experience_years": int(_years_between(self.business_establishment_date)),
+            "business_experience_years": (_completed_years(self.business_establishment_date)),
             # An unfiled ITR contributes zero provable income rather than
             # falling through to the engine's permissive default.
             "current_itr": self.current_itr_amount or 0.0,
             "previous_itr": self.prev_itr_amount or 0.0,
             "itr_filed": itr_filed,
             "business_proof": bool(self.business_proof or self.udyam_reg_no),
+            "rental_income_class": RENTAL_INCOME_TO_CLASS[self.rental_income_type],
         }
 
 
@@ -504,7 +518,7 @@ class CompanyBusiness(FormModel):
         return {
             "occupation": OccupationType.SELF_EMPLOYED.value,
             "business_establishment_date": self.company_establishment_date.isoformat(),
-            "business_experience_years": int(_years_between(self.company_establishment_date)),
+            "business_experience_years": (_completed_years(self.company_establishment_date)),
             "current_itr": self.company_current_itr_amount,
             "previous_itr": self.company_prev_itr_amount,
             "itr_filed": True,
@@ -583,6 +597,7 @@ class BankingBureauStep(FormModel):
         return {
             "selected_bank": self.selected_bank.value,
             "loan_type": self.loan_type.value,
+            "loan_enquiry_count": self.loan_enquiry_count,
             "active_car_loan": self.existing_car_loan_bank is not ExistingBankOption.NONE,
             "age_at_last_emi_salaried": self.age_at_last_emi,
             "age_at_last_emi_self_employed": self.age_at_last_emi,
@@ -636,8 +651,10 @@ class CoApplicantStep(FormModel):
 
     @property
     def has_sibling_co_applicant(self) -> bool:
-        sibling = {CoApplicantAgeRelation.BROTHER, CoApplicantAgeRelation.SISTER}
-        return self.age_relation in sibling or self.income_relation.value in {"Brother", "Sister"}
+        return (
+            self.age_relation.value in SIBLING_RELATIONS
+            or self.income_relation.value in SIBLING_RELATIONS
+        )
 
 
 # --- Root wizard request --------------------------------------------------- #
@@ -716,6 +733,9 @@ class OnboardingFormRequest(FormModel):
         payload.update(self.banking.engine_inputs())
         payload["property_status"] = self.property_status.value
         payload["guarantor_provided"] = self.occupation.guarantor_provided
+        payload["sibling_co_applicant"] = (
+            self.co_applicant.has_sibling_co_applicant if self.co_applicant else False
+        )
         if self.address is not None:
             payload["pincode"] = self.address.pincode
             payload["city"] = self.address.city_name

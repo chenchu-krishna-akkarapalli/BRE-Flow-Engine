@@ -15,3 +15,6 @@ passlib[bcrypt]>=1.7.4
 structlog>=24.1.0
 zen-engine>=0.17.0
 pytest>=8.0.0
+pytest-asyncio>=0.23.0,<2.0.0
+# Parsed by the bank-matrix conformance test (Bank_Eligibility_Matrix_v1.xlsx).
+openpyxl>=3.1.0,<4.0.0

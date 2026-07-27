@@ -64,11 +64,21 @@ WRITE_OFF_TYPE_TO_FLAG = {
     "CC": "allow_cc_write_off",
 }
 
-# Property configurations that make a guarantor mandatory (Rules.md RES-203/204).
-GUARANTOR_PROPERTY_STATUSES = frozenset({"RESI_CUM_OFFICE_RENTED", "SEPARATE_BOTH_RENTED"})
-# Banks that accept the above configuration WITHOUT a guarantor (matrix col 23:
-# "Without a Guarantor" == True). Only BOM per Ver 4.0.
-BANKS_ALLOW_WITHOUT_GUARANTOR = frozenset({"BOM"})
+# The only property configuration the matrix conditions on a guarantor:
+# residence and office both rented (cols 22/23). Resi-cum-office-rented has no
+# column of its own — col 19 ("Rented House-Salaried") and col 20
+# ("Resi-Cum-Office-Owned") are True for every bank — so it carries no
+# guarantor requirement. It previously did, which rejected applicants the form
+# never even offers the guarantor question to.
+GUARANTOR_PROPERTY_STATUSES = frozenset({"SEPARATE_BOTH_RENTED"})
+
+# Bureau rental-income class -> the per-bank policy flag governing it
+# (matrix cols 38-40). NONE/absent means no secondary rental income claimed.
+RENTAL_CLASS_TO_FLAG = {
+    "NO_ITR_NOT_IN_BANK": "allow_rental_no_itr_not_in_bank",
+    "NO_ITR_IN_BANK": "allow_rental_no_itr_in_bank",
+    "ITR_NOT_IN_BANK": "allow_rental_itr_not_in_bank",
+}
 
 # Banks that do NOT permit an existing active car loan alongside the application
 # (matrix col 19: "Existing Car Loan" == False). EXB-702.
@@ -116,6 +126,14 @@ BANK_MATRIX_RULES = {
         "allow_no_income_proof": False,
         "allow_huf": False,
         "allow_sibling_coapplicant": True,
+        "allow_loan_enquiry": False,
+        "allow_agriculture": False,
+        "allow_rental_no_itr_not_in_bank": False,
+        "allow_rental_no_itr_in_bank": True,
+        "allow_rental_itr_not_in_bank": True,
+        "allow_itr_not_filed": False,
+        "allow_without_guarantor": False,
+        "allow_with_guarantor": True,
     },
     "INDIAN_BANK": {
         "min_cibil": 730,
@@ -144,6 +162,14 @@ BANK_MATRIX_RULES = {
         "allow_no_income_proof": False,
         "allow_huf": False,
         "allow_sibling_coapplicant": False,
+        "allow_loan_enquiry": False,
+        "allow_agriculture": False,
+        "allow_rental_no_itr_not_in_bank": False,
+        "allow_rental_no_itr_in_bank": False,
+        "allow_rental_itr_not_in_bank": True,
+        "allow_itr_not_filed": False,
+        "allow_without_guarantor": False,
+        "allow_with_guarantor": True,
     },
     "IOB": {
         "min_cibil": 701,
@@ -172,6 +198,14 @@ BANK_MATRIX_RULES = {
         "allow_no_income_proof": False,
         "allow_huf": False,
         "allow_sibling_coapplicant": False,
+        "allow_loan_enquiry": False,
+        "allow_agriculture": False,
+        "allow_rental_no_itr_not_in_bank": False,
+        "allow_rental_no_itr_in_bank": False,
+        "allow_rental_itr_not_in_bank": False,
+        "allow_itr_not_filed": False,
+        "allow_without_guarantor": False,
+        "allow_with_guarantor": False,
     },
     "BOB": {
         "min_cibil": 726,
@@ -200,6 +234,14 @@ BANK_MATRIX_RULES = {
         "allow_no_income_proof": False,
         "allow_huf": False,
         "allow_sibling_coapplicant": True,
+        "allow_loan_enquiry": False,
+        "allow_agriculture": False,
+        "allow_rental_no_itr_not_in_bank": False,
+        "allow_rental_no_itr_in_bank": False,
+        "allow_rental_itr_not_in_bank": False,
+        "allow_itr_not_filed": False,
+        "allow_without_guarantor": False,
+        "allow_with_guarantor": False,
     },
     "BOM": {
         "min_cibil": 650,
@@ -228,6 +270,14 @@ BANK_MATRIX_RULES = {
         "allow_no_income_proof": False,
         "allow_huf": False,
         "allow_sibling_coapplicant": False,
+        "allow_loan_enquiry": False,
+        "allow_agriculture": True,
+        "allow_rental_no_itr_not_in_bank": False,
+        "allow_rental_no_itr_in_bank": False,
+        "allow_rental_itr_not_in_bank": False,
+        "allow_itr_not_filed": False,
+        "allow_without_guarantor": True,
+        "allow_with_guarantor": True,
     },
     "HDFC": {
         "min_cibil": 701,
@@ -256,6 +306,14 @@ BANK_MATRIX_RULES = {
         "allow_no_income_proof": True,
         "allow_huf": True,
         "allow_sibling_coapplicant": True,
+        "allow_loan_enquiry": False,
+        "allow_agriculture": True,
+        "allow_rental_no_itr_not_in_bank": False,
+        "allow_rental_no_itr_in_bank": False,
+        "allow_rental_itr_not_in_bank": False,
+        "allow_itr_not_filed": True,
+        "allow_without_guarantor": False,
+        "allow_with_guarantor": True,
     },
     "AXIS": {
         "min_cibil": 701,
@@ -284,6 +342,14 @@ BANK_MATRIX_RULES = {
         "allow_no_income_proof": True,
         "allow_huf": True,
         "allow_sibling_coapplicant": True,
+        "allow_loan_enquiry": False,
+        "allow_agriculture": True,
+        "allow_rental_no_itr_not_in_bank": False,
+        "allow_rental_no_itr_in_bank": False,
+        "allow_rental_itr_not_in_bank": False,
+        "allow_itr_not_filed": True,
+        "allow_without_guarantor": False,
+        "allow_with_guarantor": True,
     },
     "KOTAK": {
         "min_cibil": 701,
@@ -312,6 +378,14 @@ BANK_MATRIX_RULES = {
         "allow_no_income_proof": True,
         "allow_huf": True,
         "allow_sibling_coapplicant": True,
+        "allow_loan_enquiry": False,
+        "allow_agriculture": True,
+        "allow_rental_no_itr_not_in_bank": False,
+        "allow_rental_no_itr_in_bank": False,
+        "allow_rental_itr_not_in_bank": False,
+        "allow_itr_not_filed": True,
+        "allow_without_guarantor": False,
+        "allow_with_guarantor": True,
     },
 }
 
@@ -321,8 +395,11 @@ def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> 
 
     Drives BOTH the selected-bank verdict (overall_eligible) and each bank in
     the matrix, so the two can never disagree. Implements the payload-supported
-    columns of Bank_Eligibility_Matrix_v1.xlsx. (Form-16 years and existing car
-    loan are omitted: the request schema carries no field for them.)
+    columns of Bank_Eligibility_Matrix_v1.xlsx: bureau (2-13), demographics
+    (14-16, 25-26), residence & guarantor (22-23), entity class (27, 54),
+    employment & income (33-43, 46-47, 55), and co-applicant (56-61).
+    Columns describing options that are True for every bank (e.g. 28-32
+    employment types, 49-52 business entity types) carry no rejection path.
     """
     reasons: List[Dict[str, str]] = []
 
@@ -350,6 +427,11 @@ def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> 
         add("BUR-405", "Credit Bureau Floor",
             f"CIBIL score ({inp['cibil']}) is below {code} minimum threshold of {policy['min_cibil']}.")
 
+    if inp["loan_enquiry_count"] > 0 and not policy["allow_loan_enquiry"]:
+        add("BUR-406", "Credit Bureau History",
+            f"{code} does not accept applicants with open loan enquiries "
+            f"({inp['loan_enquiry_count']} on file).")
+
     if code == "INDIAN_BANK" and inp["max_dpd"] > 0:
         add("BUR-403", "Credit Bureau History",
             "Indian Bank requires zero past DPD instances across all loan accounts.")
@@ -369,6 +451,22 @@ def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> 
         elif rt == "CC" and inp["write_off_amount"] >= policy["max_cc_write_off_amount"]:
             add("BUR-401B", "Credit Bureau History",
                 f"Credit Card write-off amount (Rs {inp['write_off_amount']:,.2f}) is not below {code} ceiling (Rs {policy['max_cc_write_off_amount']:,.2f}).")
+
+    # --- Entity & business classification ------------------------------------
+    if inp["is_huf"] and not policy["allow_huf"]:
+        add("ENT-501", "Entity Classification",
+            f"{code} does not onboard Hindu Undivided Family (HUF) applicants.")
+
+    if inp["is_agriculture"] and not policy["allow_agriculture"]:
+        add("ENT-502", "Entity Classification",
+            f"{code} does not lend against agriculture-sector business income.")
+
+    # --- Secondary rental income (matrix cols 38-40) -------------------------
+    rental_flag = RENTAL_CLASS_TO_FLAG.get(inp["rental_income_class"])
+    if rental_flag is not None and not policy[rental_flag]:
+        add("INC-601", "Secondary Income",
+            f"{code} does not accept the declared rental-income configuration "
+            f"({inp['rental_income_class']}).")
 
     # --- Employment / income -------------------------------------------------
     if inp["occupation"] == "Salaried":
@@ -397,23 +495,30 @@ def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> 
             add("DEM-102", "Demographics",
                 f"Age at final EMI maturity ({inp['age_emi_sal']}) exceeds {code} limit of {policy['max_age_emi_salaried']} yrs for salaried applicants.")
     else:
-        if inp["business_exp_years"] < policy["min_total_experience_years"]:
+        # Business vintage is governed by the sheet's "Business ITR Years"
+        # column (col 47), not the salaried work-experience column.
+        if inp["business_exp_years"] < policy["min_business_itr_years"]:
             add("EMP-SE-301", "Self-Employed",
-                f"Business existence ({inp['business_exp_years']} yrs) is below {code} minimum ({policy['min_total_experience_years']} yrs).")
-        if inp["se_current_itr"] < policy["se_min_current_itr"]:
-            add("EMP-SE-302", "Self-Employed",
-                f"Current-year ITR (Rs {inp['se_current_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_current_itr']:,.0f}).")
-        if policy["se_combined_itr_rule"]:
-            combined = inp["se_current_itr"] + inp["se_prev_itr"]
-            if combined < 600000:
-                add("EMP-SE-303", "Self-Employed",
-                    f"Combined current+previous ITR (Rs {combined:,.0f}) is below {code} minimum (Rs 600,000).")
-        elif inp["se_prev_itr"] < policy["se_min_prev_itr"]:
-            add("EMP-SE-303", "Self-Employed",
-                f"Previous-year ITR (Rs {inp['se_prev_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_prev_itr']:,.0f}).")
+                f"Business existence ({inp['business_exp_years']} yrs) is below {code} minimum ({policy['min_business_itr_years']} yrs).")
         if not inp["itr_filed"]:
-            add("EMP-SE-304", "Self-Employed",
-                "Active ITR filing proof is required for self-employed profiles.")
+            # Banks carrying "ITR Not Filed" == True (col 46) underwrite this
+            # segment; for everyone else it is a hard stop. The ITR *amount*
+            # rules are moot when no return was filed.
+            if not policy["allow_itr_not_filed"]:
+                add("EMP-SE-304", "Self-Employed",
+                    f"{code} requires a filed ITR for self-employed profiles.")
+        else:
+            if inp["se_current_itr"] < policy["se_min_current_itr"]:
+                add("EMP-SE-302", "Self-Employed",
+                    f"Current-year ITR (Rs {inp['se_current_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_current_itr']:,.0f}).")
+            if policy["se_combined_itr_rule"]:
+                combined = inp["se_current_itr"] + inp["se_prev_itr"]
+                if combined < 600000:
+                    add("EMP-SE-303", "Self-Employed",
+                        f"Combined current+previous ITR (Rs {combined:,.0f}) is below {code} minimum (Rs 600,000).")
+            elif inp["se_prev_itr"] < policy["se_min_prev_itr"]:
+                add("EMP-SE-303", "Self-Employed",
+                    f"Previous-year ITR (Rs {inp['se_prev_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_prev_itr']:,.0f}).")
         if not inp["business_proof"]:
             add("EMP-SE-307", "Self-Employed", "Valid business proof/registration is mandatory.")
         if inp["age_emi_se"] > policy["max_age_emi_self_employed"]:
@@ -421,11 +526,23 @@ def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> 
                 f"Age at final EMI maturity ({inp['age_emi_se']}) exceeds {code} limit of {policy['max_age_emi_self_employed']} yrs for self-employed applicants.")
 
     # --- Residence / guarantor ----------------------------------------------
-    if (inp["property_status"] in GUARANTOR_PROPERTY_STATUSES
-            and not inp["guarantor_provided"]
-            and code not in BANKS_ALLOW_WITHOUT_GUARANTOR):
-        add("RES-205", "Residence & Guarantor",
-            f"Guarantor is mandatory for property configuration '{inp['property_status']}' at {code}.")
+    # Cols 22/23 decide the both-rented configuration independently: a
+    # guarantor rescues it only where col 23 is True, and IOB/BOB decline it
+    # either way. Offering a guarantor is not universally sufficient.
+    if inp["property_status"] in GUARANTOR_PROPERTY_STATUSES:
+        if inp["guarantor_provided"]:
+            if not policy["allow_with_guarantor"]:
+                add("RES-206", "Residence & Guarantor",
+                    f"{code} does not lend where residence and office are both rented, "
+                    "even with a guarantor.")
+        elif not policy["allow_without_guarantor"]:
+            add("RES-205", "Residence & Guarantor",
+                f"Guarantor is mandatory for property configuration '{inp['property_status']}' at {code}.")
+
+    # --- Co-applicant eligibility (matrix cols 56-61) ------------------------
+    if inp["sibling_co_applicant"] and not policy["allow_sibling_coapplicant"]:
+        add("COA-801", "Co-Applicant",
+            f"{code} does not accept a brother/sister co-applicant for age or income pooling.")
 
     # --- Existing banking relationship --------------------------------------
     if inp["active_car_loan"] and code in BANKS_DISALLOW_EXISTING_CAR_LOAN:
@@ -535,6 +652,14 @@ class BREEngineService:
             "business_exp_years": payload.get("business_experience_years", 99),
             "property_status": str(payload.get("property_status", "OWNED")).upper(),
             "guarantor_provided": payload.get("guarantor_provided", False),
+            "loan_enquiry_count": payload.get("loan_enquiry_count", 0),
+            "is_huf": (
+                str(payload.get("entity_type", "")).upper() == "HUF"
+                or str(payload.get("business_entity_type", "")).upper() == "HUF"
+            ),
+            "is_agriculture": str(payload.get("business_entity_type", "")).upper() == "AGRICULTURE",
+            "rental_income_class": str(payload.get("rental_income_class") or "NONE").upper(),
+            "sibling_co_applicant": payload.get("sibling_co_applicant", False),
         }
 
         # --- Selected-bank verdict ------------------------------------------

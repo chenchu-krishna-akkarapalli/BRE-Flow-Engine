@@ -18,10 +18,10 @@ cp .env.example .env
 ### Automated Testing & SLA Verification
 ```bash
 # Run complete test suite via uv (11/11 tests)
-uv run --with fastapi --with uvicorn --with pydantic --with pydantic-settings --with sqlalchemy --with asyncpg --with redis --with pytest --with httpx --with pyjwt pytest app/tests/ -v
+uv run --with fastapi --with uvicorn --with pydantic --with pydantic-settings --with sqlalchemy --with asyncpg --with redis --with pytest --with pytest-asyncio --with openpyxl --with httpx --with pyjwt pytest app/tests/ -v
 
 # Run single test module
-uv run --with fastapi --with uvicorn --with pydantic --with pydantic-settings --with sqlalchemy --with asyncpg --with redis --with pytest --with httpx --with pyjwt pytest app/tests/test_bre_engine.py -v
+uv run --with fastapi --with uvicorn --with pydantic --with pydantic-settings --with sqlalchemy --with asyncpg --with redis --with pytest --with pytest-asyncio --with openpyxl --with httpx --with pyjwt pytest app/tests/test_bre_engine.py -v
 
 # Execute via Makefile shortcuts
 make test

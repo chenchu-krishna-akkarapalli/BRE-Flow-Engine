@@ -13,6 +13,7 @@ from app.constants.enums import (
     OfficeAddressType,
     OfficePremisesStatus,
     PropertyStatus,
+    RentalIncomeType,
     ResidentDetails,
     SalaryMode,
     TenureBand,
@@ -95,9 +96,23 @@ WRITE_OFF_FLAG_PRECEDENCE: tuple[tuple[str, WriteOffType], ...] = (
 FORM_16_AVAILABLE_YEARS: int = 2
 FORM_16_ABSENT_YEARS: int = 0
 
-# NRI stay is captured in months by the form; the engine reasons in days.
-DAYS_PER_MONTH: int = 30
-DAYS_PER_YEAR: float = 365.25
+# NRI stay is captured in months by the form; the matrix's floor is in years.
+# Convert on the calendar (months / 12) — routing through a nominal 30-day
+# month made an exact 24-month stay score as 1.97 years and miss a ">= 2" floor.
+MONTHS_PER_YEAR: int = 12
+
+# Rental-income option -> the write-off-style class the matrix scores
+# (cols 38-40). "None" claims no secondary rental income at all.
+RENTAL_INCOME_TO_CLASS: dict[RentalIncomeType, str] = {
+    RentalIncomeType.NONE: "NONE",
+    RentalIncomeType.AGREEMENT_NO_ITR_NOT_IN_BANK: "NO_ITR_NOT_IN_BANK",
+    RentalIncomeType.AGREEMENT_ITR_NOT_IN_BANK: "ITR_NOT_IN_BANK",
+    RentalIncomeType.AGREEMENT_NO_ITR_IN_BANK: "NO_ITR_IN_BANK",
+}
+
+# Co-applicant relations the matrix gates per bank (cols 56-58, 61); parents
+# are accepted everywhere.
+SIBLING_RELATIONS: frozenset = frozenset({"Brother", "Sister"})
 
 # Age attributed to non-natural persons (Company / HUF), which have no DOB.
 # Chosen to clear every partner bank's min_age without implying a real age.
