@@ -9,7 +9,7 @@ import {
   TENURE_BAND_MONTHS, totalWorkExperienceYears,
   SALARY_MODES, TENURE_BANDS, WRITE_OFF_FLAGS,
 } from "@/lib/form-schema";
-import { isBothRented, profileTypeFor, useOnboardingStore, workflowFor } from "@/store/useOnboardingStore";
+import { isResiCumOfficeRented, profileTypeFor, useOnboardingStore, workflowFor } from "@/store/useOnboardingStore";
 import type { Draft } from "@/store/useOnboardingStore";
 
 /** Format validation runs locally against the same patterns the API enforces,
@@ -351,11 +351,11 @@ export function Step3Occupation() {
               )}
             </>
           )}
-          {isBothRented(draft) && (
+          {isResiCumOfficeRented(draft) && (
             <Field
               label="Guarantor Arrangement"
               htmlFor="guarantorStatus"
-              hint="Required when residence and office are both rented."
+              hint="Required when the office operates out of a rented residence."
             >
               <Select id="guarantorStatus" value={draft.guarantorStatus} onChange={k("guarantorStatus")} options={[
                 { value: "Without a Gaurantor", label: "Without a Guarantor" },
@@ -384,8 +384,8 @@ export function Step3Occupation() {
             <Field label="Previous Year ITR (₹)" htmlFor="prevITRAmount">
               <TextInput id="prevITRAmount" type="number" value={draft.prevITRAmount} onChange={(v) => set("prevITRAmount", num(v))} numeric />
             </Field>
-            <Field label="Business ITR (₹)" htmlFor="businessItrAmount">
-              <TextInput id="businessItrAmount" type="number" value={draft.businessItrAmount} onChange={(v) => set("businessItrAmount", num(v))} numeric />
+            <Field label="Business ITR — years filed" htmlFor="businessItrYears" hint="Number of years of filed returns.">
+              <TextInput id="businessItrYears" type="number" value={draft.businessItrYears} onChange={(v) => set("businessItrYears", num(v))} numeric />
             </Field>
           </div>
         </>
@@ -430,8 +430,8 @@ export function Step3Occupation() {
             <Field label="Previous Year ITR (₹)" htmlFor="companyPrevITRAmount">
               <TextInput id="companyPrevITRAmount" type="number" value={draft.companyPrevITRAmount} onChange={(v) => set("companyPrevITRAmount", num(v))} numeric />
             </Field>
-            <Field label="Business ITR (₹)" htmlFor="businessItrAmountCompany">
-              <TextInput id="businessItrAmountCompany" type="number" value={draft.businessItrAmountCompany} onChange={(v) => set("businessItrAmountCompany", num(v))} numeric />
+            <Field label="Business ITR — years filed" htmlFor="businessItrYearsCompany" hint="Number of years of filed returns.">
+              <TextInput id="businessItrYearsCompany" type="number" value={draft.businessItrYearsCompany} onChange={(v) => set("businessItrYearsCompany", num(v))} numeric />
             </Field>
           </div>
         </>

@@ -409,7 +409,10 @@ class SelfEmployedOccupation(FormModel):
     business_establishment_date: date = Field(alias="businessEstablishmentDate")
     current_itr_amount: float = Field(alias="currentITRAmount", ge=0.0)
     prev_itr_amount: float = Field(alias="prevITRAmount", ge=0.0)
-    business_itr_amount: float = Field(alias="businessItrAmount", ge=0.0)
+    # Years of filed business ITRs (matrix col 47), NOT a rupee amount. The
+    # form labels it "Business ITR" but the matrix threshold it feeds is a
+    # count of filing years.
+    business_itr_years: int = Field(alias="businessItrAmount", ge=0, le=60)
     rental_income_type: RentalIncomeType = Field(
         default=RentalIncomeType.NONE, alias="rentalIncomeTypeSelfEmployed"
     )
@@ -439,6 +442,7 @@ class SelfEmployedOccupation(FormModel):
             "current_itr": self.current_itr_amount,
             "previous_itr": self.prev_itr_amount,
             "itr_filed": True,
+            "business_itr_years": self.business_itr_years,
             "business_proof": bool(self.business_proof),
             "business_entity_type": self.business_entity_type.value,
             "rental_income_class": RENTAL_INCOME_TO_CLASS[self.rental_income_type],
@@ -504,7 +508,7 @@ class CompanyBusiness(FormModel):
     company_gstin: str = Field(alias="companyGstin", min_length=1, max_length=64)
     company_current_itr_amount: float = Field(alias="companyCurrentITRAmount", ge=0.0)
     company_prev_itr_amount: float = Field(alias="companyPrevITRAmount", ge=0.0)
-    business_itr_amount: float = Field(alias="businessItrAmountCompany", ge=0.0)
+    business_itr_years: int = Field(alias="businessItrAmountCompany", ge=0, le=60)
 
     @property
     def office_address_type(self) -> Optional[OfficeAddressType]:
@@ -526,6 +530,7 @@ class CompanyBusiness(FormModel):
             "current_itr": self.company_current_itr_amount,
             "previous_itr": self.company_prev_itr_amount,
             "itr_filed": True,
+            "business_itr_years": self.business_itr_years,
             "business_proof": True,
         }
 
@@ -708,14 +713,19 @@ class OnboardingFormRequest(FormModel):
         # The guarantor question is only asked — and is then mandatory — when
         # residence and office are both rented (form step-3 description).
         if isinstance(self.occupation, SelfEmployedOccupation):
-            both_rented = self.property_status is PropertyStatus.SEPARATE_BOTH_RENTED
-            if both_rented and self.occupation.guarantor_status is None:
+            # A separately addressed office is assessed on its own premises
+            # tenure and never triggers the guarantor question.
+            resi_cum_office_rented = (
+                self.property_status is PropertyStatus.RESI_CUM_OFFICE_RENTED
+            )
+            if resi_cum_office_rented and self.occupation.guarantor_status is None:
                 raise ValueError(
-                    "guarantorStatus is required when both the residence and the office are rented."
+                    "guarantorStatus is required when the office operates out of a rented residence."
                 )
-            if not both_rented and self.occupation.guarantor_status is not None:
+            if not resi_cum_office_rented and self.occupation.guarantor_status is not None:
                 raise ValueError(
-                    "guarantorStatus is only collected when both the residence and the office are rented."
+                    "guarantorStatus is only collected when the office operates out of a "
+                    "rented residence."
                 )
 
         return self

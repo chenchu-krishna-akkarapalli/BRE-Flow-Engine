@@ -74,13 +74,11 @@ WRITE_OFF_TYPE_TO_FLAG = {
     "CC": "allow_cc_write_off",
 }
 
-# The only property configuration the matrix conditions on a guarantor:
-# residence and office both rented (cols 22/23). Resi-cum-office-rented has no
-# column of its own — col 19 ("Rented House-Salaried") and col 20
-# ("Resi-Cum-Office-Owned") are True for every bank — so it carries no
-# guarantor requirement. It previously did, which rejected applicants the form
-# never even offers the guarantor question to.
-GUARANTOR_PROPERTY_STATUSES = frozenset({"SEPARATE_BOTH_RENTED"})
+# The property configuration the guarantor question attaches to: the office
+# operates out of a RENTED residence (resi-cum-office rented). A separately
+# addressed office is a distinct premises and is assessed on its own tenure —
+# it does not trigger the guarantor prompt, whatever its premises status.
+GUARANTOR_PROPERTY_STATUSES = frozenset({"RESI_CUM_OFFICE_RENTED"})
 
 # Bureau rental-income class -> the per-bank policy flag governing it
 # (matrix cols 38-40). NONE/absent means no secondary rental income claimed.
@@ -628,11 +626,13 @@ def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> 
             add("DEM-102", "Demographics",
                 f"Age at final EMI maturity ({inp['age_emi_sal']}) exceeds {code} limit of {policy['max_age_emi_salaried']} yrs for salaried applicants.")
     else:
-        # Business vintage is governed by the sheet's "Business ITR Years"
-        # column (col 47), not the salaried work-experience column.
-        if inp["business_exp_years"] < policy["min_business_itr_years"]:
+        # Col 47 "Business ITR Years" counts YEARS OF FILED RETURNS, not the
+        # age of the business. A five-year-old business that has filed twice
+        # has two ITR years, and it is the filings the bank underwrites.
+        if inp["business_itr_years"] < policy["min_business_itr_years"]:
             add("EMP-SE-301", "Self-Employed",
-                f"Business existence ({inp['business_exp_years']} yrs) is below {code} minimum ({policy['min_business_itr_years']} yrs).")
+                f"Filed business ITR history ({inp['business_itr_years']} yrs) is below "
+                f"{code} minimum ({policy['min_business_itr_years']} yrs).")
         if not inp["itr_filed"]:
             # Banks carrying "ITR Not Filed" == True (col 46) underwrite this
             # segment; for everyone else it is a hard stop. The ITR *amount*
@@ -652,8 +652,12 @@ def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> 
             elif inp["se_prev_itr"] < policy["se_min_prev_itr"]:
                 add("EMP-SE-303", "Self-Employed",
                     f"Previous-year ITR (Rs {inp['se_prev_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_prev_itr']:,.0f}).")
+        # Col 48 "Business Proof" is Mandatory at every bank: a self-employed
+        # applicant must supply a registration key (GSTIN / Udyam / equivalent).
         if not inp["business_proof"]:
-            add("EMP-SE-307", "Self-Employed", "Valid business proof/registration is mandatory.")
+            add("BUS-302", "Business Proof",
+                "A valid business proof or registration number (GSTIN / Udyam) "
+                "is mandatory for self-employed applicants.")
         if "max_age_emi_self_employed" in policy and inp["age_emi_se"] > policy["max_age_emi_self_employed"]:
             add("DEM-103", "Demographics",
                 f"Age at final EMI maturity ({inp['age_emi_se']}) exceeds {code} limit of {policy['max_age_emi_self_employed']} yrs for self-employed applicants.")
@@ -796,6 +800,11 @@ class BREEngineService:
             "itr_filed": payload.get("itr_filed", True),
             "business_proof": payload.get("business_proof", True),
             "business_exp_years": payload.get("business_experience_years", 99),
+            # Years of filed business ITRs. Falls back to business age when the
+            # branch collects no explicit count (HUF), so the rule still binds.
+            "business_itr_years": payload.get(
+                "business_itr_years", payload.get("business_experience_years", 99)
+            ),
             "property_status": str(payload.get("property_status", "OWNED")).upper(),
             "guarantor_provided": payload.get("guarantor_provided", False),
             "loan_enquiry_count": payload.get("loan_enquiry_count", 0),

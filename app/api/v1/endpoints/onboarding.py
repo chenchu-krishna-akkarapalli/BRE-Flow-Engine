@@ -169,6 +169,7 @@ def _build_application_record(
         guarantor_provided=engine_payload["guarantor_provided"],
         business_establishment_date=engine_payload.get("business_establishment_date"),
         current_itr_amount=engine_payload.get("current_itr"),
+        business_itr_years=engine_payload.get("business_itr_years"),
         prev_itr_amount=engine_payload.get("previous_itr"),
         selected_bank=banking.selected_bank.value,
         loan_type=banking.loan_type.value,

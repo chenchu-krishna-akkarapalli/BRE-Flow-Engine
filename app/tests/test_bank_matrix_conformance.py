@@ -253,7 +253,7 @@ def sheet_rejects(bank: str, f: Dict[str, Any]) -> List[str]:
         if f["age_at_last_emi"] > p["max_age_emi_salaried"]:
             out.append("age_emi_salaried")
     else:
-        if f["business_years"] < p["min_business_itr_years"]:
+        if f["business_itr_years"] < p["min_business_itr_years"]:
             out.append("business_itr_years")
         if not f["itr_filed"]:
             if not p["allow_itr_not_filed"]:
@@ -276,7 +276,7 @@ def sheet_rejects(bank: str, f: Dict[str, Any]) -> List[str]:
         out.append(f"rental_{f['rental']}")
 
     # Residence / office tenure & guarantor
-    if f["both_rented"]:
+    if f["resi_cum_office_rented"]:
         permitted = p["allow_with_guarantor"] if f["guarantor"] else p["allow_without_guarantor"]
         if not permitted:
             out.append("both_rented_guarantor")
@@ -321,7 +321,7 @@ DEFAULTS: Dict[str, Any] = {
     "salary_band": "gt25000", "cash_salary": False, "tenure_band": "2y+",
     "prev_joining_years_ago": None, "no_income_proof": False, "rental": None,
     "current_itr": 500000.0, "previous_itr": 350000.0, "itr_filed": True,
-    "business_years_ago": 10, "business_proof": True, "business_entity": "Propreitorship",
+    "business_years_ago": 10, "business_itr_years": 5, "business_proof": True, "business_entity": "Propreitorship",
     "residence": "Owned House", "office": None, "office_status": None, "guarantor": None,
     "coapp_age": "None", "coapp_income": "None",
 }
@@ -360,13 +360,18 @@ def derive(c: Dict[str, Any]) -> Dict[str, Any]:
         "form_16_years": 0 if c["no_income_proof"] else 2,
         "age_at_last_emi": c["age_at_last_emi"],
         "business_years": c["business_years_ago"],
+        # HUF collects no explicit filing count; the engine falls back to
+        # business age there, so the reference must too.
+        "business_itr_years": (
+            c["business_years_ago"] if c["entity"] == "HUF" else c["business_itr_years"]
+        ),
         "itr_filed": c["itr_filed"],
         "current_itr": c["current_itr"],
         "previous_itr": c["previous_itr"],
         "business_proof": c["business_proof"],
         "rental": c["rental"],
-        "both_rented": c["residence"] == "Rented House" and c["office"] == "Separate"
-                       and c["office_status"] == "Rented",
+        # The office runs out of a rented residence — the only guarantor trigger.
+        "resi_cum_office_rented": c["residence"] == "Rented House" and c["office"] == "Same",
         "guarantor": c["guarantor"] == "With a Gaurantor",
         "car_loan": c["car_loan"],
         "existing_account_bank": c["selected"],
@@ -438,7 +443,7 @@ def build_form(c: Dict[str, Any]) -> Dict[str, Any]:
                 "businessEntityType": c["business_entity"],
                 "businessEstablishmentDate": est.isoformat(),
                 "currentITRAmount": c["current_itr"], "prevITRAmount": c["previous_itr"],
-                "businessItrAmount": c["current_itr"],
+                "businessItrAmount": c["business_itr_years"],
                 "businessProof": "GSTIN: 29AAAAA0000A1Z5" if c["business_proof"] else None,
             }
             if c["office"]:
@@ -512,18 +517,18 @@ def cases() -> List[Tuple[str, Dict[str, Any]]]:
             add(f"{bank}/rental-{rental}", **b, rental=rental)
         add(f"{bank}/se-current-itr-low", **b, **SELF_EMPLOYED, current_itr=90000.0)
         add(f"{bank}/se-prev-itr-low", **b, **SELF_EMPLOYED, previous_itr=90000.0)
-        add(f"{bank}/se-business-2y", **b, **SELF_EMPLOYED, business_years_ago=2)
+        add(f"{bank}/se-itr-years-1", **b, **SELF_EMPLOYED, business_itr_years=1)
         add(f"{bank}/se-no-business-proof", **b, **SELF_EMPLOYED, business_proof=False)
         add(f"{bank}/se-agriculture", **b, **SELF_EMPLOYED, business_entity="Agriculture")
         add(f"{bank}/huf-entity", **b, entity="HUF")
         add(f"{bank}/huf-itr-not-filed", **b, entity="HUF", itr_filed=False)
-        add(f"{bank}/both-rented-with-guarantor", **b, occupation="Self-Employed",
-            residence="Rented House", office="Separate", office_status="Rented",
-            guarantor="With a Gaurantor")
-        add(f"{bank}/both-rented-without-guarantor", **b, occupation="Self-Employed",
-            residence="Rented House", office="Separate", office_status="Rented",
-            guarantor="Without a Gaurantor")
-        add(f"{bank}/resi-cum-office-rented", **b, **SELF_EMPLOYED, residence="Rented House")
+        add(f"{bank}/resi-cum-office-rented-with-guarantor", **b, **SELF_EMPLOYED,
+            residence="Rented House", guarantor="With a Gaurantor")
+        add(f"{bank}/resi-cum-office-rented-without-guarantor", **b, **SELF_EMPLOYED,
+            residence="Rented House", guarantor="Without a Gaurantor")
+        # A separately addressed office no longer prompts for a guarantor.
+        add(f"{bank}/separate-office-both-rented", **b, occupation="Self-Employed",
+            residence="Rented House", office="Separate", office_status="Rented")
         add(f"{bank}/coapp-age-brother", **b, coapp_age="Brother")
         add(f"{bank}/coapp-income-sister", **b, coapp_income="Sister")
         add(f"{bank}/coapp-income-father", **b, coapp_income="Father")

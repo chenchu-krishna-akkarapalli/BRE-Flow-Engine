@@ -75,14 +75,14 @@ export interface Draft {
   businessEstablishmentDate: string;
   currentITRAmount: number;
   prevITRAmount: number;
-  businessItrAmount: number;
+  businessItrYears: number;
   itrFilingStatus: string;
   udyamRegNoSelfEmployed: string;
   companyEstablishmentDate: string;
   companyGstin: string;
   companyCurrentITRAmount: number;
   companyPrevITRAmount: number;
-  businessItrAmountCompany: number;
+  businessItrYearsCompany: number;
 
   // Step 4 — banking & bureau
   existingAccountBank: string;
@@ -131,9 +131,9 @@ const INITIAL_DRAFT: Draft = {
   officeAddressType: "Same", officeAddress: "", officePremisesStatus: "",
   guarantorStatus: "", businessEntityType: "Propreitorship", businessProof: "",
   businessEstablishmentDate: "", currentITRAmount: 0, prevITRAmount: 0,
-  businessItrAmount: 0, itrFilingStatus: "Self employed ITR Filled",
+  businessItrYears: 0, itrFilingStatus: "Self employed ITR Filled",
   udyamRegNoSelfEmployed: "", companyEstablishmentDate: "", companyGstin: "",
-  companyCurrentITRAmount: 0, companyPrevITRAmount: 0, businessItrAmountCompany: 0,
+  companyCurrentITRAmount: 0, companyPrevITRAmount: 0, businessItrYearsCompany: 0,
 
   existingAccountBank: "BOI", existingCarLoanBank: "None", loanType: "Auto Loan",
   bureauCibilScore: 750, bureauDpd: 0, bureauLoanEnquiry: 0,
@@ -167,14 +167,15 @@ export function profileTypeFor(draft: Draft): ProfileType {
   return draft.occupation;
 }
 
-/** Residence and office both rented — the only configuration where the matrix
- *  asks the guarantor question, and where the API requires an answer. */
-export function isBothRented(draft: Draft): boolean {
+/** The office runs out of a RENTED residence — the only configuration that asks
+ *  the guarantor question, and where the API requires an answer. A separately
+ *  addressed office is assessed on its own premises tenure and never prompts,
+ *  whatever its premises status. */
+export function isResiCumOfficeRented(draft: Draft): boolean {
   return (
     profileTypeFor(draft) === "Self-Employed" &&
     draft.residentDetails === "Rented House" &&
-    draft.officeAddressType === "Separate" &&
-    draft.officePremisesStatus === "Rented"
+    draft.officeAddressType === "Same"
   );
 }
 
@@ -234,7 +235,7 @@ function buildOccupation(d: Draft): Occupation {
       companyGstin: d.companyGstin,
       companyCurrentITRAmount: Number(d.companyCurrentITRAmount),
       companyPrevITRAmount: Number(d.companyPrevITRAmount),
-      businessItrAmountCompany: Number(d.businessItrAmountCompany),
+      businessItrAmountCompany: Number(d.businessItrYearsCompany),
     };
   }
 
@@ -265,8 +266,8 @@ function buildOccupation(d: Draft): Occupation {
       officePremisesStatus: separate
         ? (d.officePremisesStatus as "Owned" | "Rented")
         : undefined,
-      // Guarantor is accepted ONLY when residence and office are both rented.
-      guarantorStatus: isBothRented(d)
+      // Guarantor is accepted ONLY when the office shares a rented residence.
+      guarantorStatus: isResiCumOfficeRented(d)
         ? (d.guarantorStatus as "Without a Gaurantor" | "With a Gaurantor")
         : undefined,
       businessEntityType: d.businessEntityType,
@@ -274,7 +275,7 @@ function buildOccupation(d: Draft): Occupation {
       businessEstablishmentDate: d.businessEstablishmentDate,
       currentITRAmount: Number(d.currentITRAmount),
       prevITRAmount: Number(d.prevITRAmount),
-      businessItrAmount: Number(d.businessItrAmount),
+      businessItrAmount: Number(d.businessItrYears),
       rentalIncomeTypeSelfEmployed: d.rentalIncomeType,
     };
   }
@@ -377,7 +378,20 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   error: null,
 
   setField: (key, value) =>
-    set((state) => ({ draft: { ...state.draft, [key]: value }, error: null })),
+    set((state) => {
+      const draft = { ...state.draft, [key]: value };
+      // Un-ticking a conditional flag must clear the value it guarded, or the
+      // stale amount still ships. A write-off amount with no accompanying
+      // class reaches the engine as an UNCLASSIFIED write-off and fails closed
+      // (BUR-401D) — a rejection the applicant cannot see the cause of.
+      if (key === "bureauFlagCC" && value === false) {
+        draft.bureauWriteOffAmount = 0;
+      }
+      if (key === "cibilPlScoreToggle" && value === false) {
+        draft.bureauCibilPlScore = INITIAL_DRAFT.bureauCibilPlScore;
+      }
+      return { draft, error: null };
+    }),
 
   goTo: (stepId) => set({ stepId }),
 

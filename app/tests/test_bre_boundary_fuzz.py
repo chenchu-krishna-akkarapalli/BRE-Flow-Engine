@@ -351,6 +351,7 @@ def _se_payload(**overrides):
     p.setdefault("itr_filed", True)
     p.setdefault("business_proof", True)
     p.setdefault("business_experience_years", 5)
+    p.setdefault("business_itr_years", 5)
     return p
 
 
@@ -386,9 +387,9 @@ def test_nri_not_allowed_and_stay_floor():
 
 
 def test_guarantor_mandatory_bank_specific():
-    # Both-rented config needs a guarantor at BOI; BOM waives it.
-    assert "RES-205" in _rule_ids(_evaluate(_base_payload(property_status="SEPARATE_BOTH_RENTED")))
-    ok = _evaluate(_base_payload(selected_bank="BOM", property_status="SEPARATE_BOTH_RENTED"))
+    # A rented resi-cum-office needs a guarantor at BOI; BOM waives it.
+    assert "RES-205" in _rule_ids(_evaluate(_base_payload(property_status="RESI_CUM_OFFICE_RENTED")))
+    ok = _evaluate(_base_payload(selected_bank="BOM", property_status="RESI_CUM_OFFICE_RENTED"))
     assert ok["overall_eligible"] is True
 
 
@@ -398,8 +399,8 @@ def test_guarantor_mandatory_bank_specific():
         ("current_itr", 200000, "EMP-SE-302"),   # BOI SE current ITR >= 300000
         ("previous_itr", 50000, "EMP-SE-303"),   # BOI SE previous ITR >= 100000
         ("itr_filed", False, "EMP-SE-304"),
-        ("business_proof", False, "EMP-SE-307"),
-        ("business_experience_years", 1, "EMP-SE-301"),
+        ("business_proof", False, "BUS-302"),
+        ("business_itr_years", 1, "EMP-SE-301"),
     ],
 )
 def test_self_employed_suite_rejects_boi(field, value, rule_id):

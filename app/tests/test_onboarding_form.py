@@ -109,7 +109,7 @@ COMPANY_SUBMISSION: Dict[str, Any] = {
         "companyGstin": "29AAAAA0000A1Z5",
         "companyCurrentITRAmount": 1200000,
         "companyPrevITRAmount": 950000,
-        "businessItrAmountCompany": 1100000,
+        "businessItrAmountCompany": 5,
     },
     "banking": {
         "existingAccountBank": "BOB",
@@ -247,20 +247,18 @@ def test_write_off_precedence_reports_least_permissive_class():
     assert form.banking.write_off_type == "PL"
 
 
-def test_both_rented_requires_guarantor_decision():
+def test_resi_cum_office_rented_requires_guarantor_decision():
     self_employed = _deep_merge(
         INDIVIDUAL_SALARIED,
         {
             "address": {"residentDetails": "Rented House"},
             "occupation": {
                 "profileType": "Self-Employed",
-                "officeAddressType": "Separate",
-                "officeAddress": "Indiranagar, Bengaluru",
-                "officePremisesStatus": "Rented",
+                "officeAddressType": "Same",
                 "businessEstablishmentDate": "2019-01-10",
                 "currentITRAmount": 450000,
                 "prevITRAmount": 380000,
-                "businessItrAmount": 430000,
+                "businessItrAmount": 5,
                 "businessProof": "GSTIN: 29AAAAA0000A1Z5",
             },
         },
@@ -278,7 +276,7 @@ def test_both_rented_requires_guarantor_decision():
         self_employed, {"occupation": {"guarantorStatus": "With a Gaurantor"}}
     )
     form = OnboardingFormRequest.model_validate(with_guarantor)
-    assert form.to_engine_payload()["property_status"] == PropertyStatus.SEPARATE_BOTH_RENTED.value
+    assert form.to_engine_payload()["property_status"] == PropertyStatus.RESI_CUM_OFFICE_RENTED.value
     assert form.to_engine_payload()["guarantor_provided"] is True
 
 

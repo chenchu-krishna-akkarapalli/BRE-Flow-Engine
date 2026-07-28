@@ -47,6 +47,8 @@ class ApplicationModel(Base):
     guarantor_provided: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     business_establishment_date: Mapped[Optional[str]] = mapped_column(String(10), nullable=True)
     current_itr_amount: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    # Years of filed business ITRs (matrix col 47) — a count, not a rupee value.
+    business_itr_years: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     prev_itr_amount: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
 
     # --- Banking, bureau & loan (step 4) -------------------------------------
