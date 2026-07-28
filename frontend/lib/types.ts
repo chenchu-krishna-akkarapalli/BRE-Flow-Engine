@@ -162,6 +162,21 @@ export interface RejectionReason {
   message: string;
 }
 
+export interface RuleOutcome {
+  rule_id: string;
+  name: string;
+  category: string;
+  value: string;
+  limit: string;
+  message: string;
+}
+
+export interface BankEvaluationReport {
+  is_eligible: boolean;
+  passed_rules: RuleOutcome[];
+  failed_rules: RuleOutcome[];
+}
+
 export interface EvaluationResponse {
   success: boolean;
   status: "APPROVED" | "REJECTED";
@@ -170,6 +185,7 @@ export interface EvaluationResponse {
   execution_time_ms: number;
   rejection_reasons: RejectionReason[];
   bank_eligibility: Record<BankCode, boolean>;
+  evaluation_report: Record<BankCode, BankEvaluationReport>;
   application_id: string | null;
   entity_type: EntityType;
   selected_bank: BankCode;

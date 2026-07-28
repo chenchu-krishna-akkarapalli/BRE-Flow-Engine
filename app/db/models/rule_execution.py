@@ -24,3 +24,6 @@ class RuleExecutionModel(Base):
     # Full 8-bank verdict map, so a rejected applicant's alternatives are
     # reconstructable from the audit trail without re-running the engine.
     bank_eligibility_json: Mapped[Optional[Dict[str, Any]]] = mapped_column(JSONDocument, nullable=True)
+    # Full per-bank audit report (passed + failed rules), so an export can be
+    # regenerated from the record without re-running the engine.
+    evaluation_report_json: Mapped[Optional[Dict[str, Any]]] = mapped_column(JSONDocument, nullable=True)

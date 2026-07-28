@@ -824,6 +824,23 @@ class RejectionReasonDetail(BaseModel):
     message: str
 
 
+class RuleOutcomeDetail(BaseModel):
+    """One evaluated rule, with the applicant's value against the bank's limit."""
+
+    rule_id: str
+    name: str
+    category: str
+    value: str
+    limit: str
+    message: str = ""
+
+
+class BankEvaluationReport(BaseModel):
+    is_eligible: bool
+    passed_rules: List[RuleOutcomeDetail]
+    failed_rules: List[RuleOutcomeDetail]
+
+
 class OnboardingEvaluationResponse(BaseModel):
     success: bool = True
     status: str
@@ -832,6 +849,8 @@ class OnboardingEvaluationResponse(BaseModel):
     execution_time_ms: float
     rejection_reasons: List[RejectionReasonDetail]
     bank_eligibility: Dict[str, bool]
+    # Per-bank audit trail: every rule evaluated, passed and failed.
+    evaluation_report: Dict[str, BankEvaluationReport] = Field(default_factory=dict)
 
 
 class OnboardingFormEvaluationResponse(OnboardingEvaluationResponse):

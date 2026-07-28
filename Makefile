@@ -34,7 +34,7 @@ dev:
 	uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 
 test:
-	uv run --with fastapi --with uvicorn --with pydantic --with pydantic-settings --with sqlalchemy --with asyncpg --with redis --with pytest --with pytest-asyncio --with openpyxl --with httpx --with pyjwt pytest app/tests/ -v
+	uv run --with fastapi --with uvicorn --with pydantic --with pydantic-settings --with sqlalchemy --with asyncpg --with redis --with pytest --with pytest-asyncio --with openpyxl --with reportlab --with httpx --with pyjwt pytest app/tests/ -v
 
 check-sla:
-	uv run --with fastapi --with uvicorn --with pydantic --with pydantic-settings --with sqlalchemy --with asyncpg --with redis --with pytest --with pytest-asyncio --with openpyxl --with httpx --with pyjwt pytest app/tests/test_bre_engine.py -k "test_latency_sla" -v
+	uv run --with fastapi --with uvicorn --with pydantic --with pydantic-settings --with sqlalchemy --with asyncpg --with redis --with pytest --with pytest-asyncio --with openpyxl --with reportlab --with httpx --with pyjwt pytest app/tests/test_bre_engine.py -k "test_latency_sla" -v

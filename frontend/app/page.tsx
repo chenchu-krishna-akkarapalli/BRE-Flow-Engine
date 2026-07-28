@@ -1,6 +1,7 @@
 "use client";
 
 import type { JSX } from "react";
+import { AuditCards } from "@/components/AuditCards";
 import { ReviewCard } from "@/components/ReviewCard";
 import { Stepper } from "@/components/Stepper";
 import { BankMatrix, DecisionPanel, ValidationBanner } from "@/components/Telemetry";
@@ -47,6 +48,9 @@ export default function OnboardingWizard() {
         {isLast && <ReviewCard draft={draft} onEdit={goTo} />}
 
         {result && <DecisionPanel result={result} />}
+
+        {/* Per-bank audit trail + document exports. */}
+        {result && <AuditCards result={result} />}
 
         {/* Height reserved up front so the panel fills in place (no CLS). */}
         <div className="validation-slot">

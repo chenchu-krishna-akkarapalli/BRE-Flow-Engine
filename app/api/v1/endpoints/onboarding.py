@@ -1,8 +1,10 @@
 import json
 import time
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Literal, Optional, Tuple
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi.responses import StreamingResponse
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_tenant
@@ -23,6 +25,7 @@ from app.db.models.audit_log import AuditLogModel
 from app.db.models.rule_execution import RuleExecutionModel
 from app.db.rls import set_tenant_rls_context
 from app.services.bre_engine import bre_engine_service
+from app.services.export_service import build_excel, build_pdf
 
 router = APIRouter()
 
@@ -94,6 +97,7 @@ async def evaluate_onboarding_application(
             execution_time_ms=evaluation["execution_time_ms"],
             rejection_reasons_json=json.dumps(evaluation["rejection_reasons"]),
             bank_eligibility_json=evaluation["bank_eligibility"],
+            evaluation_report_json=evaluation["evaluation_report"],
         )
         db.add(exec_record)
     except Exception as e:
@@ -110,6 +114,7 @@ async def evaluate_onboarding_application(
         execution_time_ms=total_time_ms,
         rejection_reasons=_rejection_details(evaluation),
         bank_eligibility=evaluation["bank_eligibility"],
+        evaluation_report=evaluation["evaluation_report"],
     )
 
 
@@ -221,6 +226,7 @@ async def _persist_form_evaluation(
                 execution_time_ms=evaluation["execution_time_ms"],
                 rejection_reasons_json=json.dumps(evaluation["rejection_reasons"]),
                 bank_eligibility_json=evaluation["bank_eligibility"],
+                evaluation_report_json=evaluation["evaluation_report"],
             )
         )
         db.add(
@@ -292,4 +298,87 @@ async def evaluate_onboarding_form(
         entity_type=form.identity.entity_type,
         selected_bank=form.banking.selected_bank,
         persisted=persisted,
+    )
+
+
+# --------------------------------------------------------------------------- #
+# Document export
+# --------------------------------------------------------------------------- #
+
+EXPORT_MEDIA_TYPES = {
+    "excel": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "pdf": "application/pdf",
+}
+
+
+def _applicant_parameters(app_row: ApplicationModel) -> Dict[str, Any]:
+    """Report header fields, drawn from the persisted row.
+
+    PAN is already masked on the row (`AB******4F`) — the raw value never
+    reaches the database, so the export cannot leak it.
+    """
+    return {
+        "Application ID": app_row.id,
+        "Status": app_row.status,
+        "Entity Type": app_row.entity_type,
+        "Applicant": app_row.applicant_name,
+        "PAN (masked)": app_row.pan_masked,
+        "Primary Bank": app_row.selected_bank,
+        "Loan Type": app_row.loan_type,
+        "Profile": app_row.profile_type,
+        "Occupation": app_row.occupation,
+        "Property Status": app_row.property_status,
+        "Pincode": app_row.pincode,
+        "CIBIL Score": app_row.cibil_score,
+        "Max DPD (days)": app_row.max_dpd_days,
+        "Loan Enquiries": app_row.loan_enquiry_count,
+        "Currently Outstanding": app_row.currently_outstanding,
+        "Write-off Amount": app_row.write_off_amount,
+        "Write-off Type": app_row.write_off_type,
+        "Business ITR Years": app_row.business_itr_years,
+        "Evaluated At": app_row.created_at.isoformat() if app_row.created_at else None,
+    }
+
+
+@router.get("/applications/{application_id}/export")
+async def export_application_report(
+    application_id: str,
+    format: Literal["pdf", "excel"] = Query("pdf", description="Document format."),
+    tenant_id: str = Depends(get_current_tenant),
+    db: AsyncSession = Depends(get_db),
+):
+    """Stream the evaluation audit report as a PDF or Excel workbook.
+
+    Built entirely in memory (`BytesIO`) — no temp files on the request path.
+    """
+    await set_tenant_rls_context(db, tenant_id)
+
+    app_row = (
+        await db.execute(select(ApplicationModel).where(ApplicationModel.id == application_id))
+    ).scalar_one_or_none()
+    if app_row is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Application {application_id} not found.")
+
+    execution = (
+        await db.execute(
+            select(RuleExecutionModel).where(RuleExecutionModel.application_id == application_id)
+        )
+    ).scalar_one_or_none()
+    report = (execution.evaluation_report_json if execution else None) or {}
+    if not report:
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            f"Application {application_id} has no stored evaluation report to export.",
+        )
+
+    parameters = _applicant_parameters(app_row)
+    stream = build_pdf(parameters, report) if format == "pdf" else build_excel(parameters, report)
+    suffix = "pdf" if format == "pdf" else "xlsx"
+    filename = f"flowbre-eligibility-{application_id}.{suffix}"
+
+    logger.info(f"Exported {format} report for application {application_id} (tenant '{tenant_id}')")
+    return StreamingResponse(
+        stream,
+        media_type=EXPORT_MEDIA_TYPES[format],
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )

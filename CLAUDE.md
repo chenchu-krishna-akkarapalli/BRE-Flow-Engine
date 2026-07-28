@@ -112,7 +112,7 @@ uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 # Full suite (374 tests)
 uv run --with fastapi --with uvicorn --with pydantic --with pydantic-settings \
   --with sqlalchemy --with asyncpg --with redis --with pytest --with pytest-asyncio \
-  --with openpyxl --with httpx --with pyjwt pytest app/tests/ -v
+  --with openpyxl --with reportlab --with httpx --with pyjwt pytest app/tests/ -v
 
 make test          # same, via Makefile
 make check-sla     # latency benchmarks only
@@ -128,7 +128,7 @@ docker-compose exec web alembic upgrade head
 alembic revision --autogenerate -m "describe_changes"
 ```
 
-Test dependencies that are easy to miss: **`pytest-asyncio`** (without it async tests fail rather than skip) and **`openpyxl`** (the bank-matrix conformance test parses the spreadsheet).
+Test dependencies that are easy to miss: **`pytest-asyncio`** (without it async tests fail rather than skip), **`openpyxl`** (bank-matrix conformance test + Excel export) and **`reportlab`** (PDF export). The last two are runtime dependencies, not test-only.
 
 ```bash
 # Frontend (frontend/ — Next.js 16, React 19, Tailwind v4, TypeScript 7)

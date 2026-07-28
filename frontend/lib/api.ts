@@ -66,3 +66,32 @@ export async function evaluateOnboardingForm(
 
   return (await response.json()) as EvaluationResponse;
 }
+
+
+/** Fetch an export and hand it to the browser as a native download.
+ *
+ * The endpoint streams a binary with a Content-Disposition filename; fetching
+ * it as a blob (rather than navigating) keeps the X-Tenant-ID header on the
+ * request, which a plain <a href> could not carry. */
+export async function downloadApplicationExport(
+  applicationId: string,
+  format: "pdf" | "excel",
+): Promise<void> {
+  const response = await fetch(
+    `${API_BASE}/api/v1/onboarding/applications/${applicationId}/export?format=${format}`,
+    { headers: { "X-Tenant-ID": TENANT_ID } },
+  );
+  if (!response.ok) {
+    throw new ApiError(response.status, `Export failed (${response.status}).`);
+  }
+
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `flowbre-eligibility-${applicationId}.${format === "pdf" ? "pdf" : "xlsx"}`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}

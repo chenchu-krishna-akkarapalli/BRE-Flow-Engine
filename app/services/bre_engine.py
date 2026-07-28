@@ -521,182 +521,225 @@ def _resolved_work_experience(payload: Dict[str, Any]) -> float:
     return 99.0
 
 
-def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> List[Dict[str, str]]:
-    """Return every REJECT-rule violation for one bank given normalized inputs.
+def _evaluate_bank(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Return an outcome record for every rule ACTUALLY EVALUATED for one bank.
 
-    Drives BOTH the selected-bank verdict (overall_eligible) and each bank in
-    the matrix, so the two can never disagree. Implements the payload-supported
-    columns of Bank_Eligibility_Matrix_v1.xlsx: bureau (2-13), demographics
-    (14-16, 25-26), residence & guarantor (22-23), entity class (27, 54),
-    employment & income (33-43, 46-47, 55), and co-applicant (56-61).
-    Columns describing options that are True for every bank (e.g. 28-32
-    employment types, 49-52 business entity types) carry no rejection path.
+    This is the single source of rule logic; `_bank_rejections` filters it for
+    failures. A rule that does not apply (NRI checks for a resident, write-off
+    checks with no write-off on file, columns absent from the entity's matrix)
+    records nothing at all — "not applicable" is not the same as "passed", and
+    reporting it as a pass would overstate what the bank actually verified.
     """
-    reasons: List[Dict[str, str]] = []
+    outcomes: List[Dict[str, Any]] = []
 
-    def add(rid: str, cat: str, msg: str) -> None:
-        reasons.append({"rule_id": rid, "category": cat, "message": msg})
+    def check(rid: str, name: str, cat: str, passed: bool,
+              value: Any, limit: Any, msg: str = "") -> None:
+        outcomes.append({
+            "rule_id": rid, "name": name, "category": cat, "passed": bool(passed),
+            "value": str(value), "limit": str(limit), "message": "" if passed else msg,
+        })
 
     # --- Demographics --------------------------------------------------------
-    if "min_age" in policy and inp["age"] < policy["min_age"]:
-        add("DEM-101", "Demographics",
-            f"Applicant age ({inp['age']}) is below the minimum requirement ({policy['min_age']} years).")
+    if "min_age" in policy:
+        check("DEM-101", "Minimum Age", "Demographics",
+              inp["age"] >= policy["min_age"], inp["age"], f">= {policy['min_age']}",
+              f"Applicant age ({inp['age']}) is below the minimum requirement ({policy['min_age']} years).")
 
     if inp["is_nri"] and "allow_nri" in policy:
-        if not policy["allow_nri"]:
-            add("DEM-104", "Demographics", f"{code} does not onboard NRI/PIO applicants.")
-        elif inp["nri_stay_years"] < policy["min_nri_stay_years"]:
-            add("DEM-105", "Demographics",
-                f"NRI in-country stay ({inp['nri_stay_years']:.2f} yrs) is below {code} minimum ({policy['min_nri_stay_years']} yrs).")
+        check("DEM-104", "NRI/PIO Accepted", "Demographics",
+              policy["allow_nri"], "NRI/PIO", policy["allow_nri"],
+              f"{code} does not onboard NRI/PIO applicants.")
+        if policy["allow_nri"]:
+            check("DEM-105", "NRI Minimum Stay", "Demographics",
+                  inp["nri_stay_years"] >= policy["min_nri_stay_years"],
+                  f"{inp['nri_stay_years']:.2f} yrs", f">= {policy['min_nri_stay_years']} yrs",
+                  f"NRI in-country stay ({inp['nri_stay_years']:.2f} yrs) is below {code} minimum ({policy['min_nri_stay_years']} yrs).")
 
     # --- Credit bureau -------------------------------------------------------
-    if inp["currently_overdue"]:
-        add("BUR-404", "Credit Bureau History",
-            "Application declined due to active currently-outstanding overdue balances.")
+    check("BUR-404", "Currently Outstanding", "Credit Bureau History",
+          not inp["currently_overdue"], inp["currently_overdue"], False,
+          "Application declined due to active currently-outstanding overdue balances.")
 
-    if inp["cibil"] < policy["min_cibil"]:
-        add("BUR-405", "Credit Bureau Floor",
-            f"CIBIL score ({inp['cibil']}) is below {code} minimum threshold of {policy['min_cibil']}.")
+    check("BUR-405", "CIBIL Score", "Credit Bureau Floor",
+          inp["cibil"] >= policy["min_cibil"], inp["cibil"], f">= {policy['min_cibil']}",
+          f"CIBIL score ({inp['cibil']}) is below {code} minimum threshold of {policy['min_cibil']}.")
 
-    if inp["loan_enquiry_count"] > 0 and not policy["allow_loan_enquiry"]:
-        add("BUR-406", "Credit Bureau History",
-            f"{code} does not accept applicants with open loan enquiries "
-            f"({inp['loan_enquiry_count']} on file).")
+    check("BUR-406", "Loan Enquiries", "Credit Bureau History",
+          inp["loan_enquiry_count"] == 0 or policy["allow_loan_enquiry"],
+          inp["loan_enquiry_count"], "0" if not policy["allow_loan_enquiry"] else "any",
+          f"{code} does not accept applicants with open loan enquiries "
+          f"({inp['loan_enquiry_count']} on file).")
 
-    if code == "INDIAN_BANK" and inp["max_dpd"] > 0:
-        add("BUR-403", "Credit Bureau History",
-            "Indian Bank requires zero past DPD instances across all loan accounts.")
-    elif inp["max_dpd"] > policy["max_dpd"]:
-        add("BUR-402", "Credit Bureau History",
-            f"DPD value ({inp['max_dpd']}) exceeds {code} tolerance ({policy['max_dpd']} days).")
+    if code == "INDIAN_BANK":
+        check("BUR-403", "DPD History", "Credit Bureau History",
+              inp["max_dpd"] <= 0, inp["max_dpd"], "<= 0",
+              "Indian Bank requires zero past DPD instances across all loan accounts.")
+    else:
+        check("BUR-402", "DPD History", "Credit Bureau History",
+              inp["max_dpd"] <= policy["max_dpd"], inp["max_dpd"], f"<= {policy['max_dpd']}",
+              f"DPD value ({inp['max_dpd']}) exceeds {code} tolerance ({policy['max_dpd']} days).")
 
     # --- Write-off (per product type; strict '<' cap for CC) -----------------
     if inp["write_off_amount"] > 0:
         flag_key = inp["write_off_flag_key"]
         rt = inp["write_off_type_raw"]
         if flag_key is None:
-            add("BUR-401D", "Credit Bureau History",
-                f"Unclassified write-off (Rs {inp['write_off_amount']:,.2f}) recorded; type could not be validated against {code} policy.")
-        elif not policy[flag_key]:
-            add("BUR-401", "Credit Bureau History", f"{rt} write-offs are not permitted by {code}.")
-        elif rt == "CC" and inp["write_off_amount"] >= policy["max_cc_write_off_amount"]:
-            add("BUR-401B", "Credit Bureau History",
-                f"Credit Card write-off amount (Rs {inp['write_off_amount']:,.2f}) is not below {code} ceiling (Rs {policy['max_cc_write_off_amount']:,.2f}).")
+            check("BUR-401D", "Unclassified Write-off", "Credit Bureau History",
+                  False, f"Rs {inp['write_off_amount']:,.2f}", "classified type required",
+                  f"Unclassified write-off (Rs {inp['write_off_amount']:,.2f}) recorded; type could not be validated against {code} policy.")
+        else:
+            check("BUR-401", f"{rt} Write-off", "Credit Bureau History",
+                  policy[flag_key], rt, policy[flag_key],
+                  f"{rt} write-offs are not permitted by {code}.")
+            if policy[flag_key] and rt == "CC":
+                check("BUR-401B", "Credit Card Write-off Amount", "Credit Bureau History",
+                      inp["write_off_amount"] < policy["max_cc_write_off_amount"],
+                      f"Rs {inp['write_off_amount']:,.2f}", f"< Rs {policy['max_cc_write_off_amount']:,.2f}",
+                      f"Credit Card write-off amount (Rs {inp['write_off_amount']:,.2f}) is not below {code} ceiling (Rs {policy['max_cc_write_off_amount']:,.2f}).")
 
     # --- Entity & business classification ------------------------------------
-    if inp["is_huf"] and "allow_huf" in policy and not policy["allow_huf"]:
-        add("ENT-501", "Entity Classification",
-            f"{code} does not onboard Hindu Undivided Family (HUF) applicants.")
+    if inp["is_huf"] and "allow_huf" in policy:
+        check("ENT-501", "HUF Accepted", "Entity Classification",
+              policy["allow_huf"], "HUF", policy["allow_huf"],
+              f"{code} does not onboard Hindu Undivided Family (HUF) applicants.")
 
-    if inp["is_agriculture"] and "allow_agriculture" in policy and not policy["allow_agriculture"]:
-        add("ENT-502", "Entity Classification",
-            f"{code} does not lend against agriculture-sector business income.")
+    if inp["is_agriculture"] and "allow_agriculture" in policy:
+        check("ENT-502", "Agriculture Sector", "Entity Classification",
+              policy["allow_agriculture"], "Agriculture", policy["allow_agriculture"],
+              f"{code} does not lend against agriculture-sector business income.")
 
     # --- Secondary rental income (matrix cols 38-40) -------------------------
     rental_flag = RENTAL_CLASS_TO_FLAG.get(inp["rental_income_class"])
-    if rental_flag is not None and rental_flag in policy and not policy[rental_flag]:
-        add("INC-601", "Secondary Income",
-            f"{code} does not accept the declared rental-income configuration "
-            f"({inp['rental_income_class']}).")
+    if rental_flag is not None and rental_flag in policy:
+        check("INC-601", "Rental Income Configuration", "Secondary Income",
+              policy[rental_flag], inp["rental_income_class"], policy[rental_flag],
+              f"{code} does not accept the declared rental-income configuration "
+              f"({inp['rental_income_class']}).")
 
     # --- Employment / income -------------------------------------------------
     if inp["occupation"] == "Salaried" and "min_salary" in policy:
-        if inp["salary"] < policy["min_salary"]:
-            add("EMP-SAL-202", "Employment - Salaried",
-                f"Monthly net salary (Rs {inp['salary']:,.2f}) is below the minimum floor (Rs {policy['min_salary']:,.0f}).")
-        if inp["salary_mode"] in ("CASH", "Salary payment mode-Cash"):
-            add("EMP-SAL-203", "Employment - Salaried",
-                "Cash salary payment mode is ineligible. Direct bank credit required.")
-        if inp["work_exp_years"] < policy["min_total_experience_years"]:
-            add("EMP-SAL-204", "Employment - Salaried",
-                f"Total work experience ({inp['work_exp_years']} yrs) is below {code} minimum ({policy['min_total_experience_years']} yrs).")
-        if inp["current_company_years"] < policy["min_current_company_tenure_years"]:
-            add("EMP-SAL-205", "Employment - Salaried",
-                f"Current-company tenure ({inp['current_company_years']:.2f} yrs) is below {code} minimum ({policy['min_current_company_tenure_years']} yrs).")
+        check("EMP-SAL-202", "Minimum Salary", "Employment - Salaried",
+              inp["salary"] >= policy["min_salary"],
+              f"Rs {inp['salary']:,.2f}", f">= Rs {policy['min_salary']:,.0f}",
+              f"Monthly net salary (Rs {inp['salary']:,.2f}) is below the minimum floor (Rs {policy['min_salary']:,.0f}).")
+        check("EMP-SAL-203", "Salary Payment Mode", "Employment - Salaried",
+              inp["salary_mode"] not in ("CASH", "Salary payment mode-Cash"),
+              inp["salary_mode"], "Bank Credit",
+              "Cash salary payment mode is ineligible. Direct bank credit required.")
+        check("EMP-SAL-204", "Total Work Experience", "Employment - Salaried",
+              inp["work_exp_years"] >= policy["min_total_experience_years"],
+              inp["work_exp_years"], f">= {policy['min_total_experience_years']} yrs",
+              f"Total work experience ({inp['work_exp_years']} yrs) is below {code} minimum ({policy['min_total_experience_years']} yrs).")
+        check("EMP-SAL-205", "Current Company Tenure", "Employment - Salaried",
+              inp["current_company_years"] >= policy["min_current_company_tenure_years"],
+              f"{inp['current_company_years']:.2f} yrs", f">= {policy['min_current_company_tenure_years']} yrs",
+              f"Current-company tenure ({inp['current_company_years']:.2f} yrs) is below {code} minimum ({policy['min_current_company_tenure_years']} yrs).")
         if inp["no_income_proof"]:
             # No-income-proof segment: rejected unless the bank permits it; when
             # permitted, the Form-16 history requirement does not apply.
-            if not policy["allow_no_income_proof"]:
-                add("EMP-SAL-207", "Employment - Salaried",
-                    f"{code} requires valid income proof; no-income-proof profile is not accepted.")
-        elif inp["form_16_years"] < policy["form16_years_required"]:
-            add("EMP-SAL-208", "Employment - Salaried",
-                f"Form-16 history ({inp['form_16_years']} yrs) is below {code} requirement ({policy['form16_years_required']} yrs).")
-        if "max_age_emi_salaried" in policy and inp["age_emi_sal"] > policy["max_age_emi_salaried"]:
-            add("DEM-102", "Demographics",
-                f"Age at final EMI maturity ({inp['age_emi_sal']}) exceeds {code} limit of {policy['max_age_emi_salaried']} yrs for salaried applicants.")
+            check("EMP-SAL-207", "No Income Proof Segment", "Employment - Salaried",
+                  policy["allow_no_income_proof"], "No Income Proof", policy["allow_no_income_proof"],
+                  f"{code} requires valid income proof; no-income-proof profile is not accepted.")
+        else:
+            check("EMP-SAL-208", "Form-16 History", "Employment - Salaried",
+                  inp["form_16_years"] >= policy["form16_years_required"],
+                  f"{inp['form_16_years']} yrs", f">= {policy['form16_years_required']} yrs",
+                  f"Form-16 history ({inp['form_16_years']} yrs) is below {code} requirement ({policy['form16_years_required']} yrs).")
+        if "max_age_emi_salaried" in policy:
+            check("DEM-102", "Age at Last EMI (Salaried)", "Demographics",
+                  inp["age_emi_sal"] <= policy["max_age_emi_salaried"],
+                  inp["age_emi_sal"], f"<= {policy['max_age_emi_salaried']}",
+                  f"Age at final EMI maturity ({inp['age_emi_sal']}) exceeds {code} limit of {policy['max_age_emi_salaried']} yrs for salaried applicants.")
     else:
         # Col 47 "Business ITR Years" counts YEARS OF FILED RETURNS, not the
-        # age of the business. A five-year-old business that has filed twice
-        # has two ITR years, and it is the filings the bank underwrites.
-        if inp["business_itr_years"] < policy["min_business_itr_years"]:
-            add("EMP-SE-301", "Self-Employed",
-                f"Filed business ITR history ({inp['business_itr_years']} yrs) is below "
-                f"{code} minimum ({policy['min_business_itr_years']} yrs).")
+        # age of the business.
+        check("EMP-SE-301", "Business ITR Years", "Self-Employed",
+              inp["business_itr_years"] >= policy["min_business_itr_years"],
+              f"{inp['business_itr_years']} yrs", f">= {policy['min_business_itr_years']} yrs",
+              f"Filed business ITR history ({inp['business_itr_years']} yrs) is below "
+              f"{code} minimum ({policy['min_business_itr_years']} yrs).")
         if not inp["itr_filed"]:
             # Banks carrying "ITR Not Filed" == True (col 46) underwrite this
-            # segment; for everyone else it is a hard stop. The ITR *amount*
-            # rules are moot when no return was filed.
-            if not policy["allow_itr_not_filed"]:
-                add("EMP-SE-304", "Self-Employed",
-                    f"{code} requires a filed ITR for self-employed profiles.")
+            # segment; the ITR *amount* rules are moot when no return was filed.
+            check("EMP-SE-304", "ITR Filed", "Self-Employed",
+                  policy["allow_itr_not_filed"], "Not Filed", policy["allow_itr_not_filed"],
+                  f"{code} requires a filed ITR for self-employed profiles.")
         else:
-            if inp["se_current_itr"] < policy["se_min_current_itr"]:
-                add("EMP-SE-302", "Self-Employed",
-                    f"Current-year ITR (Rs {inp['se_current_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_current_itr']:,.0f}).")
+            check("EMP-SE-302", "Current-Year ITR", "Self-Employed",
+                  inp["se_current_itr"] >= policy["se_min_current_itr"],
+                  f"Rs {inp['se_current_itr']:,.0f}", f">= Rs {policy['se_min_current_itr']:,.0f}",
+                  f"Current-year ITR (Rs {inp['se_current_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_current_itr']:,.0f}).")
             if policy["se_combined_itr_rule"]:
                 combined = inp["se_current_itr"] + inp["se_prev_itr"]
-                if combined < 600000:
-                    add("EMP-SE-303", "Self-Employed",
-                        f"Combined current+previous ITR (Rs {combined:,.0f}) is below {code} minimum (Rs 600,000).")
-            elif inp["se_prev_itr"] < policy["se_min_prev_itr"]:
-                add("EMP-SE-303", "Self-Employed",
-                    f"Previous-year ITR (Rs {inp['se_prev_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_prev_itr']:,.0f}).")
-        # Col 48 "Business Proof" is Mandatory at every bank: a self-employed
-        # applicant must supply a registration key (GSTIN / Udyam / equivalent).
-        if not inp["business_proof"]:
-            add("BUS-302", "Business Proof",
-                "A valid business proof or registration number (GSTIN / Udyam) "
-                "is mandatory for self-employed applicants.")
-        if "max_age_emi_self_employed" in policy and inp["age_emi_se"] > policy["max_age_emi_self_employed"]:
-            add("DEM-103", "Demographics",
-                f"Age at final EMI maturity ({inp['age_emi_se']}) exceeds {code} limit of {policy['max_age_emi_self_employed']} yrs for self-employed applicants.")
+                check("EMP-SE-303", "Combined ITR", "Self-Employed",
+                      combined >= 600000, f"Rs {combined:,.0f}", ">= Rs 600,000",
+                      f"Combined current+previous ITR (Rs {combined:,.0f}) is below {code} minimum (Rs 600,000).")
+            else:
+                check("EMP-SE-303", "Previous-Year ITR", "Self-Employed",
+                      inp["se_prev_itr"] >= policy["se_min_prev_itr"],
+                      f"Rs {inp['se_prev_itr']:,.0f}", f">= Rs {policy['se_min_prev_itr']:,.0f}",
+                      f"Previous-year ITR (Rs {inp['se_prev_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_prev_itr']:,.0f}).")
+        # Col 48 "Business Proof" is Mandatory at every bank.
+        check("BUS-302", "Business Proof", "Business Proof",
+              bool(inp["business_proof"]), bool(inp["business_proof"]), "Mandatory",
+              "A valid business proof or registration number (GSTIN / Udyam) "
+              "is mandatory for self-employed applicants.")
+        if "max_age_emi_self_employed" in policy:
+            check("DEM-103", "Age at Last EMI (Self-Employed)", "Demographics",
+                  inp["age_emi_se"] <= policy["max_age_emi_self_employed"],
+                  inp["age_emi_se"], f"<= {policy['max_age_emi_self_employed']}",
+                  f"Age at final EMI maturity ({inp['age_emi_se']}) exceeds {code} limit of {policy['max_age_emi_self_employed']} yrs for self-employed applicants.")
 
     # --- Residence / guarantor ----------------------------------------------
-    # Cols 22/23 decide the both-rented configuration independently: a
-    # guarantor rescues it only where col 23 is True, and IOB/BOB decline it
-    # either way. Offering a guarantor is not universally sufficient.
     if inp["property_status"] in GUARANTOR_PROPERTY_STATUSES and "allow_with_guarantor" in policy:
         if inp["guarantor_provided"]:
-            if not policy["allow_with_guarantor"]:
-                add("RES-206", "Residence & Guarantor",
-                    f"{code} does not lend where residence and office are both rented, "
-                    "even with a guarantor.")
-        elif not policy["allow_without_guarantor"]:
-            add("RES-205", "Residence & Guarantor",
-                f"Guarantor is mandatory for property configuration '{inp['property_status']}' at {code}.")
+            check("RES-206", "Rented Premises With Guarantor", "Residence & Guarantor",
+                  policy["allow_with_guarantor"], "With a Guarantor", policy["allow_with_guarantor"],
+                  f"{code} does not lend where residence and office are both rented, "
+                  "even with a guarantor.")
+        else:
+            check("RES-205", "Rented Premises Without Guarantor", "Residence & Guarantor",
+                  policy["allow_without_guarantor"], "Without a Guarantor", policy["allow_without_guarantor"],
+                  f"Guarantor is mandatory for property configuration '{inp['property_status']}' at {code}.")
 
     # --- Co-applicant eligibility (matrix cols 56-61) ------------------------
-    if inp["sibling_co_applicant"] and "allow_sibling_coapplicant" in policy and not policy["allow_sibling_coapplicant"]:
-        add("COA-801", "Co-Applicant",
-            f"{code} does not accept a brother/sister co-applicant for age or income pooling.")
+    if inp["sibling_co_applicant"] and "allow_sibling_coapplicant" in policy:
+        check("COA-801", "Sibling Co-Applicant", "Co-Applicant",
+              policy["allow_sibling_coapplicant"], "Brother/Sister", policy["allow_sibling_coapplicant"],
+              f"{code} does not accept a brother/sister co-applicant for age or income pooling.")
 
     # --- Existing banking relationship --------------------------------------
-    # Matrix col 17 "Existing A/C Holder": every bank but IOB lends only to its
-    # own existing current/savings customers. IOB onboards new-to-bank
-    # applicants, so it is the only code that skips this check.
     if (policy.get("requires_existing_account")
-            and inp["existing_account_bank"] is not ACCOUNT_BANK_UNKNOWN
-            and inp["existing_account_bank"] != code):
-        add("REL-501", "Existing Banking Relationship",
-            f"{code} lends only to existing current/savings account holders; "
-            f"the applicant does not hold an account with {code}.")
+            and inp["existing_account_bank"] is not ACCOUNT_BANK_UNKNOWN):
+        check("REL-501", "Existing Account Holder", "Existing Banking Relationship",
+              inp["existing_account_bank"] == code,
+              inp["existing_account_bank"] or "None", code,
+              f"{code} lends only to existing current/savings account holders; "
+              f"the applicant does not hold an account with {code}.")
 
-    if inp["active_car_loan"] and code in BANKS_DISALLOW_EXISTING_CAR_LOAN:
-        add("EXB-702", "Existing Banking Relationship",
-            f"{code} does not permit an existing active car loan alongside this application.")
+    if code in BANKS_DISALLOW_EXISTING_CAR_LOAN:
+        check("EXB-702", "Existing Car Loan", "Existing Banking Relationship",
+              not inp["active_car_loan"], inp["active_car_loan"], False,
+              f"{code} does not permit an existing active car loan alongside this application.")
 
-    return reasons
+    return outcomes
+
+
+def _report_row(outcome: Dict[str, Any]) -> Dict[str, str]:
+    """Project a rule outcome onto the audit-report row shape."""
+    return {
+        "rule_id": outcome["rule_id"], "name": outcome["name"],
+        "category": outcome["category"], "value": outcome["value"],
+        "limit": outcome["limit"], "message": outcome["message"],
+    }
+
+
+def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> List[Dict[str, str]]:
+    """Every REJECT-rule violation for one bank — the failures from _evaluate_bank."""
+    return [
+        {"rule_id": o["rule_id"], "category": o["category"], "message": o["message"]}
+        for o in _evaluate_bank(inp, code, policy) if not o["passed"]
+    ]
 
 
 class BREEngineService:
@@ -824,9 +867,16 @@ class BREEngineService:
         # map, so the two can never be scored against different rule sets.
         entity_matrix = matrix_for_entity(payload.get("entity_type"))
 
+        # --- Evaluate every bank ONCE; derive verdict, map and report -------
+        bank_outcomes: Dict[str, List[Dict[str, Any]]] = {
+            code: _evaluate_bank(inp, code, policy) for code, policy in entity_matrix.items()
+        }
+
         # --- Selected-bank verdict ------------------------------------------
-        selected_policy = entity_matrix[selected_bank]
-        rejection_reasons = _bank_rejections(inp, selected_bank, selected_policy)
+        rejection_reasons = [
+            {"rule_id": o["rule_id"], "category": o["category"], "message": o["message"]}
+            for o in bank_outcomes[selected_bank] if not o["passed"]
+        ]
 
         # Tenant-level overlay (not part of the bank matrix)
         if tenant_id == "tenant_alpha" and cibil_score < 720:
@@ -840,8 +890,18 @@ class BREEngineService:
 
         # --- Full 8-bank eligibility map (same rule function) ---------------
         bank_eligibility: Dict[str, bool] = {
-            code: (len(_bank_rejections(inp, code, policy)) == 0) and overall_eligible
-            for code, policy in entity_matrix.items()
+            code: all(o["passed"] for o in outcomes) and overall_eligible
+            for code, outcomes in bank_outcomes.items()
+        }
+
+        # --- Per-bank audit report (what passed, what failed, and why) -------
+        evaluation_report: Dict[str, Dict[str, Any]] = {
+            code: {
+                "is_eligible": bank_eligibility[code],
+                "passed_rules": [_report_row(o) for o in outcomes if o["passed"]],
+                "failed_rules": [_report_row(o) for o in outcomes if not o["passed"]],
+            }
+            for code, outcomes in bank_outcomes.items()
         }
 
         execution_time_ms = round((time.perf_counter() - start_time) * 1000, 3)
@@ -854,6 +914,7 @@ class BREEngineService:
             "execution_time_ms": execution_time_ms,
             "rejection_reasons": rejection_reasons,
             "bank_eligibility": bank_eligibility,
+            "evaluation_report": evaluation_report,
         }
 
 bre_engine_service = BREEngineService()
