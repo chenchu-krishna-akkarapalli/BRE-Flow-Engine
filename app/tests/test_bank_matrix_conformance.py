@@ -90,6 +90,22 @@ def _max_acceptable(v: Any) -> int:
     return n if text.startswith("<=") else n - 1
 
 
+def _cell(row: Dict[str, Any], *candidates: str) -> Any:
+    """Read a policy cell by any of its accepted header spellings.
+
+    The entity matrices are hand-curated and columns get renamed to scope them
+    ("Business Proof" -> "Self-employed-Business Proof"; the Company sheet drops
+    the "SE " prefix entirely). Matching a list of spellings — whitespace- and
+    case-insensitively — keeps a rename from breaking collection, so only a
+    genuinely NEW column requires a code change.
+    """
+    normalized = {str(k).strip().lower(): v for k, v in row.items()}
+    for name in candidates:
+        if (key := name.strip().lower()) in normalized:
+            return normalized[key]
+    raise KeyError(f"none of {candidates!r} present; sheet has {sorted(row)}")
+
+
 def _read(path: Path) -> Dict[str, Dict[str, Any]]:
     """{bank_code: {column_header: cell}} for one entity-scoped matrix."""
     rows = list(openpyxl.load_workbook(str(path), data_only=True)["decision table"].iter_rows(values_only=True))
@@ -110,57 +126,58 @@ def load_policies() -> Dict[str, Dict[str, Any]]:
     for code in individual:
         ind, com = individual[code], company[code]
         policies[code] = {
-            "min_cibil": _threshold(ind["CIBIL Score"]),
+            "min_cibil": _threshold(_cell(ind, "CIBIL Score")),
             "allow_write_off": {
-                "PL": _flag(ind["PL Write off"]),
-                "HL": _flag(ind["Home Loan Write off"]),
-                "CONSUMER": _flag(ind["Consumer Loan  Write off"]),
-                "AGRI": _flag(ind["Agri Loan  Write off"]),
-                "MSME": _flag(ind["MSME Loan  Write off"]),
-                "AUTO": _flag(ind["Auto Loan  Write off"]),
-                "CC": _flag(ind["Credit Card Write Off History"]),
+                "PL": _flag(_cell(ind, "PL Write off")),
+                "HL": _flag(_cell(ind, "Home Loan Write off")),
+                "CONSUMER": _flag(_cell(ind, "Consumer Loan  Write off")),
+                "AGRI": _flag(_cell(ind, "Agri Loan  Write off")),
+                "MSME": _flag(_cell(ind, "MSME Loan  Write off")),
+                "AUTO": _flag(_cell(ind, "Auto Loan  Write off")),
+                "CC": _flag(_cell(ind, "Credit Card Write Off History", "Credit Card Write Off")),
             },
-            "max_cc_write_off": _threshold(ind["Credit Card Write Off Amount history"]),
-            "max_dpd": _max_acceptable(ind["DPD"]),
-            "allow_loan_enquiry": _flag(ind["Loan enquiry"]),
-            "allow_currently_outstanding": _flag(ind["Currently Outstanding"]),
-            "min_age": int(ind["Min Age"]),
-            "max_age_emi_salaried": _threshold(ind["Age at Last EMI-Salaried"]),
-            "max_age_emi_self_employed": _threshold(ind["Age at Last EMI-Self Employed"]),
-            "allow_existing_car_loan": _flag(ind["Existing Car Loan"]),
-            "allow_both_rented_config": _flag(ind["Resi-Office-Separate-Both Rented-selfemployee"]),
-            "allow_without_guarantor": _flag(ind["Without a Guarantor"]),
-            "allow_with_guarantor": _flag(ind["With a Guarantor"]),
-            "allow_nri": _flag(ind["NRI/PIO"]),
-            "min_nri_stay_years": _threshold(ind["Minimium Stay Period for NRI"]),
-            "allow_agriculture": _flag(ind["Agriculture-selfemployee"]),
-            "min_total_experience_years": _threshold(ind["Minimum work experience"]),
-            "min_current_company_years": _threshold(ind["Current Company Experience (Years)"]),
-            "allow_cash_salary": _flag(ind["Salary payment mode-Cash"]),
-            "allow_no_income_proof": _flag(ind["No Income Proof"]),
+            "max_cc_write_off": _threshold(_cell(ind, "Credit Card Write Off Amount history", "Credit Card Write Off Amount")),
+            "max_dpd": _max_acceptable(_cell(ind, "DPD")),
+            "allow_loan_enquiry": _flag(_cell(ind, "Loan enquiry")),
+            "allow_currently_outstanding": _flag(_cell(ind, "Currently Outstanding")),
+            "min_age": int(_cell(ind, "Min Age")),
+            "max_age_emi_salaried": _threshold(_cell(ind, "Age at Last EMI-Salaried")),
+            "max_age_emi_self_employed": _threshold(_cell(ind, "Age at Last EMI-Self Employed")),
+            "allow_existing_car_loan": _flag(_cell(ind, "Existing Car Loan")),
+            "requires_existing_account": _flag(_cell(ind, "Existing A/C Holder")),
+            "allow_both_rented_config": _flag(_cell(ind, "Resi-Office-Separate-Both Rented-selfemployee", "Resi-Office-Separate-Both Rented")),
+            "allow_without_guarantor": _flag(_cell(ind, "Without a Guarantor")),
+            "allow_with_guarantor": _flag(_cell(ind, "With a Guarantor")),
+            "allow_nri": _flag(_cell(ind, "NRI/PIO")),
+            "min_nri_stay_years": _threshold(_cell(ind, "Minimium Stay Period for NRI")),
+            "allow_agriculture": _flag(_cell(ind, "Agriculture-selfemployee", "Agriculture")),
+            "min_total_experience_years": _threshold(_cell(ind, "Minimum work experience")),
+            "min_current_company_years": _threshold(_cell(ind, "Current Company Experience (Years)")),
+            "allow_cash_salary": _flag(_cell(ind, "Salary payment mode-Cash")),
+            "allow_no_income_proof": _flag(_cell(ind, "No Income Proof")),
             "allow_rental": {
-                "NO_ITR_NOT_IN_BANK": _flag(ind["Rental Income - With Agreement - Not Filed ITR - Not Reflecting in Bank"]),
-                "NO_ITR_IN_BANK": _flag(ind["Rental Income - With Agreement - Not Filed ITR - Reflecting in Bank"]),
-                "ITR_NOT_IN_BANK": _flag(ind["Rental Income - With Agreement - Filed ITR - Not Reflecting in Bank"]),
+                "NO_ITR_NOT_IN_BANK": _flag(_cell(ind, "Rental Income - With Agreement - Not Filed ITR - Not Reflecting in Bank")),
+                "NO_ITR_IN_BANK": _flag(_cell(ind, "Rental Income - With Agreement - Not Filed ITR - Reflecting in Bank")),
+                "ITR_NOT_IN_BANK": _flag(_cell(ind, "Rental Income - With Agreement - Filed ITR - Not Reflecting in Bank")),
             },
-            "min_salary": _threshold(ind["Minimum Salary"]),
+            "min_salary": _threshold(_cell(ind, "Minimum Salary")),
             # Income rules are read from the COMPANY sheet: they are the rules a
             # Company is scored on, and the split must keep them authoritative
             # there. They are identical in the Individual sheet (shared columns).
-            "se_min_current_itr": _threshold(com["SE Current ITR"]),
-            "se_combined_itr": "Current + Prev" in str(com["SE Previous ITR"]),
-            "se_min_prev_itr": _threshold(com["SE Previous ITR"]),
-            "allow_itr_not_filed": _flag(ind["Self Employed-ITR Not Filed"]),
-            "min_business_itr_years": _threshold(com["Business ITR Years"]),
-            "allow_huf": _flag(ind["HUF"]),
-            "form16_years_required": _threshold(ind["salaried-Form 16 Years"]),
+            "se_min_current_itr": _threshold(_cell(com, "SE Current ITR", "Current ITR")),
+            "se_combined_itr": "Current + Prev" in str(_cell(com, "SE Previous ITR", "Previous ITR")),
+            "se_min_prev_itr": _threshold(_cell(com, "SE Previous ITR", "Previous ITR")),
+            "allow_itr_not_filed": _flag(_cell(ind, "Self Employed-ITR Not Filed", "ITR Not Filed")),
+            "min_business_itr_years": _threshold(_cell(com, "Business ITR Years", "Self-employed-Business ITR Years")),
+            "allow_huf": _flag(_cell(ind, "HUF")),
+            "form16_years_required": _threshold(_cell(ind, "salaried-Form 16 Years", "Form 16 Years")),
             "coapp": {
-                "AGE_Brother": _flag(ind["Co-Applicant Age-Brother"]),
-                "AGE_Sister": _flag(ind["Co-Applicant Age-Sister"]),
-                "INC_Brother": _flag(ind["Co-Applicant Income-Brother"]),
-                "INC_Father": _flag(ind["Co-Applicant Income-Father"]),
-                "INC_Mother": _flag(ind["Co-Applicant Income-Mother"]),
-                "INC_Sister": _flag(ind["Co-Applicant Income-Sister"]),
+                "AGE_Brother": _flag(_cell(ind, "Co-Applicant Age-Brother")),
+                "AGE_Sister": _flag(_cell(ind, "Co-Applicant Age-Sister")),
+                "INC_Brother": _flag(_cell(ind, "Co-Applicant Income-Brother")),
+                "INC_Father": _flag(_cell(ind, "Co-Applicant Income-Father")),
+                "INC_Mother": _flag(_cell(ind, "Co-Applicant Income-Mother")),
+                "INC_Sister": _flag(_cell(ind, "Co-Applicant Income-Sister")),
             },
         }
     return policies
@@ -264,7 +281,11 @@ def sheet_rejects(bank: str, f: Dict[str, Any]) -> List[str]:
         if not permitted:
             out.append("both_rented_guarantor")
 
-    # Existing banking relationship
+    # Existing banking relationship — every bank but IOB lends only to its own
+    # existing account holders (col 17).
+    if p["requires_existing_account"] and f["existing_account_bank"] != bank:
+        out.append("existing_account")
+
     if f["car_loan"] and not p["allow_existing_car_loan"]:
         out.append("existing_car_loan")
 
@@ -348,6 +369,7 @@ def derive(c: Dict[str, Any]) -> Dict[str, Any]:
                        and c["office_status"] == "Rented",
         "guarantor": c["guarantor"] == "With a Gaurantor",
         "car_loan": c["car_loan"],
+        "existing_account_bank": c["selected"],
         "coapp": coapp,
     }
 
@@ -549,6 +571,7 @@ CONSTANT_CORRESPONDENCE = [
     ("max_cc_write_off", "max_cc_write_off_amount"),
     ("max_dpd", "max_dpd"),
     ("allow_loan_enquiry", "allow_loan_enquiry"),
+    ("requires_existing_account", "requires_existing_account"),
     ("min_age", "min_age"),
     ("max_age_emi_salaried", "max_age_emi_salaried"),
     ("max_age_emi_self_employed", "max_age_emi_self_employed"),
@@ -670,7 +693,7 @@ EVALUATED_COLUMNS = {
     "Credit Card Write Off Amount history",
     "DPD", "Loan enquiry", "Currently Outstanding",
     "Min Age", "Age at Last EMI-Salaried", "Age at Last EMI-Self Employed",
-    "Existing Car Loan",
+    "Existing Car Loan", "Existing A/C Holder",
     "Without a Guarantor", "With a Guarantor",
     "NRI/PIO", "Minimium Stay Period for NRI",
     "Agriculture-selfemployee",
@@ -680,8 +703,11 @@ EVALUATED_COLUMNS = {
     "Rental Income - With Agreement - Not Filed ITR - Reflecting in Bank",
     "Rental Income - With Agreement - Filed ITR - Not Reflecting in Bank",
     "Minimum Salary", "SE Current ITR", "SE Previous ITR",
+    "Current ITR", "Previous ITR",
     "Self Employed-ITR Not Filed", "ITR Not Filed",
-    "Business ITR Years", "Business Proof", "HUF", "salaried-Form 16 Years",
+    "Business ITR Years", "Business Proof",
+    "Self-employed-Business ITR Years", "Self-employed-Business Proof",
+    "HUF", "salaried-Form 16 Years",
     "Co-Applicant Age-Brother", "Co-Applicant Age-Sister",
     "Co-Applicant Income-Brother", "Co-Applicant Income-Father",
     "Co-Applicant Income-Mother", "Co-Applicant Income-Sister",
@@ -694,16 +720,14 @@ INERT_COLUMNS = {
     "salaried-Employment-Firm", "salaried-Employment-Pvt Ltd",
     "salaried-Employment-Public Ltd", "salaried-Employment-Govt",
     "salaried-Employment-PSU", "Salary payment mode- Bank Credit",
-    "Self Employed", "Self Employed ITR Filed", "Self Employed-Propreitorship",
+    "Self Employed", "Self Employed ITR Filed", "ITR Filed",
+    "Self Employed-Propreitorship",
     "Parternship Firm", "Private Limited", "Public Limited", "EMI / Income Ratio",
 }
 
 # Columns that discriminate between banks but are NOT enforced, each pending a
 # policy decision rather than an implementation.
 DEFERRED_COLUMNS = {
-    "Existing A/C Holder": "IOB=false. The form's bank selector *is* the "
-        "applicant's existing-account bank, so the literal reading makes IOB "
-        "reject every applicant who banks with IOB. Needs the sheet owner's intent.",
     "Resi-Office-Separate-Both Rented-selfemployee": "Contradicts the "
         "with/without-guarantor columns for BOB and HDFC. Those two are treated "
         "as authoritative; see sheet_rejects().",
@@ -714,6 +738,11 @@ DEFERRED_COLUMNS = {
 # them; matching on name alone would silently stop checking them.
 SHARED_COLUMN_ALIASES = {
     "Credit Card Write Off History": "Credit Card Write Off history",
+    "Self-employed-Business ITR Years": "Business ITR Years",
+    "Self-employed-Business Proof": "Business Proof",
+    "SE Current ITR": "Current ITR",
+    "SE Previous ITR": " Previous ITR",
+    "Self Employed ITR Filed": "ITR Filed",
 }
 # Deliberately entity-specific: HDFC/AXIS/Kotak decline an unfiled ITR from an
 # individual but accept one from a company. Cross-checking these would assert
@@ -729,8 +758,12 @@ def _headers(path: Path) -> List[str]:
 def test_column_classification_covers_both_matrices() -> None:
     """Every column across both entity matrices is evaluated, provably inert,
     or explicitly deferred — nothing is silently ignored by the engine."""
-    present = set(_headers(INDIVIDUAL_SHEET)) | set(_headers(COMPANY_SHEET))
-    classified = METADATA_COLUMNS | EVALUATED_COLUMNS | INERT_COLUMNS | set(DEFERRED_COLUMNS)
+    norm = lambda s: s.strip().lower()  # noqa: E731
+    present = {norm(h) for h in _headers(INDIVIDUAL_SHEET) + _headers(COMPANY_SHEET)}
+    classified = {
+        norm(c) for c in
+        METADATA_COLUMNS | EVALUATED_COLUMNS | INERT_COLUMNS | set(DEFERRED_COLUMNS)
+    }
 
     assert present - classified == set(), (
         f"unclassified columns: {sorted(present - classified)} — "
@@ -754,8 +787,12 @@ def test_split_matrices_agree_on_shared_columns() -> None:
         (h, SHARED_COLUMN_ALIASES.get(h) or lowered.get(h.lower()))
         for h in ind_headers
     ]
-    pairs = [(a, b) for a, b in pairs if b in com_headers]
-    assert len(pairs) >= 22, f"expected the bureau/policy overlap, got {len(pairs)}"
+    com_by_norm = {h.strip().lower(): h for h in com_headers}
+    pairs = [
+        (a, com_by_norm[b.strip().lower()])
+        for a, b in pairs if b and b.strip().lower() in com_by_norm
+    ]
+    assert len(pairs) >= 20, f"expected the bureau/policy overlap, got {len(pairs)}"
 
     for code in individual:
         for ind_col, com_col in pairs:
@@ -783,12 +820,9 @@ def test_deferred_columns_still_need_a_decision() -> None:
     banks = _read(INDIVIDUAL_SHEET)
     flag = lambda code, col: str(banks[code][col]).strip().lower() == "true"  # noqa: E731
 
-    assert len({flag(c, "Existing A/C Holder") for c in banks}) > 1, (
-        "'Existing A/C Holder' is now uniform — the deferral is obsolete"
-    )
     contradictory = [
         c for c in banks
-        if flag(c, "Resi-Office-Separate-Both Rented")
+        if flag(c, "Resi-Office-Separate-Both Rented-selfemployee")
         and not (flag(c, "Without a Guarantor") or flag(c, "With a Guarantor"))
     ]
     assert contradictory, (

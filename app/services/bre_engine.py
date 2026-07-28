@@ -1,5 +1,6 @@
 import asyncio
 import time
+from datetime import date, timedelta
 from typing import Any, Dict, List
 
 from app.core.exceptions import InvalidPayloadError
@@ -7,6 +8,15 @@ from app.core.logging import logger, redact_pii
 
 # Bureau cells that represent a clean / on-time (0-day) status. The parser maps
 # any of these to a 0 DPD value; every other cell must be numerically coercible.
+# Distinguishes "the caller did not tell us where they bank" (legacy flat
+# /evaluate payloads carry no such field — REL-501 cannot be judged, so it is
+# skipped) from None, which means "holds no partner-bank account at all" and
+# does reject.
+ACCOUNT_BANK_UNKNOWN = "__UNKNOWN__"
+
+DAYS_PER_YEAR = 365.25
+MONTHS_PER_YEAR = 12
+
 CLEAN_DPD_TOKENS = frozenset({"STD", "XXX", "*", "-", ""})
 
 
@@ -134,6 +144,7 @@ BANK_MATRIX_RULES = {
         "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
+        "requires_existing_account": True,
     },
     "INDIAN_BANK": {
         "min_cibil": 730,
@@ -170,6 +181,7 @@ BANK_MATRIX_RULES = {
         "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
+        "requires_existing_account": True,
     },
     "IOB": {
         "min_cibil": 701,
@@ -206,6 +218,7 @@ BANK_MATRIX_RULES = {
         "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": False,
+        "requires_existing_account": False,
     },
     "BOB": {
         "min_cibil": 726,
@@ -242,6 +255,7 @@ BANK_MATRIX_RULES = {
         "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": False,
+        "requires_existing_account": True,
     },
     "BOM": {
         "min_cibil": 650,
@@ -278,6 +292,7 @@ BANK_MATRIX_RULES = {
         "allow_itr_not_filed": False,
         "allow_without_guarantor": True,
         "allow_with_guarantor": True,
+        "requires_existing_account": True,
     },
     "HDFC": {
         "min_cibil": 701,
@@ -314,6 +329,7 @@ BANK_MATRIX_RULES = {
         "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
+        "requires_existing_account": True,
     },
     "AXIS": {
         "min_cibil": 701,
@@ -350,6 +366,7 @@ BANK_MATRIX_RULES = {
         "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
+        "requires_existing_account": True,
     },
     "KOTAK": {
         "min_cibil": 701,
@@ -386,6 +403,7 @@ BANK_MATRIX_RULES = {
         "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
+        "requires_existing_account": True,
     },
 }
 
@@ -410,7 +428,7 @@ COMPANY_MATRIX_KEYS = frozenset({
     "allow_pl_write_off", "allow_hl_write_off", "allow_consumer_write_off",
     "allow_agri_write_off", "allow_msme_write_off", "allow_auto_write_off",
     "allow_cc_write_off", "max_cc_write_off_amount",
-    "max_dpd", "allow_loan_enquiry",
+    "max_dpd", "allow_loan_enquiry", "requires_existing_account",
     "se_min_current_itr", "se_min_prev_itr", "se_combined_itr_rule",
     "allow_itr_not_filed", "min_business_itr_years",
 })
@@ -455,6 +473,54 @@ def matrix_for_entity(entity_type: Any) -> Dict[str, Dict[str, Any]]:
     the Individual matrix, the stricter of the two."""
     key = str(entity_type or "").strip().upper()
     return ENTITY_MATRICES[ENTITY_TYPE_TO_MATRIX.get(key, "INDIVIDUAL")]
+
+
+def _years_between(start: date, end: date) -> float:
+    """Fractional years between two dates. Fractions matter: the matrix floors
+    are floats (">= 2"), and truncating to whole years scores an applicant with
+    1 year 11 months as 1."""
+    return max((end - start).days / DAYS_PER_YEAR, 0.0)
+
+
+def _total_work_experience_years(
+    prev_joining: Any, current_tenure_months: Any, reference: date | None = None
+) -> float | None:
+    """Total employment history = prior-employment span + current tenure.
+
+    The prior span runs from the previous joining date to the START of the
+    current job (today minus the current tenure), so the two components are
+    disjoint and cannot double-count. Returns None when no previous employment
+    is on file, letting the caller fall back to the current tenure alone.
+    """
+    if not prev_joining:
+        return None
+    try:
+        start = date.fromisoformat(str(prev_joining)[:10])
+    except ValueError:
+        raise InvalidPayloadError(f"prev_company_joining is not a valid date: {prev_joining!r}")
+
+    today = reference or date.today()
+    tenure_years = float(current_tenure_months or 0) / MONTHS_PER_YEAR
+    current_job_start = today - timedelta(days=tenure_years * DAYS_PER_YEAR)
+    return _years_between(start, current_job_start) + tenure_years
+
+
+def _resolved_work_experience(payload: Dict[str, Any]) -> float:
+    """Total work experience in years for the salaried rules.
+
+    Prefers the date-based computation; falls back to any pre-computed value
+    (the flat /evaluate contract carries one), then to a permissive default so
+    a payload that never mentions employment is not spuriously rejected.
+    """
+    computed = _total_work_experience_years(
+        payload.get("prev_company_joining"),
+        payload.get("current_company_tenure_months"),
+    )
+    if computed is not None:
+        return computed
+    if "minimum_work_experience_years" in payload:
+        return float(payload["minimum_work_experience_years"])
+    return 99.0
 
 
 def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> List[Dict[str, str]]:
@@ -612,6 +678,16 @@ def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> 
             f"{code} does not accept a brother/sister co-applicant for age or income pooling.")
 
     # --- Existing banking relationship --------------------------------------
+    # Matrix col 17 "Existing A/C Holder": every bank but IOB lends only to its
+    # own existing current/savings customers. IOB onboards new-to-bank
+    # applicants, so it is the only code that skips this check.
+    if (policy.get("requires_existing_account")
+            and inp["existing_account_bank"] is not ACCOUNT_BANK_UNKNOWN
+            and inp["existing_account_bank"] != code):
+        add("REL-501", "Existing Banking Relationship",
+            f"{code} lends only to existing current/savings account holders; "
+            f"the applicant does not hold an account with {code}.")
+
     if inp["active_car_loan"] and code in BANKS_DISALLOW_EXISTING_CAR_LOAN:
         add("EXB-702", "Existing Banking Relationship",
             f"{code} does not permit an existing active car loan alongside this application.")
@@ -705,7 +781,10 @@ class BREEngineService:
             "write_off_flag_key": write_off_flag_key,
             "salary": payload.get("net_monthly_salary", 30000),
             "salary_mode": payload.get("salary_payment_mode", "BANK_TRANSFER"),
-            "work_exp_years": payload.get("minimum_work_experience_years", 99),
+            # Computed here from raw facts, not consumed pre-truncated: the
+            # prior-employment span only reaches the rule if the engine owns
+            # the arithmetic (Bug-2).
+            "work_exp_years": _resolved_work_experience(payload),
             "current_company_years": payload.get("current_company_tenure_months", 99999) / 12.0,
             "no_income_proof": payload.get("no_income_proof_segment", False),
             "form_16_years": payload.get("form_16_years", 2),
@@ -720,6 +799,7 @@ class BREEngineService:
             "property_status": str(payload.get("property_status", "OWNED")).upper(),
             "guarantor_provided": payload.get("guarantor_provided", False),
             "loan_enquiry_count": payload.get("loan_enquiry_count", 0),
+            "existing_account_bank": payload.get("existing_account_bank", ACCOUNT_BANK_UNKNOWN),
             "is_huf": (
                 str(payload.get("entity_type", "")).upper() == "HUF"
                 or str(payload.get("business_entity_type", "")).upper() == "HUF"

@@ -368,12 +368,11 @@ class SalariedOccupation(FormModel):
 
     def engine_inputs(self) -> Dict[str, Any]:
         tenure_months = TENURE_BAND_TO_MONTHS[self.tenure_band]
-        # Total experience runs from the previous employer's joining date when
-        # one is on file; otherwise only the current tenure is provable.
-        if self.prev_company_joining is not None:
-            work_experience_years = (_completed_years(self.prev_company_joining))
-        else:
-            work_experience_years = tenure_months // 12
+        # Only the current tenure is provable without a prior employer. When one
+        # IS on file the engine recomputes from the raw date below — the whole-
+        # year value here would discard the fractional span the matrix floors
+        # are measured in.
+        work_experience_years = tenure_months // 12
         no_income_proof = self.form_16_status is Form16Status.NO_INCOME_PROOF
         return {
             "occupation": OccupationType.SALARIED.value,
@@ -381,6 +380,11 @@ class SalariedOccupation(FormModel):
             "current_company_tenure_months": tenure_months,
             "minimum_work_experience_years": work_experience_years,
             "salary_payment_mode": SALARY_MODE_TO_ENGINE_MODE[self.salary_mode],
+            # Raw date: the engine adds the prior-employment span to the current
+            # tenure itself, so no precision is lost in transit.
+            "prev_company_joining": (
+                self.prev_company_joining.isoformat() if self.prev_company_joining else None
+            ),
             "form_16_years": FORM_16_ABSENT_YEARS if no_income_proof else FORM_16_AVAILABLE_YEARS,
             "no_income_proof_segment": no_income_proof,
             "rental_income_class": RENTAL_INCOME_TO_CLASS[self.rental_income_type],
@@ -596,6 +600,13 @@ class BankingBureauStep(FormModel):
         any_write_off = self.write_off_type is not None
         return {
             "selected_bank": self.selected_bank.value,
+            # The bank the applicant actually banks with. None for "Others",
+            # which holds no partner-bank account at all (REL-501).
+            "existing_account_bank": (
+                EXISTING_BANK_TO_BANK_CODE[self.existing_account_bank].value
+                if self.existing_account_bank in EXISTING_BANK_TO_BANK_CODE
+                else None
+            ),
             "loan_type": self.loan_type.value,
             "loan_enquiry_count": self.loan_enquiry_count,
             "active_car_loan": self.existing_car_loan_bank is not ExistingBankOption.NONE,

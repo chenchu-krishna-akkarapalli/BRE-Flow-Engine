@@ -120,6 +120,34 @@ export function progressFor(entity: EntityType, stepId: number): number {
   return Math.round(((index + 1) / plan.length) * 100);
 }
 
+/** Lower bound of each tenure band in months — the conservative end, matching
+ *  the backend's TENURE_BAND_TO_MONTHS. */
+export const TENURE_BAND_MONTHS: Record<string, number> = {
+  "0-6m": 0, "6m-1y": 6, "1y-2y": 12, "2y+": 24,
+};
+
+/** Total employment history in years, mirroring the engine exactly: the
+ *  prior-employment span (previous joining -> start of the current job) plus
+ *  the current tenure. Shown as helper text so the applicant sees the number
+ *  the bank will actually score. */
+export function totalWorkExperienceYears(
+  prevJoining: string,
+  tenureBand: string,
+): number | null {
+  if (!prevJoining) return null;
+  const start = new Date(prevJoining);
+  if (Number.isNaN(start.getTime())) return null;
+
+  const DAYS_PER_YEAR = 365.25;
+  const tenureYears = (TENURE_BAND_MONTHS[tenureBand] ?? 0) / 12;
+  const currentJobStart = new Date(Date.now() - tenureYears * DAYS_PER_YEAR * 864e5);
+  const priorSpan = Math.max(
+    (currentJobStart.getTime() - start.getTime()) / (DAYS_PER_YEAR * 864e5),
+    0,
+  );
+  return priorSpan + tenureYears;
+}
+
 /** Client-side format checks — same regexes the API enforces, so a format
  *  error never costs a round trip. */
 export const PATTERNS = {
@@ -134,7 +162,7 @@ export function stepForRule(ruleId: string): number {
   if (ruleId.startsWith("DEM-") || ruleId.startsWith("ENT-50")) return 1;
   if (ruleId.startsWith("RES-")) return 2;
   if (ruleId.startsWith("EMP-") || ruleId.startsWith("INC-")) return 3;
-  if (ruleId.startsWith("BUR-") || ruleId.startsWith("EXB-")) return 4;
+  if (ruleId.startsWith("BUR-") || ruleId.startsWith("EXB-") || ruleId.startsWith("REL-")) return 4;
   if (ruleId.startsWith("COA-")) return 5;
   return 1;
 }

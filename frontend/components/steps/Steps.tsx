@@ -6,6 +6,7 @@ import {
   ACCOUNT_BANKS, AGE_RELATIONS, BUSINESS_ENTITIES, CAR_LOAN_BANKS, CITIZENSHIP,
   EMPLOYER_TYPES, ENTITY_TYPES, FORM16_STATUS, GENDERS, INCOME_RELATIONS, INDUSTRIES,
   ITR_FILING, LOAN_TYPES, MARITAL, PATTERNS, RENTAL_INCOME, RESIDENCE, SALARY_BANDS,
+  TENURE_BAND_MONTHS, totalWorkExperienceYears,
   SALARY_MODES, TENURE_BANDS, WRITE_OFF_FLAGS,
 } from "@/lib/form-schema";
 import { isBothRented, profileTypeFor, useOnboardingStore, workflowFor } from "@/store/useOnboardingStore";
@@ -270,6 +271,9 @@ export function Step3Occupation() {
   const k = <K extends keyof Draft>(key: K) => (v: Draft[K]) => set(key, v);
   const profile = profileTypeFor(draft);
   const shortTenure = draft.tenureBand !== "2y+";
+  const totalExperience = shortTenure
+    ? totalWorkExperienceYears(draft.prevCompanyJoining, draft.tenureBand)
+    : null;
 
   return (
     <div className="flex flex-col gap-6">
@@ -287,15 +291,34 @@ export function Step3Occupation() {
           <Field label="With Current Company Since" htmlFor="tenureBand">
             <Select id="tenureBand" value={draft.tenureBand} onChange={k("tenureBand")} options={TENURE_BANDS} />
           </Field>
+          {/* Under 2 years at the current employer, prior employment is what
+              establishes total experience — the matrix scores the sum. */}
           {shortTenure && (
-            <div className="grid gap-6 sm:grid-cols-2">
-              <Field label="Previous Company Name" htmlFor="prevCompanyName">
-                <TextInput id="prevCompanyName" value={draft.prevCompanyName} onChange={k("prevCompanyName")} />
-              </Field>
-              <Field label="Previous Joining Date" htmlFor="prevCompanyJoining">
-                <TextInput id="prevCompanyJoining" type="date" value={draft.prevCompanyJoining} onChange={k("prevCompanyJoining")} />
-              </Field>
-            </div>
+            <>
+              <div className="grid gap-6 sm:grid-cols-2">
+                <Field label="Previous Company Name" htmlFor="prevCompanyName">
+                  <TextInput id="prevCompanyName" value={draft.prevCompanyName} onChange={k("prevCompanyName")} />
+                </Field>
+                <Field
+                  label="Previous Joining Date"
+                  htmlFor="prevCompanyJoining"
+                  hint={
+                    totalExperience === null
+                      ? "Required — total experience is measured from this date."
+                      : `Total work experience: ${totalExperience.toFixed(1)} years ` +
+                        `(${(totalExperience - TENURE_BAND_MONTHS[draft.tenureBand] / 12).toFixed(1)} prior ` +
+                        `+ ${(TENURE_BAND_MONTHS[draft.tenureBand] / 12).toFixed(1)} current)`
+                  }
+                >
+                  <TextInput id="prevCompanyJoining" type="date" value={draft.prevCompanyJoining} onChange={k("prevCompanyJoining")} />
+                </Field>
+              </div>
+              {totalExperience !== null && totalExperience < 2 && (
+                <p className="rounded-md bg-warning-bg p-3 text-[0.8125rem] text-warning">
+                  Most partner banks require at least 2 years of total work experience.
+                </p>
+              )}
+            </>
           )}
           <div className="grid gap-6 sm:grid-cols-2">
             <Field label="Approx. Gross Salary (₹)" htmlFor="grossSalaryBand">
