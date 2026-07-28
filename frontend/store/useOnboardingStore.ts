@@ -152,6 +152,15 @@ const INITIAL_DRAFT: Draft = {
  *  optional ones. */
 const opt = (value: string): string | undefined => (value.trim() === "" ? undefined : value);
 
+/** Which entity-scoped eligibility matrix the backend will score this draft
+ *  against. Individual and HUF share the Individual matrix; Company is scored
+ *  on the corporate one, which carries no demographic or employment columns. */
+export type Workflow = "INDIVIDUAL" | "COMPANY";
+
+export function workflowFor(entityType: EntityType): Workflow {
+  return entityType === "Company" ? "COMPANY" : "INDIVIDUAL";
+}
+
 export function profileTypeFor(draft: Draft): ProfileType {
   if (draft.entityType === "Company") return "Company";
   if (draft.entityType === "HUF") return "HUF";
@@ -294,7 +303,10 @@ function buildBanking(d: Draft): BankingStep {
     bureauDpd: Number(d.bureauDpd),
     bureauLoanEnquiry: Number(d.bureauLoanEnquiry),
     bureauCurrentlyOutstanding: Number(d.bureauCurrentlyOutstanding),
-    bureauAgeAtLastEMI: Number(d.bureauAgeAtLastEMI),
+    // A company has no age; the Company matrix carries no age-at-EMI column,
+    // so the field is neither collected nor sent for the corporate workflow.
+    bureauAgeAtLastEMI:
+      workflowFor(d.entityType) === "COMPANY" ? undefined : Number(d.bureauAgeAtLastEMI),
     cibilPlScoreToggle: d.cibilPlScoreToggle,
     bureauCibilPlScore: d.cibilPlScoreToggle ? Number(d.bureauCibilPlScore) : undefined,
     bureauFlagPL: d.bureauFlagPL,

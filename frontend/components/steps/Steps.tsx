@@ -8,7 +8,7 @@ import {
   ITR_FILING, LOAN_TYPES, MARITAL, PATTERNS, RENTAL_INCOME, RESIDENCE, SALARY_BANDS,
   SALARY_MODES, TENURE_BANDS, WRITE_OFF_FLAGS,
 } from "@/lib/form-schema";
-import { isBothRented, profileTypeFor, useOnboardingStore } from "@/store/useOnboardingStore";
+import { isBothRented, profileTypeFor, useOnboardingStore, workflowFor } from "@/store/useOnboardingStore";
 import type { Draft } from "@/store/useOnboardingStore";
 
 /** Format validation runs locally against the same patterns the API enforces,
@@ -458,9 +458,11 @@ export function Step4Banking() {
         <Field label="Currently Outstanding (₹)" htmlFor="bureauCurrentlyOutstanding">
           <TextInput id="bureauCurrentlyOutstanding" type="number" value={draft.bureauCurrentlyOutstanding} onChange={(v) => set("bureauCurrentlyOutstanding", num(v))} numeric />
         </Field>
-        <Field label="Age at Last EMI" htmlFor="bureauAgeAtLastEMI">
-          <TextInput id="bureauAgeAtLastEMI" type="number" value={draft.bureauAgeAtLastEMI} onChange={(v) => set("bureauAgeAtLastEMI", num(v))} numeric />
-        </Field>
+        {workflowFor(draft.entityType) === "INDIVIDUAL" && (
+          <Field label="Age at Last EMI" htmlFor="bureauAgeAtLastEMI">
+            <TextInput id="bureauAgeAtLastEMI" type="number" value={draft.bureauAgeAtLastEMI} onChange={(v) => set("bureauAgeAtLastEMI", num(v))} numeric />
+          </Field>
+        )}
       </div>
 
       <Checkbox id="cibilPlScoreToggle" checked={draft.cibilPlScoreToggle} onChange={(v) => set("cibilPlScoreToggle", v)} label="Is CIBIL PL Score available?" />

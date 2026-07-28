@@ -126,7 +126,8 @@ export interface BankingStep {
   bureauDpd: number;
   bureauLoanEnquiry: number;
   bureauCurrentlyOutstanding: number;
-  bureauAgeAtLastEMI: number;
+  /** Omitted for the Company workflow — the corporate matrix has no age column. */
+  bureauAgeAtLastEMI?: number;
   cibilPlScoreToggle: boolean;
   bureauCibilPlScore?: number;
   bureauFlagPL: boolean;

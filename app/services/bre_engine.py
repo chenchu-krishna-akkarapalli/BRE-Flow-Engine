@@ -304,14 +304,14 @@ BANK_MATRIX_RULES = {
         "se_combined_itr_rule": False,
         "min_business_itr_years": 2,
         "allow_no_income_proof": True,
-        "allow_huf": True,
+        "allow_huf": False,
         "allow_sibling_coapplicant": True,
         "allow_loan_enquiry": False,
         "allow_agriculture": True,
         "allow_rental_no_itr_not_in_bank": False,
         "allow_rental_no_itr_in_bank": False,
         "allow_rental_itr_not_in_bank": False,
-        "allow_itr_not_filed": True,
+        "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
     },
@@ -340,14 +340,14 @@ BANK_MATRIX_RULES = {
         "se_combined_itr_rule": False,
         "min_business_itr_years": 2,
         "allow_no_income_proof": True,
-        "allow_huf": True,
+        "allow_huf": False,
         "allow_sibling_coapplicant": True,
         "allow_loan_enquiry": False,
         "allow_agriculture": True,
         "allow_rental_no_itr_not_in_bank": False,
         "allow_rental_no_itr_in_bank": False,
         "allow_rental_itr_not_in_bank": False,
-        "allow_itr_not_filed": True,
+        "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
     },
@@ -376,18 +376,85 @@ BANK_MATRIX_RULES = {
         "se_combined_itr_rule": False,
         "min_business_itr_years": 2,
         "allow_no_income_proof": True,
-        "allow_huf": True,
+        "allow_huf": False,
         "allow_sibling_coapplicant": True,
         "allow_loan_enquiry": False,
         "allow_agriculture": True,
         "allow_rental_no_itr_not_in_bank": False,
         "allow_rental_no_itr_in_bank": False,
         "allow_rental_itr_not_in_bank": False,
-        "allow_itr_not_filed": True,
+        "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
     },
 }
+
+
+# --------------------------------------------------------------------------- #
+# Entity-scoped matrix views
+# --------------------------------------------------------------------------- #
+#
+# The policy sheet is split by entity type. A Company is scored on the columns
+# present in bank_Company_Organization_Eligibility_Matrix.xlsx; an Individual or
+# HUF on bank_Individual_Eligibility_Matrix.xlsx. The projections below mirror
+# those column sets exactly.
+#
+# A key ABSENT from a view means that matrix carries no such column, so the rule
+# it governs does not exist for that entity — not that it defaults to pass. The
+# practical consequence: a company has no date of birth, so the Company sheet
+# has no age columns, and the EMI-maturity age rule (DEM-103) no longer fires
+# against a corporate applicant's bureau "age at last EMI".
+
+COMPANY_MATRIX_KEYS = frozenset({
+    "min_cibil",
+    "allow_pl_write_off", "allow_hl_write_off", "allow_consumer_write_off",
+    "allow_agri_write_off", "allow_msme_write_off", "allow_auto_write_off",
+    "allow_cc_write_off", "max_cc_write_off_amount",
+    "max_dpd", "allow_loan_enquiry",
+    "se_min_current_itr", "se_min_prev_itr", "se_combined_itr_rule",
+    "allow_itr_not_filed", "min_business_itr_years",
+})
+
+INDIVIDUAL_MATRIX: Dict[str, Dict[str, Any]] = {
+    code: dict(policy) for code, policy in BANK_MATRIX_RULES.items()
+}
+# Where the two sheets hold DIFFERENT values for the same policy, the Company
+# sheet wins for corporate applicants. HDFC/AXIS/Kotak decline an unfiled ITR
+# from an individual but still underwrite a company that has not filed —
+# expressing that divergence is the point of splitting the matrix.
+COMPANY_POLICY_OVERRIDES: Dict[str, Dict[str, Any]] = {
+    "HDFC": {"allow_itr_not_filed": True},
+    "AXIS": {"allow_itr_not_filed": True},
+    "KOTAK": {"allow_itr_not_filed": True},
+}
+
+COMPANY_MATRIX: Dict[str, Dict[str, Any]] = {
+    code: {
+        **{k: v for k, v in policy.items() if k in COMPANY_MATRIX_KEYS},
+        **COMPANY_POLICY_OVERRIDES.get(code, {}),
+    }
+    for code, policy in BANK_MATRIX_RULES.items()
+}
+
+# Each entity type resolves to exactly one matrix. The two views are built as
+# independent dicts (no shared sub-objects), so an Individual evaluation and a
+# Company evaluation cannot observe each other's state under concurrency.
+ENTITY_MATRICES: Dict[str, Dict[str, Dict[str, Any]]] = {
+    "INDIVIDUAL": INDIVIDUAL_MATRIX,
+    "COMPANY": COMPANY_MATRIX,
+}
+ENTITY_TYPE_TO_MATRIX = {
+    "INDIVIDUAL": "INDIVIDUAL",
+    "HUF": "INDIVIDUAL",
+    "COMPANY": "COMPANY",
+}
+
+
+def matrix_for_entity(entity_type: Any) -> Dict[str, Dict[str, Any]]:
+    """Resolve the entity-scoped rule matrix. Unknown entity types fall back to
+    the Individual matrix, the stricter of the two."""
+    key = str(entity_type or "").strip().upper()
+    return ENTITY_MATRICES[ENTITY_TYPE_TO_MATRIX.get(key, "INDIVIDUAL")]
 
 
 def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> List[Dict[str, str]]:
@@ -407,11 +474,11 @@ def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> 
         reasons.append({"rule_id": rid, "category": cat, "message": msg})
 
     # --- Demographics --------------------------------------------------------
-    if inp["age"] < policy["min_age"]:
+    if "min_age" in policy and inp["age"] < policy["min_age"]:
         add("DEM-101", "Demographics",
             f"Applicant age ({inp['age']}) is below the minimum requirement ({policy['min_age']} years).")
 
-    if inp["is_nri"]:
+    if inp["is_nri"] and "allow_nri" in policy:
         if not policy["allow_nri"]:
             add("DEM-104", "Demographics", f"{code} does not onboard NRI/PIO applicants.")
         elif inp["nri_stay_years"] < policy["min_nri_stay_years"]:
@@ -453,23 +520,23 @@ def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> 
                 f"Credit Card write-off amount (Rs {inp['write_off_amount']:,.2f}) is not below {code} ceiling (Rs {policy['max_cc_write_off_amount']:,.2f}).")
 
     # --- Entity & business classification ------------------------------------
-    if inp["is_huf"] and not policy["allow_huf"]:
+    if inp["is_huf"] and "allow_huf" in policy and not policy["allow_huf"]:
         add("ENT-501", "Entity Classification",
             f"{code} does not onboard Hindu Undivided Family (HUF) applicants.")
 
-    if inp["is_agriculture"] and not policy["allow_agriculture"]:
+    if inp["is_agriculture"] and "allow_agriculture" in policy and not policy["allow_agriculture"]:
         add("ENT-502", "Entity Classification",
             f"{code} does not lend against agriculture-sector business income.")
 
     # --- Secondary rental income (matrix cols 38-40) -------------------------
     rental_flag = RENTAL_CLASS_TO_FLAG.get(inp["rental_income_class"])
-    if rental_flag is not None and not policy[rental_flag]:
+    if rental_flag is not None and rental_flag in policy and not policy[rental_flag]:
         add("INC-601", "Secondary Income",
             f"{code} does not accept the declared rental-income configuration "
             f"({inp['rental_income_class']}).")
 
     # --- Employment / income -------------------------------------------------
-    if inp["occupation"] == "Salaried":
+    if inp["occupation"] == "Salaried" and "min_salary" in policy:
         if inp["salary"] < policy["min_salary"]:
             add("EMP-SAL-202", "Employment - Salaried",
                 f"Monthly net salary (Rs {inp['salary']:,.2f}) is below the minimum floor (Rs {policy['min_salary']:,.0f}).")
@@ -491,7 +558,7 @@ def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> 
         elif inp["form_16_years"] < policy["form16_years_required"]:
             add("EMP-SAL-208", "Employment - Salaried",
                 f"Form-16 history ({inp['form_16_years']} yrs) is below {code} requirement ({policy['form16_years_required']} yrs).")
-        if inp["age_emi_sal"] > policy["max_age_emi_salaried"]:
+        if "max_age_emi_salaried" in policy and inp["age_emi_sal"] > policy["max_age_emi_salaried"]:
             add("DEM-102", "Demographics",
                 f"Age at final EMI maturity ({inp['age_emi_sal']}) exceeds {code} limit of {policy['max_age_emi_salaried']} yrs for salaried applicants.")
     else:
@@ -521,7 +588,7 @@ def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> 
                     f"Previous-year ITR (Rs {inp['se_prev_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_prev_itr']:,.0f}).")
         if not inp["business_proof"]:
             add("EMP-SE-307", "Self-Employed", "Valid business proof/registration is mandatory.")
-        if inp["age_emi_se"] > policy["max_age_emi_self_employed"]:
+        if "max_age_emi_self_employed" in policy and inp["age_emi_se"] > policy["max_age_emi_self_employed"]:
             add("DEM-103", "Demographics",
                 f"Age at final EMI maturity ({inp['age_emi_se']}) exceeds {code} limit of {policy['max_age_emi_self_employed']} yrs for self-employed applicants.")
 
@@ -529,7 +596,7 @@ def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> 
     # Cols 22/23 decide the both-rented configuration independently: a
     # guarantor rescues it only where col 23 is True, and IOB/BOB decline it
     # either way. Offering a guarantor is not universally sufficient.
-    if inp["property_status"] in GUARANTOR_PROPERTY_STATUSES:
+    if inp["property_status"] in GUARANTOR_PROPERTY_STATUSES and "allow_with_guarantor" in policy:
         if inp["guarantor_provided"]:
             if not policy["allow_with_guarantor"]:
                 add("RES-206", "Residence & Guarantor",
@@ -540,7 +607,7 @@ def _bank_rejections(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> 
                 f"Guarantor is mandatory for property configuration '{inp['property_status']}' at {code}.")
 
     # --- Co-applicant eligibility (matrix cols 56-61) ------------------------
-    if inp["sibling_co_applicant"] and not policy["allow_sibling_coapplicant"]:
+    if inp["sibling_co_applicant"] and "allow_sibling_coapplicant" in policy and not policy["allow_sibling_coapplicant"]:
         add("COA-801", "Co-Applicant",
             f"{code} does not accept a brother/sister co-applicant for age or income pooling.")
 
@@ -662,8 +729,14 @@ class BREEngineService:
             "sibling_co_applicant": payload.get("sibling_co_applicant", False),
         }
 
+        # --- Entity-scoped matrix selection ----------------------------------
+        # Individual/HUF -> Individual matrix; Company -> Company matrix. The
+        # chosen view is used for BOTH the selected-bank verdict and the 8-bank
+        # map, so the two can never be scored against different rule sets.
+        entity_matrix = matrix_for_entity(payload.get("entity_type"))
+
         # --- Selected-bank verdict ------------------------------------------
-        selected_policy = BANK_MATRIX_RULES[selected_bank]
+        selected_policy = entity_matrix[selected_bank]
         rejection_reasons = _bank_rejections(inp, selected_bank, selected_policy)
 
         # Tenant-level overlay (not part of the bank matrix)
@@ -679,7 +752,7 @@ class BREEngineService:
         # --- Full 8-bank eligibility map (same rule function) ---------------
         bank_eligibility: Dict[str, bool] = {
             code: (len(_bank_rejections(inp, code, policy)) == 0) and overall_eligible
-            for code, policy in BANK_MATRIX_RULES.items()
+            for code, policy in entity_matrix.items()
         }
 
         execution_time_ms = round((time.perf_counter() - start_time) * 1000, 3)
