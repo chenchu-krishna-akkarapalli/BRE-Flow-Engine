@@ -4,11 +4,11 @@
    Exposed through @theme so Tailwind generates bg-/text-/border-/rounded-
    utilities from them. No component may hardcode a hex value. */
 @theme {
-  --color-bg-deep: #0f172a;
-  --color-bg-surface: #1e293b;
-  --color-bg-raised: #334155;
-  --color-line: rgba(255, 255, 255, 0.08);
-  --color-line-strong: rgba(255, 255, 255, 0.16);
+  --color-bg-deep: #f8fafc;
+  --color-bg-surface: #ffffff;
+  --color-bg-raised: #ffffff;
+  --color-line: #e2e8f0;
+  --color-line-strong: #cbd5e1;
 
   --color-brand-50: #eef2ff;
   --color-brand-100: #e0e7ff;
@@ -18,18 +18,18 @@
   --color-brand-700: #4338ca;
   --color-brand-900: #312e81;
 
-  --color-ink: #f1f5f9;
-  --color-ink-muted: #94a3b8;
-  --color-ink-subtle: #64748b;
+  --color-ink: #475569;
+  --color-ink-muted: #0f172a;
+  --color-ink-subtle: #94a3b8;
 
-  --color-success: #4ade80;
-  --color-success-bg: rgba(74, 222, 128, 0.12);
-  --color-danger: #f87171;
-  --color-danger-bg: rgba(248, 113, 113, 0.12);
-  --color-warning: #fbbf24;
-  --color-warning-bg: rgba(251, 191, 36, 0.12);
-  --color-info: #38bdf8;
-  --color-info-bg: rgba(56, 189, 248, 0.12);
+  --color-success: #16a34a;
+  --color-success-bg: rgba(22, 163, 74, 0.08);
+  --color-danger: #dc2626;
+  --color-danger-bg: rgba(220, 38, 38, 0.08);
+  --color-warning: #d97706;
+  --color-warning-bg: rgba(217, 119, 6, 0.08);
+  --color-info: #0284c7;
+  --color-info-bg: rgba(2, 132, 199, 0.08);
 
   --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
@@ -38,8 +38,8 @@
   --radius-md: 10px;
   --radius-lg: 16px;
 
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.28);
-  --shadow-float: 0 12px 40px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.06), 0 2px 8px -1px rgba(0, 0, 0, 0.03);
+  --shadow-float: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
@@ -53,12 +53,12 @@
   --shell-max: 1200px;
   --form-col: 640px;
   --telemetry-col: 380px;
-  --glass-fill: rgba(30, 41, 59, 0.7);
+  --glass-fill: rgba(255, 255, 255, 0.8);
 }
 
 body {
   background: var(--color-bg-deep);
-  color: var(--color-ink);
+  color: var(--color-ink-muted);
   font-family: var(--font-sans);
 }
 
@@ -70,15 +70,26 @@ body {
 
 .glass {
   background: var(--glass-fill);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
   border: 1px solid var(--color-line);
+  box-shadow: var(--shadow-card);
+  transition: all var(--dur-fast) var(--ease-out);
+}
+
+.glass:hover {
+  border-color: var(--color-line-strong);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
 }
 
 /* CLS reservation — these panels populate after a round trip (ui_ux_design §3). */
-.validation-slot { min-height: 96px; }
+.validation-slot { min-height: 5px; }
 .matrix-slot { min-height: 320px; }
 
-.step-enter { animation: step-in var(--dur-step) var(--ease-in-out); }
+.step-enter {
+  animation: step-in var(--dur-step) var(--ease-in-out);
+  border-left: 4px solid var(--color-brand-500);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+}
 @keyframes step-in {
   from { opacity: 0; transform: translateX(12px); }
   to { opacity: 1; transform: translateX(0); }
@@ -87,6 +98,17 @@ body {
 :focus-visible {
   outline: 2px solid var(--color-brand-500);
   outline-offset: 2px;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 @media (prefers-reduced-motion: reduce) {

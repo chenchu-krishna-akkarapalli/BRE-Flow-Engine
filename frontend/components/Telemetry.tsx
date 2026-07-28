@@ -17,62 +17,68 @@ export function BankMatrix({ result }: { result: EvaluationResponse | null }) {
   return (
     <section
       aria-label="Bank eligibility"
-      className="matrix-slot glass rounded-lg p-6"
+      className="matrix-slot glass rounded-lg overflow-hidden flex flex-col p-0"
     >
-      <h2 className="text-[1.25rem] font-semibold">
-        {result
-          ? `Eligibility with ${BANK_LABELS[result.selected_bank]} as primary`
-          : "Bank eligibility"}
-      </h2>
+      {/* Header section with distinct background color */}
+      <div className="bg-gradient-to-br from-brand-50/50 to-brand-100/20 px-6 py-5 border-b border-line">
+        <h2 className="text-[1.25rem] font-semibold text-ink-muted">
+          {result
+            ? `Eligibility with ${BANK_LABELS[result.selected_bank]} as primary`
+            : "Bank eligibility"}
+        </h2>
 
-      {!result && (
-        <p className="mt-2 text-[0.8125rem] text-ink-subtle">
-          Evaluated across all 8 partner banks when you submit.
-        </p>
-      )}
+        {!result && (
+          <p className="mt-1.5 text-[0.8125rem] text-ink font-medium">
+            Evaluated across all 8 partner banks when you submit.
+          </p>
+        )}
 
-      {result && !result.overall_eligible && (
-        <p className="mt-3 rounded-md bg-warning-bg p-3 text-[0.8125rem] text-warning">
-          Other banks are evaluated once your primary bank&apos;s checks pass.
-        </p>
-      )}
+        {result && !result.overall_eligible && (
+          <p className="mt-2.5 rounded-md bg-warning-bg p-3 text-[0.8125rem] text-warning">
+            Other banks are evaluated once your primary bank&apos;s checks pass.
+          </p>
+        )}
+      </div>
 
-      <ul className="mt-4 flex flex-col gap-1">
-        {BANK_CODES.map((code) => {
-          const evaluated = result !== null && result.overall_eligible;
-          const eligible = result?.bank_eligibility[code] ?? false;
-          return (
-            <li
-              key={code}
-              className="flex min-h-[44px] items-center justify-between rounded-sm px-3"
-            >
-              <span className="text-[0.9375rem] text-ink-muted">{BANK_LABELS[code]}</span>
-              {!evaluated ? (
-                <span className="flex items-center gap-2 text-ink-subtle">
-                  <Minus size={16} aria-hidden />
-                  <span className="numeric text-[0.8125rem]">—</span>
-                </span>
-              ) : eligible ? (
-                <span className="flex items-center gap-2 text-success">
-                  <CheckCircle2 size={16} aria-hidden />
-                  <span className="text-[0.8125rem] font-medium">ELIGIBLE</span>
-                </span>
-              ) : (
-                <span className="flex items-center gap-2 text-danger">
-                  <XCircle size={16} aria-hidden />
-                  <span className="text-[0.8125rem] font-medium">NOT ELIGIBLE</span>
-                </span>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+      {/* Body section with standard list layout and tighter spacing */}
+      <div className="p-6 pt-4 bg-bg-surface flex-1">
+        <ul className="flex flex-col gap-0.5">
+          {BANK_CODES.map((code) => {
+            const evaluated = result !== null && result.overall_eligible;
+            const eligible = result?.bank_eligibility[code] ?? false;
+            return (
+              <li
+                key={code}
+                className="flex min-h-[36px] items-center justify-between rounded-md px-3 transition-colors hover:bg-brand-50/30"
+              >
+                <span className="text-[0.875rem] text-ink-muted font-medium">{BANK_LABELS[code]}</span>
+                {!evaluated ? (
+                  <span className="flex items-center gap-2 text-ink-subtle">
+                    <Minus size={14} aria-hidden />
+                    <span className="numeric text-[0.8125rem]">—</span>
+                  </span>
+                ) : eligible ? (
+                  <span className="flex items-center gap-2 text-success">
+                    <CheckCircle2 size={14} aria-hidden />
+                    <span className="text-[0.75rem] font-bold tracking-wider">ELIGIBLE</span>
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2 text-danger">
+                    <XCircle size={14} aria-hidden />
+                    <span className="text-[0.75rem] font-bold tracking-wider">NOT ELIGIBLE</span>
+                  </span>
+                )}
+              </li>
+            );
+          })}
+        </ul>
 
-      {result && (
-        <p className="numeric mt-4 border-t border-line pt-3 text-[0.8125rem] text-info">
-          {result.executed_rules_count} rules · {result.execution_time_ms.toFixed(1)} ms
-        </p>
-      )}
+        {result && (
+          <p className="numeric mt-4 border-t border-line pt-3 text-[0.8125rem] text-info font-medium">
+            {result.executed_rules_count} rules · {result.execution_time_ms.toFixed(1)} ms
+          </p>
+        )}
+      </div>
     </section>
   );
 }

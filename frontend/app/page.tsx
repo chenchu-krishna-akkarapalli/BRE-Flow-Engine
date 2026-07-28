@@ -49,16 +49,18 @@ export default function OnboardingWizard() {
         {result && <DecisionPanel result={result} />}
 
         {/* Height reserved up front so the panel fills in place (no CLS). */}
-        <div className="validation-slot">
-          {result && !result.overall_eligible && (
-            <ValidationBanner reasons={result.rejection_reasons} onJump={goTo} />
-          )}
-          {error && (
-            <p role="alert" className="rounded-md border border-danger/40 bg-danger-bg p-4 text-[0.9375rem] text-danger">
-              {error}
-            </p>
-          )}
-        </div>
+        {(result || error) && (
+          <div className="validation-slot">
+            {result && !result.overall_eligible && (
+              <ValidationBanner reasons={result.rejection_reasons} onJump={goTo} />
+            )}
+            {error && (
+              <p role="alert" className="rounded-md border border-danger/40 bg-danger-bg p-4 text-[0.9375rem] text-danger">
+                {error}
+              </p>
+            )}
+          </div>
+        )}
 
         <div className="flex items-center justify-between gap-4">
           <button
