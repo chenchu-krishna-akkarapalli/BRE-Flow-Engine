@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Checkbox, Field, RadioCards, Select, TextInput } from "@/components/Field";
 import {
   ACCOUNT_BANKS, AGE_RELATIONS, BUSINESS_ENTITIES, CAR_LOAN_BANKS, CITIZENSHIP,
@@ -158,11 +159,97 @@ export function Step1Identity() {
 export function Step2Address() {
   const { draft, set } = useField();
   const k = <K extends keyof Draft>(key: K) => (v: Draft[K]) => set(key, v);
+
+  const [areas, setAreas] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [pincodeError, setPincodeError] = useState("");
+  const [selectedArea, setSelectedArea] = useState("");
+
+  useEffect(() => {
+    const pincode = draft.pincode || "";
+    
+    if (/^\d{6}$/.test(pincode)) {
+      let isMounted = true;
+      setLoading(true);
+      setPincodeError("");
+
+      fetch(`https://api.postalpincode.in/pincode/${pincode}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (!isMounted) return;
+          if (data[0] && data[0].Status === "Success" && data[0].PostOffice) {
+            const postOffices = data[0].PostOffice;
+            const district = postOffices[0].District;
+            const state = postOffices[0].State;
+            const areaNames = postOffices.map((office: any) => office.Name);
+
+            // Auto-fill City & State
+            set("cityName", district);
+            set("stateName", state);
+            setAreas(areaNames);
+
+            // Auto-select area if only 1 option exists
+            if (areaNames.length === 1) {
+              setSelectedArea(areaNames[0]);
+            }
+          } else {
+            setPincodeError("Invalid PIN Code");
+            set("cityName", "");
+            set("stateName", "");
+            setAreas([]);
+            setSelectedArea("");
+          }
+        })
+        .catch(() => {
+          if (isMounted) {
+            setPincodeError("Failed to fetch location details");
+            set("cityName", "");
+            set("stateName", "");
+            setAreas([]);
+            setSelectedArea("");
+          }
+        })
+        .finally(() => {
+          if (isMounted) setLoading(false);
+        });
+
+      return () => {
+        isMounted = false;
+      };
+    } else {
+      setAreas([]);
+      setSelectedArea("");
+    }
+  }, [draft.pincode, set]);
+
   return (
     <div className="flex flex-col gap-6">
-      <Field label="Pincode" htmlFor="pincode" error={invalid(PATTERNS.pincode, draft.pincode, "6 digits")}>
-        <TextInput id="pincode" value={draft.pincode} onChange={k("pincode")} placeholder="560001" numeric />
+      <Field label="Pincode" htmlFor="pincode" error={pincodeError || invalid(PATTERNS.pincode, draft.pincode, "6 digits")}>
+        <div className="relative">
+          <TextInput id="pincode" value={draft.pincode} onChange={k("pincode")} placeholder="560001" numeric />
+          {loading && (
+            <span className="absolute right-3 top-3 text-xs text-gray-400 animate-pulse">
+              Fetching...
+            </span>
+          )}
+        </div>
       </Field>
+
+      {/* Area Selector - Appears only when Pincode API fetches results */}
+      {areas.length > 0 && (
+        <Field label="Area / Locality" htmlFor="areaName">
+          {/* Note: If your Draft store has a field for area, you can bind it directly 
+              using: value={draft.areaName} onChange={k("areaName")} instead of local state */}
+          <Select
+            id="areaName"
+            value={selectedArea}
+            onChange={setSelectedArea}
+            options={areas}
+            placeholder="Select Locality"
+          />
+        </Field>
+      )}
+
       <div className="grid gap-6 sm:grid-cols-2">
         <Field label="City" htmlFor="cityName">
           <TextInput id="cityName" value={draft.cityName} onChange={k("cityName")} />
