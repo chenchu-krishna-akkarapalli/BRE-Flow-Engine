@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Checkbox, Field, RadioCards, Select, TextInput } from "@/components/Field";
+import { useState, useEffect, useRef } from "react";
+import { Checkbox, Field, RadioCards, Select, TextInput, SearchableSelect } from "@/components/Field";
 import {
   ACCOUNT_BANKS, AGE_RELATIONS, BUSINESS_ENTITIES, CAR_LOAN_BANKS, CITIZENSHIP,
   EMPLOYER_TYPES, ENTITY_TYPES, FORM16_STATUS, GENDERS, INCOME_RELATIONS, INDUSTRIES,
@@ -165,6 +165,16 @@ export function Step2Address() {
   const [loading, setLoading] = useState(false);
   const [pincodeError, setPincodeError] = useState("");
   const [selectedArea, setSelectedArea] = useState("");
+  const areaInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (areas.length > 0) {
+      const timer = setTimeout(() => {
+        areaInputRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [areas]);
 
   useEffect(() => {
     const pincode = draft.pincode || "";
@@ -239,14 +249,13 @@ export function Step2Address() {
       {/* Area Selector - Appears only when Pincode API fetches results */}
       {areas.length > 0 && (
         <Field label="Area / Locality" htmlFor="areaName">
-          {/* Note: If your Draft store has a field for area, you can bind it directly 
-              using: value={draft.areaName} onChange={k("areaName")} instead of local state */}
-          <Select
+          <SearchableSelect
             id="areaName"
             value={selectedArea}
             onChange={setSelectedArea}
             options={areas}
-            placeholder="Select Locality"
+            placeholder="Search / Select Locality"
+            inputRef={areaInputRef}
           />
         </Field>
       )}
