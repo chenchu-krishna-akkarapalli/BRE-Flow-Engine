@@ -660,11 +660,23 @@ def test_endpoint_verdict_matches_spreadsheet(case: Dict[str, Any]) -> None:
         f"engine_says={[r['rule_id'] for r in body['rejection_reasons']] or ['<eligible>']}"
     )
 
-    # The map is each bank's own verdict ANDed with the selected bank's.
+    # Each entry is that bank's OWN verdict, independent of the selected bank.
+    # These assertions used to AND in `expected_overall`, mirroring an engine
+    # bug: once the selected bank rejected, every expectation collapsed to
+    # False and the loop asserted nothing about the other seven banks.
     for code in POLICIES:
-        expected = (not sheet_rejects(code, facts)) and expected_overall
+        expected = not sheet_rejects(code, facts)
         assert body["bank_eligibility"][code] == expected, (
-            f"bank_eligibility[{code}] sheet_says={sheet_rejects(code, facts) or ['<eligible>']}"
+            f"bank_eligibility[{code}] sheet_says={sheet_rejects(code, facts) or ['<eligible>']} "
+            f"engine_says={body['bank_eligibility'][code]}; selected={selected}"
+        )
+        report = body["evaluation_report"][code]
+        assert report["is_eligible"] == expected
+        # A bank cannot be turned down without naming a rule (the old AND
+        # produced is_eligible=False alongside an empty failure list).
+        assert bool(report["failed_rules"]) != expected, (
+            f"{code}: is_eligible={report['is_eligible']} but failed_rules="
+            f"{[r['rule_id'] for r in report['failed_rules']]}"
         )
 
 

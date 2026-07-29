@@ -557,15 +557,10 @@ def main():
         "description": (
             "REL-501 across all 8 banks in a single submission. `existingAccountBank: 'Others'` "
             "means the applicant holds no partner-bank account; the assessed bank falls back to "
-            "BOI. Only IOB carries `requires_existing_account = false`, so IOB is the sole bank "
-            "that should accept.\n\n"
-            "READ THIS BEFORE INTERPRETING A FAILURE HERE. The assertions below read "
-            "`evaluation_report[bank].failed_rules`, not `bank_eligibility[bank]`, because the "
-            "engine computes the map as `all(bank rules passed) AND overall_eligible` -- i.e. it "
-            "ANDs every bank with the SELECTED bank's verdict. Once the selected bank rejects, "
-            "all 8 map entries read false regardless of their own rules, and IOB reports "
-            "`is_eligible: false` with an empty `failed_rules` list. `evaluation_report` is the "
-            "un-ANDed per-bank truth and is what these tests assert on."
+            "BOI. Only IOB carries `requires_existing_account = false`, so IOB must be the sole "
+            "eligible bank in the returned map even though the assessed bank rejects.\n\n"
+            "This is the case that proves `bank_eligibility` answers 'who else would lend to "
+            "me': every entry is that bank's own verdict, independent of the selected bank's."
         ),
         "item": [{
             "name": "no-partner-bank-account (only IOB may accept)",
@@ -580,11 +575,13 @@ def main():
                 "    pm.expect(Object.keys(body.evaluation_report)).to.have.lengthOf(8);",
                 "});",
                 "Object.keys(expected).forEach(function (bank) {",
-                "    pm.test(bank + (expected[bank] ? ' does not raise' : ' raises') + "
-                "' REL-501', function () {",
+                "    pm.test(bank + ' eligibility is ' + expected[bank], function () {",
                 "        const fired = body.evaluation_report[bank].failed_rules"
                 ".map(function (r) { return r.rule_id; });",
-                "        pm.expect(fired.indexOf('REL-501') === -1).to.eql(expected[bank]);",
+                "        pm.expect(body.bank_eligibility[bank], 'fired: ' + fired)"
+                ".to.eql(expected[bank]);",
+                "        pm.expect(fired.indexOf('REL-501') === -1, 'REL-501')"
+                ".to.eql(expected[bank]);",
                 "    });",
                 "});",
                 "pm.test('REL-501 is the stated reason for the assessed bank', function () {",
