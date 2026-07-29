@@ -36,6 +36,7 @@ from fastapi.testclient import TestClient
 import app.core.redis as redis_module
 from app.api.deps import get_db, get_redis
 from app.api.schemas.onboarding import OnboardingFormRequest
+from app.constants.form_mappings import EXISTING_BANK_TO_BANK_CODE
 from app.main import app
 from app.services.bre_engine import BANK_MATRIX_RULES, RENTAL_CLASS_TO_FLAG, bre_engine_service
 
@@ -66,7 +67,11 @@ SHEET_NAME_TO_CODE = {
 # covered by test_every_bank_verdict_matches_spreadsheet, which scores every
 # bank directly — the eligibility map alone cannot verify them, because it is
 # ANDed with the selected bank's verdict.
-FORM_SELECTABLE = {"BOI": "BOI", "INDIAN_BANK": "Indian Bank", "IOB": "IOB", "BOB": "BOB", "BOM": "BOM"}
+# Bank code -> the `existingAccountBank` option that selects it. Derived from
+# the mapping table rather than restated, so a bank added to one and not the
+# other cannot silently drop out of the endpoint conformance loop below.
+FORM_SELECTABLE = {code.value: option.value
+                   for option, code in EXISTING_BANK_TO_BANK_CODE.items()}
 
 
 # --------------------------------------------------------------------------- #
@@ -145,7 +150,7 @@ def load_policies() -> Dict[str, Dict[str, Any]]:
             "max_age_emi_self_employed": _threshold(_cell(ind, "Age at Last EMI-Self Employed")),
             "allow_existing_car_loan": _flag(_cell(ind, "Existing Car Loan")),
             "requires_existing_account": _flag(_cell(ind, "Existing A/C Holder")),
-            "allow_both_rented_config": _flag(_cell(ind, "Resi-Office-Separate-Both Rented-selfemployee", "Resi-Office-Separate-Both Rented")),
+            "allow_separate_both_rented": _flag(_cell(ind, "Resi-Office-Separate-Both Rented-selfemployee", "Resi-Office-Separate-Both Rented")),
             "allow_without_guarantor": _flag(_cell(ind, "Without a Guarantor")),
             "allow_with_guarantor": _flag(_cell(ind, "With a Guarantor")),
             "allow_nri": _flag(_cell(ind, "NRI/PIO")),
@@ -218,7 +223,7 @@ def sheet_rejects(bank: str, f: Dict[str, Any]) -> List[str]:
         out.append("dpd")
     if f["currently_outstanding"] > 0 and not p["allow_currently_outstanding"]:
         out.append("currently_outstanding")
-    if f["loan_enquiry"] > 0 and not p["allow_loan_enquiry"]:
+    if f["loan_enquiry"] and not p["allow_loan_enquiry"]:
         out.append("loan_enquiry")
     if f["write_off_amount"] > 0:
         wtype = f["write_off_type"]
@@ -276,6 +281,11 @@ def sheet_rejects(bank: str, f: Dict[str, Any]) -> List[str]:
         out.append(f"rental_{f['rental']}")
 
     # Residence / office tenure & guarantor
+    # Separate premises, both rented (col 21) — distinct from the guarantor
+    # question, which governs an office run out of a rented residence.
+    if f["separate_both_rented"] and not p["allow_separate_both_rented"]:
+        out.append("separate_both_rented")
+
     if f["resi_cum_office_rented"]:
         permitted = p["allow_with_guarantor"] if f["guarantor"] else p["allow_without_guarantor"]
         if not permitted:
@@ -315,10 +325,10 @@ WRITE_OFF_FORM_FLAG = {
 DEFAULTS: Dict[str, Any] = {
     "entity": "Individual", "occupation": "Salaried", "selected": "BOI",
     "age": 34, "is_nri": False, "nri_months": 0,
-    "cibil": 800, "dpd": 0, "currently_outstanding": 0.0, "loan_enquiry": 0,
+    "cibil": 800, "dpd": 0, "currently_outstanding": 0.0, "loan_enquiry": False,
     "write_off_type": None, "write_off_amount": 0.0,
     "age_at_last_emi": 55, "car_loan": False,
-    "salary_band": "gt25000", "cash_salary": False, "tenure_band": "2y+",
+    "salary_band": "gt25000", "cash_salary": False, "tenure_band": "2y+", "form16_years": 2,
     "prev_joining_years_ago": None, "no_income_proof": False, "rental": None,
     "current_itr": 500000.0, "previous_itr": 350000.0, "itr_filed": True,
     "business_years_ago": 10, "business_itr_years": 5, "business_proof": True, "business_entity": "Propreitorship",
@@ -346,7 +356,7 @@ def derive(c: Dict[str, Any]) -> Dict[str, Any]:
         "cibil": c["cibil"],
         "dpd": c["dpd"],
         "currently_outstanding": c["currently_outstanding"],
-        "loan_enquiry": c["loan_enquiry"],
+        "loan_enquiry": bool(c["loan_enquiry"]),
         "write_off_type": c["write_off_type"],
         "write_off_amount": c["write_off_amount"],
         "is_huf": is_huf,
@@ -357,7 +367,7 @@ def derive(c: Dict[str, Any]) -> Dict[str, Any]:
         "work_exp_years": work_exp,
         "current_company_years": months / 12.0,
         "no_income_proof": c["no_income_proof"],
-        "form_16_years": 0 if c["no_income_proof"] else 2,
+        "form_16_years": 0 if c["no_income_proof"] else c["form16_years"],
         "age_at_last_emi": c["age_at_last_emi"],
         "business_years": c["business_years_ago"],
         # HUF collects no explicit filing count; the engine falls back to
@@ -372,6 +382,8 @@ def derive(c: Dict[str, Any]) -> Dict[str, Any]:
         "rental": c["rental"],
         # The office runs out of a rented residence — the only guarantor trigger.
         "resi_cum_office_rented": c["residence"] == "Rented House" and c["office"] == "Same",
+        "separate_both_rented": (c["residence"] == "Rented House" and c["office"] == "Separate"
+                                 and c["office_status"] == "Rented"),
         "guarantor": c["guarantor"] == "With a Gaurantor",
         "car_loan": c["car_loan"],
         "existing_account_bank": c["selected"],
@@ -389,7 +401,7 @@ def build_form(c: Dict[str, Any]) -> Dict[str, Any]:
         "loanType": "Auto Loan",
         "bureauCibilScore": c["cibil"],
         "bureauDpd": c["dpd"],
-        "bureauLoanEnquiry": c["loan_enquiry"],
+        "bureauLoanEnquiry": bool(c["loan_enquiry"]),
         "bureauCurrentlyOutstanding": c["currently_outstanding"],
         "bureauAgeAtLastEMI": c["age_at_last_emi"],
     }
@@ -431,6 +443,8 @@ def build_form(c: Dict[str, Any]) -> Dict[str, Any]:
                               else "Salary payment mode- Bank Credit",
                 "form16Status": "No Income Proof" if c["no_income_proof"] else "Form 16",
             }
+            if not c["no_income_proof"]:
+                occupation["form16Years"] = c["form16_years"]
             if c["prev_joining_years_ago"]:
                 prev = TODAY.replace(year=TODAY.year - c["prev_joining_years_ago"])
                 occupation["prevCompanyName"] = "Prior Employer Pvt Ltd"
@@ -500,7 +514,7 @@ def cases() -> List[Tuple[str, Dict[str, Any]]]:
         add(f"{bank}/pl-write-off", **b, write_off_type="PL", write_off_amount=1000.0)
         add(f"{bank}/auto-write-off", **b, write_off_type="AUTO", write_off_amount=1000.0)
         add(f"{bank}/currently-outstanding", **b, currently_outstanding=15000.0)
-        add(f"{bank}/loan-enquiry", **b, loan_enquiry=3)
+        add(f"{bank}/loan-enquiry", **b, loan_enquiry=True)
         add(f"{bank}/age-20", **b, age=20)
         add(f"{bank}/emi-age-61", **b, age_at_last_emi=61)
         add(f"{bank}/emi-age-71", **b, age_at_last_emi=71)
@@ -508,6 +522,7 @@ def cases() -> List[Tuple[str, Dict[str, Any]]]:
         add(f"{bank}/cash-salary", **b, cash_salary=True)
         add(f"{bank}/salary-below-floor", **b, salary_band="lt25000")
         add(f"{bank}/no-income-proof", **b, no_income_proof=True)
+        add(f"{bank}/form16-1-year", **b, form16_years=1)
         add(f"{bank}/tenure-1y", **b, tenure_band="1y-2y", prev_joining_years_ago=4)
         add(f"{bank}/tenure-6m", **b, tenure_band="6m-1y", prev_joining_years_ago=4)
         add(f"{bank}/car-loan", **b, car_loan=True)
@@ -700,6 +715,7 @@ EVALUATED_COLUMNS = {
     "Min Age", "Age at Last EMI-Salaried", "Age at Last EMI-Self Employed",
     "Existing Car Loan", "Existing A/C Holder",
     "Without a Guarantor", "With a Guarantor",
+    "Resi-Office-Separate-Both Rented-selfemployee",
     "NRI/PIO", "Minimium Stay Period for NRI",
     "Agriculture-selfemployee",
     "Minimum work experience", "Current Company Experience (Years)",
@@ -732,11 +748,7 @@ INERT_COLUMNS = {
 
 # Columns that discriminate between banks but are NOT enforced, each pending a
 # policy decision rather than an implementation.
-DEFERRED_COLUMNS = {
-    "Resi-Office-Separate-Both Rented-selfemployee": "Contradicts the "
-        "with/without-guarantor columns for BOB and HDFC. Those two are treated "
-        "as authoritative; see sheet_rejects().",
-}
+DEFERRED_COLUMNS: dict[str, str] = {}
 
 # The curated matrices renamed some shared columns per entity. These pairs are
 # the SAME policy column under two names, so the drift guard must still compare
@@ -820,17 +832,34 @@ def test_inert_columns_stay_uniform(column: str) -> None:
     )
 
 
-def test_deferred_columns_still_need_a_decision() -> None:
-    """Guard the deferrals: if the sheet is corrected, revisit them."""
-    banks = _read(INDIVIDUAL_SHEET)
-    flag = lambda code, col: str(banks[code][col]).strip().lower() == "true"  # noqa: E731
+def test_no_column_is_left_deferred() -> None:
+    """DEFERRED_COLUMNS parks columns awaiting a policy decision. Every
+    discriminating column now has a rule, so it should stay empty."""
+    assert DEFERRED_COLUMNS == {}, f"still awaiting a decision: {sorted(DEFERRED_COLUMNS)}"
 
-    contradictory = [
-        c for c in banks
-        if flag(c, "Resi-Office-Separate-Both Rented-selfemployee")
-        and not (flag(c, "Without a Guarantor") or flag(c, "With a Guarantor"))
-    ]
-    assert contradictory, (
-        "the both-rented and guarantor columns no longer contradict each other — "
-        "drop the tie-break in sheet_rejects() and read the column directly"
+
+def test_every_partner_bank_is_selectable_in_the_wizard() -> None:
+    """A BankCode with no ExistingBankOption is unreachable, not just hidden.
+
+    The wizard picks the assessed bank from `banking.existingAccountBank`, and
+    every private bank carries `requires_existing_account = True`. An omitted
+    bank therefore fails REL-501 on every single submission -- its column in
+    `bank_eligibility` reads false regardless of the applicant -- so the option
+    set has to stay in step with the matrix.
+    """
+    unreachable = set(BANK_MATRIX_RULES) - {
+        code.value for code in EXISTING_BANK_TO_BANK_CODE.values()
+    }
+    assert not unreachable, (
+        f"{sorted(unreachable)} have policy rows but no ExistingBankOption; "
+        "REL-501 would reject them on every submission"
     )
+
+
+@pytest.mark.parametrize("bank", sorted(FORM_SELECTABLE))
+def test_selecting_a_bank_assesses_that_bank(bank: str) -> None:
+    """Each option routes the verdict to its own bank's policy."""
+    form = OnboardingFormRequest.model_validate(build_form({**DEFAULTS, "selected": bank}))
+
+    assert form.banking.selected_bank.value == bank
+    assert form.to_engine_payload()["existing_account_bank"] == bank

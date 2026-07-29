@@ -50,6 +50,9 @@ EXISTING_BANK_TO_BANK_CODE: dict[ExistingBankOption, BankCode] = {
     ExistingBankOption.IOB: BankCode.IOB,
     ExistingBankOption.BOI: BankCode.BOI,
     ExistingBankOption.BOM: BankCode.BOM,
+    ExistingBankOption.HDFC: BankCode.HDFC,
+    ExistingBankOption.AXIS: BankCode.AXIS,
+    ExistingBankOption.KOTAK: BankCode.KOTAK,
 }
 DEFAULT_SELECTED_BANK: BankCode = BankCode.BOI
 

@@ -4,8 +4,9 @@ import { useState, useEffect, useRef } from "react";
 import { Checkbox, Field, RadioCards, Select, TextInput, SearchableSelect } from "@/components/Field";
 import {
   ACCOUNT_BANKS, AGE_RELATIONS, BUSINESS_ENTITIES, CAR_LOAN_BANKS, CITIZENSHIP,
-  EMPLOYER_TYPES, ENTITY_TYPES, FORM16_STATUS, GENDERS, INCOME_RELATIONS, INDUSTRIES,
+  EMPLOYER_TYPES, ENTITY_TYPES, FORM16_STATUS, GENDERS, INCOME_RELATIONS,
   ITR_FILING, LOAN_TYPES, MARITAL, PATTERNS, RENTAL_INCOME, RESIDENCE, SALARY_BANDS,
+  COMPANY_TYPES,
   TENURE_BAND_MONTHS, totalWorkExperienceYears,
   SALARY_MODES, TENURE_BANDS, WRITE_OFF_FLAGS,
 } from "@/lib/form-schema";
@@ -87,8 +88,8 @@ export function Step1Identity() {
             <TextInput id="companyName" value={draft.companyName} onChange={k("companyName")} />
           </Field>
           <div className="grid gap-6 sm:grid-cols-2">
-            <Field label="Industry Type" htmlFor="companyIndustryType">
-              <Select id="companyIndustryType" value={draft.companyIndustryType} onChange={k("companyIndustryType")} options={INDUSTRIES} placeholder="Select" />
+            <Field label="Company Type" htmlFor="companyType">
+              <Select id="companyType" value={draft.companyType} onChange={k("companyType")} options={COMPANY_TYPES} placeholder="Select" />
             </Field>
             <Field label="Company PAN" htmlFor="companyPan" error={invalid(PATTERNS.pan, draft.companyPan, "Format: AABCT1234C")}>
               <TextInput id="companyPan" value={draft.companyPan} onChange={(v) => set("companyPan", v.toUpperCase())} numeric />
@@ -340,6 +341,16 @@ export function Step3Occupation() {
           <Field label="Tax Proof Availability" htmlFor="form16Status">
             <Select id="form16Status" value={draft.form16Status} onChange={k("form16Status")} options={FORM16_STATUS} />
           </Field>
+          {/* Scored against the bank's Form-16 minimum (matrix col 55). */}
+          {draft.form16Status === "Form 16" && (
+            <Field
+              label="Years of Form 16 on file"
+              htmlFor="form16Years"
+              hint="Most partner banks require at least 2 years."
+            >
+              <TextInput id="form16Years" type="number" value={draft.form16Years} onChange={(v) => set("form16Years", num(v))} numeric />
+            </Field>
+          )}
         </>
       )}
 
@@ -481,8 +492,13 @@ export function Step4Banking() {
         <Field label="DPD (Days Past Due)" htmlFor="bureauDpd">
           <TextInput id="bureauDpd" type="number" value={draft.bureauDpd} onChange={(v) => set("bureauDpd", num(v))} numeric />
         </Field>
-        <Field label="Loan Enquiry (count)" htmlFor="bureauLoanEnquiry">
-          <TextInput id="bureauLoanEnquiry" type="number" value={draft.bureauLoanEnquiry} onChange={(v) => set("bureauLoanEnquiry", num(v))} numeric />
+        <Field label="Active loan enquiries on the bureau record?" htmlFor="bureauLoanEnquiry">
+          <RadioCards
+            name="bureauLoanEnquiry"
+            value={draft.bureauLoanEnquiry ? "yes" : "no"}
+            onChange={(v) => set("bureauLoanEnquiry", v === "yes")}
+            options={[{ value: "no", label: "No" }, { value: "yes", label: "Yes" }]}
+          />
         </Field>
       </div>
 

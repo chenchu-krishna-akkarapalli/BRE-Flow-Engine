@@ -134,7 +134,7 @@ BANK_MATRIX_RULES = {
         "allow_no_income_proof": False,
         "allow_huf": False,
         "allow_sibling_coapplicant": True,
-        "allow_loan_enquiry": False,
+        "allow_loan_enquiry": True,
         "allow_agriculture": False,
         "allow_rental_no_itr_not_in_bank": False,
         "allow_rental_no_itr_in_bank": True,
@@ -143,6 +143,7 @@ BANK_MATRIX_RULES = {
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
         "requires_existing_account": True,
+        "allow_separate_both_rented": False,
     },
     "INDIAN_BANK": {
         "min_cibil": 730,
@@ -171,7 +172,7 @@ BANK_MATRIX_RULES = {
         "allow_no_income_proof": False,
         "allow_huf": False,
         "allow_sibling_coapplicant": False,
-        "allow_loan_enquiry": False,
+        "allow_loan_enquiry": True,
         "allow_agriculture": False,
         "allow_rental_no_itr_not_in_bank": False,
         "allow_rental_no_itr_in_bank": False,
@@ -180,6 +181,7 @@ BANK_MATRIX_RULES = {
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
         "requires_existing_account": True,
+        "allow_separate_both_rented": False,
     },
     "IOB": {
         "min_cibil": 701,
@@ -208,7 +210,7 @@ BANK_MATRIX_RULES = {
         "allow_no_income_proof": False,
         "allow_huf": False,
         "allow_sibling_coapplicant": False,
-        "allow_loan_enquiry": False,
+        "allow_loan_enquiry": True,
         "allow_agriculture": False,
         "allow_rental_no_itr_not_in_bank": False,
         "allow_rental_no_itr_in_bank": False,
@@ -217,6 +219,7 @@ BANK_MATRIX_RULES = {
         "allow_without_guarantor": False,
         "allow_with_guarantor": False,
         "requires_existing_account": False,
+        "allow_separate_both_rented": False,
     },
     "BOB": {
         "min_cibil": 726,
@@ -245,7 +248,7 @@ BANK_MATRIX_RULES = {
         "allow_no_income_proof": False,
         "allow_huf": False,
         "allow_sibling_coapplicant": True,
-        "allow_loan_enquiry": False,
+        "allow_loan_enquiry": True,
         "allow_agriculture": False,
         "allow_rental_no_itr_not_in_bank": False,
         "allow_rental_no_itr_in_bank": False,
@@ -254,6 +257,7 @@ BANK_MATRIX_RULES = {
         "allow_without_guarantor": False,
         "allow_with_guarantor": False,
         "requires_existing_account": True,
+        "allow_separate_both_rented": True,
     },
     "BOM": {
         "min_cibil": 650,
@@ -282,7 +286,7 @@ BANK_MATRIX_RULES = {
         "allow_no_income_proof": False,
         "allow_huf": False,
         "allow_sibling_coapplicant": False,
-        "allow_loan_enquiry": False,
+        "allow_loan_enquiry": True,
         "allow_agriculture": True,
         "allow_rental_no_itr_not_in_bank": False,
         "allow_rental_no_itr_in_bank": False,
@@ -291,6 +295,7 @@ BANK_MATRIX_RULES = {
         "allow_without_guarantor": True,
         "allow_with_guarantor": True,
         "requires_existing_account": True,
+        "allow_separate_both_rented": False,
     },
     "HDFC": {
         "min_cibil": 701,
@@ -319,7 +324,7 @@ BANK_MATRIX_RULES = {
         "allow_no_income_proof": True,
         "allow_huf": False,
         "allow_sibling_coapplicant": True,
-        "allow_loan_enquiry": False,
+        "allow_loan_enquiry": True,
         "allow_agriculture": True,
         "allow_rental_no_itr_not_in_bank": False,
         "allow_rental_no_itr_in_bank": False,
@@ -328,6 +333,7 @@ BANK_MATRIX_RULES = {
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
         "requires_existing_account": True,
+        "allow_separate_both_rented": True,
     },
     "AXIS": {
         "min_cibil": 701,
@@ -356,7 +362,7 @@ BANK_MATRIX_RULES = {
         "allow_no_income_proof": True,
         "allow_huf": False,
         "allow_sibling_coapplicant": True,
-        "allow_loan_enquiry": False,
+        "allow_loan_enquiry": True,
         "allow_agriculture": True,
         "allow_rental_no_itr_not_in_bank": False,
         "allow_rental_no_itr_in_bank": False,
@@ -365,6 +371,7 @@ BANK_MATRIX_RULES = {
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
         "requires_existing_account": True,
+        "allow_separate_both_rented": True,
     },
     "KOTAK": {
         "min_cibil": 701,
@@ -393,7 +400,7 @@ BANK_MATRIX_RULES = {
         "allow_no_income_proof": True,
         "allow_huf": False,
         "allow_sibling_coapplicant": True,
-        "allow_loan_enquiry": False,
+        "allow_loan_enquiry": True,
         "allow_agriculture": True,
         "allow_rental_no_itr_not_in_bank": False,
         "allow_rental_no_itr_in_bank": False,
@@ -402,6 +409,7 @@ BANK_MATRIX_RULES = {
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
         "requires_existing_account": True,
+        "allow_separate_both_rented": True,
     },
 }
 
@@ -564,11 +572,13 @@ def _evaluate_bank(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> Li
           inp["cibil"] >= policy["min_cibil"], inp["cibil"], f">= {policy['min_cibil']}",
           f"CIBIL score ({inp['cibil']}) is below {code} minimum threshold of {policy['min_cibil']}.")
 
+    # An applicant with no enquiries always passes; one with enquiries is
+    # judged against the bank's col-12 permission.
     check("BUR-406", "Loan Enquiries", "Credit Bureau History",
-          inp["loan_enquiry_count"] == 0 or policy["allow_loan_enquiry"],
-          inp["loan_enquiry_count"], "0" if not policy["allow_loan_enquiry"] else "any",
-          f"{code} does not accept applicants with open loan enquiries "
-          f"({inp['loan_enquiry_count']} on file).")
+          (not inp["has_loan_enquiry"]) or policy["allow_loan_enquiry"],
+          "Yes" if inp["has_loan_enquiry"] else "No",
+          "Any" if policy["allow_loan_enquiry"] else "No",
+          f"{code} does not accept applicants with active loan enquiries on the bureau record.")
 
     if code == "INDIAN_BANK":
         check("BUR-403", "DPD History", "Credit Bureau History",
@@ -641,7 +651,7 @@ def _evaluate_bank(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> Li
                   policy["allow_no_income_proof"], "No Income Proof", policy["allow_no_income_proof"],
                   f"{code} requires valid income proof; no-income-proof profile is not accepted.")
         else:
-            check("EMP-SAL-208", "Form-16 History", "Employment - Salaried",
+            check("EMP-SAL-206", "Form-16 History", "Employment - Salaried",
                   inp["form_16_years"] >= policy["form16_years_required"],
                   f"{inp['form_16_years']} yrs", f">= {policy['form16_years_required']} yrs",
                   f"Form-16 history ({inp['form_16_years']} yrs) is below {code} requirement ({policy['form16_years_required']} yrs).")
@@ -701,6 +711,18 @@ def _evaluate_bank(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> Li
             check("RES-205", "Rented Premises Without Guarantor", "Residence & Guarantor",
                   policy["allow_without_guarantor"], "Without a Guarantor", policy["allow_without_guarantor"],
                   f"Guarantor is mandatory for property configuration '{inp['property_status']}' at {code}.")
+
+    # --- Separate office premises, both rented (col 21) ---------------------
+    # Distinct from the guarantor question (cols 22/23), which governs an office
+    # run out of a rented residence. This one asks whether the bank lends at all
+    # when residence and a SEPARATELY addressed office are both rented.
+    if inp["property_status"] == "SEPARATE_BOTH_RENTED" and "allow_separate_both_rented" in policy:
+        check("REL-502", "Separate Premises Both Rented", "Residence & Guarantor",
+              policy["allow_separate_both_rented"],
+              "Residence + separate office both rented",
+              policy["allow_separate_both_rented"],
+              f"{code} does not lend where the residence and a separately addressed "
+              "office are both rented.")
 
     # --- Co-applicant eligibility (matrix cols 56-61) ------------------------
     if inp["sibling_co_applicant"] and "allow_sibling_coapplicant" in policy:
@@ -850,7 +872,10 @@ class BREEngineService:
             ),
             "property_status": str(payload.get("property_status", "OWNED")).upper(),
             "guarantor_provided": payload.get("guarantor_provided", False),
-            "loan_enquiry_count": payload.get("loan_enquiry_count", 0),
+            # Yes/no on the wizard; the flat contract still carries a count.
+            "has_loan_enquiry": bool(
+                payload.get("has_loan_enquiry", payload.get("loan_enquiry_count", 0) > 0)
+            ),
             "existing_account_bank": payload.get("existing_account_bank", ACCOUNT_BANK_UNKNOWN),
             "is_huf": (
                 str(payload.get("entity_type", "")).upper() == "HUF"
@@ -872,25 +897,33 @@ class BREEngineService:
             code: _evaluate_bank(inp, code, policy) for code, policy in entity_matrix.items()
         }
 
-        # --- Selected-bank verdict ------------------------------------------
-        rejection_reasons = [
-            {"rule_id": o["rule_id"], "category": o["category"], "message": o["message"]}
-            for o in bank_outcomes[selected_bank] if not o["passed"]
-        ]
-
-        # Tenant-level overlay (not part of the bank matrix)
+        # Tenant-level overlay (not part of the bank matrix). It gates the
+        # applicant, not one lender, so it suppresses every bank in the map.
+        tenant_rejections: List[Dict[str, Any]] = []
         if tenant_id == "tenant_alpha" and cibil_score < 720:
-            rejection_reasons.append({
+            tenant_rejections.append({
                 "rule_id": "ALPHA-RSK-001",
                 "category": "Tenant Alpha Risk",
                 "message": "Tenant Alpha requires a minimum CIBIL score of 720 for prime onboarding.",
             })
 
+        # --- Selected-bank verdict ------------------------------------------
+        rejection_reasons = [
+            {"rule_id": o["rule_id"], "category": o["category"], "message": o["message"]}
+            for o in bank_outcomes[selected_bank] if not o["passed"]
+        ] + tenant_rejections
+
         overall_eligible = len(rejection_reasons) == 0
 
         # --- Full 8-bank eligibility map (same rule function) ---------------
+        # Each bank is scored on ITS OWN rules plus the tenant overlay, and
+        # nothing else. Previously this was ANDed with `overall_eligible`,
+        # which folded the SELECTED bank's rejections into every other entry:
+        # one bank turning the applicant down blanked the whole map, so the
+        # answer to "who else would lend to me" was always "nobody", and a bank
+        # could report is_eligible=false with an empty failed_rules list.
         bank_eligibility: Dict[str, bool] = {
-            code: all(o["passed"] for o in outcomes) and overall_eligible
+            code: all(o["passed"] for o in outcomes) and not tenant_rejections
             for code, outcomes in bank_outcomes.items()
         }
 
