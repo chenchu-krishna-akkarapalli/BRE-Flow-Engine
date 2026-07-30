@@ -1,120 +1,235 @@
 @import "tailwindcss";
 
-/* Design tokens — single source of truth, per the ui_ux_design skill.
-   Exposed through @theme so Tailwind generates bg-/text-/border-/rounded-
-   utilities from them. No component may hardcode a hex value. */
-@theme {
-  --color-bg-deep: #f8fafc;
-  --color-bg-surface: #ffffff;
-  --color-bg-raised: #ffffff;
-  --color-line: #e2e8f0;
-  --color-line-strong: #cbd5e1;
+/* 
+  FlowBRE Premium Light / Day Mode Design System Tokens & Motion Utilities
+  Engineered with crisp white HSL color spaces, translucent glass filters, and GPU-accelerated micro-animations.
+*/
 
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-400: #818cf8;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-900: #312e81;
+:root {
+  /* HSL Color Space Definitions - Day Mode */
+  --hsl-bg-deep: 210 40% 98%;          /* Soft Crisp Off-white Background */
+  --hsl-bg-surface: 0 0% 100%;          /* Pure White Surface */
+  --hsl-bg-raised: 210 30% 96%;         /* Light Gray Raised Card Surface */
+  --hsl-bg-glass: 0 0% 100% / 0.85;     /* Translucent White Glass */
 
-  /* Contrast on --color-bg-surface (#ffffff), WCAG 2.1 AA needs 4.5:1 for
-     body text. ink-muted 17.9:1, ink 7.6:1, ink-subtle 4.8:1. ink-subtle is
-     reserved for placeholders and de-emphasised numerals; it was #94a3b8
-     (2.6:1), which failed outright once micro-copy started carrying the
-     explanations the applicant depends on. */
-  --color-ink: #475569;
-  --color-ink-muted: #0f172a;
-  --color-ink-subtle: #64748b;
+  --hsl-brand-primary: 174 84% 35%;     /* Rich Teal/Cyan */
+  --hsl-brand-indigo: 238 75% 55%;      /* Electric Indigo */
+  --hsl-brand-accent: 280 75% 55%;      /* Cyber Violet */
 
-  --color-success: #15803d;  /* 5.0:1 on white, 4.7:1 on its own tint */
-  --color-success-bg: rgba(22, 163, 74, 0.08);
-  --color-danger: #c81e1e;   /* 5.4:1 on white, 4.8:1 on its own tint */
-  --color-danger-bg: rgba(220, 38, 38, 0.08);
-  /* 5.0:1 on white, 4.7:1 on --color-warning-bg. #d97706 was 3.2:1. */
-  --color-warning: #b45309;
-  --color-warning-bg: rgba(217, 119, 6, 0.08);
-  --color-info: #0369a1;     /* 5.9:1 on white */
-  --color-info-bg: rgba(2, 132, 199, 0.08);
+  --hsl-ink: 222 47% 11%;               /* Deep Dark Slate Text */
+  --hsl-ink-muted: 215 25% 27%;         /* Secondary Text */
+  --hsl-ink-subtle: 215 16% 47%;        /* De-emphasized Text */
 
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --hsl-line: 214 32% 91%;              /* Subtle Light Border */
+  --hsl-line-strong: 214 25% 82%;       /* Strong Border */
+  --hsl-line-glow: 174 84% 35% / 0.3;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  --hsl-success: 152 76% 36%;
+  --hsl-success-bg: 152 76% 46% / 0.1;
+  --hsl-danger: 350 84% 48%;
+  --hsl-danger-bg: 350 84% 55% / 0.1;
+  --hsl-warning: 38 92% 40%;
+  --hsl-warning-bg: 38 92% 50% / 0.1;
+  --hsl-info: 199 89% 40%;
+  --hsl-info-bg: 199 89% 48% / 0.1;
 
-  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.06), 0 2px 8px -1px rgba(0, 0, 0, 0.03);
-  --shadow-float: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --dur-instant: 100ms;
+  --dur-fast: 180ms;
+  --dur-normal: 240ms;
+  --dur-slow: 350ms;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --font-outfit: var(--font-outfit), var(--font-inter), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --shell-max: 1280px;
+  --form-col: 720px;
+  --telemetry-col: 480px;
 }
 
-:root {
-  --dur-instant: 120ms;
-  --dur-fast: 180ms;
-  --dur-step: 240ms;
-  --shell-max: 1200px;
-  --form-col: 640px;
-  --telemetry-col: 380px;
-  --glass-fill: rgba(255, 255, 255, 0.8);
+@theme {
+  --color-bg-deep: hsl(var(--hsl-bg-deep));
+  --color-bg-surface: hsl(var(--hsl-bg-surface));
+  --color-bg-raised: hsl(var(--hsl-bg-raised));
+  --color-line: hsl(var(--hsl-line));
+  --color-line-strong: hsl(var(--hsl-line-strong));
+
+  --color-brand-400: hsl(174 84% 42%);
+  --color-brand-500: hsl(var(--hsl-brand-primary));
+  --color-brand-600: hsl(174 84% 28%);
+  --color-brand-indigo: hsl(var(--hsl-brand-indigo));
+  --color-brand-violet: hsl(var(--hsl-brand-accent));
+
+  --color-ink: hsl(var(--hsl-ink));
+  --color-ink-muted: hsl(var(--hsl-ink-muted));
+  --color-ink-subtle: hsl(var(--hsl-ink-subtle));
+
+  --color-success: hsl(var(--hsl-success));
+  --color-success-bg: hsl(var(--hsl-success-bg));
+  --color-danger: hsl(var(--hsl-danger));
+  --color-danger-bg: hsl(var(--hsl-danger-bg));
+  --color-warning: hsl(var(--hsl-warning));
+  --color-warning-bg: hsl(var(--hsl-warning-bg));
+  --color-info: hsl(var(--hsl-info));
+  --color-info-bg: hsl(var(--hsl-info-bg));
+
+  --font-display: var(--font-outfit);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --shadow-glass: 0 10px 30px -5px rgba(0, 0, 0, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  --shadow-glow: 0 4px 20px -2px hsl(var(--hsl-brand-primary) / 0.25);
+  --shadow-float: 0 20px 40px -15px rgba(0, 0, 0, 0.12);
 }
 
 body {
-  background: var(--color-bg-deep);
-  color: var(--color-ink-muted);
+  background-color: hsl(var(--hsl-bg-deep));
+  color: hsl(var(--hsl-ink));
   font-family: var(--font-sans);
+  background-image: 
+    radial-gradient(circle at 10% 10%, hsl(var(--hsl-brand-primary) / 0.05) 0%, transparent 45%),
+    radial-gradient(circle at 90% 90%, hsl(var(--hsl-brand-indigo) / 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, #ffffff 0%, transparent 100%);
+  background-attachment: fixed;
 }
 
-/* Scores, currency and rule IDs must align vertically in the matrix and review card. */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-outfit);
+}
+
+/* Numeric & Code Formatting */
 .numeric {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
 
-.glass {
-  background: var(--glass-fill);
+/* Day Mode Glassmorphic Surfaces */
+.glass-panel {
+  background: hsl(var(--hsl-bg-glass));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid hsl(var(--hsl-line));
+  box-shadow: var(--shadow-glass);
+  transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.glass-panel:hover {
+  border-color: hsl(var(--hsl-line-strong));
+}
+
+.glass-card {
+  background: #ffffff;
   backdrop-filter: blur(16px);
-  border: 1px solid var(--color-line);
-  box-shadow: var(--shadow-card);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid hsl(var(--hsl-line));
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: transform var(--dur-fast) var(--ease-spring), border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.glass-card:hover {
+  transform: translateY(-2px) scale(1.005);
+  border-color: hsl(var(--hsl-brand-primary) / 0.5);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 0 15px hsl(var(--hsl-brand-primary) / 0.1);
+}
+
+.glass-input {
+  background: #ffffff;
+  backdrop-filter: blur(8px);
+  border: 1px solid hsl(var(--hsl-line-strong));
+  color: hsl(var(--hsl-ink));
   transition: all var(--dur-fast) var(--ease-out);
 }
 
-.glass:hover {
-  border-color: var(--color-line-strong);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+.glass-input:focus {
+  background: #ffffff;
+  border-color: hsl(var(--hsl-brand-primary));
+  box-shadow: 0 0 0 3px hsl(var(--hsl-brand-primary) / 0.15), 0 0 12px hsl(var(--hsl-brand-primary) / 0.1);
+  outline: none;
 }
 
-/* CLS reservation — these panels populate after a round trip (ui_ux_design §3). */
-.validation-slot { min-height: 5px; }
-.matrix-slot { min-height: 320px; }
+/* Day Mode Gradient Text Effect */
+.text-gradient {
+  background: linear-gradient(135deg, hsl(var(--hsl-ink)) 0%, hsl(var(--hsl-brand-primary)) 60%, hsl(var(--hsl-brand-indigo)) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Animation Keyframes */
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 
 .step-enter {
-  animation: step-in var(--dur-step) var(--ease-in-out);
-  border-left: 4px solid var(--color-brand-500);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
-}
-@keyframes step-in {
-  from { opacity: 0; transform: translateX(12px); }
-  to { opacity: 1; transform: translateX(0); }
+  animation: step-in var(--dur-normal) var(--ease-out) forwards;
 }
 
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 12px hsl(var(--hsl-brand-primary) / 0.15);
+  }
+  50% {
+    box-shadow: 0 0 24px hsl(var(--hsl-brand-primary) / 0.3);
+  }
+}
+
+.animate-glow {
+  animation: pulse-glow 3s infinite ease-in-out;
+}
+
+@keyframes card-appear {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.telemetry-card-enter {
+  animation: card-appear var(--dur-fast) var(--ease-spring) forwards;
+}
+
+/* Accessibility Focus States */
 :focus-visible {
-  outline: 2px solid var(--color-brand-500);
+  outline: 2px solid hsl(var(--hsl-brand-primary));
   outline-offset: 2px;
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
+/* Custom Day Mode Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--hsl-bg-raised));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--hsl-line-strong));
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--hsl-brand-primary) / 0.6);
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
-
-/* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

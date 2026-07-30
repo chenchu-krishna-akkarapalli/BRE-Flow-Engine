@@ -1,32 +1,38 @@
 "use client";
 
 import { ReactNode, useState, useEffect, useRef } from "react";
+import { ChevronDown, Check } from "lucide-react";
 
-// Form primitives. Every control carries a real <label for>; spacing and radius come from tokens.
+// Form Primitives with 48px touch targets and day mode light styling
 
-const CONTROL =
-  "w-full rounded-sm border border-line bg-bg-raised px-[14px] py-[10px] " +
-  "text-ink placeholder:text-ink-subtle transition-colors " +
-  "focus:border-brand-500 disabled:opacity-50";
+const CONTROL_BASE =
+  "w-full min-h-[48px] rounded-xl border border-line-strong bg-white px-4 py-3 " +
+  "text-[0.9375rem] text-ink placeholder:text-ink-subtle backdrop-blur-md transition-all duration-200 " +
+  "hover:border-brand-500/50 focus:border-brand-500 focus:bg-white focus:shadow-[0_0_15px_rgba(13,148,136,0.15)] focus:outline-none disabled:opacity-50";
 
-// One question and its answer control; the question carries the whole meaning.
 export function Field({
-  label, htmlFor, error, children,
+  label,
+  htmlFor,
+  error,
+  children,
 }: {
-  label: string; htmlFor: string; error?: string; children: ReactNode;
+  label: string;
+  htmlFor: string;
+  error?: string;
+  children: ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-[6px]">
+    <div className="flex flex-col gap-2">
       <label
         htmlFor={htmlFor}
-        className="text-[0.9375rem] font-medium leading-snug text-ink-muted"
+        className="text-[0.9375rem] font-semibold leading-snug text-ink tracking-wide"
       >
         {label}
       </label>
       {children}
       {error && (
-        <p id={`${htmlFor}-error`} className="text-[0.8125rem] font-medium text-danger">
-          {error}
+        <p id={`${htmlFor}-error`} className="text-[0.8125rem] font-medium text-danger animate-pulse flex items-center gap-1">
+          <span>⚠️</span> {error}
         </p>
       )}
     </div>
@@ -34,10 +40,21 @@ export function Field({
 }
 
 export function TextInput({
-  id, value, onChange, placeholder, type = "text", error, numeric = false,
+  id,
+  value,
+  onChange,
+  placeholder,
+  type = "text",
+  error,
+  numeric = false,
 }: {
-  id: string; value: string | number; onChange: (v: string) => void;
-  placeholder?: string; type?: string; error?: string; numeric?: boolean;
+  id: string;
+  value: string | number;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  type?: string;
+  error?: string;
+  numeric?: boolean;
 }) {
   return (
     <input
@@ -49,65 +66,120 @@ export function TextInput({
       aria-describedby={error ? `${id}-error` : undefined}
       onChange={(e) => onChange(e.target.value)}
       onWheel={(e) => type === "number" && e.currentTarget.blur()}
-      className={`${CONTROL} ${numeric ? "numeric" : ""} ${error ? "border-danger" : ""}`}
+      className={`${CONTROL_BASE} ${numeric ? "numeric" : ""} ${
+        error ? "border-danger focus:border-danger focus:shadow-none" : ""
+      }`}
     />
   );
 }
 
 export function Select({
-  id, value, onChange, options, placeholder,
+  id,
+  value,
+  onChange,
+  options,
+  placeholder,
 }: {
-  id: string; value: string; onChange: (v: string) => void;
+  id: string;
+  value: string;
+  onChange: (v: string) => void;
   options: readonly (string | { value: string; label: string })[];
   placeholder?: string;
 }) {
   return (
-    <select
-      id={id}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className={CONTROL}
-    >
-      {placeholder && <option value="">{placeholder}</option>}
-      {options.map((opt) => {
-        const v = typeof opt === "string" ? opt : opt.value;
-        const l = typeof opt === "string" ? opt : opt.label;
-        return <option key={v} value={v}>{l}</option>;
-      })}
-    </select>
+    <div className="relative w-full">
+      <select
+        id={id}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`${CONTROL_BASE} appearance-none pr-10 cursor-pointer`}
+      >
+        {placeholder && (
+          <option value="" className="bg-white text-ink-subtle">
+            {placeholder}
+          </option>
+        )}
+        {options.map((opt) => {
+          const v = typeof opt === "string" ? opt : opt.value;
+          const l = typeof opt === "string" ? opt : opt.label;
+          return (
+            <option key={v} value={v} className="bg-white text-ink">
+              {l}
+            </option>
+          );
+        })}
+      </select>
+      <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-ink-subtle">
+        <ChevronDown size={18} />
+      </div>
+    </div>
   );
 }
 
 export function Checkbox({
-  id, checked, onChange, label,
+  id,
+  checked,
+  onChange,
+  label,
 }: {
-  id: string; checked: boolean; onChange: (v: boolean) => void; label: string;
+  id: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  label: string;
 }) {
   return (
-    // 44px minimum touch target (ui_ux_design §6).
-    <label htmlFor={id} className="flex min-h-[44px] cursor-pointer items-center gap-3">
-      <input
-        id={id}
-        type="checkbox"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-        className="size-[18px] accent-brand-500"
-      />
-      <span className="text-[0.9375rem] text-ink">{label}</span>
+    <label
+      htmlFor={id}
+      className={`group flex min-h-[48px] cursor-pointer items-center gap-3 rounded-xl border p-3.5 transition-all duration-200 ${
+        checked
+          ? "border-brand-500 bg-brand-500/10 text-ink font-medium shadow-sm"
+          : "border-line bg-white text-ink-muted hover:border-line-strong hover:bg-bg-raised"
+      }`}
+    >
+      <div className="relative flex items-center justify-center">
+        <input
+          id={id}
+          type="checkbox"
+          checked={checked}
+          onChange={(e) => onChange(e.target.checked)}
+          className="peer sr-only"
+        />
+        <div
+          className={`flex h-5 w-5 items-center justify-center rounded-md border transition-all ${
+            checked
+              ? "border-brand-500 bg-brand-500 text-white"
+              : "border-line-strong bg-white group-hover:border-brand-500"
+          }`}
+        >
+          {checked && <Check size={14} strokeWidth={3} />}
+        </div>
+      </div>
+      <span className="text-[0.9375rem] font-medium leading-snug">{label}</span>
     </label>
   );
 }
 
-// Answer cards: 2-3 choices sit side by side, longer sets stack.
+// Answer cards: Large, touch-target-rich interactive cards for Day Mode
 export function RadioCards({
-  name, value, onChange, options, label,
+  name,
+  value,
+  onChange,
+  options,
+  label,
 }: {
-  name: string; value: string; onChange: (v: string) => void;
+  name: string;
+  value: string;
+  onChange: (v: string) => void;
   options: readonly { value: string; label: string }[];
   label?: string;
 }) {
   const columns =
-    options.length === 2 ? "sm:grid-cols-2" : options.length === 3 ? "sm:grid-cols-3" : "";
+    options.length === 2
+      ? "sm:grid-cols-2"
+      : options.length === 3
+      ? "sm:grid-cols-3"
+      : "sm:grid-cols-2";
+
   return (
     <div role="radiogroup" aria-label={label ?? name} className={`grid gap-3 ${columns}`}>
       {options.map((opt) => {
@@ -115,10 +187,10 @@ export function RadioCards({
         return (
           <label
             key={opt.value}
-            className={`flex min-h-[44px] cursor-pointer items-center justify-center rounded-md border px-4 py-3 text-center text-[0.9375rem] transition-colors ${
+            className={`group relative flex min-h-[52px] cursor-pointer items-center justify-between rounded-xl border px-4 py-3.5 text-left transition-all duration-200 ${
               active
-                ? "border-brand-500 bg-brand-500/15 font-medium text-ink-muted"
-                : "border-line bg-bg-raised text-ink hover:border-line-strong"
+                ? "border-brand-500 bg-gradient-to-r from-brand-500/15 to-brand-indigo/10 font-semibold text-ink shadow-[0_2px_12px_rgba(13,148,136,0.15)] ring-1 ring-brand-500/40 scale-[1.01]"
+                : "border-line bg-white text-ink-muted hover:scale-[1.01] hover:border-line-strong hover:bg-bg-raised hover:text-ink"
             }`}
           >
             <input
@@ -129,7 +201,16 @@ export function RadioCards({
               onChange={() => onChange(opt.value)}
               className="sr-only"
             />
-            {opt.label}
+            <span className="text-[0.9375rem] leading-snug">{opt.label}</span>
+            <div
+              className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-all ${
+                active
+                  ? "border-brand-500 bg-brand-500 text-white"
+                  : "border-line-strong bg-white group-hover:border-brand-500"
+              }`}
+            >
+              {active && <Check size={12} strokeWidth={3} />}
+            </div>
           </label>
         );
       })}
@@ -155,19 +236,17 @@ export function SearchableSelect({
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  
+
   const containerRef = useRef<HTMLDivElement>(null);
   const localInputRef = useRef<HTMLInputElement>(null);
   const inputRef = externalInputRef || localInputRef;
 
-  // Sync searchQuery with value when closed
   useEffect(() => {
     if (!isOpen) {
       setSearchQuery(value || "");
     }
   }, [value, isOpen]);
 
-  // Click outside handler
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -179,13 +258,8 @@ export function SearchableSelect({
   }, []);
 
   const q = searchQuery.toLowerCase().trim();
+  const filteredOptions = options.filter((opt) => opt.toLowerCase().includes(q));
 
-  // Filter options based on query
-  const filteredOptions = options.filter((opt) =>
-    opt.toLowerCase().includes(q)
-  );
-
-  // If search query has 2 or more letters, sort matching options to the top
   const displayOptions = [...filteredOptions];
   if (q.length >= 2) {
     displayOptions.sort((a, b) => {
@@ -197,7 +271,6 @@ export function SearchableSelect({
     });
   }
 
-  // Reset highlighted index when options change
   useEffect(() => {
     setHighlightedIndex(-1);
   }, [searchQuery]);
@@ -253,7 +326,7 @@ export function SearchableSelect({
           id={id}
           ref={inputRef}
           type="text"
-          value={isOpen ? searchQuery : (value || "")}
+          value={isOpen ? searchQuery : value || ""}
           onChange={(e) => {
             setSearchQuery(e.target.value);
             setIsOpen(true);
@@ -264,7 +337,7 @@ export function SearchableSelect({
           }}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className={`${CONTROL} pr-10`}
+          className={`${CONTROL_BASE} pr-10`}
           autoComplete="off"
         />
         <button
@@ -275,23 +348,17 @@ export function SearchableSelect({
               inputRef.current?.focus();
             }
           }}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink cursor-pointer"
+          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-ink-subtle hover:text-ink cursor-pointer"
         >
-          <svg
-            className={`h-4 w-4 transform transition-transform duration-200 ${
-              isOpen ? "rotate-180" : ""
-            }`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
+          <ChevronDown
+            size={18}
+            className={`transform transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          />
         </button>
       </div>
 
       {isOpen && displayOptions.length > 0 && (
-        <ul className="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-auto rounded-sm border border-line bg-bg-surface py-1 shadow-float no-scrollbar">
+        <ul className="absolute left-0 right-0 z-50 mt-2 max-h-60 overflow-auto rounded-xl border border-line-strong bg-white py-2 shadow-float backdrop-blur-xl no-scrollbar">
           {displayOptions.map((opt, index) => {
             const isSelected = opt === value;
             const isHighlighted = index === highlightedIndex;
@@ -299,23 +366,24 @@ export function SearchableSelect({
               <li
                 key={opt}
                 onClick={() => handleSelect(opt)}
-                className={`cursor-pointer px-4 py-2 text-[0.9375rem] transition-colors ${
+                className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-[0.9375rem] transition-colors ${
                   isHighlighted
-                    ? "bg-brand-500/20 text-ink"
+                    ? "bg-brand-500/10 text-ink font-medium"
                     : isSelected
-                    ? "bg-brand-500/15 text-brand-400 font-medium"
-                    : "text-ink-muted hover:bg-brand-500/10 hover:text-ink"
+                    ? "bg-brand-500/15 text-brand-600 font-semibold"
+                    : "text-ink-muted hover:bg-bg-raised hover:text-ink"
                 }`}
               >
-                {opt}
+                <span>{opt}</span>
+                {isSelected && <Check size={16} className="text-brand-500" />}
               </li>
             );
           })}
         </ul>
       )}
       {isOpen && displayOptions.length === 0 && (
-        <div className="absolute left-0 right-0 z-50 mt-1 rounded-sm border border-line bg-bg-surface px-4 py-3 text-center text-sm text-ink-subtle shadow-float">
-          No results found
+        <div className="absolute left-0 right-0 z-50 mt-2 rounded-xl border border-line-strong bg-white px-4 py-3 text-center text-sm text-ink-subtle shadow-float">
+          No matching localities found
         </div>
       )}
     </div>
