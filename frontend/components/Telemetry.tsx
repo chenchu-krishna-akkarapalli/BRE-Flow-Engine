@@ -3,16 +3,26 @@
 import { AlertOctagon, CheckCircle2, CircleSlash, Minus, XCircle } from "lucide-react";
 import { BANK_LABELS, stepForRule } from "@/lib/form-schema";
 import { BANK_CODES } from "@/lib/types";
-import type { EvaluationResponse, RejectionReason } from "@/lib/types";
+import type { BankCode, EvaluationResponse, RejectionReason } from "@/lib/types";
 
 /** Live 8-bank eligibility panel.
  *
- * bank_eligibility[X] is bank X's verdict ANDed with the SELECTED bank's, so
- * once the selected bank rejects every entry reads false — including banks
- * that would have accepted on their own policy. Rendering eight red rows would
- * tell the applicant no bank will take them, which is not what the API means.
- * The panel is therefore titled by primary bank, and collapses to the blocking
- * reason instead of showing a wall of false. */
+ * bank_eligibility[X] is bank X's own verdict, independent of the primary
+ * bank's, so a decline at the primary bank does not blank out the rest — the
+ * panel's whole value is showing where else the applicant qualifies. */
+/** Partner banks that accept, excluding the one already named as primary. */
+function alternatives(result: EvaluationResponse) {
+  return BANK_CODES.filter(
+    (code) => code !== result.selected_bank && result.bank_eligibility[code],
+  );
+}
+
+function listBanks(codes: readonly BankCode[]) {
+  const names = codes.map((code) => BANK_LABELS[code]);
+  if (names.length === 1) return names[0];
+  return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+}
+
 export function BankMatrix({ result }: { result: EvaluationResponse | null }) {
   return (
     <section
@@ -35,7 +45,9 @@ export function BankMatrix({ result }: { result: EvaluationResponse | null }) {
 
         {result && !result.overall_eligible && (
           <p className="mt-2.5 rounded-md bg-warning-bg p-3 text-[0.8125rem] text-warning">
-            Other banks are evaluated once your primary bank&apos;s checks pass.
+            {alternatives(result).length > 0
+              ? `${BANK_LABELS[result.selected_bank]} declined, but ${listBanks(alternatives(result))} would lend on the same details.`
+              : `${BANK_LABELS[result.selected_bank]} declined, and no other partner bank accepts these details.`}
           </p>
         )}
       </div>
@@ -44,7 +56,7 @@ export function BankMatrix({ result }: { result: EvaluationResponse | null }) {
       <div className="p-6 pt-4 bg-bg-surface flex-1">
         <ul className="flex flex-col gap-0.5">
           {BANK_CODES.map((code) => {
-            const evaluated = result !== null && result.overall_eligible;
+            const evaluated = result !== null;
             const eligible = result?.bank_eligibility[code] ?? false;
             return (
               <li

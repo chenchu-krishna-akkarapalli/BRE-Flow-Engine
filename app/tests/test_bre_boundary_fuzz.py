@@ -453,16 +453,16 @@ def test_selected_bank_and_matrix_are_consistent():
 
 def test_form_16_years_bank_specific():
     # BOI requires >= 2 Form-16 years; 1 rejects, 2 passes.
-    assert "EMP-SAL-208" in _rule_ids(_evaluate(_base_payload(form_16_years=1)))
-    assert "EMP-SAL-208" not in _rule_ids(_evaluate(_base_payload(form_16_years=2)))
+    assert "EMP-SAL-206" in _rule_ids(_evaluate(_base_payload(form_16_years=1)))
+    assert "EMP-SAL-206" not in _rule_ids(_evaluate(_base_payload(form_16_years=2)))
     # BOB only needs 1 year.
-    assert "EMP-SAL-208" not in _rule_ids(_evaluate(_base_payload(selected_bank="BOB", form_16_years=1)))
+    assert "EMP-SAL-206" not in _rule_ids(_evaluate(_base_payload(selected_bank="BOB", form_16_years=1)))
 
 
 def test_form_16_skipped_on_accepted_no_income_proof():
     # HDFC accepts a no-income-proof profile, so Form-16 history is not required.
     ok = _evaluate(_base_payload(selected_bank="HDFC", no_income_proof_segment=True, form_16_years=0))
-    assert "EMP-SAL-208" not in _rule_ids(ok)
+    assert "EMP-SAL-206" not in _rule_ids(ok)
     assert ok["overall_eligible"] is True
 
 

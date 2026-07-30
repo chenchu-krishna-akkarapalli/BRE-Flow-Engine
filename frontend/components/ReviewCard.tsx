@@ -60,7 +60,7 @@ export function ReviewCard({
       title: "Occupation",
       rows:
         profile === "Salaried"
-          ? [["Profile", "Salaried"], ["Tenure", draft.tenureBand], ["Income proof", draft.form16Status]]
+          ? [["Profile", "Salaried"], ["Tenure", draft.tenureBand], ["Income proof", draft.form16Status === "Form 16" ? `Form 16 · ${draft.form16Years} yrs` : draft.form16Status]]
           : profile === "Company"
           ? [["Profile", "Company"], ["GSTIN", draft.companyGstin || "—"], ["Current ITR", `₹${draft.companyCurrentITRAmount.toLocaleString("en-IN")}`]]
           : [["Profile", profile], ["Established", draft.businessEstablishmentDate || "—"], ["Current ITR", `₹${draft.currentITRAmount.toLocaleString("en-IN")}`]],

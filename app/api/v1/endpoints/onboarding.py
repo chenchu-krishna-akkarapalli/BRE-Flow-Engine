@@ -55,15 +55,22 @@ async def evaluate_onboarding_application(
     """Evaluates candidate application against partner bank rules, records RLS audit trail, and returns verdict in < 80 ms."""
     start_time = time.perf_counter()
 
+    # `mode="json"` is load-bearing, not cosmetic: python-mode dumping leaves
+    # enum MEMBERS in the dict, and `str(BankCode.HDFC)` is "BankCode.HDFC",
+    # not "HDFC". The engine compares these fields as strings, so a python-mode
+    # payload silently fell back to the default bank, never matched a
+    # property_status, and never saw an HUF entity type.
+    engine_payload = payload.model_dump(mode="json")
+
     # Redact sensitive PII before logging
-    log_safe_payload = redact_pii(payload.model_dump())
+    log_safe_payload = redact_pii(engine_payload)
     logger.info(f"Evaluating application for tenant '{tenant_id}': {log_safe_payload}")
 
     # Enforce PostgreSQL Row-Level Security
     await set_tenant_rls_context(db, tenant_id)
 
     # Execute in-memory Zen-Engine rules (< 10 ms)
-    evaluation = await bre_engine_service.evaluate_application(payload.model_dump(), tenant_id=tenant_id)
+    evaluation = await bre_engine_service.evaluate_application(engine_payload, tenant_id=tenant_id)
 
     # Persist Application record and RuleExecution audit log in single DB transaction (< 15 ms)
     try:
@@ -184,7 +191,7 @@ def _build_application_record(
         cibil_pl_score=banking.cibil_pl_score,
         dpd_count=len(bureau["dpd_history"]),
         max_dpd_days=banking.dpd,
-        loan_enquiry_count=banking.loan_enquiry_count,
+        loan_enquiry_count=1 if banking.has_loan_enquiry else 0,
         currently_outstanding=banking.currently_outstanding,
         write_off_amount=bureau["write_off_amount"],
         write_off_type=bureau["write_off_type"],
@@ -294,6 +301,10 @@ async def evaluate_onboarding_form(
         execution_time_ms=total_time_ms,
         rejection_reasons=_rejection_details(evaluation),
         bank_eligibility=evaluation["bank_eligibility"],
+        # The per-bank audit trail the review screen's collapsible cards and the
+        # PDF/Excel exports render. It was being persisted but never returned,
+        # so the wizard's audit cards had nothing to open.
+        evaluation_report=evaluation["evaluation_report"],
         application_id=application_id,
         entity_type=form.identity.entity_type,
         selected_bank=form.banking.selected_bank,

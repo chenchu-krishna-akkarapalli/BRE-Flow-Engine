@@ -78,6 +78,7 @@ INDIVIDUAL_SALARIED: Dict[str, Any] = {
         "grossSalaryBand": "gt25000",
         "salaryMode": "Salary payment mode- Bank Credit",
         "form16Status": "Form 16",
+        "form16Years": 2,
         "rentalIncomeTypeSalaried": "None",
     },
     "banking": {
@@ -96,7 +97,7 @@ COMPANY_SUBMISSION: Dict[str, Any] = {
         "entityType": "Company",
         "applicantName": "Acme Traders Pvt Ltd",
         "companyName": "Acme Traders Pvt Ltd",
-        "companyIndustryType": "Trading",
+        "companyType": "private_limited",
         "companyPan": "AABCT1234C",
         "companyLocation": "MG Road, Bengaluru",
         "contactPersonName": "Priya Nair",
@@ -266,7 +267,7 @@ def test_resi_cum_office_rented_requires_guarantor_decision():
     self_employed["occupation"] = {
         k: v for k, v in self_employed["occupation"].items()
         if k not in ("employerType", "tenureBand", "grossSalaryBand", "salaryMode",
-                     "form16Status", "rentalIncomeTypeSalaried")
+                     "form16Status", "form16Years", "rentalIncomeTypeSalaried")
     }
 
     with pytest.raises(ValidationError, match="guarantorStatus is required"):

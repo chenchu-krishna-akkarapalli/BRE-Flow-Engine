@@ -33,7 +33,7 @@ export interface Draft {
   phone: string;
   email: string;
   companyName: string;
-  companyIndustryType: string;
+  companyType: string;
   companyPan: string;
   companyLocation: string;
   contactPersonName: string;
@@ -65,6 +65,7 @@ export interface Draft {
   grossSalaryBand: string;
   salaryMode: string;
   form16Status: string;
+  form16Years: number;
   rentalIncomeType: string;
   officeAddressType: string;
   officeAddress: string;
@@ -88,11 +89,11 @@ export interface Draft {
   existingAccountBank: string;
   existingCarLoanBank: string;
   loanType: string;
-  bureauCibilScore: number | "";
-  bureauDpd: number | "";
-  bureauLoanEnquiry: number | "";
-  bureauCurrentlyOutstanding: number | "";
-  bureauAgeAtLastEMI: number | "";
+  bureauCibilScore: number;
+  bureauDpd: number;
+  bureauLoanEnquiry: boolean;
+  bureauCurrentlyOutstanding: number;
+  bureauAgeAtLastEMI: number;
   cibilPlScoreToggle: boolean;
   bureauCibilPlScore: number | "";
   bureauFlagPL: boolean;
@@ -116,7 +117,7 @@ const INITIAL_DRAFT: Draft = {
   entityType: "Individual",
   applicantName: "", dob: "", gender: "", pan: "", maritalStatus: "",
   citizenshipStatus: "Resident Indian", nriStayPeriod: 12, phone: "", email: "",
-  companyName: "", companyIndustryType: "", companyPan: "", companyLocation: "",
+  companyName: "", companyType: "", companyPan: "", companyLocation: "",
   contactPersonName: "", contactPersonDesignation: "", companyMobile: "",
   companyEmail: "", companyEmployees: "",
   hufName: "", hufPan: "", udyamRegNoHUF: "", hufLocation: "", hufFormationDate: "",
@@ -127,7 +128,7 @@ const INITIAL_DRAFT: Draft = {
   occupation: "Salaried",
   employerType: "", tenureBand: "2y+", prevCompanyName: "", prevCompanyJoining: "",
   grossSalaryBand: "gt25000", salaryMode: "Salary payment mode- Bank Credit",
-  form16Status: "Form 16", rentalIncomeType: "None",
+  form16Status: "Form 16", form16Years: 2, rentalIncomeType: "None",
   officeAddressType: "Same", officeAddress: "", officePremisesStatus: "",
   guarantorStatus: "", businessEntityType: "Propreitorship", businessProof: "",
   businessEstablishmentDate: "", currentITRAmount: "", prevITRAmount: "",
@@ -136,8 +137,8 @@ const INITIAL_DRAFT: Draft = {
   companyCurrentITRAmount: "", companyPrevITRAmount: "", businessItrYearsCompany: "",
 
   existingAccountBank: "BOI", existingCarLoanBank: "None", loanType: "Auto Loan",
-  bureauCibilScore: 750, bureauDpd: "", bureauLoanEnquiry: "",
-  bureauCurrentlyOutstanding: "", bureauAgeAtLastEMI: 55,
+  bureauCibilScore: 750, bureauDpd: 0, bureauLoanEnquiry: false,
+  bureauCurrentlyOutstanding: 0, bureauAgeAtLastEMI: 55,
   cibilPlScoreToggle: false, bureauCibilPlScore: 750,
   bureauFlagPL: false, bureauFlagHome: false, bureauFlagConsumer: false,
   bureauFlagAgri: false, bureauFlagMSME: false, bureauFlagAuto: false,
@@ -185,7 +186,7 @@ function buildIdentity(d: Draft): Identity {
       entityType: "Company",
       applicantName: d.applicantName,
       companyName: d.companyName,
-      companyIndustryType: d.companyIndustryType as never,
+      companyType: d.companyType as never,
       companyPan: d.companyPan.toUpperCase(),
       companyLocation: d.companyLocation,
       contactPersonName: d.contactPersonName,
@@ -291,6 +292,8 @@ function buildOccupation(d: Draft): Occupation {
     grossSalaryBand: d.grossSalaryBand as never,
     salaryMode: d.salaryMode as never,
     form16Status: d.form16Status as never,
+    // Only accepted when Form 16 is claimed; the API rejects it otherwise.
+    form16Years: d.form16Status === "Form 16" ? Number(d.form16Years) : undefined,
     rentalIncomeTypeSalaried: d.rentalIncomeType,
   };
 }
@@ -302,7 +305,7 @@ function buildBanking(d: Draft): BankingStep {
     loanType: d.loanType as never,
     bureauCibilScore: Number(d.bureauCibilScore),
     bureauDpd: Number(d.bureauDpd),
-    bureauLoanEnquiry: Number(d.bureauLoanEnquiry),
+    bureauLoanEnquiry: d.bureauLoanEnquiry,
     bureauCurrentlyOutstanding: Number(d.bureauCurrentlyOutstanding),
     // A company has no age; the Company matrix carries no age-at-EMI column,
     // so the field is neither collected nor sent for the corporate workflow.

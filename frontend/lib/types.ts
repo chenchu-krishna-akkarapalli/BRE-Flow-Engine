@@ -31,7 +31,7 @@ export interface CompanyIdentity {
   entityType: "Company";
   applicantName: string;
   companyName: string;
-  companyIndustryType: "Manufacturing" | "Services" | "Trading" | "Real Estate" | "Others";
+  companyType: "partnership_firm" | "proprietorship" | "private_limited" | "public_limited";
   companyPan: string;
   companyLocation: string;
   contactPersonName: string;
@@ -72,6 +72,8 @@ export interface SalariedOccupation {
   grossSalaryBand: "lt25000" | "gt25000";
   salaryMode: "Salary payment mode- Bank Credit" | "Salary payment mode-Cash";
   form16Status: "Form 16" | "No Income Proof";
+  /** Years of Form 16 on file — required only when Form 16 is claimed. */
+  form16Years?: number;
   rentalIncomeTypeSalaried: string;
 }
 
@@ -124,7 +126,7 @@ export interface BankingStep {
   loanType: "Auto Loan" | "Personal Loan" | "Home Loan";
   bureauCibilScore: number;
   bureauDpd: number;
-  bureauLoanEnquiry: number;
+  bureauLoanEnquiry: boolean;
   bureauCurrentlyOutstanding: number;
   /** Omitted for the Company workflow — the corporate matrix has no age column. */
   bureauAgeAtLastEMI?: number;

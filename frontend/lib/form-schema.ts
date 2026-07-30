@@ -14,7 +14,13 @@ export const ENTITY_TYPES: { value: EntityType; label: string }[] = [
 export const GENDERS = ["Male", "Female", "Other"] as const;
 export const MARITAL = ["Married", "Unmarried"] as const;
 export const CITIZENSHIP = ["Resident Indian", "NRI/PIO"] as const;
-export const INDUSTRIES = ["Manufacturing", "Services", "Trading", "Real Estate", "Others"] as const;
+/** Legal constitution of a corporate applicant (replaces the old industry list). */
+export const COMPANY_TYPES = [
+  { value: "partnership_firm", label: "Partnership Firm" },
+  { value: "proprietorship", label: "Proprietorship" },
+  { value: "private_limited", label: "Private Limited" },
+  { value: "public_limited", label: "Public Limited" },
+];
 export const RESIDENCE = ["Owned House", "Rented House"] as const;
 
 export const EMPLOYER_TYPES = [
@@ -68,7 +74,13 @@ export const ITR_FILING = [
   { value: "ITR Not Filed", label: "Not Filed" },
 ] as const;
 
-export const ACCOUNT_BANKS = ["BOB", "Indian Bank", "IOB", "BOI", "BOM", "Others"];
+// One option per partner bank, matching ExistingBankOption on the backend.
+// A bank missing from this list cannot be selected, and because the private
+// banks require an existing account relationship it would then be rejected by
+// REL-501 on every submission rather than simply being unavailable.
+export const ACCOUNT_BANKS = [
+  "BOB", "Indian Bank", "IOB", "BOI", "BOM", "HDFC", "Axis", "Kotak", "Others",
+];
 export const CAR_LOAN_BANKS = ["None", ...ACCOUNT_BANKS];
 export const LOAN_TYPES = ["Auto Loan", "Personal Loan", "Home Loan"] as const;
 
@@ -160,7 +172,7 @@ export const PATTERNS = {
 /** rule_id prefix -> the step that owns the failing field (ui_ux_design §3). */
 export function stepForRule(ruleId: string): number {
   if (ruleId.startsWith("DEM-") || ruleId.startsWith("ENT-50")) return 1;
-  if (ruleId.startsWith("RES-")) return 2;
+  if (ruleId.startsWith("RES-") || ruleId.startsWith("REL-502")) return 2;
   if (ruleId.startsWith("EMP-") || ruleId.startsWith("INC-")) return 3;
   if (ruleId.startsWith("BUR-") || ruleId.startsWith("EXB-") || ruleId.startsWith("REL-")) return 4;
   if (ruleId.startsWith("COA-")) return 5;

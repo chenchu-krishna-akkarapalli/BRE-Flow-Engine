@@ -80,12 +80,13 @@ class CitizenshipStatus(str, Enum):
     NRI_PIO = "NRI/PIO"
 
 
-class CompanyIndustryType(str, Enum):
-    MANUFACTURING = "Manufacturing"
-    SERVICES = "Services"
-    TRADING = "Trading"
-    REAL_ESTATE = "Real Estate"
-    OTHERS = "Others"
+class CompanyType(str, Enum):
+    """Legal constitution of a corporate applicant (was: industry type)."""
+
+    PARTNERSHIP_FIRM = "partnership_firm"
+    PROPRIETORSHIP = "proprietorship"
+    PRIVATE_LIMITED = "private_limited"
+    PUBLIC_LIMITED = "public_limited"
 
 
 class ResidentDetails(str, Enum):
@@ -162,12 +163,23 @@ class ITRFilingStatus(str, Enum):
 
 
 class ExistingBankOption(str, Enum):
+    """Where the applicant already banks — one option per partner bank.
+
+    Every member of :class:`BankCode` must appear here: the option selects
+    which bank's policy drives the verdict, and the private banks all carry
+    ``requires_existing_account = True``, so an unrepresented partner bank can
+    never be scored (REL-501 rejects it on every submission).
+    """
+
     NONE = "None"
     BOB = "BOB"
     INDIAN_BANK = "Indian Bank"
     IOB = "IOB"
     BOI = "BOI"
     BOM = "BOM"
+    HDFC = "HDFC"
+    AXIS = "Axis"
+    KOTAK = "Kotak"
     OTHERS = "Others"
 
 

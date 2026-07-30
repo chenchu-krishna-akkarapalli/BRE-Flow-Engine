@@ -25,7 +25,7 @@ from app.constants import (
     CitizenshipStatus,
     CoApplicantAgeRelation,
     CoApplicantIncomeRelation,
-    CompanyIndustryType,
+    CompanyType,
     EmployerType,
     EntityType,
     ExistingBankOption,
@@ -243,7 +243,7 @@ class CompanyIdentity(FormModel):
     entity_type: Literal[EntityType.COMPANY] = Field(alias="entityType")
     applicant_name: str = Field(alias="applicantName", min_length=1, max_length=128)
     company_name: str = Field(alias="companyName", min_length=1, max_length=180)
-    company_industry_type: CompanyIndustryType = Field(alias="companyIndustryType")
+    company_type: CompanyType = Field(alias="companyType")
     company_pan: PanField = Field(alias="companyPan")
     company_location: str = Field(alias="companyLocation", min_length=1, max_length=256)
     contact_person_name: str = Field(alias="contactPersonName", min_length=1, max_length=128)
@@ -339,9 +339,21 @@ class SalariedOccupation(FormModel):
     )
     salary_mode: SalaryMode = Field(default=SalaryMode.BANK_CREDIT, alias="salaryMode")
     form_16_status: Form16Status = Field(default=Form16Status.FORM_16, alias="form16Status")
+    # Years of Form 16 on file, scored against matrix col 55. Required when
+    # Form 16 is claimed; meaningless (and rejected) when it is not.
+    form_16_years: Optional[int] = Field(default=None, alias="form16Years", ge=0, le=50)
     rental_income_type: RentalIncomeType = Field(
         default=RentalIncomeType.NONE, alias="rentalIncomeTypeSalaried"
     )
+
+    @model_validator(mode="after")
+    def _validate_form_16_years(self) -> "SalariedOccupation":
+        claims_form_16 = self.form_16_status is Form16Status.FORM_16
+        if claims_form_16 and self.form_16_years is None:
+            raise ValueError("form16Years is required when Form 16 is claimed.")
+        if not claims_form_16 and self.form_16_years is not None:
+            raise ValueError("form16Years is only collected when Form 16 is claimed.")
+        return self
 
     @model_validator(mode="after")
     def _require_previous_employer(self) -> "SalariedOccupation":
@@ -385,7 +397,7 @@ class SalariedOccupation(FormModel):
             "prev_company_joining": (
                 self.prev_company_joining.isoformat() if self.prev_company_joining else None
             ),
-            "form_16_years": FORM_16_ABSENT_YEARS if no_income_proof else FORM_16_AVAILABLE_YEARS,
+            "form_16_years": FORM_16_ABSENT_YEARS if no_income_proof else (self.form_16_years or 0),
             "no_income_proof_segment": no_income_proof,
             "rental_income_class": RENTAL_INCOME_TO_CLASS[self.rental_income_type],
         }
@@ -559,7 +571,7 @@ class BankingBureauStep(FormModel):
     loan_type: LoanType = Field(alias="loanType")
     cibil_score: int = Field(default=750, alias="bureauCibilScore", ge=300, le=900)
     dpd: int = Field(default=0, alias="bureauDpd", ge=0)
-    loan_enquiry_count: int = Field(default=0, alias="bureauLoanEnquiry", ge=0)
+    has_loan_enquiry: bool = Field(default=False, alias="bureauLoanEnquiry")
     currently_outstanding: float = Field(default=0.0, alias="bureauCurrentlyOutstanding", ge=0.0)
     age_at_last_emi: int = Field(default=35, alias="bureauAgeAtLastEMI", ge=18, le=100)
     cibil_pl_score_available: bool = Field(default=False, alias="cibilPlScoreToggle")
@@ -613,7 +625,7 @@ class BankingBureauStep(FormModel):
                 else None
             ),
             "loan_type": self.loan_type.value,
-            "loan_enquiry_count": self.loan_enquiry_count,
+            "has_loan_enquiry": self.has_loan_enquiry,
             "active_car_loan": self.existing_car_loan_bank is not ExistingBankOption.NONE,
             "age_at_last_emi_salaried": self.age_at_last_emi,
             "age_at_last_emi_self_employed": self.age_at_last_emi,
