@@ -20,6 +20,9 @@ MIN_SALARIED_TOTAL_WORK_EXP_YEARS: int = 1
 MIN_SELF_EMPLOYED_BUSINESS_EXP_YEARS: int = 2
 MIN_SELF_EMPLOYED_CURRENT_ITR: float = 300000.0
 MIN_SELF_EMPLOYED_PREVIOUS_ITR: float = 100000.0
+# Two-year total required by banks whose matrix row reads "Current + Prev".
+# It REPLACES the per-year floors at those banks rather than stacking on them.
+MIN_SELF_EMPLOYED_COMBINED_ITR: float = 600000.0
 MIN_SELF_EMPLOYED_LOAN_AMOUNT: float = 100000.0
 DPD_WRITE_OFF_MAX_TOLERANCE_DAYS: int = 90
 

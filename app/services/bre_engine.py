@@ -3,6 +3,7 @@ import time
 from datetime import date, timedelta
 from typing import Any, Dict, List
 
+from app.constants.limits import MIN_SELF_EMPLOYED_COMBINED_ITR as COMBINED_ITR_FLOOR
 from app.core.exceptions import InvalidPayloadError
 from app.core.logging import logger, redact_pii
 
@@ -241,7 +242,12 @@ BANK_MATRIX_RULES = {
         "min_current_company_tenure_years": 2.0,
         "min_total_experience_years": 2.0,
         "form16_years_required": 1,
-        "se_min_current_itr": 300000.0,
+        # The sheet's "Current ITR" cell reads "condition", not a threshold:
+        # BOB states no per-year floor and defers entirely to the combined
+        # test below. The 300,000 previously carried here was transcribed from
+        # the other banks' rows and rejected applicants the combined rule
+        # admits.
+        "se_min_current_itr": 0.0,
         "se_min_prev_itr": 0.0,
         "se_combined_itr_rule": True,  # Current + Prev >= 600,000
         "min_business_itr_years": 2,
@@ -674,21 +680,28 @@ def _evaluate_bank(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> Li
             check("EMP-SE-304", "ITR Filed", "Self-Employed",
                   policy["allow_itr_not_filed"], "Not Filed", policy["allow_itr_not_filed"],
                   f"{code} requires a filed ITR for self-employed profiles.")
+        elif policy["se_combined_itr_rule"]:
+            # Combined-ITR banks assess the two-year total, not each year in
+            # isolation: a lean current year carried by a strong previous one
+            # still proves the income. The Rs 600,000 total is therefore the
+            # ONLY income floor here — the per-year minimum does not also
+            # apply, or a qualifying applicant would be rejected for the very
+            # shortfall the combined test exists to absorb.
+            combined = inp["se_current_itr"] + inp["se_prev_itr"]
+            check("EMP-SE-303", "Combined ITR", "Self-Employed",
+                  combined >= COMBINED_ITR_FLOOR, f"Rs {combined:,.0f}",
+                  f">= Rs {COMBINED_ITR_FLOOR:,.0f}",
+                  f"Combined current+previous ITR (Rs {combined:,.0f}) is below "
+                  f"{code} minimum (Rs {COMBINED_ITR_FLOOR:,.0f}).")
         else:
             check("EMP-SE-302", "Current-Year ITR", "Self-Employed",
                   inp["se_current_itr"] >= policy["se_min_current_itr"],
                   f"Rs {inp['se_current_itr']:,.0f}", f">= Rs {policy['se_min_current_itr']:,.0f}",
                   f"Current-year ITR (Rs {inp['se_current_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_current_itr']:,.0f}).")
-            if policy["se_combined_itr_rule"]:
-                combined = inp["se_current_itr"] + inp["se_prev_itr"]
-                check("EMP-SE-303", "Combined ITR", "Self-Employed",
-                      combined >= 600000, f"Rs {combined:,.0f}", ">= Rs 600,000",
-                      f"Combined current+previous ITR (Rs {combined:,.0f}) is below {code} minimum (Rs 600,000).")
-            else:
-                check("EMP-SE-303", "Previous-Year ITR", "Self-Employed",
-                      inp["se_prev_itr"] >= policy["se_min_prev_itr"],
-                      f"Rs {inp['se_prev_itr']:,.0f}", f">= Rs {policy['se_min_prev_itr']:,.0f}",
-                      f"Previous-year ITR (Rs {inp['se_prev_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_prev_itr']:,.0f}).")
+            check("EMP-SE-303", "Previous-Year ITR", "Self-Employed",
+                  inp["se_prev_itr"] >= policy["se_min_prev_itr"],
+                  f"Rs {inp['se_prev_itr']:,.0f}", f">= Rs {policy['se_min_prev_itr']:,.0f}",
+                  f"Previous-year ITR (Rs {inp['se_prev_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_prev_itr']:,.0f}).")
         # Col 48 "Business Proof" is Mandatory at every bank.
         check("BUS-302", "Business Proof", "Business Proof",
               bool(inp["business_proof"]), bool(inp["business_proof"]), "Mandatory",

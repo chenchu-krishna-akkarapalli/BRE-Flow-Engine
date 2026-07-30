@@ -30,6 +30,7 @@ from app.constants.enums import (
 )
 from app.constants.error_codes import ErrorCode
 from app.constants.limits import (
+    MIN_SELF_EMPLOYED_COMBINED_ITR,
     DB_MAX_OVERFLOW,
     DB_POOL_PRE_PING,
     DB_POOL_RECYCLE_SECONDS,
@@ -99,6 +100,7 @@ __all__ = [
     "CoApplicantIncomeRelation",
     "WriteOffType",
     "ErrorCode",
+    "MIN_SELF_EMPLOYED_COMBINED_ITR",
     "SLA_TARGET_SIMPLE_GET_MS",
     "SLA_TARGET_CRUD_EVAL_MS",
     "SLA_TARGET_ZEN_RAM_MS",

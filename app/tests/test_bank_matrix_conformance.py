@@ -37,6 +37,7 @@ import app.core.redis as redis_module
 from app.api.deps import get_db, get_redis
 from app.api.schemas.onboarding import OnboardingFormRequest
 from app.constants.form_mappings import EXISTING_BANK_TO_BANK_CODE
+from app.constants.limits import MIN_SELF_EMPLOYED_COMBINED_ITR as COMBINED_ITR_FLOOR
 from app.main import app
 from app.services.bre_engine import BANK_MATRIX_RULES, RENTAL_CLASS_TO_FLAG, bre_engine_service
 
@@ -264,13 +265,16 @@ def sheet_rejects(bank: str, f: Dict[str, Any]) -> List[str]:
             if not p["allow_itr_not_filed"]:
                 out.append("itr_not_filed")
         else:
-            if f["current_itr"] < p["se_min_current_itr"]:
-                out.append("se_current_itr")
             if p["se_combined_itr"]:
-                if f["current_itr"] + f["previous_itr"] < 600000:
+                # The two-year total is the whole income test at these banks;
+                # the per-year floors do not also apply.
+                if f["current_itr"] + f["previous_itr"] < COMBINED_ITR_FLOOR:
                     out.append("se_combined_itr")
-            elif f["previous_itr"] < p["se_min_prev_itr"]:
-                out.append("se_prev_itr")
+            else:
+                if f["current_itr"] < p["se_min_current_itr"]:
+                    out.append("se_current_itr")
+                if f["previous_itr"] < p["se_min_prev_itr"]:
+                    out.append("se_prev_itr")
         if not f["business_proof"]:
             out.append("business_proof")
         if f["age_at_last_emi"] > p["max_age_emi_self_employed"]:
