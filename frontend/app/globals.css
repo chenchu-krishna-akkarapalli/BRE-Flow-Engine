@@ -18,17 +18,23 @@
   --color-brand-700: #4338ca;
   --color-brand-900: #312e81;
 
+  /* Contrast on --color-bg-surface (#ffffff), WCAG 2.1 AA needs 4.5:1 for
+     body text. ink-muted 17.9:1, ink 7.6:1, ink-subtle 4.8:1. ink-subtle is
+     reserved for placeholders and de-emphasised numerals; it was #94a3b8
+     (2.6:1), which failed outright once micro-copy started carrying the
+     explanations the applicant depends on. */
   --color-ink: #475569;
   --color-ink-muted: #0f172a;
-  --color-ink-subtle: #94a3b8;
+  --color-ink-subtle: #64748b;
 
-  --color-success: #16a34a;
+  --color-success: #15803d;  /* 5.0:1 on white, 4.7:1 on its own tint */
   --color-success-bg: rgba(22, 163, 74, 0.08);
-  --color-danger: #dc2626;
+  --color-danger: #c81e1e;   /* 5.4:1 on white, 4.8:1 on its own tint */
   --color-danger-bg: rgba(220, 38, 38, 0.08);
-  --color-warning: #d97706;
+  /* 5.0:1 on white, 4.7:1 on --color-warning-bg. #d97706 was 3.2:1. */
+  --color-warning: #b45309;
   --color-warning-bg: rgba(217, 119, 6, 0.08);
-  --color-info: #0284c7;
+  --color-info: #0369a1;     /* 5.9:1 on white */
   --color-info-bg: rgba(2, 132, 199, 0.08);
 
   --font-sans: var(--font-inter), system-ui, sans-serif;

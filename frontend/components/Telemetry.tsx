@@ -5,12 +5,7 @@ import { BANK_LABELS, stepForRule } from "@/lib/form-schema";
 import { BANK_CODES } from "@/lib/types";
 import type { BankCode, EvaluationResponse, RejectionReason } from "@/lib/types";
 
-/** Live 8-bank eligibility panel.
- *
- * bank_eligibility[X] is bank X's own verdict, independent of the primary
- * bank's, so a decline at the primary bank does not blank out the rest — the
- * panel's whole value is showing where else the applicant qualifies. */
-/** Partner banks that accept, excluding the one already named as primary. */
+// Partner banks that accept, excluding the one already named as primary.
 function alternatives(result: EvaluationResponse) {
   return BANK_CODES.filter(
     (code) => code !== result.selected_bank && result.bank_eligibility[code],
@@ -23,6 +18,7 @@ function listBanks(codes: readonly BankCode[]) {
   return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
 }
 
+// Live 8-bank panel. Each entry is that bank's own verdict, so a decline at the primary bank does not blank the rest.
 export function BankMatrix({ result }: { result: EvaluationResponse | null }) {
   return (
     <section
@@ -95,8 +91,7 @@ export function BankMatrix({ result }: { result: EvaluationResponse | null }) {
   );
 }
 
-/** Grouped rule failures. Shows the rule ID and a deep link back to the step
- *  that owns the field, rather than collapsing everything to "ineligible". */
+// Grouped rule failures, each deep-linking back to the step that owns the field.
 export function ValidationBanner({
   reasons, onJump,
 }: {

@@ -14,14 +14,9 @@ import type {
   ProfileType,
 } from "@/lib/types";
 
-/** Flat draft of every field across all five steps.
- *
- * Kept flat rather than pre-shaped into the request body because the wizard
- * edits fields one at a time, while the API needs a discriminated union
- * assembled per entity type. buildPayload() performs that projection once, at
- * submit — which is also the only place the `extra="forbid"` rules matter. */
+// Flat draft of all five steps; buildPayload() projects it into the API's discriminated union at submit.
 export interface Draft {
-  // Step 1 — identity (union of all three branches)
+  // Step 1 — identity (union of both branches)
   entityType: EntityType;
   applicantName: string;
   dob: string;
@@ -41,14 +36,6 @@ export interface Draft {
   companyMobile: string;
   companyEmail: string;
   companyEmployees: string;
-  hufName: string;
-  hufPan: string;
-  udyamRegNoHUF: string;
-  hufLocation: string;
-  hufFormationDate: string;
-  kartaName: string;
-  kartaPan: string;
-  kartaMobile: string;
 
   // Step 2 — address
   pincode: string;
@@ -65,7 +52,8 @@ export interface Draft {
   grossSalaryBand: string;
   salaryMode: string;
   form16Status: string;
-  form16Years: number;
+  // Empty string while the box is cleared — buildPayload coerces on submit.
+  form16Years: number | "";
   rentalIncomeType: string;
   officeAddressType: string;
   officeAddress: string;
@@ -77,8 +65,6 @@ export interface Draft {
   currentITRAmount: number | "";
   prevITRAmount: number | "";
   businessItrYears: number | "";
-  itrFilingStatus: string;
-  udyamRegNoSelfEmployed: string;
   companyEstablishmentDate: string;
   companyGstin: string;
   companyCurrentITRAmount: number | "";
@@ -89,13 +75,17 @@ export interface Draft {
   existingAccountBank: string;
   existingCarLoanBank: string;
   loanType: string;
-  bureauCibilScore: number;
-  bureauDpd: number;
+  bureauCibilScore: number | "";
+  // Two yes/no questions instead of a "DPD" figure; dpdDaysFor() maps them back to days.
+  hasMissedPayment: boolean;
+  missedOver90: boolean;
   bureauLoanEnquiry: boolean;
-  bureauCurrentlyOutstanding: number;
-  bureauAgeAtLastEMI: number;
+  bureauCurrentlyOutstanding: number | "";
+  bureauAgeAtLastEMI: number | "";
   cibilPlScoreToggle: boolean;
   bureauCibilPlScore: number | "";
+  // Gate: the seven class flags below are only asked once this is true.
+  hasWriteOff: boolean;
   bureauFlagPL: boolean;
   bureauFlagHome: boolean;
   bureauFlagConsumer: boolean;
@@ -120,8 +110,6 @@ const INITIAL_DRAFT: Draft = {
   companyName: "", companyType: "", companyPan: "", companyLocation: "",
   contactPersonName: "", contactPersonDesignation: "", companyMobile: "",
   companyEmail: "", companyEmployees: "",
-  hufName: "", hufPan: "", udyamRegNoHUF: "", hufLocation: "", hufFormationDate: "",
-  kartaName: "", kartaPan: "", kartaMobile: "",
 
   pincode: "", cityName: "", stateName: "", residentDetails: "Owned House",
 
@@ -132,15 +120,15 @@ const INITIAL_DRAFT: Draft = {
   officeAddressType: "Same", officeAddress: "", officePremisesStatus: "",
   guarantorStatus: "", businessEntityType: "Propreitorship", businessProof: "",
   businessEstablishmentDate: "", currentITRAmount: "", prevITRAmount: "",
-  businessItrYears: "", itrFilingStatus: "Self employed ITR Filled",
-  udyamRegNoSelfEmployed: "", companyEstablishmentDate: "", companyGstin: "",
+  businessItrYears: "", companyEstablishmentDate: "", companyGstin: "",
   companyCurrentITRAmount: "", companyPrevITRAmount: "", businessItrYearsCompany: "",
 
   existingAccountBank: "BOI", existingCarLoanBank: "None", loanType: "Auto Loan",
-  bureauCibilScore: 750, bureauDpd: 0, bureauLoanEnquiry: false,
+  bureauCibilScore: 750, hasMissedPayment: false, missedOver90: false,
+  bureauLoanEnquiry: false,
   bureauCurrentlyOutstanding: 0, bureauAgeAtLastEMI: 55,
   cibilPlScoreToggle: false, bureauCibilPlScore: 750,
-  bureauFlagPL: false, bureauFlagHome: false, bureauFlagConsumer: false,
+  hasWriteOff: false, bureauFlagPL: false, bureauFlagHome: false, bureauFlagConsumer: false,
   bureauFlagAgri: false, bureauFlagMSME: false, bureauFlagAuto: false,
   bureauFlagCC: false, bureauWriteOffAmount: "",
 
@@ -148,14 +136,10 @@ const INITIAL_DRAFT: Draft = {
   coApplicantName: "", coApplicantDob: "", coApplicantOccupation: "",
 };
 
-/** Empty string -> undefined, so JSON.stringify drops the key entirely.
- *  The API forbids unknown/inapplicable fields; it does not forbid absent
- *  optional ones. */
+// Empty string -> undefined so JSON.stringify drops the key; the API forbids inapplicable fields, not absent ones.
 const opt = (value: string): string | undefined => (value.trim() === "" ? undefined : value);
 
-/** Which entity-scoped eligibility matrix the backend will score this draft
- *  against. Individual and HUF share the Individual matrix; Company is scored
- *  on the corporate one, which carries no demographic or employment columns. */
+// Which entity-scoped matrix scores this draft; the corporate one carries no demographic or employment columns.
 export type Workflow = "INDIVIDUAL" | "COMPANY";
 
 export function workflowFor(entityType: EntityType): Workflow {
@@ -163,15 +147,16 @@ export function workflowFor(entityType: EntityType): Workflow {
 }
 
 export function profileTypeFor(draft: Draft): ProfileType {
-  if (draft.entityType === "Company") return "Company";
-  if (draft.entityType === "HUF") return "HUF";
-  return draft.occupation;
+  return draft.entityType === "Company" ? "Company" : draft.occupation;
 }
 
-/** The office runs out of a RENTED residence — the only configuration that asks
- *  the guarantor question, and where the API requires an answer. A separately
- *  addressed office is assessed on its own premises tenure and never prompts,
- *  whatever its premises status. */
+// Days past due implied by the two repayment answers; 30 keeps the middle case out of the max_dpd=0 banks.
+export function dpdDaysFor(draft: Draft): number {
+  if (!draft.hasMissedPayment) return 0;
+  return draft.missedOver90 ? 90 : 30;
+}
+
+// Office in a RENTED residence — the only configuration that asks the guarantor question.
 export function isResiCumOfficeRented(draft: Draft): boolean {
   return (
     profileTypeFor(draft) === "Self-Employed" &&
@@ -194,20 +179,6 @@ function buildIdentity(d: Draft): Identity {
       companyMobile: d.companyMobile,
       companyEmail: d.companyEmail,
       companyEmployees: d.companyEmployees ? Number(d.companyEmployees) : undefined,
-    };
-  }
-  if (d.entityType === "HUF") {
-    return {
-      entityType: "HUF",
-      applicantName: d.applicantName,
-      hufName: d.hufName,
-      hufPan: d.hufPan.toUpperCase(),
-      udyamRegNoHUF: opt(d.udyamRegNoHUF),
-      hufLocation: opt(d.hufLocation),
-      hufFormationDate: opt(d.hufFormationDate),
-      kartaName: d.kartaName,
-      kartaPan: d.kartaPan.toUpperCase(),
-      kartaMobile: opt(d.kartaMobile),
     };
   }
   const isNri = d.citizenshipStatus === "NRI/PIO";
@@ -237,23 +208,6 @@ function buildOccupation(d: Draft): Occupation {
       companyCurrentITRAmount: Number(d.companyCurrentITRAmount),
       companyPrevITRAmount: Number(d.companyPrevITRAmount),
       businessItrAmountCompany: Number(d.businessItrYearsCompany),
-    };
-  }
-
-  if (profile === "HUF") {
-    const filed = d.itrFilingStatus === "Self employed ITR Filled";
-    return {
-      profileType: "HUF",
-      officeAddressType: d.officeAddressType as "Same" | "Separate",
-      officeAddress: d.officeAddressType === "Separate" ? d.officeAddress : undefined,
-      udyamRegNoSelfEmployed: opt(d.udyamRegNoSelfEmployed),
-      businessEstablishmentDate: d.businessEstablishmentDate,
-      itrFilingStatus: d.itrFilingStatus as never,
-      // Amounts are required when filed and meaningless when not.
-      currentITRAmount: filed ? Number(d.currentITRAmount) : undefined,
-      prevITRAmount: filed ? Number(d.prevITRAmount) : undefined,
-      rentalIncomeTypeSelfEmployed: d.rentalIncomeType,
-      businessProof: opt(d.businessProof),
     };
   }
 
@@ -304,11 +258,10 @@ function buildBanking(d: Draft): BankingStep {
     existingCarLoanBank: d.existingCarLoanBank,
     loanType: d.loanType as never,
     bureauCibilScore: Number(d.bureauCibilScore),
-    bureauDpd: Number(d.bureauDpd),
+    bureauDpd: dpdDaysFor(d),
     bureauLoanEnquiry: d.bureauLoanEnquiry,
     bureauCurrentlyOutstanding: Number(d.bureauCurrentlyOutstanding),
-    // A company has no age; the Company matrix carries no age-at-EMI column,
-    // so the field is neither collected nor sent for the corporate workflow.
+    // A company has no age; the Company matrix carries no age-at-EMI column.
     bureauAgeAtLastEMI:
       workflowFor(d.entityType) === "COMPANY" ? undefined : Number(d.bureauAgeAtLastEMI),
     cibilPlScoreToggle: d.cibilPlScoreToggle,
@@ -337,9 +290,7 @@ function buildCoApplicant(d: Draft): CoApplicantStep {
   };
 }
 
-/** Project the flat draft into the discriminated-union request body.
- *  Address and co-applicant are omitted entirely for Company — the API
- *  rejects the submission outright if either is present. */
+// Project the draft into the request body; Company omits address and co-applicant, which the API rejects outright.
 export function buildPayload(d: Draft): OnboardingFormRequest {
   const isCompany = d.entityType === "Company";
   return {
@@ -383,15 +334,26 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   setField: (key, value) =>
     set((state) => {
       const draft = { ...state.draft, [key]: value };
-      // Un-ticking a conditional flag must clear the value it guarded, or the
-      // stale amount still ships. A write-off amount with no accompanying
-      // class reaches the engine as an UNCLASSIFIED write-off and fails closed
-      // (BUR-401D) — a rejection the applicant cannot see the cause of.
+      // Un-ticking a flag must clear what it guarded, or an unclassified write-off fails closed (BUR-401D).
       if (key === "bureauFlagCC" && value === false) {
         draft.bureauWriteOffAmount = "";
       }
       if (key === "cibilPlScoreToggle" && value === false) {
         draft.bureauCibilPlScore = INITIAL_DRAFT.bureauCibilPlScore;
+      }
+      // Answering "no" to a gate must retract everything it revealed.
+      if (key === "hasWriteOff" && value === false) {
+        draft.bureauFlagPL = false;
+        draft.bureauFlagHome = false;
+        draft.bureauFlagConsumer = false;
+        draft.bureauFlagAgri = false;
+        draft.bureauFlagMSME = false;
+        draft.bureauFlagAuto = false;
+        draft.bureauFlagCC = false;
+        draft.bureauWriteOffAmount = "";
+      }
+      if (key === "hasMissedPayment" && value === false) {
+        draft.missedOver90 = false;
       }
       return { draft, error: null };
     }),

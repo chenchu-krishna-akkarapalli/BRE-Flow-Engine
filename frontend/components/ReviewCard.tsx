@@ -7,11 +7,13 @@ import { STEP_PLAN } from "@/lib/form-schema";
 import type { Draft } from "@/store/useOnboardingStore";
 import { profileTypeFor } from "@/store/useOnboardingStore";
 
-/** Step 5 review summary.
- *
- * PII is masked by default using the same masks as the backend's redact_pii —
- * this is the most screenshotted surface in the flow, so unmasking is an
- * explicit per-card action, never the default view. */
+// Plain restatement of the two repayment answers.
+function missedPaymentSummary(draft: Draft): string {
+  if (!draft.hasMissedPayment) return "None";
+  return draft.missedOver90 ? "Yes, more than 90 days late" : "Yes, but under 90 days";
+}
+
+// Step 5 review. PII is masked by default (same masks as redact_pii); unmasking is an explicit action.
 export function ReviewCard({
   draft, onEdit,
 }: {
@@ -22,14 +24,8 @@ export function ReviewCard({
   const isCompany = draft.entityType === "Company";
   const plan = STEP_PLAN[draft.entityType];
 
-  const pan =
-    draft.entityType === "Company" ? draft.companyPan
-    : draft.entityType === "HUF" ? draft.hufPan
-    : draft.pan;
-  const name =
-    draft.entityType === "Company" ? draft.companyName
-    : draft.entityType === "HUF" ? draft.hufName
-    : draft.applicantName;
+  const pan = isCompany ? draft.companyPan : draft.pan;
+  const name = isCompany ? draft.companyName : draft.applicantName;
 
   const groups: { step: number; title: string; rows: [string, string][] }[] = [
     {
@@ -37,7 +33,7 @@ export function ReviewCard({
       title: "Identity",
       rows: [
         ["Name", name || "—"],
-        ["Entity", draft.entityType],
+        ["Applying as", isCompany ? "A company" : "An individual"],
         ["PAN", pan ? (revealed ? pan : redactPan(pan)) : "—"],
         ...(draft.entityType === "Individual"
           ? ([["DOB", draft.dob ? (revealed ? draft.dob : redactDob(draft.dob)) : "—"]] as [string, string][])
@@ -50,9 +46,9 @@ export function ReviewCard({
           step: 2,
           title: "Address",
           rows: [
-            ["Pincode", draft.pincode || "—"],
-            ["City / State", [draft.cityName, draft.stateName].filter(Boolean).join(", ") || "—"],
-            ["Residence", draft.residentDetails],
+            ["PIN code", draft.pincode || "—"],
+            ["City and state", [draft.cityName, draft.stateName].filter(Boolean).join(", ") || "—"],
+            ["Home", draft.residentDetails],
           ] as [string, string][],
         }]),
     {
@@ -60,19 +56,20 @@ export function ReviewCard({
       title: "Occupation",
       rows:
         profile === "Salaried"
-          ? [["Profile", "Salaried"], ["Tenure", draft.tenureBand], ["Income proof", draft.form16Status === "Form 16" ? `Form 16 · ${draft.form16Years} yrs` : draft.form16Status]]
+          ? [["Works as", "Salaried"], ["Time at current job", draft.tenureBand], ["Proof of income", draft.form16Status === "Form 16" ? `Form 16 · ${draft.form16Years} yrs` : "None"]]
           : profile === "Company"
-          ? [["Profile", "Company"], ["GSTIN", draft.companyGstin || "—"], ["Current ITR", `₹${draft.companyCurrentITRAmount.toLocaleString("en-IN")}`]]
-          : [["Profile", profile], ["Established", draft.businessEstablishmentDate || "—"], ["Current ITR", `₹${draft.currentITRAmount.toLocaleString("en-IN")}`]],
+          ? [["Works as", "A company"], ["GST / Udyam number", draft.companyGstin || "—"], ["Income declared last year", `₹${draft.companyCurrentITRAmount.toLocaleString("en-IN")}`]]
+          : [["Works as", "Self-employed"], ["Business started", draft.businessEstablishmentDate || "—"], ["Income declared last year", `₹${draft.currentITRAmount.toLocaleString("en-IN")}`]],
     },
     {
       step: 4,
       title: "Banking & Bureau",
       rows: [
-        ["Primary bank", draft.existingAccountBank],
-        ["Loan type", draft.loanType],
-        ["CIBIL", String(draft.bureauCibilScore)],
-        ["DPD", String(draft.bureauDpd)],
+        ["Banks with", draft.existingAccountBank],
+        ["Loan wanted", draft.loanType],
+        ["Credit score", String(draft.bureauCibilScore)],
+        ["Missed payments", missedPaymentSummary(draft)],
+        ["Written-off accounts", draft.hasWriteOff ? "Yes" : "None"],
       ],
     },
     ...(isCompany
@@ -81,8 +78,8 @@ export function ReviewCard({
           step: 5,
           title: "Co-Applicant",
           rows: [
-            ["Age extension", draft.coAppAgeRelation],
-            ["Income pooling", draft.coAppIncomeRelation],
+            ["Joining for the age limit", draft.coAppAgeRelation],
+            ["Adding their income", draft.coAppIncomeRelation],
           ] as [string, string][],
         }]),
   ];
@@ -90,14 +87,14 @@ export function ReviewCard({
   return (
     <section className="glass rounded-lg p-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-[1.25rem] font-semibold">Review your application</h2>
+        <h2 className="text-[1.25rem] font-semibold">Please check your answers</h2>
         <button
           type="button"
           onClick={() => setRevealed((r) => !r)}
           className="flex min-h-[44px] items-center gap-2 text-[0.8125rem] text-brand-400"
         >
           {revealed ? <EyeOff size={14} aria-hidden /> : <Eye size={14} aria-hidden />}
-          {revealed ? "Hide" : "Reveal"} sensitive fields
+          {revealed ? "Hide" : "Show"} my PAN and date of birth
         </button>
       </div>
 

@@ -2,28 +2,30 @@
 
 import { ReactNode, useState, useEffect, useRef } from "react";
 
-/** Form primitives. Every control carries a real <label for>, and spacing /
- *  radius come from tokens (Rules: input padding 10px 14px, radius 6px). */
+// Form primitives. Every control carries a real <label for>; spacing and radius come from tokens.
 
 const CONTROL =
   "w-full rounded-sm border border-line bg-bg-raised px-[14px] py-[10px] " +
   "text-ink placeholder:text-ink-subtle transition-colors " +
   "focus:border-brand-500 disabled:opacity-50";
 
+// One question and its answer control; the question carries the whole meaning.
 export function Field({
-  label, htmlFor, hint, error, children,
+  label, htmlFor, error, children,
 }: {
-  label: string; htmlFor: string; hint?: string; error?: string; children: ReactNode;
+  label: string; htmlFor: string; error?: string; children: ReactNode;
 }) {
   return (
     <div className="flex flex-col gap-[6px]">
-      <label htmlFor={htmlFor} className="text-[0.8125rem] text-ink-muted">
+      <label
+        htmlFor={htmlFor}
+        className="text-[0.9375rem] font-medium leading-snug text-ink-muted"
+      >
         {label}
       </label>
       {children}
-      {hint && !error && <p className="text-[0.8125rem] text-ink-subtle">{hint}</p>}
       {error && (
-        <p id={`${htmlFor}-error`} className="text-[0.8125rem] text-danger">
+        <p id={`${htmlFor}-error`} className="text-[0.8125rem] font-medium text-danger">
           {error}
         </p>
       )}
@@ -96,14 +98,18 @@ export function Checkbox({
   );
 }
 
+// Answer cards: 2-3 choices sit side by side, longer sets stack.
 export function RadioCards({
-  name, value, onChange, options,
+  name, value, onChange, options, label,
 }: {
   name: string; value: string; onChange: (v: string) => void;
-  options: { value: string; label: string }[];
+  options: readonly { value: string; label: string }[];
+  label?: string;
 }) {
+  const columns =
+    options.length === 2 ? "sm:grid-cols-2" : options.length === 3 ? "sm:grid-cols-3" : "";
   return (
-    <div role="radiogroup" aria-label={name} className="grid gap-3 sm:grid-cols-3">
+    <div role="radiogroup" aria-label={label ?? name} className={`grid gap-3 ${columns}`}>
       {options.map((opt) => {
         const active = value === opt.value;
         return (
@@ -111,8 +117,8 @@ export function RadioCards({
             key={opt.value}
             className={`flex min-h-[44px] cursor-pointer items-center justify-center rounded-md border px-4 py-3 text-center text-[0.9375rem] transition-colors ${
               active
-                ? "border-brand-500 bg-brand-500/15 text-ink"
-                : "border-line bg-bg-raised text-ink-muted hover:border-line-strong"
+                ? "border-brand-500 bg-brand-500/15 font-medium text-ink-muted"
+                : "border-line bg-bg-raised text-ink hover:border-line-strong"
             }`}
           >
             <input

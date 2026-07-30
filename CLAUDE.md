@@ -94,12 +94,36 @@ Frontend compile targets are separate and live in `frontend-principles`: sub-30 
 
 Redact before logging, always — PAN `AB******4F`, DOB `****-**-15`, Aadhaar `****-****-1234` (`redact_pii()`). Never log raw request bodies containing bureau responses or tax documents. Raw PAN never reaches the database; only the masked form is persisted.
 
+## Comment Style — single-line only
+
+**Every comment is a single line.** No multi-line block comments, no `/** … */` JSDoc banners, no `"""…"""` prose docstrings that run past one line. Applies to Python, TypeScript, TSX and CSS alike.
+
+```python
+# Combined-ITR banks score the two-year total; the per-year floor does not also apply.
+```
+```ts
+// Un-ticking a flag must clear what it guarded, or an unclassified write-off fails closed (BUR-401D).
+```
+
+Rationale: every file an agent opens is re-read into context in full. A ten-line rationale block costs those tokens on every read, for the whole session, and dilutes attention across the file — the signal an agent needs is the one line stating *why*, not the essay around it.
+
+Rules:
+
+1. **One line, and it must earn its place.** State the non-obvious *why* — a constraint, a boundary semantic, a rule ID, a bug it prevents. Delete anything restating what the code says.
+2. **Two lines maximum, and only when a single line genuinely cannot carry it** (a wire contract, a matrix column mapping). Use consecutive `//` or `#` lines, never a block.
+3. **No decorative banners.** `# ---- Section ----` separators are fine; multi-line headers are not.
+4. **Do not restate this file.** SLAs, the memory lifecycle and the architectural non-negotiables are defined here once; a comment repeating them is pure cost.
+5. **Docstrings**: one line. Where a public function truly needs argument-level detail, put it in the type hints and the constant's own comment, not in prose.
+
+When editing an existing file, collapse any multi-line comment you touch. Do not sweep untouched files just to reformat them.
+
 ## Python Style
 
 - Python 3.11+, strict type hints, Pydantic v2 `BaseModel` / `BaseSettings`.
 - `async`/`await` for all DB, Redis, and I/O. No blocking calls on the event loop.
 - Raise domain exceptions from `app/core/exceptions.py`. Never swallow exceptions or return fallback zeros.
 - Constants, messages, error codes, and regexes load from `app/constants/` — zero inline hardcoding.
+- Comments follow the single-line rule above.
 
 ---
 

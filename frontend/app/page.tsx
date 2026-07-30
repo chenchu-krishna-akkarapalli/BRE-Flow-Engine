@@ -49,7 +49,6 @@ export default function OnboardingWizard() {
 
         {result && <DecisionPanel result={result} />}
 
-        {/* Per-bank audit trail + document exports. */}
         {result && <AuditCards result={result} />}
 
         {/* Height reserved up front so the panel fills in place (no CLS). */}
@@ -73,7 +72,7 @@ export default function OnboardingWizard() {
             disabled={isFirst}
             className="min-h-[44px] rounded-md border border-line px-6 py-3 text-[0.9375rem] text-ink-muted transition-colors hover:border-line-strong disabled:opacity-40"
           >
-            Back
+            Go back
           </button>
 
           {isLast ? (
@@ -84,18 +83,17 @@ export default function OnboardingWizard() {
                   onClick={reset}
                   className="min-h-[44px] rounded-md border border-line px-6 py-3 text-[0.9375rem] text-ink-muted"
                 >
-                  Start over
+                  Start again
                 </button>
               )}
-              {/* No spinner: the verdict returns inside the ~100 ms SLA, where a
-                  spinner would flash and read as a glitch (ui_ux_design §3.4). */}
+              {/* No spinner: the verdict returns inside the ~100 ms SLA. */}
               <button
                 type="button"
                 onClick={submit}
                 disabled={submitting}
                 className="min-h-[44px] rounded-md bg-brand-600 px-6 py-3 text-[0.9375rem] font-medium text-white transition-colors hover:bg-brand-700 disabled:opacity-60"
               >
-                {submitting ? "Evaluating…" : "Submit application"}
+                {submitting ? "Checking…" : "See which banks will lend to me"}
               </button>
             </div>
           ) : (
@@ -104,7 +102,7 @@ export default function OnboardingWizard() {
               onClick={next}
               className="min-h-[44px] rounded-md bg-brand-600 px-6 py-3 text-[0.9375rem] font-medium text-white transition-colors hover:bg-brand-700"
             >
-              Continue
+              Next question
             </button>
           )}
         </div>

@@ -1,13 +1,11 @@
-/** Wire contract for POST /api/v1/onboarding/evaluate/form.
- *
- * Mirrors app/api/schemas/onboarding.py. The backend validates with
- * `extra="forbid"`, so a field that does not belong to the submitted branch is
- * a 422 — not a silently ignored key. Every optional field below is therefore
- * genuinely omittable, and the payload builder must strip rather than send
- * empty values. */
+// Wire contract for POST /api/v1/onboarding/evaluate/form, mirroring app/api/schemas/onboarding.py.
+// The backend validates with `extra="forbid"`, so a field outside the submitted branch is a 422, not
+// a silently ignored key — the payload builder must strip empty values rather than send them.
 
-export type EntityType = "Individual" | "Company" | "HUF";
-export type ProfileType = "Salaried" | "Self-Employed" | "HUF" | "Company";
+// HUF is not offered by this wizard. The API still models it; the frontend
+// simply never constructs that branch.
+export type EntityType = "Individual" | "Company";
+export type ProfileType = "Salaried" | "Self-Employed" | "Company";
 
 export const BANK_CODES = [
   "BOI", "INDIAN_BANK", "IOB", "BOB", "BOM", "HDFC", "AXIS", "KOTAK",
@@ -41,20 +39,7 @@ export interface CompanyIdentity {
   companyEmployees?: number;
 }
 
-export interface HUFIdentity {
-  entityType: "HUF";
-  applicantName: string;
-  hufName: string;
-  hufPan: string;
-  udyamRegNoHUF?: string;
-  hufLocation?: string;
-  hufFormationDate?: string;
-  kartaName: string;
-  kartaPan: string;
-  kartaMobile?: string;
-}
-
-export type Identity = IndividualIdentity | CompanyIdentity | HUFIdentity;
+export type Identity = IndividualIdentity | CompanyIdentity;
 
 export interface AddressStep {
   pincode: string;
@@ -92,19 +77,6 @@ export interface SelfEmployedOccupation {
   rentalIncomeTypeSelfEmployed: string;
 }
 
-export interface HUFBusiness {
-  profileType: "HUF";
-  officeAddressType: "Same" | "Separate";
-  officeAddress?: string;
-  udyamRegNoSelfEmployed?: string;
-  businessEstablishmentDate: string;
-  itrFilingStatus: "Self employed ITR Filled" | "ITR Not Filed";
-  currentITRAmount?: number;
-  prevITRAmount?: number;
-  rentalIncomeTypeSelfEmployed: string;
-  businessProof?: string;
-}
-
 export interface CompanyBusiness {
   profileType: "Company";
   companyEstablishmentDate: string;
@@ -117,7 +89,6 @@ export interface CompanyBusiness {
 export type Occupation =
   | SalariedOccupation
   | SelfEmployedOccupation
-  | HUFBusiness
   | CompanyBusiness;
 
 export interface BankingStep {
@@ -194,7 +165,7 @@ export interface EvaluationResponse {
   persisted: boolean;
 }
 
-/** FastAPI 422 body: {"detail": [{loc, msg, type}, ...]} */
+// FastAPI 422 body: {"detail": [{loc, msg, type}, ...]}
 export interface ValidationErrorItem {
   loc: (string | number)[];
   msg: string;

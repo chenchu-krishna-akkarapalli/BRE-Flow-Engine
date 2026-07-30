@@ -1,20 +1,23 @@
-/** Option sets and step plan transcribed from onboading-form.json.
- *
- * Values are the wire values the backend enum accepts verbatim — including the
- * source spelling of "Gaurantor" and "Propreitorship". Do not "correct" them. */
+// Option sets from onboading-form.json. Values are the backend's wire values verbatim, including the
+// source spelling of "Gaurantor" and "Propreitorship". Do not "correct" them.
 
 import type { BankCode, EntityType } from "./types";
 
 export const ENTITY_TYPES: { value: EntityType; label: string }[] = [
-  { value: "Individual", label: "Individual" },
-  { value: "Company", label: "Company / Organization" },
-  { value: "HUF", label: "HUF" },
+  { value: "Individual", label: "Myself, as an individual" },
+  { value: "Company", label: "A company or organisation" },
+];
+
+// Reusable yes/no answers, so every binary question reads the same way.
+export const YES_NO = [
+  { value: "no", label: "No" },
+  { value: "yes", label: "Yes" },
 ];
 
 export const GENDERS = ["Male", "Female", "Other"] as const;
 export const MARITAL = ["Married", "Unmarried"] as const;
 export const CITIZENSHIP = ["Resident Indian", "NRI/PIO"] as const;
-/** Legal constitution of a corporate applicant (replaces the old industry list). */
+// Legal constitution of a corporate applicant (replaces the old industry list).
 export const COMPANY_TYPES = [
   { value: "partnership_firm", label: "Partnership Firm" },
   { value: "proprietorship", label: "Proprietorship" },
@@ -38,41 +41,36 @@ export const TENURE_BANDS = [
   { value: "2y+", label: "2+ Years" },
 ] as const;
 
+// Answers to the "more than Rs 25,000 a month?" question; the values are what the API expects.
 export const SALARY_BANDS = [
-  { value: "lt25000", label: "Less than 25,000" },
-  { value: "gt25000", label: "More than 25,000" },
+  { value: "gt25000", label: "Yes, more than ₹25,000" },
+  { value: "lt25000", label: "No, ₹25,000 or less" },
 ] as const;
 
 export const SALARY_MODES = [
-  { value: "Salary payment mode- Bank Credit", label: "Through Bank" },
-  { value: "Salary payment mode-Cash", label: "Cash" },
+  { value: "Salary payment mode- Bank Credit", label: "Into my bank account" },
+  { value: "Salary payment mode-Cash", label: "In cash" },
 ] as const;
 
 export const FORM16_STATUS = [
-  { value: "Form 16", label: "Form 16 / ITR Available" },
-  { value: "No Income Proof", label: "No Formal Income Proof" },
+  { value: "Form 16", label: "Yes, I have Form 16 or my tax returns" },
+  { value: "No Income Proof", label: "No, I do not have either" },
 ] as const;
 
 export const RENTAL_INCOME = [
-  { value: "None", label: "No Rental Income Claimed" },
-  { value: "Rental Income-with Agreement -Not filed ITR-Not reflecting in Bank", label: "Agreement, no ITR, not in bank" },
-  { value: "Rental Income-with Agreement filed ITR- Not reflecting in Bank", label: "Agreement, filed ITR, not in bank" },
-  { value: "Rental Income-with Agreement -Not filed ITR-reflecting in Bank", label: "Agreement, no ITR, reflecting in bank" },
+  { value: "None", label: "No, I do not earn any rent" },
+  { value: "Rental Income-with Agreement -Not filed ITR-Not reflecting in Bank", label: "Yes — I have a rent agreement, but no tax return, and the rent is not paid into my bank" },
+  { value: "Rental Income-with Agreement filed ITR- Not reflecting in Bank", label: "Yes — I have a rent agreement and a tax return, but the rent is not paid into my bank" },
+  { value: "Rental Income-with Agreement -Not filed ITR-reflecting in Bank", label: "Yes — I have a rent agreement and the rent is paid into my bank, but no tax return" },
 ];
 
 export const BUSINESS_ENTITIES = [
-  { value: "Propreitorship", label: "Sole Proprietorship" },
-  { value: "Parternship Firm", label: "Partnership Firm" },
-  { value: "Private Limited", label: "Private Limited Company" },
-  { value: "Public Limited", label: "Public Limited Company" },
-  { value: "HUF", label: "Hindu Undivided Family (HUF)" },
-  { value: "Agriculture", label: "Agriculture Sector" },
+  { value: "Propreitorship", label: "I run it on my own (sole proprietorship)" },
+  { value: "Parternship Firm", label: "A partnership firm" },
+  { value: "Private Limited", label: "A private limited company" },
+  { value: "Public Limited", label: "A public limited company" },
+  { value: "Agriculture", label: "Farming or agriculture" },
 ];
-
-export const ITR_FILING = [
-  { value: "Self employed ITR Filled", label: "Filed" },
-  { value: "ITR Not Filed", label: "Not Filed" },
-] as const;
 
 // One option per partner bank, matching ExistingBankOption on the backend.
 // A bank missing from this list cannot be selected, and because the private
@@ -84,8 +82,18 @@ export const ACCOUNT_BANKS = [
 export const CAR_LOAN_BANKS = ["None", ...ACCOUNT_BANKS];
 export const LOAN_TYPES = ["Auto Loan", "Personal Loan", "Home Loan"] as const;
 
-export const AGE_RELATIONS = ["None", "Brother", "Sister"] as const;
-export const INCOME_RELATIONS = ["None", "Father", "Mother", "Brother", "Sister"] as const;
+export const AGE_RELATIONS = [
+  { value: "None", label: "No one — just me" },
+  { value: "Brother", label: "My brother" },
+  { value: "Sister", label: "My sister" },
+];
+export const INCOME_RELATIONS = [
+  { value: "None", label: "No one — just my own income" },
+  { value: "Father", label: "My father" },
+  { value: "Mother", label: "My mother" },
+  { value: "Brother", label: "My brother" },
+  { value: "Sister", label: "My sister" },
+];
 
 export const BANK_LABELS: Record<BankCode, string> = {
   BOI: "Bank of India",
@@ -99,30 +107,27 @@ export const BANK_LABELS: Record<BankCode, string> = {
 };
 
 export const WRITE_OFF_FLAGS = [
-  { key: "bureauFlagPL", label: "PL Write-Off" },
-  { key: "bureauFlagHome", label: "Home Loan WO" },
-  { key: "bureauFlagConsumer", label: "Consumer WO" },
-  { key: "bureauFlagAgri", label: "Agri Loan WO" },
-  { key: "bureauFlagMSME", label: "MSME WO" },
-  { key: "bureauFlagAuto", label: "Auto Loan WO" },
-  { key: "bureauFlagCC", label: "Credit Card WO" },
+  { key: "bureauFlagPL", label: "A personal loan" },
+  { key: "bureauFlagHome", label: "A home loan" },
+  { key: "bureauFlagConsumer", label: "A consumer loan (phone, TV, appliance)" },
+  { key: "bureauFlagAgri", label: "A farm or agriculture loan" },
+  { key: "bureauFlagMSME", label: "A small-business (MSME) loan" },
+  { key: "bureauFlagAuto", label: "A car or vehicle loan" },
+  { key: "bureauFlagCC", label: "A credit card" },
 ] as const;
 
-/** Steps collected per entity type. Company skips Address (2) and
- *  Co-Applicant (5) — the API rejects them outright if sent — so a fixed 20%
- *  ladder would strand a Company at 60%. */
+// Steps per entity type. Company skips Address (2) and Co-Applicant (5), which the API rejects if sent.
 export const STEP_PLAN: Record<EntityType, number[]> = {
   Individual: [1, 2, 3, 4, 5],
-  HUF: [1, 2, 3, 4, 5],
   Company: [1, 3, 4],
 };
 
 export const STEP_TITLES: Record<number, string> = {
-  1: "Identity Details",
-  2: "Address & Residence",
-  3: "Occupation & Business",
-  4: "Banking, Bureau & Loan",
-  5: "Co-Applicant & Review",
+  1: "About you",
+  2: "Where you live",
+  3: "Your work and income",
+  4: "Your banking and credit history",
+  5: "Anyone applying with you",
 };
 
 export function progressFor(entity: EntityType, stepId: number): number {
@@ -132,16 +137,12 @@ export function progressFor(entity: EntityType, stepId: number): number {
   return Math.round(((index + 1) / plan.length) * 100);
 }
 
-/** Lower bound of each tenure band in months — the conservative end, matching
- *  the backend's TENURE_BAND_TO_MONTHS. */
+// Lower bound of each tenure band in months, matching the backend's TENURE_BAND_TO_MONTHS.
 export const TENURE_BAND_MONTHS: Record<string, number> = {
   "0-6m": 0, "6m-1y": 6, "1y-2y": 12, "2y+": 24,
 };
 
-/** Total employment history in years, mirroring the engine exactly: the
- *  prior-employment span (previous joining -> start of the current job) plus
- *  the current tenure. Shown as helper text so the applicant sees the number
- *  the bank will actually score. */
+// Total employment years, mirroring the engine: prior-employment span plus current tenure.
 export function totalWorkExperienceYears(
   prevJoining: string,
   tenureBand: string,
@@ -160,8 +161,7 @@ export function totalWorkExperienceYears(
   return priorSpan + tenureYears;
 }
 
-/** Client-side format checks — same regexes the API enforces, so a format
- *  error never costs a round trip. */
+// Client-side format checks — the same regexes the API enforces.
 export const PATTERNS = {
   pan: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
   pincode: /^[1-9][0-9]{5}$/,
@@ -169,7 +169,7 @@ export const PATTERNS = {
   email: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
 };
 
-/** rule_id prefix -> the step that owns the failing field (ui_ux_design §3). */
+// rule_id prefix -> the step that owns the failing field (ui_ux_design §3).
 export function stepForRule(ruleId: string): number {
   if (ruleId.startsWith("DEM-") || ruleId.startsWith("ENT-50")) return 1;
   if (ruleId.startsWith("RES-") || ruleId.startsWith("REL-502")) return 2;
