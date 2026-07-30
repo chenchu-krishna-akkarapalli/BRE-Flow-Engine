@@ -46,6 +46,7 @@ export function TextInput({
       aria-invalid={error ? true : undefined}
       aria-describedby={error ? `${id}-error` : undefined}
       onChange={(e) => onChange(e.target.value)}
+      onWheel={(e) => type === "number" && e.currentTarget.blur()}
       className={`${CONTROL} ${numeric ? "numeric" : ""} ${error ? "border-danger" : ""}`}
     />
   );

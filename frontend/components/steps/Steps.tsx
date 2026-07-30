@@ -25,7 +25,7 @@ function useField() {
   return { draft, set: setField };
 }
 
-const num = (v: string) => (v === "" ? 0 : Number(v));
+const num = (v: string) => (v === "" ? "" : Number(v));
 
 export function Step1Identity() {
   const { draft, set } = useField();
@@ -56,10 +56,10 @@ export function Step1Identity() {
           </Field>
           <div className="grid gap-6 sm:grid-cols-2">
             <Field label="Gender" htmlFor="gender">
-              <Select id="gender" value={draft.gender} onChange={k("gender")} options={GENDERS} placeholder="Select" />
+              <Select id="gender" value={draft.gender} onChange={k("gender")} options={GENDERS}  />
             </Field>
             <Field label="Marital Status" htmlFor="maritalStatus">
-              <Select id="maritalStatus" value={draft.maritalStatus} onChange={k("maritalStatus")} options={MARITAL} placeholder="Select" />
+              <Select id="maritalStatus" value={draft.maritalStatus} onChange={k("maritalStatus")} options={MARITAL}  />
             </Field>
           </div>
           <Field label="Citizenship / Residency" htmlFor="citizenshipStatus">
@@ -88,7 +88,7 @@ export function Step1Identity() {
           </Field>
           <div className="grid gap-6 sm:grid-cols-2">
             <Field label="Industry Type" htmlFor="companyIndustryType">
-              <Select id="companyIndustryType" value={draft.companyIndustryType} onChange={k("companyIndustryType")} options={INDUSTRIES} placeholder="Select" />
+              <Select id="companyIndustryType" value={draft.companyIndustryType} onChange={k("companyIndustryType")} options={INDUSTRIES}  />
             </Field>
             <Field label="Company PAN" htmlFor="companyPan" error={invalid(PATTERNS.pan, draft.companyPan, "Format: AABCT1234C")}>
               <TextInput id="companyPan" value={draft.companyPan} onChange={(v) => set("companyPan", v.toUpperCase())} numeric />
@@ -295,7 +295,7 @@ export function Step3Occupation() {
       {profile === "Salaried" && (
         <>
           <Field label="Employment Type" htmlFor="employerType">
-            <Select id="employerType" value={draft.employerType} onChange={k("employerType")} options={EMPLOYER_TYPES} placeholder="Select" />
+            <Select id="employerType" value={draft.employerType} onChange={k("employerType")} options={EMPLOYER_TYPES} />
           </Field>
           <Field label="With Current Company Since" htmlFor="tenureBand">
             <Select id="tenureBand" value={draft.tenureBand} onChange={k("tenureBand")} options={TENURE_BANDS} />
@@ -355,7 +355,7 @@ export function Step3Occupation() {
               </Field>
               {profile === "Self-Employed" && (
                 <Field label="Office Premises Status" htmlFor="officePremisesStatus">
-                  <Select id="officePremisesStatus" value={draft.officePremisesStatus} onChange={k("officePremisesStatus")} options={["Owned", "Rented"]} placeholder="Select" />
+                  <Select id="officePremisesStatus" value={draft.officePremisesStatus} onChange={k("officePremisesStatus")} options={["Owned", "Rented"]}  />
                 </Field>
               )}
             </>

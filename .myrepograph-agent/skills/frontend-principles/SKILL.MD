@@ -43,7 +43,7 @@ const [user, posts] = await Promise.all([getUser(id), getUserPosts(id)]);
 
 ## 4. pnpm
 
-- Content-addressable store, hard-linked into `node_modules`.
+- Content-addressable store, hard-linked into `node_modules`. 
 - `.npmrc`: `hoist=false` or explicit patterns — blocks ghost dependencies.
 - `pnpm-workspace.yaml` shares tokens/utils locally without publishing.
 

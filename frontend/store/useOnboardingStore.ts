@@ -29,7 +29,7 @@ export interface Draft {
   pan: string;
   maritalStatus: string;
   citizenshipStatus: string;
-  nriStayPeriod: number;
+  nriStayPeriod: number | "";
   phone: string;
   email: string;
   companyName: string;
@@ -73,28 +73,28 @@ export interface Draft {
   businessEntityType: string;
   businessProof: string;
   businessEstablishmentDate: string;
-  currentITRAmount: number;
-  prevITRAmount: number;
-  businessItrYears: number;
+  currentITRAmount: number | "";
+  prevITRAmount: number | "";
+  businessItrYears: number | "";
   itrFilingStatus: string;
   udyamRegNoSelfEmployed: string;
   companyEstablishmentDate: string;
   companyGstin: string;
-  companyCurrentITRAmount: number;
-  companyPrevITRAmount: number;
-  businessItrYearsCompany: number;
+  companyCurrentITRAmount: number | "";
+  companyPrevITRAmount: number | "";
+  businessItrYearsCompany: number | "";
 
   // Step 4 — banking & bureau
   existingAccountBank: string;
   existingCarLoanBank: string;
   loanType: string;
-  bureauCibilScore: number;
-  bureauDpd: number;
-  bureauLoanEnquiry: number;
-  bureauCurrentlyOutstanding: number;
-  bureauAgeAtLastEMI: number;
+  bureauCibilScore: number | "";
+  bureauDpd: number | "";
+  bureauLoanEnquiry: number | "";
+  bureauCurrentlyOutstanding: number | "";
+  bureauAgeAtLastEMI: number | "";
   cibilPlScoreToggle: boolean;
-  bureauCibilPlScore: number;
+  bureauCibilPlScore: number | "";
   bureauFlagPL: boolean;
   bureauFlagHome: boolean;
   bureauFlagConsumer: boolean;
@@ -102,7 +102,7 @@ export interface Draft {
   bureauFlagMSME: boolean;
   bureauFlagAuto: boolean;
   bureauFlagCC: boolean;
-  bureauWriteOffAmount: number;
+  bureauWriteOffAmount: number | "";
 
   // Step 5 — co-applicant
   coAppAgeRelation: string;
@@ -130,18 +130,18 @@ const INITIAL_DRAFT: Draft = {
   form16Status: "Form 16", rentalIncomeType: "None",
   officeAddressType: "Same", officeAddress: "", officePremisesStatus: "",
   guarantorStatus: "", businessEntityType: "Propreitorship", businessProof: "",
-  businessEstablishmentDate: "", currentITRAmount: 0, prevITRAmount: 0,
-  businessItrYears: 0, itrFilingStatus: "Self employed ITR Filled",
+  businessEstablishmentDate: "", currentITRAmount: "", prevITRAmount: "",
+  businessItrYears: "", itrFilingStatus: "Self employed ITR Filled",
   udyamRegNoSelfEmployed: "", companyEstablishmentDate: "", companyGstin: "",
-  companyCurrentITRAmount: 0, companyPrevITRAmount: 0, businessItrYearsCompany: 0,
+  companyCurrentITRAmount: "", companyPrevITRAmount: "", businessItrYearsCompany: "",
 
   existingAccountBank: "BOI", existingCarLoanBank: "None", loanType: "Auto Loan",
-  bureauCibilScore: 750, bureauDpd: 0, bureauLoanEnquiry: 0,
-  bureauCurrentlyOutstanding: 0, bureauAgeAtLastEMI: 55,
+  bureauCibilScore: 750, bureauDpd: "", bureauLoanEnquiry: "",
+  bureauCurrentlyOutstanding: "", bureauAgeAtLastEMI: 55,
   cibilPlScoreToggle: false, bureauCibilPlScore: 750,
   bureauFlagPL: false, bureauFlagHome: false, bureauFlagConsumer: false,
   bureauFlagAgri: false, bureauFlagMSME: false, bureauFlagAuto: false,
-  bureauFlagCC: false, bureauWriteOffAmount: 0,
+  bureauFlagCC: false, bureauWriteOffAmount: "",
 
   coAppAgeRelation: "None", coAppIncomeRelation: "None",
   coApplicantName: "", coApplicantDob: "", coApplicantOccupation: "",
@@ -385,7 +385,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       // class reaches the engine as an UNCLASSIFIED write-off and fails closed
       // (BUR-401D) — a rejection the applicant cannot see the cause of.
       if (key === "bureauFlagCC" && value === false) {
-        draft.bureauWriteOffAmount = 0;
+        draft.bureauWriteOffAmount = "";
       }
       if (key === "cibilPlScoreToggle" && value === false) {
         draft.bureauCibilPlScore = INITIAL_DRAFT.bureauCibilPlScore;
