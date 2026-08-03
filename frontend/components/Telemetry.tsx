@@ -25,35 +25,35 @@ export function BankMatrix({ result }: { result: EvaluationResponse | null }) {
   return (
     <section
       aria-label="Bank eligibility telemetry"
-      className="glass-panel overflow-hidden rounded-2xl p-6 shadow-sm flex flex-col gap-5 border border-line"
+      className="glass-panel overflow-hidden rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col gap-3.5 border border-line"
     >
       {/* Header section with telemetry badge */}
-      <div className="flex flex-col gap-2 border-b border-line pb-4">
+      <div className="flex flex-col gap-1.5 border-b border-line pb-2.5">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-brand-600 font-bold text-xs uppercase tracking-wider">
-            <Zap size={14} className="animate-pulse" />
+          <div className="flex items-center gap-1.5 text-brand-600 font-bold text-[0.6875rem] uppercase tracking-wider">
+            <Zap size={12} className="animate-pulse" />
             <span>BRE Telemetry Matrix</span>
           </div>
-          <span className="numeric text-xs text-ink-subtle bg-bg-raised px-2.5 py-1 rounded-full border border-line">
+          <span className="numeric text-[0.6875rem] text-ink-subtle bg-bg-raised px-2 py-0.5 rounded-full border border-line">
             8 Partner Banks
           </span>
         </div>
 
-        <h2 className="text-xl font-bold tracking-tight text-ink">
+        <h2 className="text-base sm:text-lg font-bold tracking-tight text-ink">
           {result
             ? `Eligibility with ${BANK_LABELS[result.selected_bank]} as primary`
             : "Bank Eligibility Telemetry"}
         </h2>
 
         {!result && (
-          <p className="text-xs text-ink-muted leading-relaxed">
+          <p className="text-[0.75rem] text-ink-muted leading-relaxed">
             Evaluated instantly across all 8 lender rule-sets upon form submission.
           </p>
         )}
 
         {result && !result.overall_eligible && (
-          <div className="rounded-xl border border-warning/30 bg-warning-bg p-3.5 backdrop-blur-md">
-            <p className="text-xs font-semibold text-warning leading-snug">
+          <div className="rounded-xl border border-warning/30 bg-warning-bg p-2.5 backdrop-blur-md">
+            <p className="text-[0.75rem] font-semibold text-warning leading-snug">
               {alternatives(result).length > 0
                 ? `${BANK_LABELS[result.selected_bank]} declined, but ${listBanks(alternatives(result))} approve based on these parameters.`
                 : `${BANK_LABELS[result.selected_bank]} declined, and no other partner bank currently matches these parameters.`}
@@ -62,8 +62,8 @@ export function BankMatrix({ result }: { result: EvaluationResponse | null }) {
         )}
       </div>
 
-      {/* 8-Card Grid Layout */}
-      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+      {/* 8-Card Grid Layout - 2 columns on tablet and desktop */}
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-2">
         {BANK_CODES.map((code, index) => {
           const evaluated = result !== null;
           const eligible = result?.bank_eligibility[code] ?? false;
@@ -73,7 +73,7 @@ export function BankMatrix({ result }: { result: EvaluationResponse | null }) {
             <div
               key={code}
               style={{ animationDelay: `${index * 40}ms` }}
-              className={`telemetry-card-enter group relative flex min-h-[64px] flex-col justify-between rounded-xl border p-3.5 transition-all duration-300 ${
+              className={`telemetry-card-enter group relative flex min-h-[48px] sm:min-h-[50px] flex-col justify-between rounded-xl border p-2.5 transition-all duration-300 ${
                 !evaluated
                   ? "border-line bg-white hover:border-line-strong hover:bg-bg-raised"
                   : eligible
@@ -83,35 +83,35 @@ export function BankMatrix({ result }: { result: EvaluationResponse | null }) {
                   : "border-danger/25 bg-danger-bg/40 hover:border-danger/40"
               }`}
             >
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-[0.875rem] font-semibold text-ink truncate">
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[0.75rem] sm:text-xs font-semibold text-ink truncate">
                   {BANK_LABELS[code]}
                 </span>
                 {isPrimary && (
-                  <span className="rounded-md bg-brand-500/10 border border-brand-500/30 px-1.5 py-0.5 text-[0.6875rem] font-bold text-brand-600">
+                  <span className="rounded bg-brand-500/10 border border-brand-500/30 px-1 py-0.5 text-[0.625rem] font-bold text-brand-600">
                     Primary
                   </span>
                 )}
               </div>
 
-              <div className="mt-2 flex items-center justify-between">
-                <span className="numeric text-[0.75rem] font-bold text-ink-subtle uppercase tracking-wider">
+              <div className="mt-1 flex items-center justify-between gap-2">
+                <span className="numeric text-[0.6875rem] font-bold text-ink-subtle uppercase tracking-wider">
                   {code}
                 </span>
 
                 {!evaluated ? (
-                  <span className="flex items-center gap-1 text-[0.75rem] text-ink-subtle font-mono">
+                  <span className="flex items-center gap-1 text-[0.6875rem] text-ink-subtle font-mono">
                     <span className="h-1.5 w-1.5 rounded-full bg-slate-300" />
                     <span>PENDING</span>
                   </span>
                 ) : eligible ? (
-                  <span className="flex items-center gap-1.5 text-success font-bold text-[0.75rem] tracking-wide">
-                    <CheckCircle2 size={15} className="shrink-0 text-success" />
+                  <span className="flex items-center gap-1 text-success font-bold text-[0.6875rem] tracking-wide">
+                    <CheckCircle2 size={13} className="shrink-0 text-success" />
                     <span>ELIGIBLE</span>
                   </span>
                 ) : (
-                  <span className="flex items-center gap-1.5 text-danger font-bold text-[0.75rem] tracking-wide">
-                    <XCircle size={15} className="shrink-0 text-danger" />
+                  <span className="flex items-center gap-1 text-danger font-bold text-[0.6875rem] tracking-wide">
+                    <XCircle size={13} className="shrink-0 text-danger" />
                     <span>DECLINED</span>
                   </span>
                 )}
@@ -123,16 +123,16 @@ export function BankMatrix({ result }: { result: EvaluationResponse | null }) {
 
       {/* BRE Engine Performance SLA Telemetry */}
       {result && (
-        <div className="mt-2 flex items-center justify-between rounded-xl border border-line bg-bg-raised p-3.5 backdrop-blur-md">
-          <div className="flex items-center gap-2">
-            <ShieldCheck size={16} className="text-brand-600" />
-            <span className="numeric text-xs font-bold text-ink">
+        <div className="mt-1 flex items-center justify-between rounded-xl border border-line bg-bg-raised p-2.5 backdrop-blur-md">
+          <div className="flex items-center gap-1.5">
+            <ShieldCheck size={14} className="text-brand-600" />
+            <span className="numeric text-[0.6875rem] font-bold text-ink">
               {result.executed_rules_count} Rules Evaluated
             </span>
           </div>
-          <div className="flex items-center gap-1.5 text-brand-600">
-            <Zap size={14} />
-            <span className="numeric text-xs font-extrabold">
+          <div className="flex items-center gap-1 text-brand-600">
+            <Zap size={12} />
+            <span className="numeric text-[0.6875rem] font-extrabold">
               {result.execution_time_ms.toFixed(1)} ms SLA
             </span>
           </div>

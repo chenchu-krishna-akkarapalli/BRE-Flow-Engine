@@ -128,6 +128,7 @@ export const STEP_TITLES: Record<number, string> = {
   3: "Your work and income",
   4: "Your banking and credit history",
   5: "Anyone applying with you",
+  6: "Results & Audit",
 };
 
 export function progressFor(entity: EntityType, stepId: number): number {

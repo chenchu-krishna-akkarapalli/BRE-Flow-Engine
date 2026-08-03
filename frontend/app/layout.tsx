@@ -34,7 +34,7 @@ export default function RootLayout({
       className={`${outfit.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-bg-deep text-ink selection:bg-brand-500/20 selection:text-brand-600">
-        <div className="relative flex min-h-screen flex-col overflow-x-hidden">
+        <div className="relative flex min-h-screen flex-col overflow-x-clip">
           {/* Subtle Ambient Light Backdrop Glows */}
           <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-brand-500/5 blur-[140px]" />
           <div className="pointer-events-none absolute top-1/3 -right-40 -z-10 h-[500px] w-[500px] rounded-full bg-brand-indigo/5 blur-[130px]" />

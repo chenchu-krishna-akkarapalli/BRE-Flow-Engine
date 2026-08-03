@@ -22,14 +22,17 @@ export function Stepper({
   onJump: (id: number) => void;
 }) {
   const plan = STEP_PLAN[entityType];
-  const percent = progressFor(entityType, stepId);
-  const allSteps = [1, 2, 3, 4, 5];
+  const percent = stepId === 6 ? 100 : progressFor(entityType, stepId);
+  const allSteps = [1, 2, 3, 4, 5, 6];
   const isCorporate = workflowFor(entityType) === "COMPANY";
 
   // Circular progress SVG calculations (radius 18, circumference ~113.1)
   const radius = 18;
   const circumference = 2 * Math.PI * radius;
   const dashOffset = circumference - (percent / 100) * circumference;
+
+  const totalStepsCount = isCorporate ? 4 : 6;
+  const currentStepNumber = stepId === 6 ? totalStepsCount : plan.indexOf(stepId) + 1;
 
   return (
     <nav aria-label="Onboarding wizard progress" className="flex flex-col gap-5 rounded-2xl border border-line bg-white p-6 shadow-sm">
@@ -66,7 +69,7 @@ export function Stepper({
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs uppercase tracking-wider text-brand-600 font-bold flex items-center gap-1">
-                <Sparkles size={13} /> Step {plan.indexOf(stepId) + 1} of {plan.length}
+                <Sparkles size={13} /> Step {currentStepNumber} of {totalStepsCount}
               </span>
               <span
                 className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[0.75rem] font-medium border ${
@@ -107,11 +110,11 @@ export function Stepper({
       </div>
 
       {/* Interactive Step Navigation Pills */}
-      <ol className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+      <ol className="grid grid-cols-3 gap-2 sm:grid-cols-6">
         {allSteps.map((id) => {
           const active = id === stepId;
-          const included = plan.includes(id);
-          const done = included && plan.indexOf(id) < plan.indexOf(stepId);
+          const included = plan.includes(id) || id === 6;
+          const done = included && (stepId === 6 ? id !== 6 : plan.indexOf(id) < plan.indexOf(stepId));
 
           if (!included) {
             return (

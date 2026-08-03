@@ -37,7 +37,11 @@ export function Step1Identity() {
   const k = <K extends keyof Draft>(key: K) => (v: Draft[K]) => set(key, v);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6"> 
+     <Field label="What is your full name as printed on your ID card?" htmlFor="applicantName">
+        <TextInput id="applicantName" value={draft.applicantName} onChange={k("applicantName")} />
+      </Field>
+
       <Field label="Who is applying for this loan?" htmlFor="entityType">
         <RadioCards
           name="entityType"
@@ -48,9 +52,7 @@ export function Step1Identity() {
         />
       </Field>
 
-      <Field label="What is your full name as printed on your ID card?" htmlFor="applicantName">
-        <TextInput id="applicantName" value={draft.applicantName} onChange={k("applicantName")} />
-      </Field>
+    
 
       {draft.entityType === "Individual" && (
         <>

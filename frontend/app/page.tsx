@@ -1,11 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import type { JSX } from "react";
 import { ArrowLeft, ArrowRight, RefreshCw, ShieldCheck, Zap } from "lucide-react";
 import { AuditCards } from "@/components/AuditCards";
 import { ReviewCard } from "@/components/ReviewCard";
 import { Stepper } from "@/components/Stepper";
-import { BankMatrix, DecisionPanel, ValidationBanner } from "@/components/Telemetry";
+import { BankMatrix, DecisionPanel } from "@/components/Telemetry";
 import {
   Step1Identity, Step2Address, Step3Occupation, Step4Banking, Step5CoApplicant,
 } from "@/components/steps/Steps";
@@ -32,10 +33,44 @@ export default function OnboardingWizard() {
   const submit = useOnboardingStore((s) => s.submit);
   const reset = useOnboardingStore((s) => s.reset);
 
+  const [showSummary, setShowSummary] = useState(false);
+  const [submittingApplication, setSubmittingApplication] = useState(false);
+
   const plan = STEP_PLAN[draft.entityType];
   const isFirst = plan.indexOf(stepId) === 0;
   const isLast = plan.indexOf(stepId) === plan.length - 1;
   const StepBody = STEP_COMPONENTS[stepId];
+
+  const handleEvaluate = async () => {
+    await submit();
+    const currentError = useOnboardingStore.getState().error;
+    if (!currentError) {
+      setShowSummary(true);
+    }
+  };
+
+  const handleJump = (id: number) => {
+    if (id === 6 && !result) return;
+    goTo(id);
+  };
+
+  const handleSubmitApplication = async () => {
+    if (submittingApplication) return;
+    setSubmittingApplication(true);
+    try {
+      // Simulate submission loading time for visual indicator and preventing duplicate clicks
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      setShowSummary(false);
+      goTo(6); // Navigate to Step 6
+    } finally {
+      setSubmittingApplication(false);
+    }
+  };
+
+  const handleReset = () => {
+    setShowSummary(false);
+    reset();
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-bg-deep">
@@ -71,101 +106,122 @@ export default function OnboardingWizard() {
       </header>
 
       {/* Main Wizard Shell */}
-      <main className="mx-auto flex w-full max-w-[var(--shell-max)] flex-1 flex-col gap-8 px-6 py-8 lg:flex-row lg:items-start">
-        {/* Left Form Wizard Column */}
-        <div className="flex w-full flex-col gap-6 lg:max-w-[var(--form-col)]">
-          {/* Stepper Progress Header */}
-          <Stepper entityType={draft.entityType} stepId={stepId} onJump={goTo} />
+      <main className="mx-auto flex w-full max-w-[var(--shell-max)] flex-1 flex-col gap-8 px-6 pt-4 pb-8 lg:flex-row lg:items-start animate-fade-in">
+        {stepId === 6 ? (
+          /* Step 6 Content - Side-by-side layout on large screens */
+          <div className="flex w-full flex-col gap-8 lg:flex-row lg:items-start max-w-[var(--shell-max)] mx-auto animate-in fade-in duration-300">
+            {/* Left Column: Full Audit Trail */}
+            <div className="flex w-full flex-col gap-6 lg:max-w-[var(--form-col)]">
+              {/* Stepper Progress Header */}
+              <Stepper entityType={draft.entityType} stepId={stepId} onJump={handleJump} />
 
-          {/* Form Step Body Container with Day Mode Glass Panel */}
-          <section
-            key={stepId}
-            className="step-enter glass-panel rounded-2xl p-6 sm:p-8 shadow-sm border border-line bg-white"
-          >
-            <StepBody />
-          </section>
-
-          {/* Final Step Review Card */}
-          {isLast && (
-            <ReviewCard
-              draft={draft}
-              onEdit={goTo}
-              applicationId={result?.application_id}
-            />
-          )}
-
-          {/* Verdict Decision Panel */}
-          {result && <DecisionPanel result={result} />}
-
-          {/* Detailed Audit Logs */}
-          {result && <AuditCards result={result} />}
-
-          {/* Validation & Error Slot */}
-          {(result || error) && (
-            <div className="validation-slot">
-              {result && !result.overall_eligible && (
-                <ValidationBanner reasons={result.rejection_reasons} onJump={goTo} />
-              )}
-              {error && (
-                <div role="alert" className="rounded-2xl border border-danger/30 bg-danger-bg p-5 text-sm font-bold text-danger backdrop-blur-xl shadow-xs">
-                  {error}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Form Wizard Navigation Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
-            <button
-              type="button"
-              onClick={prev}
-              disabled={isFirst}
-              className="flex min-h-[48px] items-center gap-2 rounded-xl border border-line bg-white px-6 py-3 text-sm font-bold text-ink shadow-xs transition-all hover:border-line-strong hover:bg-bg-raised disabled:opacity-40"
-            >
-              <ArrowLeft size={16} />
-              <span>Go back</span>
-            </button>
-
-            {isLast ? (
-              <div className="flex items-center gap-3">
-                {result && (
-                  <button
-                    type="button"
-                    onClick={reset}
-                    className="flex min-h-[48px] items-center gap-2 rounded-xl border border-line bg-white px-6 py-3 text-sm font-bold text-ink transition-all hover:bg-bg-raised"
-                  >
-                    <RefreshCw size={16} />
-                    <span>Start again</span>
-                  </button>
-                )}
+              {result && <DecisionPanel result={result} />}
+              {result && <AuditCards result={result} />}
+              
+              {/* Start Again button at the bottom of the left column */}
+              <div className="flex justify-end pt-4">
                 <button
                   type="button"
-                  onClick={submit}
-                  disabled={submitting}
-                  className="group relative flex min-h-[48px] items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-brand-500 via-brand-indigo to-brand-violet px-8 py-3 text-sm font-extrabold text-white shadow-glow transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_4px_25px_rgba(13,148,136,0.35)] active:scale-[0.98] disabled:opacity-60"
+                  onClick={handleReset}
+                  className="flex min-h-[48px] items-center gap-2 rounded-xl border border-line bg-white px-6 py-3 text-sm font-bold text-ink transition-all hover:bg-bg-raised"
                 >
-                  <ShieldCheck size={18} />
-                  <span>{submitting ? "Checking BRE Engine..." : "See which banks will lend to me"}</span>
+                  <RefreshCw size={16} />
+                  <span>Start again</span>
                 </button>
               </div>
-            ) : (
-              <button
-                type="button"
-                onClick={next}
-                className="group flex min-h-[48px] items-center gap-2 rounded-xl bg-gradient-to-r from-brand-500 to-brand-indigo px-8 py-3 text-sm font-extrabold text-white shadow-glow transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_4px_20px_rgba(13,148,136,0.3)] active:scale-[0.98]"
+            </div>
+
+            {/* Right Column: BRE Telemetry Matrix */}
+            <aside className="w-full lg:sticky lg:top-24 lg:max-w-[var(--telemetry-col)]">
+              <BankMatrix result={result} />
+            </aside>
+          </div>
+        ) : (
+          /* Normal Onboarding Steps 1 to 5 */
+          <>
+            {/* Left Form Wizard Column */}
+            <div className="flex w-full flex-col gap-6 lg:max-w-[var(--form-col)]">
+              {/* Stepper Progress Header */}
+              <Stepper entityType={draft.entityType} stepId={stepId} onJump={handleJump} />
+
+              {/* Form Step Body Container with Day Mode Glass Panel */}
+              <section
+                key={stepId}
+                className="step-enter glass-panel rounded-2xl p-6 sm:p-8 shadow-sm border border-line bg-white"
               >
-                <span>Next question</span>
-                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-              </button>
-            )}
+                {StepBody && <StepBody />}
+              </section>
+
+              {/* Validation & Error Slot */}
+              {error && (
+                <div className="validation-slot">
+                  <div role="alert" className="rounded-2xl border border-danger/30 bg-danger-bg p-5 text-sm font-bold text-danger backdrop-blur-xl shadow-xs">
+                    {error}
+                  </div>
+                </div>
+              )}
+
+              {/* Form Wizard Navigation Bar */}
+              <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
+                <button
+                  type="button"
+                  onClick={prev}
+                  disabled={isFirst}
+                  className="flex min-h-[48px] items-center gap-2 rounded-xl border border-line bg-white px-6 py-3 text-sm font-bold text-ink shadow-xs transition-all hover:border-line-strong hover:bg-bg-raised disabled:opacity-40"
+                >
+                  <ArrowLeft size={16} />
+                  <span>Go back</span>
+                </button>
+
+                {isLast ? (
+                  <button
+                    type="button"
+                    onClick={handleEvaluate}
+                    disabled={submitting}
+                    className="group relative flex min-h-[48px] items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-brand-500 via-brand-indigo to-brand-violet px-8 py-3 text-sm font-extrabold text-white shadow-glow transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_4px_25px_rgba(13,148,136,0.35)] active:scale-[0.98] disabled:opacity-60"
+                  >
+                    <span>{submitting ? "Evaluating Application..." : "Evaluate Application"}</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={next}
+                    className="group flex min-h-[48px] items-center gap-2 rounded-xl bg-gradient-to-r from-brand-500 to-brand-indigo px-8 py-3 text-sm font-extrabold text-white shadow-glow transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_4px_20px_rgba(13,148,136,0.3)] active:scale-[0.98]"
+                  >
+                    <span>Next question</span>
+                    <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Right Telemetry Column */}
+            <aside className="w-full lg:sticky lg:top-24 lg:max-w-[var(--telemetry-col)]">
+              {/* Telemetry Matrix shows PENDING (null) on Steps 1 to 5 */}
+              <BankMatrix result={null} />
+            </aside>
+          </>
+        )}
+      </main>
+
+      {/* Application Summary Popup Modal */}
+      {showSummary && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+          <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+            <ReviewCard
+              draft={draft}
+              onEdit={(step) => {
+                setShowSummary(false);
+                goTo(step);
+              }}
+              applicationId={result?.application_id}
+              result={result}
+              onSubmitApplication={handleSubmitApplication}
+              submittingApplication={submittingApplication}
+            />
           </div>
         </div>
-
-        {/* Right Telemetry Column */}
-        <aside className="w-full lg:sticky lg:top-24 lg:max-w-[var(--telemetry-col)]">
-          <BankMatrix result={result} />
-        </aside>
-      </main>
+      )}
 
       {/* Footer */}
       <footer className="mt-auto border-t border-line bg-white/60 py-6 text-center text-xs font-medium text-ink-subtle backdrop-blur-xl">

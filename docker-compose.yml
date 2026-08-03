@@ -44,7 +44,7 @@ services:
       - ENVIRONMENT=${ENVIRONMENT:-development}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - POSTGRES_SERVER=postgres
-      - POSTGRES_USER=${POSTGRES_USER:-bre_user}
+      - POSTGRES_USER=${POSTGRES_USER:-bre_user} 
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-bre_password}
       - POSTGRES_DB=${POSTGRES_DB:-bre_db}
       - POSTGRES_PORT=5432

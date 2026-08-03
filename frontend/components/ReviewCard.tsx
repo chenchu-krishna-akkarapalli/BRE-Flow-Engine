@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Download, Eye, EyeOff, FileSpreadsheet, Printer, ShieldCheck } from "lucide-react";
+import { Download, Eye, EyeOff, FileSpreadsheet, ShieldCheck } from "lucide-react";
 import { downloadApplicationExport } from "@/lib/api";
 import { redactDob, redactPan } from "@/lib/redact";
-import { STEP_PLAN } from "@/lib/form-schema";
+import { STEP_PLAN, BANK_LABELS } from "@/lib/form-schema";
 import type { Draft } from "@/store/useOnboardingStore";
 import { profileTypeFor } from "@/store/useOnboardingStore";
+import type { EvaluationResponse } from "@/lib/types";
 
 function missedPaymentSummary(draft: Draft): string {
   if (!draft.hasMissedPayment) return "None";
@@ -21,10 +22,16 @@ export function ReviewCard({
   draft,
   onEdit,
   applicationId,
+  result,
+  onSubmitApplication,
+  submittingApplication,
 }: {
   draft: Draft;
   onEdit: (stepId: number) => void;
   applicationId?: string | null;
+  result?: EvaluationResponse | null;
+  onSubmitApplication?: () => void;
+  submittingApplication?: boolean;
 }) {
   const [revealed, setRevealed] = useState(false);
   const [exporting, setExporting] = useState<"pdf" | "excel" | null>(null);
@@ -115,6 +122,28 @@ export function ReviewCard({
             ["Income Aggregation", draft.coAppIncomeRelation],
           ] as [string, string][],
         }]),
+    ...(result
+      ? [
+          {
+            step: 6,
+            title: "Engine Decision",
+            rows: [
+              ["Overall Status", result.status],
+              [
+                "Decision Details",
+                result.overall_eligible
+                  ? `Application approved with ${BANK_LABELS[result.selected_bank]}. Parameters meet all risk threshold limits.`
+                  : `Application does not meet the eligibility limits for ${BANK_LABELS[result.selected_bank]}.`,
+              ],
+            ] as [string, string][],
+          },
+          {
+            step: 7,
+            title: "Reference ID",
+            rows: [["Application Reference ID", result.application_id || "—"]] as [string, string][],
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -123,7 +152,7 @@ export function ReviewCard({
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line pb-4">
         <div>
           <span className="text-xs uppercase tracking-wider text-brand-600 font-bold flex items-center gap-1">
-            <ShieldCheck size={14} /> Application Summary
+            <ShieldCheck size={14} /> APPLICATION SUMMARY
           </span>
           <h2 className="text-xl font-bold tracking-tight text-ink mt-0.5">
             Review Your Application Parameters
@@ -141,17 +170,7 @@ export function ReviewCard({
             <span>{revealed ? "Hide PII" : "Unmask PII"}</span>
           </button>
 
-          {/* Quick Print Button */}
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className="flex min-h-[40px] items-center gap-2 rounded-xl border border-line bg-white px-3.5 py-2 text-xs font-semibold text-ink hover:border-line-strong hover:bg-bg-raised transition-all"
-          >
-            <Printer size={14} />
-            <span className="hidden sm:inline">Print</span>
-          </button>
-
-          {/* Export PDF */}
+          {/* Export PDF
           <button
             type="button"
             onClick={() => handleExport("pdf")}
@@ -160,10 +179,10 @@ export function ReviewCard({
           >
             <Download size={14} />
             <span>{exporting === "pdf" ? "Exporting..." : "PDF"}</span>
-          </button>
+          </button> */}
 
           {/* Export Excel */}
-          <button
+          {/* <button
             type="button"
             onClick={() => handleExport("excel")}
             disabled={exporting !== null}
@@ -171,7 +190,7 @@ export function ReviewCard({
           >
             <FileSpreadsheet size={14} />
             <span>{exporting === "excel" ? "Exporting..." : "Excel"}</span>
-          </button>
+          </button> */}
         </div>
       </div>
 
@@ -205,6 +224,30 @@ export function ReviewCard({
           </div>
         ))}
       </div>
+
+      {/* Submit Application Button */}
+      {onSubmitApplication && (
+        <div className="border-t border-line pt-6 flex justify-end">
+          <button
+            type="button"
+            onClick={onSubmitApplication}
+            disabled={submittingApplication}
+            className="group relative flex min-h-[48px] items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-brand-500 via-brand-indigo to-brand-violet px-8 py-3 text-sm font-extrabold text-white shadow-glow transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_4px_25px_rgba(13,148,136,0.35)] active:scale-[0.98] disabled:opacity-60"
+          >
+            {submittingApplication ? (
+              <>
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                <span>Submitting Application...</span>
+              </>
+            ) : (
+              <>
+                <ShieldCheck size={18} />
+                <span>Submit Application</span>
+              </>
+            )}
+          </button>
+        </div>
+      )}
     </section>
   );
 }
