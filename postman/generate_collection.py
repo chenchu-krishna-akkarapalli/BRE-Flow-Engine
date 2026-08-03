@@ -70,7 +70,7 @@ def salaried(bank, **over):
         "profileType": "Salaried",
         "employerType": "Employment-Pvt Ltd",
         "tenureBand": "2y+",
-        "grossSalaryBand": "gt25000",
+        "grossSalary": 50000.0,
         "salaryMode": "Salary payment mode- Bank Credit",
         "form16Status": "Form 16",
         "form16Years": max(BANK_MATRIX_RULES[bank]["form16_years_required"], 2),
@@ -177,9 +177,9 @@ def form_scenarios(bank):
               "Any failure here invalidates the rest of the folder.",
               form_body(bank, salaried(bank)), True))
     s.append((CAT_SAL, "salaried-salary-below-floor",
-              f"EMP-SAL-202: gross band 'lt25000' resolves to Rs 20,000/month, below the "
+              f"EMP-SAL-202: a gross salary of Rs 20,000/month, below the "
               f"Rs {p['min_salary']:,.0f} floor.",
-              form_body(bank, salaried(bank, grossSalaryBand="lt25000")), False))
+              form_body(bank, salaried(bank, grossSalary=20000.0)), False))
     s.append((CAT_SAL, "salaried-tenure-1y-2y",
               f"EMP-SAL-205: '1y-2y' band credits 1.00 yr of current-company tenure against "
               f"{bank}'s {p['min_current_company_tenure_years']} yr floor. Prior employer "

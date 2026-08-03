@@ -120,7 +120,10 @@ class SalaryMode(str, Enum):
 
 
 class Form16Status(str, Enum):
+    """Which document a salaried applicant offers as proof of income."""
+
     FORM_16 = "Form 16"
+    ITR = "ITR"
     NO_INCOME_PROOF = "No Income Proof"
 
 

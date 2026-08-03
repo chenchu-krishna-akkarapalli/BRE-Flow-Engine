@@ -442,7 +442,7 @@ def build_form(c: Dict[str, Any]) -> Dict[str, Any]:
         if c["occupation"] == "Salaried":
             occupation = {
                 "profileType": "Salaried", "tenureBand": c["tenure_band"],
-                "grossSalaryBand": c["salary_band"],
+                "grossSalary": 50000.0 if c["salary_band"] == "gt25000" else 20000.0,
                 "salaryMode": "Salary payment mode-Cash" if c["cash_salary"]
                               else "Salary payment mode- Bank Credit",
                 "form16Status": "No Income Proof" if c["no_income_proof"] else "Form 16",

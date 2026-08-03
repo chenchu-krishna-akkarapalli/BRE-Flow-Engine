@@ -30,6 +30,10 @@ from app.constants.enums import (
 )
 from app.constants.error_codes import ErrorCode
 from app.constants.limits import (
+    MAX_UPLOAD_BYTES,
+    OTP_LENGTH,
+    OTP_MAX_ATTEMPTS,
+    OTP_TTL_SECONDS,
     MIN_SELF_EMPLOYED_COMBINED_ITR,
     DB_MAX_OVERFLOW,
     DB_POOL_PRE_PING,
@@ -57,6 +61,8 @@ from app.constants.messages import (
     MSG_READY_OK,
 )
 from app.constants.regex import (
+    AADHAAR_REGEX,
+    AADHAAR_REGEX_PATTERN,
     DOB_REGEX,
     EMAIL_REGEX,
     EMAIL_REGEX_PATTERN,
@@ -123,6 +129,12 @@ __all__ = [
     "MSG_ERR_JDM_NOT_FOUND",
     "MSG_EVALUATION_APPROVED",
     "MSG_EVALUATION_REJECTED",
+    "MAX_UPLOAD_BYTES",
+    "OTP_LENGTH",
+    "OTP_TTL_SECONDS",
+    "OTP_MAX_ATTEMPTS",
+    "AADHAAR_REGEX",
+    "AADHAAR_REGEX_PATTERN",
     "PAN_REGEX",
     "GSTIN_REGEX",
     "PINCODE_REGEX",

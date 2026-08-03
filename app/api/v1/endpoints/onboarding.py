@@ -2,7 +2,7 @@ import json
 import time
 from typing import Any, Dict, Literal, Optional, Tuple
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from fastapi.responses import StreamingResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,12 +10,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.deps import get_current_tenant
 from app.api.schemas.onboarding import (
     CompanyIdentity,
+    DocumentExtractionResponse,
     HUFIdentity,
     IndividualIdentity,
     OnboardingEvaluationRequest,
     OnboardingEvaluationResponse,
     OnboardingFormEvaluationResponse,
     OnboardingFormRequest,
+    OtpSendRequest,
+    OtpSendResponse,
+    OtpVerifyRequest,
+    OtpVerifyResponse,
     RejectionReasonDetail,
 )
 from app.core.database import get_db
@@ -26,6 +31,8 @@ from app.db.models.rule_execution import RuleExecutionModel
 from app.db.rls import set_tenant_rls_context
 from app.services.bre_engine import bre_engine_service
 from app.services.export_service import build_excel, build_pdf
+from app.services.ocr_service import extract_aadhaar_card, extract_pan_card, validate_upload
+from app.services.verification_service import send_otp, verify_otp
 
 router = APIRouter()
 
@@ -393,3 +400,65 @@ async def export_application_report(
         media_type=EXPORT_MEDIA_TYPES[format],
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
+
+
+# --------------------------------------------------------------------------- #
+# Document extraction & OTP verification (add-on.md)
+#
+# These sit OUTSIDE the < 80 ms CRUD budget by nature: Tesseract takes seconds.
+# They run in a worker thread so the evaluation path keeps its latency, and the
+# uploaded document is never written to a durable store — only the extracted
+# field survives the request, and Aadhaar only ever in masked form.
+# --------------------------------------------------------------------------- #
+
+DOCUMENT_EXTRACTORS = {"pan": extract_pan_card, "aadhaar": extract_aadhaar_card}
+
+
+@router.post("/documents/{document_type}/extract", response_model=DocumentExtractionResponse)
+async def extract_document(
+    document_type: Literal["pan", "aadhaar"],
+    file: UploadFile = File(..., description="JPEG, PNG or PDF, up to 5 MB."),
+    tenant_id: str = Depends(get_current_tenant),
+):
+    """Read a PAN or Aadhaar card with openbharatocr and return its fields."""
+    content = await file.read()
+    filename = file.filename or f"{document_type}-upload"
+    validate_upload(content, file.content_type, filename)
+
+    # Never raises for a missing OCR stack: `simulated` says which path ran.
+    extracted, simulated = await DOCUMENT_EXTRACTORS[document_type](
+        content, file.content_type, filename
+    )
+    logger.info(
+        f"Extracted {document_type} for tenant '{tenant_id}' from "
+        f"'{redact_pii(filename)}' ({len(content)} bytes, simulated={simulated}): "
+        f"{redact_pii(dict(extracted))}"
+    )
+    return DocumentExtractionResponse(
+        document_type=document_type,
+        filename=filename,
+        size_bytes=len(content),
+        extracted=extracted,
+        populated=any(v for v in extracted.values()),
+        simulated=simulated,
+    )
+
+
+@router.post("/verification/otp/send", response_model=OtpSendResponse)
+async def send_verification_otp(
+    payload: OtpSendRequest,
+    tenant_id: str = Depends(get_current_tenant),
+):
+    """Issue a demo OTP challenge for a PAN (email) or mobile number."""
+    result = send_otp(payload.channel, payload.target)
+    logger.info(f"OTP requested by tenant '{tenant_id}' via {payload.channel}")
+    return OtpSendResponse(**result)
+
+
+@router.post("/verification/otp/verify", response_model=OtpVerifyResponse)
+async def confirm_verification_otp(
+    payload: OtpVerifyRequest,
+    tenant_id: str = Depends(get_current_tenant),
+):
+    """Check a code against its challenge. Correct codes verify exactly once."""
+    return OtpVerifyResponse(**verify_otp(payload.challenge_id, payload.code))

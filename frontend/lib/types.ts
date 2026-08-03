@@ -46,6 +46,7 @@ export interface AddressStep {
   cityName?: string;
   stateName?: string;
   residentDetails: "Owned House" | "Rented House";
+  aadhaarNumber?: string;
 }
 
 export interface SalariedOccupation {
@@ -54,11 +55,14 @@ export interface SalariedOccupation {
   tenureBand: "0-6m" | "6m-1y" | "1y-2y" | "2y+";
   prevCompanyName?: string;
   prevCompanyJoining?: string;
-  grossSalaryBand: "lt25000" | "gt25000";
+  grossSalary: number;
   salaryMode: "Salary payment mode- Bank Credit" | "Salary payment mode-Cash";
-  form16Status: "Form 16" | "No Income Proof";
-  /** Years of Form 16 on file — required only when Form 16 is claimed. */
+  form16Status: "Form 16" | "ITR" | "No Income Proof";
+  // Years of Form 16 on file — required only when Form 16 is claimed.
   form16Years?: number;
+  // Required instead of form16Years when the proof offered is an ITR.
+  currentYearItr?: number;
+  previousYearItr?: number;
   rentalIncomeTypeSalaried: string;
 }
 
@@ -99,7 +103,7 @@ export interface BankingStep {
   bureauDpd: number;
   bureauLoanEnquiry: boolean;
   bureauCurrentlyOutstanding: number;
-  /** Omitted for the Company workflow — the corporate matrix has no age column. */
+  // Omitted by the wizard; the API derives it from the DOB (age + 7).
   bureauAgeAtLastEMI?: number;
   cibilPlScoreToggle: boolean;
   bureauCibilPlScore?: number;

@@ -656,7 +656,7 @@ def _evaluate_bank(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> Li
             check("EMP-SAL-207", "No Income Proof Segment", "Employment - Salaried",
                   policy["allow_no_income_proof"], "No Income Proof", policy["allow_no_income_proof"],
                   f"{code} requires valid income proof; no-income-proof profile is not accepted.")
-        else:
+        elif inp["income_proof"] != "ITR":
             check("EMP-SAL-206", "Form-16 History", "Employment - Salaried",
                   inp["form_16_years"] >= policy["form16_years_required"],
                   f"{inp['form_16_years']} yrs", f">= {policy['form16_years_required']} yrs",
@@ -870,6 +870,9 @@ class BREEngineService:
             "current_company_years": payload.get("current_company_tenure_months", 99999) / 12.0,
             "no_income_proof": payload.get("no_income_proof_segment", False),
             "form_16_years": payload.get("form_16_years", 2),
+            # "Form 16" | "ITR" | "No Income Proof". An ITR proves income
+            # without a Form-16 history, so col 55 does not apply to it.
+            "income_proof": payload.get("income_proof", "Form 16"),
             "active_car_loan": payload.get("active_car_loan", False),
             "age_emi_sal": payload.get("age_at_last_emi_salaried", age),
             "age_emi_se": payload.get("age_at_last_emi_self_employed", age),

@@ -2,8 +2,13 @@ import logging
 import re
 from typing import Any, Dict, Union
 
-# Regex patterns for PII redaction
-PAN_PATTERN = re.compile(r"([A-Z]{2})[A-Z]{3}[0-9]{4}([A-Z]{2})")
+# Regex patterns for PII redaction.
+# A PAN is 10 characters (5 letters, 4 digits, 1 letter). The pattern below
+# used to demand 2+3+4+2 = 11, so it never matched a real PAN and the
+# string-redaction path silently passed them through — reachable now that an
+# uploaded filename can carry one. Case-insensitive because filenames are
+# user-supplied. The mask matches redact_pan(): ABCDE1234F -> AB******4F.
+PAN_PATTERN = re.compile(r"\b([A-Z]{2})[A-Z]{3}[0-9]{3}([0-9][A-Z])\b", re.IGNORECASE)
 DOB_PATTERN = re.compile(r"\b(\d{4}-\d{2}-)(\d{2})\b")
 AADHAAR_PATTERN = re.compile(r"\b\d{4}[-\s]?\d{4}[-\s]?(\d{4})\b")
 
@@ -71,15 +76,20 @@ def setup_logging(log_level: str = "INFO") -> logging.Logger:
     logger = logging.getLogger("flowbre")
     logger.setLevel(log_level.upper())
     
+    # The filter belongs on the LOGGER, not one handler: a handler-scoped
+    # filter is bypassed by every other handler attached later (file, JSON,
+    # APM shipper, pytest's caplog), which then sees the raw PII.
+    if not any(isinstance(f, PIIRedactingFilter) for f in logger.filters):
+        logger.addFilter(PIIRedactingFilter())
+
     if not logger.handlers:
         handler = logging.StreamHandler()
         formatter = logging.Formatter(
             '[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s'
         )
         handler.setFormatter(formatter)
-        handler.addFilter(PIIRedactingFilter())
         logger.addHandler(handler)
-        
+
     return logger
 
 

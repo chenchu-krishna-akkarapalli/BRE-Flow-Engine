@@ -27,6 +27,9 @@ export interface Draft {
   nriStayPeriod: number | "";
   phone: string;
   email: string;
+  // Demo OTP outcomes; they gate nothing in the eligibility decision.
+  panVerified: boolean;
+  phoneVerified: boolean;
   companyName: string;
   companyType: string;
   companyPan: string;
@@ -42,6 +45,8 @@ export interface Draft {
   cityName: string;
   stateName: string;
   residentDetails: string;
+  // Read off the address proof by OCR when the applicant owns their home.
+  aadhaarNumber: string;
 
   // Step 3 — occupation
   occupation: "Salaried" | "Self-Employed";
@@ -49,11 +54,17 @@ export interface Draft {
   tenureBand: string;
   prevCompanyName: string;
   prevCompanyJoining: string;
-  grossSalaryBand: string;
+  grossSalary: number | "";
   salaryMode: string;
+  // "Form 16" | "ITR" | "No Income Proof"
   form16Status: string;
   // Empty string while the box is cleared — buildPayload coerces on submit.
   form16Years: number | "";
+  // Collected instead of Form-16 years when the proof offered is an ITR.
+  salariedCurrentYearItr: number | "";
+  salariedPreviousYearItr: number | "";
+  // Yes/no gate in front of the rental-income category dropdown.
+  hasRentalIncome: boolean;
   rentalIncomeType: string;
   officeAddressType: string;
   officeAddress: string;
@@ -61,6 +72,7 @@ export interface Draft {
   guarantorStatus: string;
   businessEntityType: string;
   businessProof: string;
+  businessProofVerified: boolean;
   businessEstablishmentDate: string;
   currentITRAmount: number | "";
   prevITRAmount: number | "";
@@ -81,7 +93,6 @@ export interface Draft {
   missedOver90: boolean;
   bureauLoanEnquiry: boolean;
   bureauCurrentlyOutstanding: number | "";
-  bureauAgeAtLastEMI: number | "";
   cibilPlScoreToggle: boolean;
   bureauCibilPlScore: number | "";
   // Gate: the seven class flags below are only asked once this is true.
@@ -107,18 +118,23 @@ const INITIAL_DRAFT: Draft = {
   entityType: "Individual",
   applicantName: "", dob: "", gender: "", pan: "", maritalStatus: "",
   citizenshipStatus: "Resident Indian", nriStayPeriod: 12, phone: "", email: "",
+  panVerified: false, phoneVerified: false,
   companyName: "", companyType: "", companyPan: "", companyLocation: "",
   contactPersonName: "", contactPersonDesignation: "", companyMobile: "",
   companyEmail: "", companyEmployees: "",
 
   pincode: "", cityName: "", stateName: "", residentDetails: "Owned House",
+  aadhaarNumber: "",
 
   occupation: "Salaried",
   employerType: "", tenureBand: "2y+", prevCompanyName: "", prevCompanyJoining: "",
-  grossSalaryBand: "gt25000", salaryMode: "Salary payment mode- Bank Credit",
-  form16Status: "Form 16", form16Years: 2, rentalIncomeType: "None",
+  grossSalary: "", salaryMode: "Salary payment mode- Bank Credit",
+  form16Status: "Form 16", form16Years: 2, salariedCurrentYearItr: "",
+  salariedPreviousYearItr: "", hasRentalIncome: false,
+  rentalIncomeType: "Rental Income-with Agreement -Not filed ITR-Not reflecting in Bank",
   officeAddressType: "Same", officeAddress: "", officePremisesStatus: "",
   guarantorStatus: "", businessEntityType: "Propreitorship", businessProof: "",
+  businessProofVerified: false,
   businessEstablishmentDate: "", currentITRAmount: "", prevITRAmount: "",
   businessItrYears: "", companyEstablishmentDate: "", companyGstin: "",
   companyCurrentITRAmount: "", companyPrevITRAmount: "", businessItrYearsCompany: "",
@@ -126,7 +142,7 @@ const INITIAL_DRAFT: Draft = {
   existingAccountBank: "BOI", existingCarLoanBank: "None", loanType: "Auto Loan",
   bureauCibilScore: 750, hasMissedPayment: false, missedOver90: false,
   bureauLoanEnquiry: false,
-  bureauCurrentlyOutstanding: 0, bureauAgeAtLastEMI: 55,
+  bureauCurrentlyOutstanding: 0,
   cibilPlScoreToggle: false, bureauCibilPlScore: 750,
   hasWriteOff: false, bureauFlagPL: false, bureauFlagHome: false, bureauFlagConsumer: false,
   bureauFlagAgri: false, bureauFlagMSME: false, bureauFlagAuto: false,
@@ -154,6 +170,36 @@ export function profileTypeFor(draft: Draft): ProfileType {
 export function dpdDaysFor(draft: Draft): number {
   if (!draft.hasMissedPayment) return 0;
   return draft.missedOver90 ? 90 : 30;
+}
+
+// Whole years elapsed since the DOB, on the calendar (no day-count drift).
+export function ageFromDob(dob: string): number | null {
+  if (!dob) return null;
+  const born = new Date(dob);
+  if (Number.isNaN(born.getTime())) return null;
+  const today = new Date();
+  let years = today.getFullYear() - born.getFullYear();
+  if (today.getMonth() < born.getMonth()
+    || (today.getMonth() === born.getMonth() && today.getDate() < born.getDate())) {
+    years -= 1;
+  }
+  return Math.max(years, 0);
+}
+
+// add-on.md §4: no longer asked. Age at the final EMI is current age + a fixed 7-year tenor.
+export const LOAN_TENOR_YEARS = 7;
+
+export function ageAtLastEmiFor(draft: Draft): number | null {
+  const age = ageFromDob(draft.dob);
+  return age === null ? null : age + LOAN_TENOR_YEARS;
+}
+
+// add-on.md §5: the co-applicant section only appears when the loan outlives the age limit.
+export const CO_APPLICANT_AGE_THRESHOLD = 60;
+
+export function needsCoApplicant(draft: Draft): boolean {
+  const age = ageAtLastEmiFor(draft);
+  return age !== null && age > CO_APPLICANT_AGE_THRESHOLD;
 }
 
 // Office in a RENTED residence — the only configuration that asks the guarantor question.
@@ -197,6 +243,11 @@ function buildIdentity(d: Draft): Identity {
   };
 }
 
+// "No" to the rental radio is what sets the None category; the dropdown never carries it.
+function rentalIncomeFor(d: Draft): string {
+  return d.hasRentalIncome ? d.rentalIncomeType : "None";
+}
+
 function buildOccupation(d: Draft): Occupation {
   const profile = profileTypeFor(d);
 
@@ -231,7 +282,7 @@ function buildOccupation(d: Draft): Occupation {
       currentITRAmount: Number(d.currentITRAmount),
       prevITRAmount: Number(d.prevITRAmount),
       businessItrAmount: Number(d.businessItrYears),
-      rentalIncomeTypeSelfEmployed: d.rentalIncomeType,
+      rentalIncomeTypeSelfEmployed: rentalIncomeFor(d),
     };
   }
 
@@ -243,12 +294,15 @@ function buildOccupation(d: Draft): Occupation {
     // Prior employment is required below 2 years and rejected at 2y+.
     prevCompanyName: shortTenure ? d.prevCompanyName : undefined,
     prevCompanyJoining: shortTenure ? d.prevCompanyJoining : undefined,
-    grossSalaryBand: d.grossSalaryBand as never,
+    grossSalary: Number(d.grossSalary),
     salaryMode: d.salaryMode as never,
     form16Status: d.form16Status as never,
     // Only accepted when Form 16 is claimed; the API rejects it otherwise.
     form16Years: d.form16Status === "Form 16" ? Number(d.form16Years) : undefined,
-    rentalIncomeTypeSalaried: d.rentalIncomeType,
+    // ...and these only when the proof offered is an ITR.
+    currentYearItr: d.form16Status === "ITR" ? Number(d.salariedCurrentYearItr) : undefined,
+    previousYearItr: d.form16Status === "ITR" ? Number(d.salariedPreviousYearItr) : undefined,
+    rentalIncomeTypeSalaried: rentalIncomeFor(d),
   };
 }
 
@@ -261,9 +315,8 @@ function buildBanking(d: Draft): BankingStep {
     bureauDpd: dpdDaysFor(d),
     bureauLoanEnquiry: d.bureauLoanEnquiry,
     bureauCurrentlyOutstanding: Number(d.bureauCurrentlyOutstanding),
-    // A company has no age; the Company matrix carries no age-at-EMI column.
-    bureauAgeAtLastEMI:
-      workflowFor(d.entityType) === "COMPANY" ? undefined : Number(d.bureauAgeAtLastEMI),
+    // Omitted entirely: the API derives it from the DOB (age + 7). A company
+    // has no DOB and the Company matrix carries no age-at-EMI column anyway.
     cibilPlScoreToggle: d.cibilPlScoreToggle,
     bureauCibilPlScore: d.cibilPlScoreToggle ? Number(d.bureauCibilPlScore) : undefined,
     bureauFlagPL: d.bureauFlagPL,
@@ -301,7 +354,8 @@ export function buildPayload(d: Draft): OnboardingFormRequest {
           pincode: d.pincode,
           cityName: opt(d.cityName),
           stateName: opt(d.stateName),
-          residentDetails: d.residentDetails as "Owned House" | "Rented House",
+              residentDetails: d.residentDetails as "Owned House" | "Rented House",
+          aadhaarNumber: opt(d.aadhaarNumber),
         },
     occupation: buildOccupation(d),
     banking: buildBanking(d),

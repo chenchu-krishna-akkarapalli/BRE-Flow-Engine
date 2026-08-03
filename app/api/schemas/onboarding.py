@@ -17,6 +17,7 @@ from typing import Annotated, Any, Dict, List, Literal, Optional, Union
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from app.constants import (
+    AADHAAR_REGEX_PATTERN,
     EMAIL_REGEX_PATTERN,
     PAN_REGEX_PATTERN,
     PHONE_REGEX_PATTERN,
@@ -32,7 +33,6 @@ from app.constants import (
     Form16Status,
     FormBusinessEntityType,
     Gender,
-    GrossSalaryBand,
     GuarantorStatus,
     ITRFilingStatus,
     LoanType,
@@ -56,7 +56,7 @@ from app.constants.form_mappings import (
     PROPERTY_STATUS_MATRIX,
     RENTAL_INCOME_TO_CLASS,
     SIBLING_RELATIONS,
-    SALARY_BAND_TO_MONTHLY_AMOUNT,
+    LOAN_TENOR_YEARS,
     SALARY_MODE_TO_ENGINE_MODE,
     TENURE_BAND_TO_MONTHS,
     WRITE_OFF_FLAG_PRECEDENCE,
@@ -322,6 +322,11 @@ class AddressStep(FormModel):
     city_name: Optional[str] = Field(default=None, alias="cityName", max_length=128)
     state_name: Optional[str] = Field(default=None, alias="stateName", max_length=128)
     resident_details: ResidentDetails = Field(alias="residentDetails")
+    # Read off the address proof by OCR when the applicant owns their home.
+    # Only ever persisted masked (****-****-1234).
+    aadhaar_number: Optional[str] = Field(
+        default=None, alias="aadhaarNumber", pattern=AADHAAR_REGEX_PATTERN
+    )
 
 
 # --- Step 3: Occupation & Business ----------------------------------------- #
@@ -334,25 +339,31 @@ class SalariedOccupation(FormModel):
     tenure_band: TenureBand = Field(alias="tenureBand")
     prev_company_name: Optional[str] = Field(default=None, alias="prevCompanyName", max_length=180)
     prev_company_joining: Optional[date] = Field(default=None, alias="prevCompanyJoining")
-    gross_salary_band: GrossSalaryBand = Field(
-        default=GrossSalaryBand.GT_25000, alias="grossSalaryBand"
-    )
+    gross_salary: float = Field(alias="grossSalary", ge=0.0)
     salary_mode: SalaryMode = Field(default=SalaryMode.BANK_CREDIT, alias="salaryMode")
     form_16_status: Form16Status = Field(default=Form16Status.FORM_16, alias="form16Status")
     # Years of Form 16 on file, scored against matrix col 55. Required when
     # Form 16 is claimed; meaningless (and rejected) when it is not.
     form_16_years: Optional[int] = Field(default=None, alias="form16Years", ge=0, le=50)
+    # Collected instead of Form-16 years when the proof offered is an ITR.
+    current_year_itr: Optional[float] = Field(default=None, alias="currentYearItr", ge=0.0)
+    previous_year_itr: Optional[float] = Field(default=None, alias="previousYearItr", ge=0.0)
     rental_income_type: RentalIncomeType = Field(
         default=RentalIncomeType.NONE, alias="rentalIncomeTypeSalaried"
     )
 
     @model_validator(mode="after")
-    def _validate_form_16_years(self) -> "SalariedOccupation":
+    def _validate_income_proof(self) -> "SalariedOccupation":
         claims_form_16 = self.form_16_status is Form16Status.FORM_16
+        claims_itr = self.form_16_status is Form16Status.ITR
         if claims_form_16 and self.form_16_years is None:
             raise ValueError("form16Years is required when Form 16 is claimed.")
         if not claims_form_16 and self.form_16_years is not None:
             raise ValueError("form16Years is only collected when Form 16 is claimed.")
+        if claims_itr and (self.current_year_itr is None or self.previous_year_itr is None):
+            raise ValueError("currentYearItr and previousYearItr are required when ITR is the proof.")
+        if not claims_itr and (self.current_year_itr is not None or self.previous_year_itr is not None):
+            raise ValueError("currentYearItr / previousYearItr are only collected when ITR is the proof.")
         return self
 
     @model_validator(mode="after")
@@ -388,7 +399,10 @@ class SalariedOccupation(FormModel):
         no_income_proof = self.form_16_status is Form16Status.NO_INCOME_PROOF
         return {
             "occupation": OccupationType.SALARIED.value,
-            "net_monthly_salary": SALARY_BAND_TO_MONTHLY_AMOUNT[self.gross_salary_band],
+            "net_monthly_salary": self.gross_salary,
+            # An ITR proves income without a Form-16 history, so EMP-SAL-206
+            # does not apply — the engine skips it rather than scoring 0 years.
+            "income_proof": self.form_16_status.value,
             "current_company_tenure_months": tenure_months,
             "minimum_work_experience_years": work_experience_years,
             "salary_payment_mode": SALARY_MODE_TO_ENGINE_MODE[self.salary_mode],
@@ -573,7 +587,12 @@ class BankingBureauStep(FormModel):
     dpd: int = Field(default=0, alias="bureauDpd", ge=0)
     has_loan_enquiry: bool = Field(default=False, alias="bureauLoanEnquiry")
     currently_outstanding: float = Field(default=0.0, alias="bureauCurrentlyOutstanding", ge=0.0)
-    age_at_last_emi: int = Field(default=35, alias="bureauAgeAtLastEMI", ge=18, le=100)
+    # add-on.md §4: no longer asked. Absent means "derive it from the DOB the
+    # applicant already gave" (age + LOAN_TENOR_YEARS); integrators posting the
+    # flat value directly still override it.
+    age_at_last_emi: Optional[int] = Field(
+        default=None, alias="bureauAgeAtLastEMI", ge=18, le=100
+    )
     cibil_pl_score_available: bool = Field(default=False, alias="cibilPlScoreToggle")
     cibil_pl_score: Optional[int] = Field(
         default=None, alias="bureauCibilPlScore", ge=300, le=900
@@ -627,6 +646,7 @@ class BankingBureauStep(FormModel):
             "loan_type": self.loan_type.value,
             "has_loan_enquiry": self.has_loan_enquiry,
             "active_car_loan": self.existing_car_loan_bank is not ExistingBankOption.NONE,
+            # Filled by OnboardingFormRequest, which owns the DOB it derives from.
             "age_at_last_emi_salaried": self.age_at_last_emi,
             "age_at_last_emi_self_employed": self.age_at_last_emi,
             "credit_bureau": {
@@ -764,12 +784,18 @@ class OnboardingFormRequest(FormModel):
         payload.update(self.identity.engine_inputs())
         payload.update(self.occupation.engine_inputs())
         payload.update(self.banking.engine_inputs())
+        # add-on.md §4: Age at Last EMI = current age + the fixed 7-year tenor.
+        if self.banking.age_at_last_emi is None:
+            derived = int(payload["age"]) + LOAN_TENOR_YEARS
+            payload["age_at_last_emi_salaried"] = derived
+            payload["age_at_last_emi_self_employed"] = derived
         payload["property_status"] = self.property_status.value
         payload["guarantor_provided"] = self.occupation.guarantor_provided
         payload["sibling_co_applicant"] = (
             self.co_applicant.has_sibling_co_applicant if self.co_applicant else False
         )
         if self.address is not None:
+            payload["aadhaar_number"] = self.address.aadhaar_number
             payload["pincode"] = self.address.pincode
             payload["city"] = self.address.city_name
             payload["state"] = self.address.state_name
@@ -875,3 +901,49 @@ class OnboardingFormEvaluationResponse(OnboardingEvaluationResponse):
         default=True,
         description="False when the verdict was returned but the audit trail could not be written.",
     )
+
+
+# --------------------------------------------------------------------------- #
+# Document extraction & verification (add-on.md steps 1-3)
+# --------------------------------------------------------------------------- #
+
+
+class DocumentExtractionResponse(BaseModel):
+    """Fields lifted off an uploaded document. The document itself is discarded."""
+
+    success: bool = True
+    document_type: Literal["pan", "aadhaar"]
+    filename: str
+    size_bytes: int
+    extracted: Dict[str, Optional[str]]
+    # False when extraction ran but read nothing usable — the applicant types it in.
+    populated: bool
+    # True when openbharatocr was unavailable and the fields came from a
+    # filename scan. The caller MUST NOT present these as read off the document.
+    simulated: bool = False
+
+
+class OtpSendRequest(BaseModel):
+    channel: Literal["email", "mobile"]
+    target: str = Field(min_length=1, max_length=254, description="Email address or 10-digit mobile.")
+
+
+class OtpSendResponse(BaseModel):
+    challenge_id: str
+    channel: Literal["email", "mobile"]
+    sent_to: str
+    expires_in_seconds: int
+    demo_code: Optional[str] = Field(
+        default=None,
+        description="Demo builds only: the code a real provider would deliver out of band.",
+    )
+
+
+class OtpVerifyRequest(BaseModel):
+    challenge_id: str = Field(min_length=1, max_length=128)
+    code: str = Field(min_length=1, max_length=12)
+
+
+class OtpVerifyResponse(BaseModel):
+    verified: bool
+    attempts_remaining: int

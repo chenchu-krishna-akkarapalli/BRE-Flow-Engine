@@ -4,13 +4,19 @@ import { useState, useEffect, useRef } from "react";
 import { Checkbox, Field, RadioCards, Select, TextInput, SearchableSelect } from "@/components/Field";
 import {
   ACCOUNT_BANKS, AGE_RELATIONS, BUSINESS_ENTITIES, CAR_LOAN_BANKS, CITIZENSHIP,
-  EMPLOYER_TYPES, ENTITY_TYPES, FORM16_STATUS, GENDERS, INCOME_RELATIONS,
-  LOAN_TYPES, MARITAL, PATTERNS, RENTAL_INCOME, RESIDENCE, SALARY_BANDS,
+  ADDRESS_PROOF_HELPER, EMPLOYER_TYPES, ENTITY_TYPES, GENDERS, INCOME_PROOF,
+  INCOME_RELATIONS,
+  LOAN_TYPES, MARITAL, PATTERNS, RENTAL_INCOME, RESIDENCE,
   COMPANY_TYPES, YES_NO,
-  TENURE_BAND_MONTHS, totalWorkExperienceYears,
+  totalWorkExperienceYears,
   SALARY_MODES, TENURE_BANDS, WRITE_OFF_FLAGS,
 } from "@/lib/form-schema";
-import { isResiCumOfficeRented, profileTypeFor, useOnboardingStore, workflowFor } from "@/store/useOnboardingStore";
+import { DocumentUpload } from "@/components/DocumentUpload";
+import { VerifyField } from "@/components/VerifyField";
+import {
+  LOAN_TENOR_YEARS, ageAtLastEmiFor, isResiCumOfficeRented, needsCoApplicant,
+  profileTypeFor, useOnboardingStore,
+} from "@/store/useOnboardingStore";
 import type { Draft } from "@/store/useOnboardingStore";
 
 // Every control is phrased as a question answerable without banking vocabulary.
@@ -31,6 +37,87 @@ const num = (v: string) => (v === "" ? "" : Number(v));
 
 // Yes/no answers are stored as booleans but rendered as cards.
 const yn = (v: boolean) => (v ? "yes" : "no");
+
+// An ITR amount with its own Upload and Verify, used by both occupation flows.
+function ItrField({
+  id, label, value, onChange,
+}: {
+  id: string; label: string; value: number | ""; onChange: (v: number | "") => void;
+}) {
+  const [verified, setVerified] = useState(false);
+  return (
+    <Field label={label} htmlFor={id}>
+      <div className="flex flex-col gap-3">
+        <TextInput
+          id={id}
+          type="number"
+          value={value}
+          onChange={(v) => { onChange(num(v)); setVerified(false); }}
+          placeholder="Amount in ₹"
+          numeric
+          verified={verified}
+        />
+        <div className="flex flex-wrap items-start gap-3">
+          <DocumentUpload id={`${id}Upload`} documentType="pan" label="Upload" />
+          <VerifyField
+            channel="email"
+            target={`${id}@document.verify`}
+            verified={verified}
+            onVerified={setVerified}
+            label="Verify"
+          />
+        </div>
+      </div>
+    </Field>
+  );
+}
+
+// add-on.md §4: derived from the DOB, never asked. Shown so the applicant can
+// see the number the banks score, and so a missing DOB is visibly the cause.
+function AgeAtLastEmi() {
+  const draft = useOnboardingStore((s) => s.draft);
+  const age = ageAtLastEmiFor(draft);
+  return (
+    <Field label="Age at Last EMI" htmlFor="ageAtLastEmi">
+      <output
+        id="ageAtLastEmi"
+        className="flex min-h-[48px] items-center rounded-xl border border-line bg-bg-raised px-4 py-3 text-[0.9375rem] text-ink"
+      >
+        {age === null
+          ? "Add your date of birth in step 1 and this fills in."
+          : `${age} years — your age today plus the ${LOAN_TENOR_YEARS}-year loan term.`}
+      </output>
+    </Field>
+  );
+}
+
+// Yes/no radio in front of the rental-income category dropdown (add-on.md §3.2c).
+function RentalIncomeQuestion() {
+  const { draft, set } = useField();
+  return (
+    <>
+      <Field label="Do you earn any rent from a property you own?" htmlFor="hasRentalIncome">
+        <RadioCards
+          name="hasRentalIncome"
+          label="Do you earn any rent from a property you own?"
+          value={yn(draft.hasRentalIncome)}
+          onChange={(v) => set("hasRentalIncome", v === "yes")}
+          options={YES_NO}
+        />
+      </Field>
+      {draft.hasRentalIncome && (
+        <Field label="How is that rental income documented?" htmlFor="rentalIncomeType">
+          <Select
+            id="rentalIncomeType"
+            value={draft.rentalIncomeType}
+            onChange={(v) => set("rentalIncomeType", v)}
+            options={RENTAL_INCOME}
+          />
+        </Field>
+      )}
+    </>
+  );
+}
 
 export function Step1Identity() {
   const { draft, set } = useField();
@@ -56,16 +143,44 @@ export function Step1Identity() {
 
       {draft.entityType === "Individual" && (
         <>
-          <Field label="On which date were you born?" htmlFor="dob">
+          <Field label="Date of Birth (DOB)" htmlFor="dob">
             <TextInput id="dob" type="date" value={draft.dob} onChange={k("dob")} />
           </Field>
 
           <Field
-            label="What is your 10-character PAN card number?"
+            label="PAN Number"
             htmlFor="pan"
             error={invalid(PATTERNS.pan, draft.pan, "This does not look like a PAN. It should read like ABCDE1234F.")}
           >
-            <TextInput id="pan" value={draft.pan} onChange={(v) => set("pan", v.toUpperCase())} placeholder="ABCDE1234F" numeric />
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-wrap items-start gap-3">
+                <div className="min-w-[220px] flex-1">
+                  <TextInput
+                    id="pan"
+                    value={draft.pan}
+                    onChange={(v) => { set("pan", v.toUpperCase()); set("panVerified", false); }}
+                    placeholder="ABCDE1234F"
+                    numeric
+                    verified={draft.panVerified}
+                  />
+                </div>
+                <VerifyField
+                  channel="email"
+                  target={draft.email}
+                  verified={draft.panVerified}
+                  onVerified={(v) => set("panVerified", v)}
+                />
+              </div>
+              <DocumentUpload
+                id="panUpload"
+                documentType="pan"
+                label="Upload PAN card"
+                onExtracted={(fields) => {
+                  if (fields.pan) set("pan", fields.pan.toUpperCase());
+                  if (fields.dob && !draft.dob) set("dob", fields.dob);
+                }}
+              />
+            </div>
           </Field>
 
           <div className="grid gap-6 sm:grid-cols-2">
@@ -93,7 +208,23 @@ export function Step1Identity() {
               htmlFor="phone"
               error={invalid(PATTERNS.phone, draft.phone, "Enter the 10 digits of your mobile number, starting with 6, 7, 8 or 9.")}
             >
-              <TextInput id="phone" value={draft.phone} onChange={k("phone")} numeric />
+              <div className="flex flex-wrap items-start gap-3">
+                <div className="min-w-[180px] flex-1">
+                  <TextInput
+                    id="phone"
+                    value={draft.phone}
+                    onChange={(v) => { set("phone", v); set("phoneVerified", false); }}
+                    numeric
+                    verified={draft.phoneVerified}
+                  />
+                </div>
+                <VerifyField
+                  channel="mobile"
+                  target={draft.phone}
+                  verified={draft.phoneVerified}
+                  onVerified={(v) => set("phoneVerified", v)}
+                />
+              </div>
             </Field>
             <Field
               label="What is your email address?"
@@ -281,7 +412,27 @@ export function Step2Address() {
       </div>
 
       <Field label="Do you own the house you live in, or do you rent it?" htmlFor="residentDetails">
-        <Select id="residentDetails" value={draft.residentDetails} onChange={k("residentDetails")} options={RESIDENCE} />
+        <RadioCards
+          name="residentDetails"
+          label="Do you own the house you live in, or do you rent it?"
+          value={draft.residentDetails}
+          onChange={k("residentDetails")}
+          options={RESIDENCE}
+        />
+      </Field>
+
+      <Field label="Address Proof" htmlFor="addressProof">
+        <DocumentUpload
+          id="addressProof"
+          /* Only the owned-house proof (Aadhaar) is an OCR-readable document;
+             a rental agreement is free-form, so it is collected, not read. */
+          documentType="aadhaar"
+          label="Upload address proof"
+          helper={ADDRESS_PROOF_HELPER[draft.residentDetails]}
+          onExtracted={(fields) => {
+            if (fields.aadhaar_number) set("aadhaarNumber", fields.aadhaar_number);
+          }}
+        />
       </Field>
     </div>
   );
@@ -306,8 +457,8 @@ export function Step3Occupation() {
             value={draft.occupation}
             onChange={(v) => set("occupation", v as Draft["occupation"])}
             options={[
-              { value: "Salaried", label: "I work for a company (Salaried)" },
-              { value: "Self-Employed", label: "I work for myself (Self-Employed)" },
+              { value: "Salaried", label: "Salaried" },
+              { value: "Self-Employed", label: "Self-employed" },
             ]}
           />
         </Field>
@@ -343,14 +494,8 @@ export function Step3Occupation() {
           )}
 
           <div className="grid gap-6 sm:grid-cols-2">
-            <Field label="Do you make more than ₹25,000 every month?" htmlFor="grossSalaryBand">
-              <RadioCards
-                name="grossSalaryBand"
-                label="Do you make more than 25,000 rupees every month?"
-                value={draft.grossSalaryBand}
-                onChange={k("grossSalaryBand")}
-                options={SALARY_BANDS}
-              />
+            <Field label="Gross Salary" htmlFor="grossSalary">
+              <TextInput id="grossSalary" type="number" value={draft.grossSalary} onChange={(v) => set("grossSalary", num(v))} placeholder="Monthly amount in ₹" numeric />
             </Field>
             <Field label="How do you receive your salary: into a bank account, or in cash?" htmlFor="salaryMode">
               <RadioCards
@@ -364,14 +509,42 @@ export function Step3Occupation() {
           </div>
 
           <Field label="Do you have proof of the tax you pay on your salary?" htmlFor="form16Status">
-            <Select id="form16Status" value={draft.form16Status} onChange={k("form16Status")} options={FORM16_STATUS} />
+            <RadioCards
+              name="form16Status"
+              label="Do you have proof of the tax you pay on your salary?"
+              value={draft.form16Status}
+              onChange={k("form16Status")}
+              options={INCOME_PROOF}
+            />
           </Field>
 
           {/* Scored against the bank's Form-16 minimum (matrix col 55). */}
           {draft.form16Status === "Form 16" && (
-            <Field label="For how many years do you have Form 16?" htmlFor="form16Years">
-              <TextInput id="form16Years" type="number" value={draft.form16Years} onChange={(v) => set("form16Years", num(v))} numeric />
-            </Field>
+            <>
+              <Field label="Upload your Form 16" htmlFor="form16Upload">
+                <DocumentUpload id="form16Upload" documentType="pan" label="Upload Form 16" />
+              </Field>
+              <Field label="For how many years do you have Form 16?" htmlFor="form16Years">
+                <TextInput id="form16Years" type="number" value={draft.form16Years} onChange={(v) => set("form16Years", num(v))} numeric />
+              </Field>
+            </>
+          )}
+
+          {draft.form16Status === "ITR" && (
+            <div className="grid gap-6 sm:grid-cols-2">
+              <ItrField
+                id="salariedCurrentYearItr"
+                label="Current Year ITR"
+                value={draft.salariedCurrentYearItr}
+                onChange={(v) => set("salariedCurrentYearItr", v)}
+              />
+              <ItrField
+                id="salariedPreviousYearItr"
+                label="Previous Year ITR"
+                value={draft.salariedPreviousYearItr}
+                onChange={(v) => set("salariedPreviousYearItr", v)}
+              />
+            </div>
           )}
         </>
       )}
@@ -435,20 +608,38 @@ export function Step3Occupation() {
           </Field>
 
           <Field label="What is your business registration or GST number?" htmlFor="businessProof">
-            <TextInput id="businessProof" value={draft.businessProof} onChange={k("businessProof")} placeholder="29AAAAA0000A1Z5" />
+            <div className="flex flex-col gap-3">
+              <TextInput id="businessProof" value={draft.businessProof} onChange={k("businessProof")} placeholder="29AAAAA0000A1Z5" />
+              <div className="flex flex-wrap items-start gap-3">
+                <DocumentUpload id="businessProofUpload" documentType="pan" label="Upload" />
+                <VerifyField
+                  channel="email"
+                  target={draft.email || "business@document.verify"}
+                  verified={draft.businessProofVerified}
+                  onVerified={(v) => set("businessProofVerified", v)}
+                />
+              </div>
+            </div>
           </Field>
 
-          <div className="grid gap-6 sm:grid-cols-3">
-            <Field label="What income did you declare last year? (₹)" htmlFor="currentITRAmount">
-              <TextInput id="currentITRAmount" type="number" value={draft.currentITRAmount} onChange={(v) => set("currentITRAmount", num(v))} numeric />
-            </Field>
-            <Field label="And the year before that? (₹)" htmlFor="prevITRAmount">
-              <TextInput id="prevITRAmount" type="number" value={draft.prevITRAmount} onChange={(v) => set("prevITRAmount", num(v))} numeric />
-            </Field>
-            <Field label="For how many years have you filed tax returns?" htmlFor="businessItrYears">
-              <TextInput id="businessItrYears" type="number" value={draft.businessItrYears} onChange={(v) => set("businessItrYears", num(v))} numeric />
-            </Field>
+          <div className="grid gap-6 sm:grid-cols-2">
+            <ItrField
+              id="currentITRAmount"
+              label="Current Year ITR"
+              value={draft.currentITRAmount}
+              onChange={(v) => set("currentITRAmount", v)}
+            />
+            <ItrField
+              id="prevITRAmount"
+              label="Previous Year ITR"
+              value={draft.prevITRAmount}
+              onChange={(v) => set("prevITRAmount", v)}
+            />
           </div>
+
+          <Field label="For how many years have you filed tax returns?" htmlFor="businessItrYears">
+            <TextInput id="businessItrYears" type="number" value={draft.businessItrYears} onChange={(v) => set("businessItrYears", num(v))} numeric />
+          </Field>
         </>
       )}
 
@@ -476,11 +667,7 @@ export function Step3Occupation() {
         </>
       )}
 
-      {profile !== "Company" && (
-        <Field label="Do you earn any rent from a property you own?" htmlFor="rentalIncomeType">
-          <Select id="rentalIncomeType" value={draft.rentalIncomeType} onChange={k("rentalIncomeType")} options={RENTAL_INCOME} />
-        </Field>
-      )}
+      {profile !== "Company" && <RentalIncomeQuestion />}
     </div>
   );
 }
@@ -550,11 +737,7 @@ export function Step4Banking() {
         <Field label="How much do you currently owe in overdue payments? (₹)" htmlFor="bureauCurrentlyOutstanding">
           <TextInput id="bureauCurrentlyOutstanding" type="number" value={draft.bureauCurrentlyOutstanding} onChange={(v) => set("bureauCurrentlyOutstanding", num(v))} numeric />
         </Field>
-        {workflowFor(draft.entityType) === "INDIVIDUAL" && (
-          <Field label="How old will you be when you make the last payment on this loan?" htmlFor="bureauAgeAtLastEMI">
-            <TextInput id="bureauAgeAtLastEMI" type="number" value={draft.bureauAgeAtLastEMI} onChange={(v) => set("bureauAgeAtLastEMI", num(v))} numeric />
-          </Field>
-        )}
+        {draft.entityType === "Individual" && <AgeAtLastEmi />}
       </div>
 
       <Field label="Do you have any loan or card that a bank settled or wrote off?" htmlFor="hasWriteOff">
@@ -613,6 +796,20 @@ export function Step5CoApplicant() {
   const { draft, set } = useField();
   const k = <K extends keyof Draft>(key: K) => (v: Draft[K]) => set(key, v);
   const pooling = draft.coAppIncomeRelation !== "None";
+
+  // add-on.md §5: a co-applicant only matters when the loan outlives the
+  // banks' age ceiling. Below the threshold the questions are not asked at all.
+  if (!needsCoApplicant(draft)) {
+    const age = ageAtLastEmiFor(draft);
+    return (
+      <p className="text-[0.9375rem] text-ink">
+        {age === null
+          ? "Add your date of birth in step 1 to see whether a co-applicant is needed."
+          : `You will be ${age} at your last payment, which is inside every bank's age limit. `
+            + "No co-applicant is needed — continue to submit."}
+      </p>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6">

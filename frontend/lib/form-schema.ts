@@ -4,8 +4,8 @@
 import type { BankCode, EntityType } from "./types";
 
 export const ENTITY_TYPES: { value: EntityType; label: string }[] = [
-  { value: "Individual", label: "Myself, as an individual" },
-  { value: "Company", label: "A company or organisation" },
+  { value: "Individual", label: "Individual" },
+  { value: "Company", label: "Company or organisation" },
 ];
 
 // Reusable yes/no answers, so every binary question reads the same way.
@@ -24,7 +24,16 @@ export const COMPANY_TYPES = [
   { value: "private_limited", label: "Private Limited" },
   { value: "public_limited", label: "Public Limited" },
 ];
-export const RESIDENCE = ["Owned House", "Rented House"] as const;
+export const RESIDENCE = [
+  { value: "Rented House", label: "Rented house" },
+  { value: "Owned House", label: "Owned house" },
+];
+
+// Helper text under the address-proof upload, per residence type (add-on.md §2.1).
+export const ADDRESS_PROOF_HELPER: Record<string, string> = {
+  "Rented House": "Please upload your rental agreement document",
+  "Owned House": "Please upload your Aadhaar card or electricity bill",
+};
 
 export const EMPLOYER_TYPES = [
   { value: "Employment-Pvt Ltd", label: "Private Limited (Pvt Ltd)" },
@@ -52,13 +61,15 @@ export const SALARY_MODES = [
   { value: "Salary payment mode-Cash", label: "In cash" },
 ] as const;
 
-export const FORM16_STATUS = [
-  { value: "Form 16", label: "Yes, I have Form 16 or my tax returns" },
-  { value: "No Income Proof", label: "No, I do not have either" },
+export const INCOME_PROOF = [
+  { value: "Form 16", label: "Form 16" },
+  { value: "ITR", label: "ITR" },
+  { value: "No Income Proof", label: "No income proof" },
 ] as const;
 
+// Shown only when the rental-income radio is Yes. "None" is not an option here
+// — answering No is what sets it.
 export const RENTAL_INCOME = [
-  { value: "None", label: "No, I do not earn any rent" },
   { value: "Rental Income-with Agreement -Not filed ITR-Not reflecting in Bank", label: "Yes — I have a rent agreement, but no tax return, and the rent is not paid into my bank" },
   { value: "Rental Income-with Agreement filed ITR- Not reflecting in Bank", label: "Yes — I have a rent agreement and a tax return, but the rent is not paid into my bank" },
   { value: "Rental Income-with Agreement -Not filed ITR-reflecting in Bank", label: "Yes — I have a rent agreement and the rent is paid into my bank, but no tax return" },

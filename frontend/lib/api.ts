@@ -95,3 +95,78 @@ export async function downloadApplicationExport(
   link.remove();
   URL.revokeObjectURL(url);
 }
+
+
+// --------------------------------------------------------------------------- //
+// Document extraction & OTP verification (add-on.md)
+// --------------------------------------------------------------------------- //
+
+export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
+export const ACCEPTED_UPLOAD_TYPES = ["image/jpeg", "image/png", "application/pdf"];
+
+export interface DocumentExtraction {
+  document_type: "pan" | "aadhaar";
+  filename: string;
+  size_bytes: number;
+  extracted: Record<string, string | null>;
+  populated: boolean;
+  // True when the OCR stack was unavailable and the fields came from a
+  // filename scan — never present these as read off the document.
+  simulated: boolean;
+}
+
+// The file is posted, read and discarded; nothing is stored server-side.
+export async function extractDocument(
+  documentType: "pan" | "aadhaar",
+  file: File,
+): Promise<DocumentExtraction> {
+  const form = new FormData();
+  form.append("file", file);
+
+  const response = await fetch(
+    `${API_BASE}/api/v1/onboarding/documents/${documentType}/extract`,
+    { method: "POST", headers: { "X-Tenant-ID": TENANT_ID }, body: form },
+  );
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new ApiError(response.status, body?.detail ?? `Extraction failed (${response.status}).`);
+  }
+  return (await response.json()) as DocumentExtraction;
+}
+
+export interface OtpChallenge {
+  challenge_id: string;
+  channel: "email" | "mobile";
+  sent_to: string;
+  expires_in_seconds: number;
+  demo_code?: string | null;
+}
+
+export async function sendOtp(channel: "email" | "mobile", target: string): Promise<OtpChallenge> {
+  const response = await fetch(`${API_BASE}/api/v1/onboarding/verification/otp/send`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-Tenant-ID": TENANT_ID },
+    body: JSON.stringify({ channel, target }),
+  });
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new ApiError(response.status, body?.detail ?? `Could not send a code (${response.status}).`);
+  }
+  return (await response.json()) as OtpChallenge;
+}
+
+export async function verifyOtp(
+  challengeId: string,
+  code: string,
+): Promise<{ verified: boolean; attempts_remaining: number }> {
+  const response = await fetch(`${API_BASE}/api/v1/onboarding/verification/otp/verify`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-Tenant-ID": TENANT_ID },
+    body: JSON.stringify({ challenge_id: challengeId, code }),
+  });
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new ApiError(response.status, body?.detail ?? `Verification failed (${response.status}).`);
+  }
+  return (await response.json()) as { verified: boolean; attempts_remaining: number };
+}

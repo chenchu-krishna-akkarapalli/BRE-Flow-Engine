@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, useState, useEffect, useRef } from "react";
-import { ChevronDown, Check } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 
 // Form Primitives with 48px touch targets and day mode light styling
 
@@ -39,6 +39,8 @@ export function Field({
   );
 }
 
+// `verified` paints the state an OTP challenge earns: green border, green tint
+// and a tick. The tick is decorative — the adjacent "Verified" label announces it.
 export function TextInput({
   id,
   value,
@@ -47,6 +49,7 @@ export function TextInput({
   type = "text",
   error,
   numeric = false,
+  verified = false,
 }: {
   id: string;
   value: string | number;
@@ -55,21 +58,35 @@ export function TextInput({
   type?: string;
   error?: string;
   numeric?: boolean;
+  verified?: boolean;
 }) {
+  const state = error
+    ? "border-danger focus:border-danger focus:shadow-none"
+    : verified
+    ? "border-success bg-success-bg pr-11"
+    : "";
   return (
-    <input
-      id={id}
-      type={type}
-      value={value}
-      placeholder={placeholder}
-      aria-invalid={error ? true : undefined}
-      aria-describedby={error ? `${id}-error` : undefined}
-      onChange={(e) => onChange(e.target.value)}
-      onWheel={(e) => type === "number" && e.currentTarget.blur()}
-      className={`${CONTROL_BASE} ${numeric ? "numeric" : ""} ${
-        error ? "border-danger focus:border-danger focus:shadow-none" : ""
-      }`}
-    />
+    <div className="relative w-full">
+      <input
+        id={id}
+        type={type}
+        value={value}
+        placeholder={placeholder}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? `${id}-error` : undefined}
+        onChange={(e) => onChange(e.target.value)}
+        onWheel={(e) => type === "number" && e.currentTarget.blur()}
+        className={`${CONTROL_BASE} ${numeric ? "numeric" : ""} ${state}`}
+      />
+      {verified && !error && (
+        <Check
+          size={18}
+          strokeWidth={3}
+          aria-hidden
+          className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-success"
+        />
+      )}
+    </div>
   );
 }
 

@@ -75,7 +75,7 @@ INDIVIDUAL_SALARIED: Dict[str, Any] = {
         "profileType": "Salaried",
         "employerType": "Employment-Pvt Ltd",
         "tenureBand": "2y+",
-        "grossSalaryBand": "gt25000",
+        "grossSalary": 50000.0,
         "salaryMode": "Salary payment mode- Bank Credit",
         "form16Status": "Form 16",
         "form16Years": 2,
@@ -266,7 +266,7 @@ def test_resi_cum_office_rented_requires_guarantor_decision():
     )
     self_employed["occupation"] = {
         k: v for k, v in self_employed["occupation"].items()
-        if k not in ("employerType", "tenureBand", "grossSalaryBand", "salaryMode",
+        if k not in ("employerType", "tenureBand", "grossSalary", "salaryMode",
                      "form16Status", "form16Years", "rentalIncomeTypeSalaried")
     }
 

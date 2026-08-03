@@ -9,7 +9,6 @@ one-line constant edit rather than a hunt through the request pipeline.
 from app.constants.enums import (
     BankCode,
     ExistingBankOption,
-    GrossSalaryBand,
     OfficeAddressType,
     OfficePremisesStatus,
     PropertyStatus,
@@ -20,12 +19,9 @@ from app.constants.enums import (
     WriteOffType,
 )
 
-# Representative monthly salary for each band. The matrix floor is Rs 25,000,
-# so the band midpoints below sit unambiguously on either side of it.
-SALARY_BAND_TO_MONTHLY_AMOUNT: dict[GrossSalaryBand, float] = {
-    GrossSalaryBand.LT_25000: 20000.0,
-    GrossSalaryBand.GT_25000: 50000.0,
-}
+# Years added to the applicant's current age to reach the final EMI. The form
+# no longer asks for it; add-on.md fixes the loan horizon at 7 years.
+LOAN_TENOR_YEARS: int = 7
 
 # Lower bound of each tenure band in months — the conservative end, so a
 # "1y-2y" applicant is never credited with more tenure than proven.
