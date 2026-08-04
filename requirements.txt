@@ -20,10 +20,10 @@ pytest-asyncio>=0.23.0,<2.0.0
 openpyxl>=3.1.0,<4.0.0
 # PDF generation for the evaluation audit report export.
 reportlab>=4.1.0,<5.0.0
-# Document OCR for PAN / Aadhaar extraction. Also needs the Tesseract binary on
-# the host (apt-get install tesseract-ocr / choco install tesseract). Optional at
-# runtime: without it, extraction degrades to a filename scan flagged
-# `simulated: true` rather than failing the upload.
+# Document OCR for the PAN and Aadhaar numbers. Also needs the Tesseract binary
+# on the host (apt-get install tesseract-ocr / winget install
+# UB-Mannheim.TesseractOCR). Optional at runtime: without it extraction degrades
+# to a filename scan flagged `simulated: true` rather than failing the upload.
 openbharatocr>=0.1.0
 # openbharatocr imports it but does not declare it; absent, `import
 # openbharatocr` raises ModuleNotFoundError and takes OCR down with it.

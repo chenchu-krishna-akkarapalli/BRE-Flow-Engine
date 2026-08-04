@@ -39,6 +39,11 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
 
+    # Document OCR. Off by default so a host without the stack still serves
+    # uploads; set OCR_REQUIRE_REAL=true where a simulated extraction must
+    # never be mistaken for a reading of the applicant's card.
+    OCR_REQUIRE_REAL: bool = False
+
     # Latency SLA Targets (ms)
     SLA_GET_LOOKUP_MS: float = 30.0
     SLA_CRUD_EVAL_MS: float = 80.0

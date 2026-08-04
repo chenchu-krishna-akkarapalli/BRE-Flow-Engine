@@ -11,7 +11,9 @@ export function DocumentUpload({
   id, documentType, label, helper, onExtracted,
 }: {
   id: string;
-  documentType: "pan" | "aadhaar";
+  // Omit to collect the file without reading it — an electricity bill or a
+  // rental agreement carries no field worth extracting.
+  documentType?: "pan" | "aadhaar";
   label: string;
   helper?: string;
   // Called with the OCR fields; the caller decides which to write into the form.
@@ -61,6 +63,12 @@ export function DocumentUpload({
 
   async function extract() {
     if (!file) return;
+    if (!documentType) {
+      // Collect-only: attaching the file IS the outcome.
+      setDone(file.name);
+      setOpen(false);
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
@@ -194,7 +202,7 @@ export function DocumentUpload({
                 disabled={busy}
                 className="min-h-[44px] rounded-md bg-brand-600 px-5 py-2 text-[0.9375rem] font-medium text-white transition-colors hover:bg-brand-700 disabled:opacity-60"
               >
-                {busy ? "Reading…" : "Extract"}
+                {busy ? "Reading…" : documentType ? "Extract" : "Attach"}
               </button>
             </div>
           </div>

@@ -35,6 +35,29 @@ export const ADDRESS_PROOF_HELPER: Record<string, string> = {
   "Owned House": "Please upload your Aadhaar card or electricity bill",
 };
 
+// An owned-home applicant picks which document backs the address BEFORE the
+// upload appears, because only the Aadhaar card is worth running OCR over.
+export const ADDRESS_PROOF_TYPES = [
+  { value: "Aadhaar Card", label: "Aadhaar Card" },
+  { value: "Electricity Bill", label: "Electricity Bill" },
+];
+
+export const ADDRESS_PROOF_DETAIL: Record<string, { label: string; helper: string }> = {
+  "Aadhaar Card": {
+    label: "Address Proof (Aadhaar Card)",
+    helper: "Please upload your Aadhaar Card. The system will read your Aadhaar number automatically.",
+  },
+  "Electricity Bill": {
+    label: "Address Proof (Electricity Bill)",
+    helper: "Please upload a copy of your recent electricity bill.",
+  },
+};
+
+// 1234 5678 9012 — grouped for reading back, never reformatted for the wire.
+export function formatAadhaar(digits: string): string {
+  return digits.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
+}
+
 export const EMPLOYER_TYPES = [
   { value: "Employment-Pvt Ltd", label: "Private Limited (Pvt Ltd)" },
   { value: "Employment-Public Ltd", label: "Public Limited" },

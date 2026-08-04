@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import { Checkbox, Field, RadioCards, Select, TextInput, SearchableSelect } from "@/components/Field";
 import {
   ACCOUNT_BANKS, AGE_RELATIONS, BUSINESS_ENTITIES, CAR_LOAN_BANKS, CITIZENSHIP,
-  ADDRESS_PROOF_HELPER, EMPLOYER_TYPES, ENTITY_TYPES, GENDERS, INCOME_PROOF,
+  ADDRESS_PROOF_DETAIL, ADDRESS_PROOF_HELPER, ADDRESS_PROOF_TYPES, formatAadhaar,
+  EMPLOYER_TYPES, ENTITY_TYPES, GENDERS, INCOME_PROOF,
   INCOME_RELATIONS,
   LOAN_TYPES, MARITAL, PATTERNS, RENTAL_INCOME, RESIDENCE,
   COMPANY_TYPES, YES_NO,
@@ -305,6 +306,14 @@ export function Step2Address() {
   const [selectedArea, setSelectedArea] = useState("");
   const areaInputRef = useRef<HTMLInputElement>(null);
 
+  const owned = draft.residentDetails === "Owned House";
+  // A rented home has one possible proof, so it needs no type question; an
+  // owned one shows nothing until the applicant says which document they have.
+  const proof = owned
+    ? ADDRESS_PROOF_DETAIL[draft.addressProofType]
+    : { label: "Address Proof", helper: ADDRESS_PROOF_HELPER[draft.residentDetails] };
+  const readsAadhaar = owned && draft.addressProofType === "Aadhaar Card";
+
   useEffect(() => {
     if (areas.length > 0) {
       const timer = setTimeout(() => {
@@ -421,19 +430,53 @@ export function Step2Address() {
         />
       </Field>
 
-      <Field label="Address Proof" htmlFor="addressProof">
-        <DocumentUpload
-          id="addressProof"
-          /* Only the owned-house proof (Aadhaar) is an OCR-readable document;
-             a rental agreement is free-form, so it is collected, not read. */
-          documentType="aadhaar"
-          label="Upload address proof"
-          helper={ADDRESS_PROOF_HELPER[draft.residentDetails]}
-          onExtracted={(fields) => {
-            if (fields.aadhaar_number) set("aadhaarNumber", fields.aadhaar_number);
-          }}
-        />
-      </Field>
+      {/* An owned home can be proved two ways, and only one of them is worth
+          reading. Asking which comes first so the upload can name the document
+          it expects instead of listing both. */}
+      {owned && (
+        <Field label="Select Address Proof Type" htmlFor="addressProofType">
+          <RadioCards
+            name="addressProofType"
+            label="Select Address Proof Type"
+            value={draft.addressProofType}
+            onChange={k("addressProofType")}
+            options={ADDRESS_PROOF_TYPES}
+          />
+        </Field>
+      )}
+
+      {proof && (
+        <Field label={proof.label} htmlFor="addressProof">
+          <DocumentUpload
+            /* Keyed on the choice: switching proof type remounts the control,
+               dropping the file staged against the previous one. */
+            key={`${draft.residentDetails}:${draft.addressProofType}`}
+            id="addressProof"
+            documentType={readsAadhaar ? "aadhaar" : undefined}
+            label="Upload address proof"
+            helper={proof.helper}
+            onExtracted={(fields) => {
+              if (fields.aadhaar_number) set("aadhaarNumber", fields.aadhaar_number);
+            }}
+          />
+        </Field>
+      )}
+
+      {readsAadhaar && draft.aadhaarNumber && (
+        <Field
+          label="Aadhaar number read from your card"
+          htmlFor="aadhaarNumber"
+        >
+          <TextInput
+            id="aadhaarNumber"
+            value={formatAadhaar(draft.aadhaarNumber)}
+            onChange={(v) => set("aadhaarNumber", v.replace(/\D/g, ""))}
+            numeric
+            verified
+          />
+        </Field>
+      )}
+
     </div>
   );
 }

@@ -141,6 +141,11 @@ uv run --with fastapi --with uvicorn --with pydantic --with pydantic-settings \
 make test          # same, via Makefile
 make check-sla     # latency benchmarks only
 
+# Document OCR stack — run with the SAME interpreter that serves the API.
+# Exit 0 = real extraction works; exit 1 = uploads return "simulated": true.
+.venv/Scripts/python.exe scripts/check_ocr_stack.py   # Windows
+.venv/bin/python scripts/check_ocr_stack.py           # Linux / macOS
+
 # Containers — Postgres 127.0.0.1:5435, Redis 6379, FastAPI 8000
 docker-compose up -d --build
 docker-compose ps
@@ -151,6 +156,37 @@ docker-compose down
 docker-compose exec web alembic upgrade head
 alembic revision --autogenerate -m "describe_changes"
 ```
+
+## Document OCR (`openbharatocr`)
+
+Extraction needs **two** independent installs. Missing either makes uploads
+return `"simulated": true` with no error, so check both before debugging code.
+
+**1. Python packages** — into the interpreter that runs the API, not a different one:
+
+```bash
+uv venv --python 3.12          # openbharatocr's OpenCV/numpy wheels stop at 3.12
+uv pip install -r requirements.txt
+```
+
+**2. Tesseract OCR engine** — an OS binary, not a pip package:
+
+```bash
+winget install --id UB-Mannheim.TesseractOCR   # Windows (reopen the shell after)
+sudo apt-get install -y tesseract-ocr          # Debian / Ubuntu
+brew install tesseract                         # macOS
+```
+
+Then start the server with that interpreter — a bare `uvicorn` resolves to whichever
+Python is first on PATH, which is the usual cause of unexplained simulated extractions:
+
+```bash
+.venv/Scripts/python.exe -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+Set `OCR_REQUIRE_REAL=true` to make a missing stack a loud 422 naming the absent
+component, instead of a silent fallback. Leave it off in dev; turn it on wherever a
+simulated payload must never be mistaken for a reading of the applicant's card.
 
 Test dependencies that are easy to miss: **`pytest-asyncio`** (without it async tests fail rather than skip), **`openpyxl`** (bank-matrix conformance test + Excel export) and **`reportlab`** (PDF export). The last two are runtime dependencies, not test-only.
 

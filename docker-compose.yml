@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bre_password}
       POSTGRES_DB: ${POSTGRES_DB:-bre_db}
     ports:
-      - "127.0.0.1:${POSTGRES_HOST_PORT:-5432}:5432"
+      - "127.0.0.1:${POSTGRES_PORT:-5435}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -21,7 +21,7 @@ services:
     image: redis:7-alpine
     container_name: flowbre_redis
     ports:
-      - "127.0.0.1:${REDIS_HOST_PORT:-6379}:6379"
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -43,6 +43,8 @@ services:
       - API_V1_STR=${API_V1_STR:-/api/v1}
       - ENVIRONMENT=${ENVIRONMENT:-development}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      # Load-bearing: inside the network the app reaches Postgres by service
+      # name on its INTERNAL port, overriding the host-facing values in .env.
       - POSTGRES_SERVER=postgres
       - POSTGRES_USER=${POSTGRES_USER:-bre_user} 
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-bre_password}
@@ -50,6 +52,7 @@ services:
       - POSTGRES_PORT=5432
       - DB_POOL_SIZE=${DB_POOL_SIZE:-20}
       - DB_MAX_OVERFLOW=${DB_MAX_OVERFLOW:-10}
+      # Same for Redis: service name, internal port.
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_DB=0

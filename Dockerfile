@@ -14,6 +14,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy dependency specifications
 COPY requirements.txt .
 
+# openbharatocr declares easyocr, which declares torch. Nothing in the PAN or
+# Aadhaar path calls it, but pip installs it regardless — and on Linux the
+# default PyPI torch wheel bundles the CUDA runtime and triton, over a gigabyte
+# of GPU tooling. Installing the CPU build from PyTorch's own index FIRST
+# satisfies the requirement, so the pass below resolves torch as already-present
+# and never reaches for the CUDA wheel. Kept out of requirements.txt on purpose:
+# that file also drives local installs, where the default is already CPU-only.
+RUN pip install --no-cache-dir --user \
+    --index-url https://download.pytorch.org/whl/cpu \
+    torch torchvision
+
 # Install python dependencies to a temporary wheels directory
 RUN pip install --no-cache-dir --user -r requirements.txt
 
@@ -23,6 +34,15 @@ RUN pip install --no-cache-dir --user -r requirements.txt
 FROM python:3.11-slim AS runner
 
 WORKDIR /app
+
+# tesseract-ocr is the OCR engine openbharatocr shells out to and is not a pip
+# package; libgl1 + libglib2.0-0 are what its OpenCV dependency links against.
+# Omit either and uploads fall back to simulated extraction with no error.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    tesseract-ocr \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
 
 # Create non-root system group and user
 RUN groupadd -g 10001 appgroup && \

@@ -65,6 +65,11 @@ def client():
     return TestClient(app)
 
 
+def _no_engines(monkeypatch) -> None:
+    """Silence the OCR engine so the fallback path is what runs."""
+    monkeypatch.setattr(ocr_service, "_load_openbharatocr", lambda: None)
+
+
 # --------------------------------------------------------------------------- #
 # Upload guards
 # --------------------------------------------------------------------------- #
@@ -285,7 +290,7 @@ def test_aadhaar_from_ocr_is_accepted_and_never_persisted_raw() -> None:
 
 def test_missing_ocr_package_does_not_block_the_upload(client: TestClient, monkeypatch) -> None:
     """The reported defect: a missing package 400'd the whole submission."""
-    monkeypatch.setattr(ocr_service, "_load_openbharatocr", lambda: None)
+    _no_engines(monkeypatch)
 
     response = client.post(
         "/api/v1/onboarding/documents/pan/extract",
@@ -300,7 +305,7 @@ def test_missing_ocr_package_does_not_block_the_upload(client: TestClient, monke
 
 
 def test_fallback_reads_an_identity_number_out_of_the_filename(client: TestClient, monkeypatch) -> None:
-    monkeypatch.setattr(ocr_service, "_load_openbharatocr", lambda: None)
+    _no_engines(monkeypatch)
 
     response = client.post(
         "/api/v1/onboarding/documents/pan/extract",
@@ -330,6 +335,7 @@ def test_a_broken_ocr_stack_degrades_instead_of_failing(client: TestClient, monk
         def pan(self, path):
             raise RuntimeError("tesseract is not installed or it's not in your PATH")
 
+    _no_engines(monkeypatch)
     monkeypatch.setattr(ocr_service, "_load_openbharatocr", lambda: Exploding())
 
     response = client.post(
@@ -344,7 +350,7 @@ def test_a_broken_ocr_stack_degrades_instead_of_failing(client: TestClient, monk
 
 
 def test_upload_guards_still_reject_under_the_fallback(client: TestClient, monkeypatch) -> None:
-    monkeypatch.setattr(ocr_service, "_load_openbharatocr", lambda: None)
+    _no_engines(monkeypatch)
 
     response = client.post(
         "/api/v1/onboarding/documents/pan/extract",
@@ -366,7 +372,7 @@ def test_fallback_is_far_inside_the_latency_budget() -> None:
 
 
 def test_fallback_logs_the_tracked_warning(client: TestClient, monkeypatch, caplog) -> None:
-    monkeypatch.setattr(ocr_service, "_load_openbharatocr", lambda: None)
+    _no_engines(monkeypatch)
 
     with caplog.at_level("WARNING", logger="flowbre"):
         client.post(
@@ -378,3 +384,65 @@ def test_fallback_logs_the_tracked_warning(client: TestClient, monkeypatch, capl
     assert any(ocr_service.FALLBACK_LOG_MESSAGE in r.message for r in caplog.records)
     # The PAN travelled in the filename; it must not reach the log unmasked.
     assert not any("ABCDE1234F" in r.message for r in caplog.records)
+
+
+# --------------------------------------------------------------------------- #
+# OCR_REQUIRE_REAL: refuse to simulate rather than simulate silently
+# --------------------------------------------------------------------------- #
+
+def test_strict_mode_errors_instead_of_simulating(client: TestClient, monkeypatch) -> None:
+    _no_engines(monkeypatch)
+    monkeypatch.setattr(ocr_service.settings, "OCR_REQUIRE_REAL", True)
+
+    response = client.post(
+        "/api/v1/onboarding/documents/pan/extract",
+        files={"file": ("pan-ABCDE1234F.jpeg", b"data", "image/jpeg")},
+        headers=TENANT,
+    )
+
+    assert response.status_code == 422
+    detail = str(response.json())
+    assert "Real document extraction was required" in detail
+    # Whichever component is at fault, the error must name a next step rather
+    # than just reporting the failure.
+    assert any(hint in detail.lower()
+               for hint in ("requirements.txt", "tesseract", "check_ocr_stack.py"))
+
+
+def test_strict_mode_names_the_missing_python_stack(monkeypatch) -> None:
+    monkeypatch.setattr(ocr_service, "_obocr_error", "ModuleNotFoundError: No module named 'cv2'")
+    reason = ocr_service._unavailable_reason()
+
+    assert "cv2" in reason
+    assert "interpreter" in reason
+
+
+def test_strict_mode_names_a_missing_tesseract_binary(monkeypatch) -> None:
+    monkeypatch.setattr(ocr_service, "_obocr_error", None)
+    monkeypatch.setattr(ocr_service.shutil, "which", lambda _: None)
+    reason = ocr_service._unavailable_reason()
+
+    assert "Tesseract" in reason
+    assert "not a pip package" in reason
+
+
+def test_default_stays_permissive(client: TestClient, monkeypatch) -> None:
+    """OCR_REQUIRE_REAL is off by default, so a dev host still serves uploads."""
+    _no_engines(monkeypatch)
+
+    response = client.post(
+        "/api/v1/onboarding/documents/pan/extract",
+        files={"file": ("pan-ABCDE1234F.jpeg", b"data", "image/jpeg")},
+        headers=TENANT,
+    )
+    assert response.status_code == 200
+    assert response.json()["simulated"] is True
+
+
+def test_printed_dob_is_normalised_to_iso() -> None:
+    """Cards print DD/MM/YYYY; <input type="date"> silently rejects anything else."""
+    assert ocr_service._iso_dob("25/08/2002") == "2002-08-25"
+    assert ocr_service._iso_dob("25-08-2002") == "2002-08-25"
+    assert ocr_service._iso_dob("2002-08-25") == "2002-08-25"
+    assert ocr_service._iso_dob(None) is None
+    assert ocr_service._iso_dob("") is None

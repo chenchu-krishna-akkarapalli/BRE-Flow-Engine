@@ -45,7 +45,10 @@ export interface Draft {
   cityName: string;
   stateName: string;
   residentDetails: string;
-  // Read off the address proof by OCR when the applicant owns their home.
+  // Which document backs the address, chosen before the upload appears.
+  // "" until the applicant picks one; only "Aadhaar Card" is OCR-readable.
+  addressProofType: string;
+  // Read off the address proof by OCR when that document is an Aadhaar card.
   aadhaarNumber: string;
 
   // Step 3 — occupation
@@ -124,7 +127,7 @@ const INITIAL_DRAFT: Draft = {
   companyEmail: "", companyEmployees: "",
 
   pincode: "", cityName: "", stateName: "", residentDetails: "Owned House",
-  aadhaarNumber: "",
+  addressProofType: "", aadhaarNumber: "",
 
   occupation: "Salaried",
   employerType: "", tenureBand: "2y+", prevCompanyName: "", prevCompanyJoining: "",
@@ -408,6 +411,15 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       }
       if (key === "hasMissedPayment" && value === false) {
         draft.missedOver90 = false;
+      }
+      // Switching residence or proof type invalidates whatever was uploaded
+      // against the previous choice, and any number read off it.
+      if (key === "residentDetails") {
+        draft.addressProofType = "";
+        draft.aadhaarNumber = "";
+      }
+      if (key === "addressProofType") {
+        draft.aadhaarNumber = "";
       }
       return { draft, error: null };
     }),
