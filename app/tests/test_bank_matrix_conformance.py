@@ -23,6 +23,7 @@ Four layers, each closing a hole the previous one leaves open:
 """
 
 import asyncio
+import inspect
 import re
 from datetime import date
 from pathlib import Path
@@ -150,7 +151,7 @@ def load_policies() -> Dict[str, Dict[str, Any]]:
             "max_age_emi_salaried": _threshold(_cell(ind, "Age at Last EMI-Salaried")),
             "max_age_emi_self_employed": _threshold(_cell(ind, "Age at Last EMI-Self Employed")),
             "allow_existing_car_loan": _flag(_cell(ind, "Existing Car Loan")),
-            "requires_existing_account": _flag(_cell(ind, "Existing A/C Holder")),
+            "allows_existing_account_holder": _flag(_cell(ind, "Existing A/C Holder")),
             "allow_separate_both_rented": _flag(_cell(ind, "Resi-Office-Separate-Both Rented-selfemployee", "Resi-Office-Separate-Both Rented")),
             "allow_without_guarantor": _flag(_cell(ind, "Without a Guarantor")),
             "allow_with_guarantor": _flag(_cell(ind, "With a Guarantor")),
@@ -297,10 +298,13 @@ def sheet_rejects(bank: str, f: Dict[str, Any]) -> List[str]:
 
     # Existing banking relationship — every bank but IOB lends only to its own
     # existing account holders (col 17).
-    if p["requires_existing_account"] and f["existing_account_bank"] != bank:
+    # Col "Existing A/C Holder" false = the bank turns away its OWN customers.
+    if not p["allows_existing_account_holder"] and f["existing_account_bank"] == bank:
         out.append("existing_account")
 
-    if f["car_loan"] and not p["allow_existing_car_loan"]:
+    # Col "Existing Car Loan" false = the bank refuses a SECOND exposure to
+    # itself; a car loan with another lender leaves it unbound.
+    if f["car_loan_bank"] == bank and not p["allow_existing_car_loan"]:
         out.append("existing_car_loan")
 
     # Co-applicant relationships
@@ -331,7 +335,8 @@ DEFAULTS: Dict[str, Any] = {
     "age": 34, "is_nri": False, "nri_months": 0,
     "cibil": 800, "dpd": 0, "currently_outstanding": 0.0, "loan_enquiry": False,
     "write_off_type": None, "write_off_amount": 0.0,
-    "age_at_last_emi": 55, "car_loan": False,
+    # Bank code the applicant's car loan runs with, or None for no car loan.
+    "age_at_last_emi": 55, "car_loan": None,
     "salary_band": "gt25000", "cash_salary": False, "tenure_band": "2y+", "form16_years": 2,
     "prev_joining_years_ago": None, "no_income_proof": False, "rental": None,
     "current_itr": 500000.0, "previous_itr": 350000.0, "itr_filed": True,
@@ -389,7 +394,7 @@ def derive(c: Dict[str, Any]) -> Dict[str, Any]:
         "separate_both_rented": (c["residence"] == "Rented House" and c["office"] == "Separate"
                                  and c["office_status"] == "Rented"),
         "guarantor": c["guarantor"] == "With a Gaurantor",
-        "car_loan": c["car_loan"],
+        "car_loan_bank": c["car_loan"],
         "existing_account_bank": c["selected"],
         "coapp": coapp,
     }
@@ -401,7 +406,7 @@ def build_form(c: Dict[str, Any]) -> Dict[str, Any]:
 
     banking: Dict[str, Any] = {
         "existingAccountBank": FORM_SELECTABLE[c["selected"]],
-        "existingCarLoanBank": "BOB" if c["car_loan"] else "None",
+        "existingCarLoanBank": FORM_SELECTABLE[c["car_loan"]] if c["car_loan"] else "None",
         "loanType": "Auto Loan",
         "bureauCibilScore": c["cibil"],
         "bureauDpd": c["dpd"],
@@ -495,6 +500,11 @@ def build_form(c: Dict[str, Any]) -> Dict[str, Any]:
 
 SELF_EMPLOYED = {"occupation": "Self-Employed", "office": "Same"}
 
+# A car-loan lender that is never the bank under test. IOB and BOB are the two
+# banks whose "Existing Car Loan" cell reads No, so pairing them proves a
+# restrictive bank still approves when the loan sits with the OTHER one.
+FOREIGN_CAR_LOAN_BANK = {code: "IOB" if code == "BOB" else "BOB" for code in FORM_SELECTABLE}
+
 
 def cases() -> List[Tuple[str, Dict[str, Any]]]:
     out: List[Tuple[str, Dict[str, Any]]] = []
@@ -529,7 +539,10 @@ def cases() -> List[Tuple[str, Dict[str, Any]]]:
         add(f"{bank}/form16-1-year", **b, form16_years=1)
         add(f"{bank}/tenure-1y", **b, tenure_band="1y-2y", prev_joining_years_ago=4)
         add(f"{bank}/tenure-6m", **b, tenure_band="6m-1y", prev_joining_years_ago=4)
-        add(f"{bank}/car-loan", **b, car_loan=True)
+        # Both halves of EXB-702: a car loan with this bank, and one with a
+        # different lender that must leave every bank's verdict untouched.
+        add(f"{bank}/car-loan-same-bank", **b, car_loan=bank)
+        add(f"{bank}/car-loan-other-bank", **b, car_loan=FOREIGN_CAR_LOAN_BANK[bank])
         add(f"{bank}/nri-24-months", **b, is_nri=True, nri_months=24)
         add(f"{bank}/nri-12-months", **b, is_nri=True, nri_months=12)
         for rental in RENTAL_FORM_VALUE:
@@ -595,7 +608,7 @@ CONSTANT_CORRESPONDENCE = [
     ("max_cc_write_off", "max_cc_write_off_amount"),
     ("max_dpd", "max_dpd"),
     ("allow_loan_enquiry", "allow_loan_enquiry"),
-    ("requires_existing_account", "requires_existing_account"),
+    ("allows_existing_account_holder", "allows_existing_account_holder"),
     ("min_age", "min_age"),
     ("max_age_emi_salaried", "max_age_emi_salaried"),
     ("max_age_emi_self_employed", "max_age_emi_self_employed"),
@@ -848,6 +861,31 @@ def test_inert_columns_stay_uniform(column: str) -> None:
     )
 
 
+def test_every_normalized_input_reaches_a_rule() -> None:
+    """The mirror of the column guard, on the payload side.
+
+    A key assembled into the engine's `inp` that no rule ever reads is a
+    parameter the applicant was asked for and then scored on nothing. Source
+    inspection is the only way to see it: such a key breaks no test by itself.
+    """
+    src = Path(inspect.getfile(bre_engine_service.__class__)).read_text(encoding="utf-8")
+    start = src.index('inp: Dict[str, Any] = {')
+    depth, i = 0, src.index("{", start)
+    while True:
+        depth += 1 if src[i] == "{" else -1 if src[i] == "}" else 0
+        if depth == 0:
+            break
+        i += 1
+    assembled = set(re.findall(r'^\s{12}"([a-z0-9_]+)":', src[start:i + 1], re.M))
+    read = set(re.findall(r'inp\["([a-z0-9_]+)"\]',
+                          src[src.index("def _evaluate_bank("):src.index("def _tenant_overlay_outcomes(")]))
+
+    assert assembled - read == set(), (
+        f"collected but scored by no rule: {sorted(assembled - read)} — "
+        "wire it to a rule or stop assembling it"
+    )
+
+
 def test_no_column_is_left_deferred() -> None:
     """DEFERRED_COLUMNS parks columns awaiting a policy decision. Every
     discriminating column now has a rule, so it should stay empty."""
@@ -858,10 +896,9 @@ def test_every_partner_bank_is_selectable_in_the_wizard() -> None:
     """A BankCode with no ExistingBankOption is unreachable, not just hidden.
 
     The wizard picks the assessed bank from `banking.existingAccountBank`, and
-    every private bank carries `requires_existing_account = True`. An omitted
-    bank therefore fails REL-501 on every single submission -- its column in
-    `bank_eligibility` reads false regardless of the applicant -- so the option
-    set has to stay in step with the matrix.
+    A bank absent from the option set can never be chosen as the assessed bank,
+    so its policy would never drive a verdict. The option set has to stay in
+    step with the matrix.
     """
     unreachable = set(BANK_MATRIX_RULES) - {
         code.value for code in EXISTING_BANK_TO_BANK_CODE.values()

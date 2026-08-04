@@ -12,7 +12,7 @@ from pydantic import ValidationError
 
 import app.core.redis as redis_module
 from app.api.deps import get_db, get_redis
-from app.api.schemas.onboarding import OnboardingFormRequest
+from app.api.schemas.onboarding import OnboardingEvaluationRequest, OnboardingFormRequest
 from app.constants import BankCode, EntityType, PropertyStatus
 from app.db.models.application import ApplicationModel
 from app.db.models.audit_log import AuditLogModel
@@ -366,3 +366,13 @@ def test_form_endpoint_rejects_mismatched_branch():
         headers={"X-Tenant-ID": "tenant_beta"},
     )
     assert response.status_code == 422
+
+
+@pytest.mark.parametrize("model", [OnboardingFormRequest, OnboardingEvaluationRequest])
+def test_documented_swagger_example_validates(model) -> None:
+    """The example is what "Try it out" posts, so a stale one is a 422 demo.
+
+    It drifts silently: renaming a field updates the model and leaves the
+    example behind, and nothing else in the suite ever submits it.
+    """
+    model.model_validate(model.model_config["json_schema_extra"]["example"])

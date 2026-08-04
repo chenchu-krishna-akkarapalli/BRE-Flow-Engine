@@ -4,6 +4,7 @@ from datetime import date, timedelta
 from typing import Any, Dict, List
 
 from app.constants.limits import MIN_SELF_EMPLOYED_COMBINED_ITR as COMBINED_ITR_FLOOR
+from app.constants.limits import TENANT_CIBIL_OVERLAY
 from app.core.exceptions import InvalidPayloadError
 from app.core.logging import logger, redact_pii
 
@@ -89,8 +90,9 @@ RENTAL_CLASS_TO_FLAG = {
     "ITR_NOT_IN_BANK": "allow_rental_itr_not_in_bank",
 }
 
-# Banks that do NOT permit an existing active car loan alongside the application
-# (matrix col 19: "Existing Car Loan" == False). EXB-702.
+# Banks that do NOT permit an existing car loan OF THEIR OWN alongside the
+# application (matrix col 19: "Existing Car Loan" == False). A car loan held
+# with a different lender never binds these banks. EXB-702.
 BANKS_DISALLOW_EXISTING_CAR_LOAN = frozenset({"IOB", "BOB"})
 
 # Canonical Bank Policy Matrix derived from Bank_Eligibility_Matrix_v1.xlsx (62 columns).
@@ -143,7 +145,7 @@ BANK_MATRIX_RULES = {
         "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
-        "requires_existing_account": True,
+        "allows_existing_account_holder": True,
         "allow_separate_both_rented": False,
     },
     "INDIAN_BANK": {
@@ -181,7 +183,7 @@ BANK_MATRIX_RULES = {
         "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
-        "requires_existing_account": True,
+        "allows_existing_account_holder": True,
         "allow_separate_both_rented": False,
     },
     "IOB": {
@@ -219,7 +221,7 @@ BANK_MATRIX_RULES = {
         "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": False,
-        "requires_existing_account": False,
+        "allows_existing_account_holder": False,
         "allow_separate_both_rented": False,
     },
     "BOB": {
@@ -262,7 +264,7 @@ BANK_MATRIX_RULES = {
         "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": False,
-        "requires_existing_account": True,
+        "allows_existing_account_holder": True,
         "allow_separate_both_rented": True,
     },
     "BOM": {
@@ -300,7 +302,7 @@ BANK_MATRIX_RULES = {
         "allow_itr_not_filed": False,
         "allow_without_guarantor": True,
         "allow_with_guarantor": True,
-        "requires_existing_account": True,
+        "allows_existing_account_holder": True,
         "allow_separate_both_rented": False,
     },
     "HDFC": {
@@ -338,7 +340,7 @@ BANK_MATRIX_RULES = {
         "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
-        "requires_existing_account": True,
+        "allows_existing_account_holder": True,
         "allow_separate_both_rented": True,
     },
     "AXIS": {
@@ -376,7 +378,7 @@ BANK_MATRIX_RULES = {
         "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
-        "requires_existing_account": True,
+        "allows_existing_account_holder": True,
         "allow_separate_both_rented": True,
     },
     "KOTAK": {
@@ -414,7 +416,7 @@ BANK_MATRIX_RULES = {
         "allow_itr_not_filed": False,
         "allow_without_guarantor": False,
         "allow_with_guarantor": True,
-        "requires_existing_account": True,
+        "allows_existing_account_holder": True,
         "allow_separate_both_rented": True,
     },
 }
@@ -440,7 +442,7 @@ COMPANY_MATRIX_KEYS = frozenset({
     "allow_pl_write_off", "allow_hl_write_off", "allow_consumer_write_off",
     "allow_agri_write_off", "allow_msme_write_off", "allow_auto_write_off",
     "allow_cc_write_off", "max_cc_write_off_amount",
-    "max_dpd", "allow_loan_enquiry", "requires_existing_account",
+    "max_dpd", "allow_loan_enquiry", "allows_existing_account_holder",
     "se_min_current_itr", "se_min_prev_itr", "se_combined_itr_rule",
     "allow_itr_not_filed", "min_business_itr_years",
 })
@@ -548,9 +550,15 @@ def _evaluate_bank(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> Li
 
     def check(rid: str, name: str, cat: str, passed: bool,
               value: Any, limit: Any, msg: str = "") -> None:
+        # A passing rule states its own outcome; only failures carry a
+        # hand-written sentence, because only they have to explain themselves.
+        description = (
+            f"{name} of {value} satisfies {code} limit of {limit}."
+            if passed else msg
+        )
         outcomes.append({
             "rule_id": rid, "name": name, "category": cat, "passed": bool(passed),
-            "value": str(value), "limit": str(limit), "message": "" if passed else msg,
+            "value": str(value), "limit": str(limit), "message": description,
         })
 
     # --- Demographics --------------------------------------------------------
@@ -744,28 +752,65 @@ def _evaluate_bank(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> Li
               f"{code} does not accept a brother/sister co-applicant for age or income pooling.")
 
     # --- Existing banking relationship --------------------------------------
-    if (policy.get("requires_existing_account")
+    # Col "Existing A/C Holder". true = no constraint, the bank lends to anyone.
+    # false = it will not lend to its OWN account holders; another bank's
+    # customers are unaffected, so the rule only binds when the two match.
+    if (not policy.get("allows_existing_account_holder", True)
             and inp["existing_account_bank"] is not ACCOUNT_BANK_UNKNOWN):
         check("REL-501", "Existing Account Holder", "Existing Banking Relationship",
-              inp["existing_account_bank"] == code,
-              inp["existing_account_bank"] or "None", code,
-              f"{code} lends only to existing current/savings account holders; "
-              f"the applicant does not hold an account with {code}.")
+              inp["existing_account_bank"] != code,
+              inp["existing_account_bank"] or "None", f"not {code}",
+              f"{code} does not lend to applicants who already hold a "
+              f"current/savings account with {code}.")
 
-    if code in BANKS_DISALLOW_EXISTING_CAR_LOAN:
+    # Col "Existing Car Loan" false = the bank refuses a second exposure to
+    # ITSELF; a car loan running with any other lender leaves it unbound, so
+    # the rule only binds when the car loan is with this same bank. EXB-702.
+    if inp["car_loan_bank"] is not None and code in BANKS_DISALLOW_EXISTING_CAR_LOAN:
         check("EXB-702", "Existing Car Loan", "Existing Banking Relationship",
-              not inp["active_car_loan"], inp["active_car_loan"], False,
-              f"{code} does not permit an existing active car loan alongside this application.")
+              inp["car_loan_bank"] != code, inp["car_loan_bank"], f"not {code}",
+              f"{code} does not permit a second exposure to an applicant who already "
+              f"services a car loan with {code}.")
 
     return outcomes
+
+
+def _tenant_overlay_outcomes(tenant_id: str, cibil: int) -> List[Dict[str, Any]]:
+    """Tenant risk rules in the same outcome shape as a matrix rule.
+
+    Emitted for pass and fail alike so the audit report carries the overlay at
+    every bank, rather than a bank reading ineligible with no rule to show.
+    """
+    entry = TENANT_CIBIL_OVERLAY.get(tenant_id)
+    if entry is None:
+        return []
+    rule_id, floor = entry
+    passed = cibil >= floor
+    return [{
+        "rule_id": rule_id,
+        "name": "Tenant CIBIL Floor",
+        "category": "Tenant Risk Overlay",
+        "passed": passed,
+        "value": str(cibil),
+        "limit": f">= {floor}",
+        "message": (
+            f"Tenant CIBIL Floor of {cibil} satisfies the {tenant_id} limit of >= {floor}."
+            if passed else
+            f"{tenant_id} requires a minimum CIBIL score of {floor} for prime onboarding."
+        ),
+    }]
 
 
 def _report_row(outcome: Dict[str, Any]) -> Dict[str, str]:
     """Project a rule outcome onto the audit-report row shape."""
     return {
-        "rule_id": outcome["rule_id"], "name": outcome["name"],
-        "category": outcome["category"], "value": outcome["value"],
-        "limit": outcome["limit"], "message": outcome["message"],
+        "rule_id": outcome["rule_id"],
+        "parameter_name": outcome["name"],
+        "category": outcome["category"],
+        "status": "PASS" if outcome["passed"] else "FAIL",
+        "user_value": outcome["value"],
+        "limit_value": outcome["limit"],
+        "description": outcome["message"],
     }
 
 
@@ -873,14 +918,15 @@ class BREEngineService:
             # "Form 16" | "ITR" | "No Income Proof". An ITR proves income
             # without a Form-16 history, so col 55 does not apply to it.
             "income_proof": payload.get("income_proof", "Form 16"),
-            "active_car_loan": payload.get("active_car_loan", False),
+            # Which lender the car loan runs with, not merely that one exists:
+            # EXB-702 is bank-specific, so an unnamed lender binds nobody.
+            "car_loan_bank": payload.get("existing_car_loan_bank") or None,
             "age_emi_sal": payload.get("age_at_last_emi_salaried", age),
             "age_emi_se": payload.get("age_at_last_emi_self_employed", age),
             "se_current_itr": payload.get("current_itr", 10_000_000),
             "se_prev_itr": payload.get("previous_itr", 10_000_000),
             "itr_filed": payload.get("itr_filed", True),
             "business_proof": payload.get("business_proof", True),
-            "business_exp_years": payload.get("business_experience_years", 99),
             # Years of filed business ITRs. Falls back to business age when the
             # branch collects no explicit count (HUF), so the rule still binds.
             "business_itr_years": payload.get(
@@ -914,20 +960,16 @@ class BREEngineService:
         }
 
         # Tenant-level overlay (not part of the bank matrix). It gates the
-        # applicant, not one lender, so it suppresses every bank in the map.
-        tenant_rejections: List[Dict[str, Any]] = []
-        if tenant_id == "tenant_alpha" and cibil_score < 720:
-            tenant_rejections.append({
-                "rule_id": "ALPHA-RSK-001",
-                "category": "Tenant Alpha Risk",
-                "message": "Tenant Alpha requires a minimum CIBIL score of 720 for prime onboarding.",
-            })
+        # applicant, not one lender, so it is scored INTO every bank's outcomes:
+        # a bank it suppresses has to show the rule that suppressed it.
+        for outcomes in bank_outcomes.values():
+            outcomes.extend(_tenant_overlay_outcomes(tenant_id, cibil_score))
 
         # --- Selected-bank verdict ------------------------------------------
         rejection_reasons = [
             {"rule_id": o["rule_id"], "category": o["category"], "message": o["message"]}
             for o in bank_outcomes[selected_bank] if not o["passed"]
-        ] + tenant_rejections
+        ]
 
         overall_eligible = len(rejection_reasons) == 0
 
@@ -939,7 +981,7 @@ class BREEngineService:
         # answer to "who else would lend to me" was always "nobody", and a bank
         # could report is_eligible=false with an empty failed_rules list.
         bank_eligibility: Dict[str, bool] = {
-            code: all(o["passed"] for o in outcomes) and not tenant_rejections
+            code: all(o["passed"] for o in outcomes)
             for code, outcomes in bank_outcomes.items()
         }
 

@@ -141,11 +141,12 @@ export interface RejectionReason {
 
 export interface RuleOutcome {
   rule_id: string;
-  name: string;
+  parameter_name: string;
   category: string;
-  value: string;
-  limit: string;
-  message: string;
+  status: "PASS" | "FAIL";
+  user_value: string;
+  limit_value: string;
+  description: string;
 }
 
 export interface BankEvaluationReport {

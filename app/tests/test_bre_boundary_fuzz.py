@@ -200,6 +200,36 @@ def test_tenant_alpha_risk_override_stacks():
     assert "ALPHA-RSK-001" not in _rule_ids(default)
 
 
+def test_tenant_overlay_is_visible_in_every_bank_report():
+    """A bank the overlay suppresses must SHOW the rule that suppressed it.
+
+    The overlay used to gate `bank_eligibility` outside the outcome list, so
+    every card read ineligible with an empty failed_rules — the bug the
+    exhaustive audit report exists to prevent.
+    """
+    p = _base_payload()
+    p["credit_bureau"]["cibil_score"] = 710
+    report = _evaluate_with_tenant(p, "tenant_alpha")["evaluation_report"]
+
+    for code, entry in report.items():
+        assert entry["is_eligible"] is False
+        row = next(r for r in entry["failed_rules"] if r["rule_id"] == "ALPHA-RSK-001")
+        assert row["status"] == "FAIL"
+        assert row["user_value"] == "710" and row["limit_value"] == ">= 720"
+        assert row["description"], f"{code} overlay row carries no description"
+
+
+def test_tenant_overlay_reports_a_pass_it_clears():
+    """Scored, not merely enforced — a cleared overlay is still audit evidence."""
+    p = _base_payload()
+    p["credit_bureau"]["cibil_score"] = 750
+    report = _evaluate_with_tenant(p, "tenant_alpha")["evaluation_report"]
+
+    for entry in report.values():
+        row = next(r for r in entry["passed_rules"] if r["rule_id"] == "ALPHA-RSK-001")
+        assert row["status"] == "PASS" and row["limit_value"] == ">= 720"
+
+
 def _evaluate_with_tenant(payload, tenant_id):
     return asyncio.run(
         bre_engine_service.evaluate_application(copy.deepcopy(payload), tenant_id=tenant_id)
@@ -466,9 +496,22 @@ def test_form_16_skipped_on_accepted_no_income_proof():
     assert ok["overall_eligible"] is True
 
 
-def test_existing_car_loan_bank_specific():
-    # IOB and BOB forbid an existing active car loan; others allow it.
-    assert "EXB-702" in _rule_ids(_evaluate(_base_payload(selected_bank="IOB", active_car_loan=True)))
-    assert "EXB-702" in _rule_ids(_evaluate(_base_payload(selected_bank="BOB", active_car_loan=True)))
-    assert _evaluate(_base_payload(selected_bank="BOI", active_car_loan=True))["overall_eligible"] is True
-    assert _evaluate(_base_payload(selected_bank="HDFC", active_car_loan=True))["overall_eligible"] is True
+def test_existing_car_loan_binds_only_the_lending_bank():
+    # IOB and BOB refuse a car loan of their OWN; neither is bound by one held
+    # with the other, and no bank is bound by a loan with a third lender.
+    for bank in ("IOB", "BOB"):
+        own = _evaluate(_base_payload(selected_bank=bank, existing_car_loan_bank=bank))
+        assert "EXB-702" in _rule_ids(own)
+        assert own["bank_eligibility"][bank] is False
+
+    for bank in ("IOB", "BOB", "BOI", "HDFC"):
+        other = "BOB" if bank != "BOB" else "IOB"
+        away = _evaluate(_base_payload(selected_bank=bank, existing_car_loan_bank=other))
+        assert away["bank_eligibility"][bank] is True, f"{bank} bound by a {other} car loan"
+
+
+def test_no_car_loan_leaves_exb_702_unevaluated():
+    """With no car loan there is nothing to judge, so the rule never runs."""
+    clean = _evaluate(_base_payload(selected_bank="IOB"))
+    rows = clean["evaluation_report"]["IOB"]
+    assert "EXB-702" not in {r["rule_id"] for r in rows["passed_rules"] + rows["failed_rules"]}

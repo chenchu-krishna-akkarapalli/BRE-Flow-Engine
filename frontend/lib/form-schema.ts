@@ -120,6 +120,8 @@ export const AGE_RELATIONS = [
   { value: "None", label: "No one — just me" },
   { value: "Brother", label: "My brother" },
   { value: "Sister", label: "My sister" },
+  { value: "Son", label: "My son" },
+  { value: "Daughter", label: "My daughter" },
 ];
 export const INCOME_RELATIONS = [
   { value: "None", label: "No one — just my own income" },
@@ -127,6 +129,8 @@ export const INCOME_RELATIONS = [
   { value: "Mother", label: "My mother" },
   { value: "Brother", label: "My brother" },
   { value: "Sister", label: "My sister" },
+  { value: "Son", label: "My son" },
+  { value: "Daughter", label: "My daughter" },
 ];
 
 export const BANK_LABELS: Record<BankCode, string> = {

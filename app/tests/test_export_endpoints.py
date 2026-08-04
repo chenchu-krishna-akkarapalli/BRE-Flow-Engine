@@ -121,12 +121,20 @@ def test_evaluation_report_covers_every_bank() -> None:
 def test_report_rows_carry_value_and_limit() -> None:
     failed = EVALUATION["evaluation_report"]["BOI"]["failed_rules"]
     cibil = next(r for r in failed if r["rule_id"] == "BUR-405")
-    assert cibil["name"] == "CIBIL Score"
-    assert cibil["value"] == "650" and cibil["limit"] == ">= 701"
-    assert cibil["message"]
+    assert cibil["parameter_name"] == "CIBIL Score"
+    assert cibil["status"] == "FAIL"
+    assert cibil["user_value"] == "650" and cibil["limit_value"] == ">= 701"
+    assert cibil["description"]
 
-    passed = EVALUATION["evaluation_report"]["BOI"]["passed_rules"]
-    assert all(r["message"] == "" for r in passed), "a passed rule carries no failure message"
+
+def test_every_row_explains_itself() -> None:
+    """The audit grid is only useful if a PASS states its outcome too."""
+    for code, report in EVALUATION["evaluation_report"].items():
+        for row in report["passed_rules"] + report["failed_rules"]:
+            assert row["description"], f"{code}/{row['rule_id']} has no description"
+            assert row["status"] in ("PASS", "FAIL")
+        assert all(r["status"] == "PASS" for r in report["passed_rules"])
+        assert all(r["status"] == "FAIL" for r in report["failed_rules"])
 
 
 def test_failed_rules_match_rejection_reasons() -> None:

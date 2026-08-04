@@ -169,9 +169,8 @@ class ExistingBankOption(str, Enum):
     """Where the applicant already banks — one option per partner bank.
 
     Every member of :class:`BankCode` must appear here: the option selects
-    which bank's policy drives the verdict, and the private banks all carry
-    ``requires_existing_account = True``, so an unrepresented partner bank can
-    never be scored (REL-501 rejects it on every submission).
+    which bank's policy drives the verdict, so an unrepresented partner bank
+    could never be scored at all.
     """
 
     NONE = "None"
@@ -196,6 +195,8 @@ class CoApplicantAgeRelation(str, Enum):
     NONE = "None"
     BROTHER = "Brother"
     SISTER = "Sister"
+    SON = "Son"
+    DAUGHTER = "Daughter"
 
 
 class CoApplicantIncomeRelation(str, Enum):
@@ -204,6 +205,8 @@ class CoApplicantIncomeRelation(str, Enum):
     MOTHER = "Mother"
     BROTHER = "Brother"
     SISTER = "Sister"
+    SON = "Son"
+    DAUGHTER = "Daughter"
 
 
 class WriteOffType(str, Enum):

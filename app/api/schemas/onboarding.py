@@ -105,7 +105,9 @@ class OnboardingEvaluationRequest(BaseModel):
     salary_payment_mode: str = "BANK_TRANSFER"
     form_16_years: int = Field(default=2, ge=0)
     no_income_proof_segment: bool = False
-    active_car_loan: bool = False
+    # EXB-702 is bank-specific, so the flat contract names the lender rather
+    # than asserting a bare "has a car loan", which binds no bank.
+    existing_car_loan_bank: Optional[BankCode] = None
 
     # Self-Employed
     business_experience_years: int = Field(default=5, ge=0)
@@ -141,7 +143,7 @@ class OnboardingEvaluationRequest(BaseModel):
                 "salary_payment_mode": "BANK_TRANSFER",
                 "form_16_years": 2,
                 "no_income_proof_segment": False,
-                "active_car_loan": False,
+                "existing_car_loan_bank": None,
                 "business_experience_years": 5,
                 "current_itr": 500000,
                 "previous_itr": 450000,
@@ -645,7 +647,13 @@ class BankingBureauStep(FormModel):
             ),
             "loan_type": self.loan_type.value,
             "has_loan_enquiry": self.has_loan_enquiry,
-            "active_car_loan": self.existing_car_loan_bank is not ExistingBankOption.NONE,
+            # The lender the car loan runs with. None for "Others"/"None" —
+            # neither names a partner bank, so EXB-702 cannot bind.
+            "existing_car_loan_bank": (
+                EXISTING_BANK_TO_BANK_CODE[self.existing_car_loan_bank].value
+                if self.existing_car_loan_bank in EXISTING_BANK_TO_BANK_CODE
+                else None
+            ),
             # Filled by OnboardingFormRequest, which owns the DOB it derives from.
             "age_at_last_emi_salaried": self.age_at_last_emi,
             "age_at_last_emi_self_employed": self.age_at_last_emi,
@@ -827,9 +835,10 @@ class OnboardingFormRequest(FormModel):
                     "profileType": "Salaried",
                     "employerType": "Employment-Pvt Ltd",
                     "tenureBand": "2y+",
-                    "grossSalaryBand": "gt25000",
+                    "grossSalary": 60000,
                     "salaryMode": "Salary payment mode- Bank Credit",
                     "form16Status": "Form 16",
+                    "form16Years": 2,
                     "rentalIncomeTypeSalaried": "None",
                 },
                 "banking": {
@@ -863,14 +872,15 @@ class RejectionReasonDetail(BaseModel):
 
 
 class RuleOutcomeDetail(BaseModel):
-    """One evaluated rule, with the applicant's value against the bank's limit."""
+    """One evaluated rule: what was checked, the verdict, and why."""
 
     rule_id: str
-    name: str
+    parameter_name: str
     category: str
-    value: str
-    limit: str
-    message: str = ""
+    status: Literal["PASS", "FAIL"]
+    user_value: str
+    limit_value: str
+    description: str
 
 
 class BankEvaluationReport(BaseModel):

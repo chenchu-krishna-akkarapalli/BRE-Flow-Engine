@@ -198,7 +198,7 @@ for a future hard-reject on disallowed sibling co-applicants.)
 | Rule ID | Parameter | Condition | Action | Status | Rejection Reason |
 |---|---|---|---|---|---|
 | EXB-701 | existing_account_holder | account_status == "ACTIVE" with selected bank | PASS | 🕓 | Existing relationship — eligible for pre-approved fast-track. |
-| EXB-702 | active_car_loan | `active_car_loan == true` && bank ∈ {IOB, BOB} | REJECT | ✅ | Selected bank does not permit an existing active car loan (matrix col 19). |
+| EXB-702 | existing_car_loan_bank | `existing_car_loan_bank == bank` && bank ∈ {IOB, BOB} | REJECT | ✅ | The bank does not permit a second exposure to an applicant already servicing a car loan with it (matrix col 19). A car loan with any other lender does not bind it. |
 
 ---
 

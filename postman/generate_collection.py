@@ -133,7 +133,7 @@ def flat_body(bank, **over):
         "salary_payment_mode": "BANK_TRANSFER",
         "form_16_years": max(p["form16_years_required"], 2),
         "no_income_proof_segment": False,
-        "active_car_loan": False,
+        "existing_car_loan_bank": None,
         "business_experience_years": p["min_business_itr_years"] + 2,
         "current_itr": p["se_min_current_itr"] + 300000.0,
         "previous_itr": max(p["se_min_prev_itr"], 300000.0) + 300000.0,
@@ -294,10 +294,10 @@ def form_scenarios(bank):
 
     # --- 3. Existing account ----------------------------------------------- #
     s.append((CAT_ACCOUNT, "account-held-with-this-bank",
-              f"REL-501 positive: applicant holds a current/savings account with {bank}, which "
-              f"is {'required' if p['requires_existing_account'] else 'NOT required'} here "
-              f"(col: Existing Current/Savings A/c With).",
-              form_body(bank, salaried(bank)), True))
+              f"REL-501: applicant holds a current/savings account with {bank}, which "
+              f"{'accepts' if p['allows_existing_account_holder'] else 'turns away'} its own "
+              f"account holders (col: Existing A/C Holder).",
+              form_body(bank, salaried(bank)), p["allows_existing_account_holder"]))
 
     # --- 4. Core boundary scenarios ---------------------------------------- #
     s.append((CAT_BOUNDARY, "cibil-at-floor",
@@ -550,15 +550,16 @@ def main():
     # Cross-bank folder: the one REL-501 negative the wizard can express.
     others = form_body("BOI", salaried("BOI"))
     others["banking"]["existingAccountBank"] = "Others"
-    cross_expected = {b: not BANK_MATRIX_RULES[b]["requires_existing_account"]
-                      for b in BANK_MATRIX_RULES}
+    # REL-501 binds a bank only against its OWN account holders, so an applicant
+    # banking outside the partner set is unconstrained everywhere.
+    cross_expected = {b: True for b in BANK_MATRIX_RULES}
     cross = {
         "name": "Cross-Bank / Existing A/c Matrix",
         "description": (
             "REL-501 across all 8 banks in a single submission. `existingAccountBank: 'Others'` "
             "means the applicant holds no partner-bank account; the assessed bank falls back to "
-            "BOI. Only IOB carries `requires_existing_account = false`, so IOB must be the sole "
-            "eligible bank in the returned map even though the assessed bank rejects.\n\n"
+            "BOI. REL-501 binds a bank only against its own account holders, so banking outside "
+            "the partner set leaves every bank free to lend.\n\n"
             "This is the case that proves `bank_eligibility` answers 'who else would lend to "
             "me': every entry is that bank's own verdict, independent of the selected bank's."
         ),

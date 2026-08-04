@@ -26,6 +26,11 @@ MIN_SELF_EMPLOYED_COMBINED_ITR: float = 600000.0
 MIN_SELF_EMPLOYED_LOAN_AMOUNT: float = 100000.0
 DPD_WRITE_OFF_MAX_TOLERANCE_DAYS: int = 90
 
+# Tenant risk overlays layered on top of the bank matrix: tenant -> (rule id,
+# CIBIL floor). Gates the applicant rather than one lender, so it scores at
+# every bank.
+TENANT_CIBIL_OVERLAY: dict[str, tuple[str, int]] = {"tenant_alpha": ("ALPHA-RSK-001", 720)}
+
 # Rate Limiting Defaults
 DEFAULT_TENANT_RATE_LIMIT_PER_MINUTE: int = 600
 

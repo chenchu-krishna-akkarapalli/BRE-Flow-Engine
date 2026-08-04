@@ -36,18 +36,18 @@ function RuleTable({ rules, passed }: { rules: RuleOutcome[]; passed: boolean })
                       <XCircle size={15} className="mt-0.5 shrink-0 text-danger" />
                     )}
                     <span>
-                      <span className="font-bold text-ink">{rule.name}</span>
+                      <span className="font-bold text-ink">{rule.parameter_name}</span>
                       <span className="numeric ml-2 rounded bg-white px-1.5 py-0.5 text-[0.6875rem] font-bold text-ink-subtle border border-line">
                         {rule.rule_id}
                       </span>
-                      {rule.message && (
-                        <span className="mt-0.5 block text-ink-muted leading-relaxed font-medium">{rule.message}</span>
+                      {rule.description && (
+                        <span className="mt-0.5 block text-ink-muted leading-relaxed font-medium">{rule.description}</span>
                       )}
                     </span>
                   </span>
                 </td>
-                <td className="numeric py-2 px-3 font-bold text-ink">{rule.value}</td>
-                <td className="numeric py-2 px-3 text-ink-muted">{rule.limit}</td>
+                <td className="numeric py-2 px-3 font-bold text-ink">{rule.user_value}</td>
+                <td className="numeric py-2 px-3 text-ink-muted">{rule.limit_value}</td>
               </tr>
             ))}
           </tbody>

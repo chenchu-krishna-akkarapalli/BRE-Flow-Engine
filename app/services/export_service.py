@@ -36,11 +36,13 @@ _BORDER = Border(left=_THIN, right=_THIN, top=_THIN, bottom=_THIN)
 def _rows_for_bank(report: Dict[str, Any]) -> List[Tuple[str, str, str, str, str, str]]:
     """Flatten one bank's report into (status, rule_id, name, value, limit, note)."""
     rows = [
-        ("PASS", r["rule_id"], r["name"], r["value"], r["limit"], "")
+        (r["status"], r["rule_id"], r["parameter_name"], r["user_value"],
+         r["limit_value"], r["description"])
         for r in report.get("passed_rules", [])
     ]
     rows += [
-        ("FAIL", r["rule_id"], r["name"], r["value"], r["limit"], r.get("message", ""))
+        (r["status"], r["rule_id"], r["parameter_name"], r["user_value"],
+         r["limit_value"], r["description"])
         for r in report.get("failed_rules", [])
     ]
     return rows
