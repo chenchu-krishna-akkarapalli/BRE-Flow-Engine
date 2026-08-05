@@ -12,6 +12,7 @@ import {
   totalWorkExperienceYears,
   SALARY_MODES, TENURE_BANDS, WRITE_OFF_FLAGS,
 } from "@/lib/form-schema";
+import { CibilUpload } from "@/components/CibilUpload";
 import { DocumentUpload } from "@/components/DocumentUpload";
 import { VerifyField } from "@/components/VerifyField";
 import {
@@ -718,6 +719,9 @@ export function Step3Occupation() {
 export function Step4Banking() {
   const { draft, set } = useField();
   const k = <K extends keyof Draft>(key: K) => (v: Draft[K]) => set(key, v);
+  // Every bureau answer below is locked while a parsed report is attached, so
+  // what the applicant signs off on is what the document actually says.
+  const locked = useOnboardingStore((s) => s.cibilVerified) !== null;
 
   return (
     <div className="flex flex-col gap-6">
@@ -739,8 +743,10 @@ export function Step4Banking() {
         />
       </Field>
 
+      <CibilUpload />
+
       <Field label="What is your latest credit score (CIBIL score), if you know it?" htmlFor="bureauCibilScore">
-        <TextInput id="bureauCibilScore" type="number" value={draft.bureauCibilScore} onChange={(v) => set("bureauCibilScore", num(v))} numeric />
+        <TextInput id="bureauCibilScore" type="number" value={draft.bureauCibilScore} onChange={(v) => set("bureauCibilScore", num(v))} numeric verified={locked} disabled={locked} />
       </Field>
 
       <Field label="Have you ever missed a loan payment, or paid one late?" htmlFor="hasMissedPayment">
@@ -750,6 +756,7 @@ export function Step4Banking() {
           value={yn(draft.hasMissedPayment)}
           onChange={(v) => set("hasMissedPayment", v === "yes")}
           options={YES_NO}
+          disabled={locked}
         />
       </Field>
 
@@ -762,6 +769,7 @@ export function Step4Banking() {
             value={yn(draft.missedOver90)}
             onChange={(v) => set("missedOver90", v === "yes")}
             options={YES_NO}
+            disabled={locked}
           />
         </Field>
       )}
@@ -773,12 +781,13 @@ export function Step4Banking() {
           value={yn(draft.bureauLoanEnquiry)}
           onChange={(v) => set("bureauLoanEnquiry", v === "yes")}
           options={YES_NO}
+          disabled={locked}
         />
       </Field>
 
       <div className="grid gap-6 sm:grid-cols-2">
         <Field label="How much do you currently owe in overdue payments? (₹)" htmlFor="bureauCurrentlyOutstanding">
-          <TextInput id="bureauCurrentlyOutstanding" type="number" value={draft.bureauCurrentlyOutstanding} onChange={(v) => set("bureauCurrentlyOutstanding", num(v))} numeric />
+          <TextInput id="bureauCurrentlyOutstanding" type="number" value={draft.bureauCurrentlyOutstanding} onChange={(v) => set("bureauCurrentlyOutstanding", num(v))} numeric verified={locked} disabled={locked} />
         </Field>
         {draft.entityType === "Individual" && <AgeAtLastEmi />}
       </div>
@@ -790,6 +799,7 @@ export function Step4Banking() {
           value={yn(draft.hasWriteOff)}
           onChange={(v) => set("hasWriteOff", v === "yes")}
           options={YES_NO}
+          disabled={locked}
         />
       </Field>
 
@@ -807,6 +817,7 @@ export function Step4Banking() {
                   checked={draft[flag.key]}
                   onChange={(v) => set(flag.key, v)}
                   label={flag.label}
+                  disabled={locked}
                 />
               ))}
             </div>
@@ -814,7 +825,7 @@ export function Step4Banking() {
 
           {draft.bureauFlagCC && (
             <Field label="How much was written off on the credit card? (₹)" htmlFor="bureauWriteOffAmount">
-              <TextInput id="bureauWriteOffAmount" type="number" value={draft.bureauWriteOffAmount} onChange={(v) => set("bureauWriteOffAmount", num(v))} numeric />
+              <TextInput id="bureauWriteOffAmount" type="number" value={draft.bureauWriteOffAmount} onChange={(v) => set("bureauWriteOffAmount", num(v))} numeric verified={locked} disabled={locked} />
             </Field>
           )}
         </>
@@ -825,10 +836,11 @@ export function Step4Banking() {
         checked={draft.cibilPlScoreToggle}
         onChange={(v) => set("cibilPlScoreToggle", v)}
         label="I also know my separate personal-loan credit score"
+        disabled={locked}
       />
       {draft.cibilPlScoreToggle && (
         <Field label="What is that personal-loan credit score?" htmlFor="bureauCibilPlScore">
-          <TextInput id="bureauCibilPlScore" type="number" value={draft.bureauCibilPlScore} onChange={(v) => set("bureauCibilPlScore", num(v))} numeric />
+          <TextInput id="bureauCibilPlScore" type="number" value={draft.bureauCibilPlScore} onChange={(v) => set("bureauCibilPlScore", num(v))} numeric verified={locked} disabled={locked} />
         </Field>
       )}
     </div>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InnovexInfinte | Brand Architecture Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        :root {
+            --bg-main: #F5F7F8;
+            --brand-primary: #0B192C;
+            --brand-accent: #00D2C4;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: #1a1a1a;
+            scroll-behavior: smooth;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 500px;
+        }
+
+        .mood-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--brand-primary), var(--brand-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .lemniscate-canvas {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="pb-20">
+
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="text-xl font-bold tracking-tighter">
+                    <span class="text-slate-900">INNOVEX</span><span class="text-teal-500 font-light ml-1">INFINTE</span>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-600">
+                    <a href="#landscape" class="hover:text-teal-600 transition">Market Landscape</a>
+                    <a href="#moodboards" class="hover:text-teal-600 transition">Mood Boards</a>
+                    <a href="#geometry" class="hover:text-teal-600 transition">Geometry</a>
+                    <a href="#roadmap" class="hover:text-teal-600 transition">Roadmap</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="max-w-7xl mx-auto px-4 pt-16 pb-12 text-center">
+        <h1 class="text-5xl md:text-6xl font-bold text-slate-900 mb-6">Brand Identity Architecture</h1>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Strategic visual design framework for <strong>InnovexInfinte Private Limited</strong>. 
+            Blending technical excellence with infinite potential through data-driven creativity.
+        </p>
+    </header>
+
+    <section id="landscape" class="max-w-7xl mx-auto px-4 py-16 border-t border-gray-100">
+        <div class="grid md:grid-cols-3 gap-12">
+            <div class="md:col-span-1">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Competitive Landscape</h2>
+                <p class="text-gray-600 mb-6">
+                    This section analyzes the market congestion within the MCA registry. As shown in the data, your incorporation in March 2024 occurred during a high-activity period for 'Innovex' related entities.
+                </p>
+                <div class="bg-teal-50 border-l-4 border-teal-500 p-4">
+                    <p class="text-sm text-teal-800 italic">
+                        "Visual defensibility requires moving beyond standard blue-gray palettes and simple sans-serif italic types."
+                    </p>
+                </div>
+            </div>
+            <div class="md:col-span-2 bg-white p-6 rounded-2xl shadow-sm">
+                <div class="chart-container">
+                    <canvas id="marketChart"></canvas>
+                </div>
+                <p class="text-xs text-center text-gray-400 mt-4">X-Axis: Registration Timeline | Y-Axis: Industry Scale (Logarithmic)</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="moodboards" class="max-w-7xl mx-auto px-4 py-16 bg-slate-900 rounded-[2.5rem] text-white">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold mb-4">Interactive Mood Board Explorer</h2>
+            <p class="text-slate-400 max-w-2xl mx-auto">
+                Explore three distinct visual directions designed to secure your trademark while reflecting your core business values.
+            </p>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-4 mb-12" id="moodControls">
+            <button onclick="switchMood('kinetic')" class="px-6 py-3 rounded-full border border-teal-500/30 bg-teal-500/10 text-teal-400 hover:bg-teal-500/20 transition active-mood" id="btn-kinetic">Kinetic Loom</button>
+            <button onclick="switchMood('synergetic')" class="px-6 py-3 rounded-full border border-orange-500/30 bg-orange-500/5 text-orange-400 hover:bg-orange-500/20 transition" id="btn-synergetic">Synergetic Loop</button>
+            <button onclick="switchMood('monolithic')" class="px-6 py-3 rounded-full border border-yellow-500/30 bg-yellow-500/5 text-yellow-400 hover:bg-yellow-500/20 transition" id="btn-monolithic">Monolithic Pillar</button>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-12 items-center" id="moodDisplay">
+            <div class="space-y-6">
+                <div id="moodTag" class="inline-block px-3 py-1 rounded-md bg-teal-500 text-slate-900 font-bold text-xs uppercase tracking-widest">Tech-Forward</div>
+                <h3 id="moodTitle" class="text-4xl font-bold">The Kinetic Loom</h3>
+                <p id="moodDesc" class="text-lg text-slate-300 leading-relaxed">
+                    Designed for cutting-edge software and system integration. Focuses on energy, connectivity, and continuous movement using isometric grids and dynamic light trails.
+                </p>
+                <div class="grid grid-cols-3 gap-4" id="paletteDisplay">
+                    <div class="space-y-2">
+                        <div class="h-12 rounded-lg bg-[#0B192C] border border-white/10"></div>
+                        <div class="text-[10px] text-center text-slate-400 uppercase">#0B192C</div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="h-12 rounded-lg bg-[#00D2C4] border border-white/10"></div>
+                        <div class="text-[10px] text-center text-slate-400 uppercase">#00D2C4</div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="h-12 rounded-lg bg-[#F5F7F8] border border-white/10"></div>
+                        <div class="text-[10px] text-center text-slate-400 uppercase">#F5F7F8</div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative p-8 rounded-3xl bg-white/5 border border-white/10 flex flex-col items-center justify-center min-h-[300px]">
+                <div class="text-center mb-8">
+                    <p class="text-slate-500 text-sm mb-2">TYPOGRAPHIC PREVIEW</p>
+                    <div class="text-4xl md:text-5xl font-black tracking-tight" id="typoPreview">
+                        <span id="p-innovex" class="text-white">INNOVEX</span><span id="p-infinte" class="text-teal-400 font-light ml-2 tracking-widest">INFINTE</span>
+                    </div>
+                </div>
+                <div class="w-full h-px bg-white/10 mb-8"></div>
+                <div class="text-sm text-slate-400 italic text-center" id="moodMetaphor">
+                    "Metaphor: Intersecting energy paths weaving an infinite loop."
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="geometry" class="max-w-7xl mx-auto px-4 py-16">
+        <div class="flex flex-col md:flex-row items-center gap-12">
+            <div class="w-full md:w-1/2">
+                <h2 class="text-3xl font-bold text-slate-900 mb-6">Geometric Blueprints</h2>
+                <p class="text-gray-600 mb-6">
+                    To ensure absolute scalability and legal uniqueness, your logo is not hand-drawn but mathematically constructed. We utilize the <strong>Lemniscate of Bernoulli</strong> as the base foundation.
+                </p>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <code class="text-sm text-teal-600 font-mono">(x² + y²)² = 2a²(x² - y²)</code>
+                    <p class="text-xs text-gray-400 mt-2">The Cartesian coordinate formula for the infinite loop.</p>
+                </div>
+                <ul class="space-y-4 text-gray-700">
+                    <li class="flex items-start">
+                        <span class="h-6 w-6 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-xs font-bold mr-3 mt-0.5">1</span>
+                        <span><strong>Angle Harmonization:</strong> Terminal cuts on 'X' matching curve angles.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="h-6 w-6 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-xs font-bold mr-3 mt-0.5">2</span>
+                        <span><strong>Shared Vertex:</strong> Linking wordmark typography to the icon logic.</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="w-full md:w-1/2 flex justify-center">
+                <div class="p-4 bg-white rounded-2xl shadow-lg border border-gray-100 w-full max-w-md">
+                    <canvas id="geometryCanvas" class="lemniscate-canvas w-full aspect-square"></canvas>
+                    <div class="mt-4 flex justify-between items-center text-xs text-gray-400">
+                        <span>Purity: 100%</span>
+                        <span>Symmetry: Radial</span>
+                        <span>Type: Bernoulli Curve</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="roadmap" class="max-w-7xl mx-auto px-4 py-16">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold text-slate-900">Implementation Roadmap</h2>
+            <p class="text-gray-500">The 6-Phase Strategic Rollout</p>
+        </div>
+
+        <div class="relative">
+            <div class="hidden md:block absolute left-1/2 h-full w-0.5 bg-gray-200 -translate-x-1/2"></div>
+            
+            <div class="space-y-12">
+                <div class="relative flex flex-col md:flex-row items-center group">
+                    <div class="md:w-1/2 md:pr-12 text-center md:text-right">
+                        <h4 class="text-lg font-bold text-slate-900">Phase 1: Selection</h4>
+                        <p class="text-sm text-gray-500">Choose one core visual direction from the three mood boards to align stakeholders.</p>
+                    </div>
+                    <div class="z-10 h-10 w-10 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold shadow-lg my-4 md:my-0">01</div>
+                    <div class="md:w-1/2 md:pl-12">
+                        <span class="text-xs font-bold text-teal-600 uppercase tracking-widest">Deliverable</span>
+                        <p class="text-sm text-gray-600 font-medium">Signed Brand Brief & Selected Direction</p>
+                    </div>
+                </div>
+
+                <div class="relative flex flex-col md:flex-row-reverse items-center group">
+                    <div class="md:w-1/2 md:pl-12 text-center md:text-left">
+                        <h4 class="text-lg font-bold text-slate-900">Phase 2: Geometric Drafting</h4>
+                        <p class="text-sm text-gray-500">Constructing the logo mark using the parametric lemniscate grid.</p>
+                    </div>
+                    <div class="z-10 h-10 w-10 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold shadow-lg my-4 md:my-0">02</div>
+                    <div class="md:w-1/2 md:pr-12 md:text-right">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Deliverable</span>
+                        <p class="text-sm text-gray-600 font-medium">Vector Master Files (.EPS / .AI)</p>
+                    </div>
+                </div>
+
+                <div class="relative flex flex-col md:flex-row items-center group">
+                    <div class="md:w-1/2 md:pr-12 text-center md:text-right">
+                        <h4 class="text-lg font-bold text-slate-900">Phase 6: Legal Filing</h4>
+                        <p class="text-sm text-gray-500">Submit the final device mark for trademark registration under Classes 9, 35, 42.</p>
+                    </div>
+                    <div class="z-10 h-10 w-10 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold shadow-lg my-4 md:my-0">06</div>
+                    <div class="md:w-1/2 md:pl-12">
+                        <span class="text-xs font-bold text-teal-600 uppercase tracking-widest">Deliverable</span>
+                        <p class="text-sm text-gray-600 font-medium">Trademark Application Receipt</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white border-t border-gray-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-sm text-gray-400 mb-2">Internal Branding Strategy Document v1.0</p>
+            <p class="text-lg font-bold text-slate-900">INNOVEXINFINTE PRIVATE LIMITED</p>
+            <p class="text-xs text-gray-400 mt-4">&copy; 2024 All Rights Reserved. Confidential Strategy Asset.</p>
+        </div>
+    </footer>
+
+    <script>
+        const moods = {
+            kinetic: {
+                tag: 'Tech-Forward',
+                title: 'The Kinetic Loom',
+                desc: 'Designed for cutting-edge software and system integration. Focuses on energy, connectivity, and continuous movement using isometric grids and dynamic light trails.',
+                palette: ['#0B192C', '#00D2C4', '#F5F7F8'],
+                metaphor: 'Metaphor: Intersecting energy paths weaving an infinite loop.',
+                tagClass: 'bg-teal-500',
+                accent: '#00D2C4',
+                weight: 'font-black'
+            },
+            synergetic: {
+                tag: 'Human-Centric',
+                title: 'The Synergetic Loop',
+                desc: 'Crafted for strategic advisory and collaborative design. Prioritizes human connection and sustainable growth with soft overlapping curves and translucent gradients.',
+                palette: ['#2C302E', '#D47B56', '#EAE6DF'],
+                metaphor: 'Metaphor: A flowing ribbon representing shared growth.',
+                tagClass: 'bg-orange-500',
+                accent: '#D47B56',
+                weight: 'font-semibold'
+            },
+            monolithic: {
+                tag: 'Premium Authority',
+                title: 'The Monolithic Pillar',
+                desc: 'Tailored for high-trust sectors like fintech or advanced manufacturing. Focuses on structural strength and operational excellence using bold minimalist forms.',
+                palette: ['#111111', '#D4AF37', '#8E9092'],
+                metaphor: 'Metaphor: A solid pillar carved with a negative-space infinity loop.',
+                tagClass: 'bg-yellow-500',
+                accent: '#D4AF37',
+                weight: 'font-bold'
+            }
+        };
+
+        function switchMood(key) {
+            const mood = moods[key];
+            
+            // Update Text
+            document.getElementById('moodTag').innerText = mood.tag;
+            document.getElementById('moodTag').className = `inline-block px-3 py-1 rounded-md text-slate-900 font-bold text-xs uppercase tracking-widest ${mood.tagClass}`;
+            document.getElementById('moodTitle').innerText = mood.title;
+            document.getElementById('moodDesc').innerText = mood.desc;
+            document.getElementById('moodMetaphor').innerText = mood.metaphor;
+            
+            // Update Palette
+            const paletteDivs = document.getElementById('paletteDisplay').children;
+            mood.palette.forEach((color, i) => {
+                paletteDivs[i].children[0].style.backgroundColor = color;
+                paletteDivs[i].children[1].innerText = color;
+            });
+
+            // Update Typo Preview
+            const innovex = document.getElementById('p-innovex');
+            const infinte = document.getElementById('p-infinte');
+            
+            innovex.className = `${mood.weight} text-white`;
+            infinte.style.color = mood.accent;
+            
+            // UI Button Highlighting
+            document.querySelectorAll('#moodControls button').forEach(btn => {
+                btn.style.opacity = '0.5';
+            });
+            document.getElementById(`btn-${key}`).style.opacity = '1';
+        }
+
+        // --- Market Chart ---
+        const ctxMarket = document.getElementById('marketChart').getContext('2d');
+        new Chart(ctxMarket, {
+            type: 'scatter',
+            data: {
+                datasets: [
+                    { label: 'Innovex Int.', data: [{x: 2024.2, y: 80}], backgroundColor: '#0B192C' },
+                    { label: 'Innovex Polymers', data: [{x: 2024.25, y: 45}], backgroundColor: '#2C302E' },
+                    { label: 'Anni Innovex', data: [{x: 2024.26, y: 30}], backgroundColor: '#00D2C4' },
+                    { label: 'Innofinite Tech', data: [{x: 2018.9, y: 55}], backgroundColor: '#8E9092' },
+                    { label: 'InfinityX Innov.', data: [{x: 2019.3, y: 40}], backgroundColor: '#D47B56' },
+                    { label: 'InnovexInfinte', data: [{x: 2024.22, y: 95}], backgroundColor: '#00D2C4', pointRadius: 10, pointHoverRadius: 12 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: { display: true, text: 'Registration Year (2015-2024)' }
+                    },
+                    y: {
+                        display: false
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => context.dataset.label
+                        }
+                    }
+                }
+            }
+        });
+
+        // --- Lemniscate Animation ---
+        const canvas = document.getElementById('geometryCanvas');
+        const gCtx = canvas.getContext('2d');
+        let step = 0;
+
+        function drawLemniscate() {
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = canvas.offsetWidth;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const a = width * 0.35; // Scale
+
+            gCtx.clearRect(0, 0, width, height);
+
+            // Draw Grid
+            gCtx.strokeStyle = '#f1f1f1';
+            gCtx.lineWidth = 1;
+            for(let i=0; i<width; i+=20){
+                gCtx.beginPath(); gCtx.moveTo(i, 0); gCtx.lineTo(i, height); gCtx.stroke();
+                gCtx.beginPath(); gCtx.moveTo(0, i); gCtx.lineTo(width, i); gCtx.stroke();
+            }
+
+            // Draw Lemniscate
+            gCtx.beginPath();
+            gCtx.lineWidth = 4;
+            gCtx.strokeStyle = '#00D2C4';
+
+            for (let t = 0; t <= Math.PI * 2; t += 0.01) {
+                // Formula: x = a*cos(t) / (1+sin^2(t)), y = a*sin(t)*cos(t) / (1+sin^2(t))
+                const sinT = Math.sin(t);
+                const cosT = Math.cos(t);
+                const denominator = 1 + sinT * sinT;
+                
+                const x = (a * cosT) / denominator;
+                const y = (a * sinT * cosT) / denominator;
+
+                if (t === 0) gCtx.moveTo(centerX + x, centerY + y);
+                else gCtx.lineTo(centerX + x, centerY + y);
+            }
+            gCtx.stroke();
+
+            // Animated Node
+            const t = step % (Math.PI * 2);
+            const sinT = Math.sin(t);
+            const cosT = Math.cos(t);
+            const denominator = 1 + sinT * sinT;
+            const nx = (a * cosT) / denominator;
+            const ny = (a * sinT * cosT) / denominator;
+
+            gCtx.beginPath();
+            gCtx.arc(centerX + nx, centerY + ny, 6, 0, Math.PI * 2);
+            gCtx.fillStyle = '#0B192C';
+            gCtx.fill();
+
+            step += 0.02;
+            requestAnimationFrame(drawLemniscate);
+        }
+
+        drawLemniscate();
+        switchMood('kinetic'); // Initial State
+    </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+[package]
+name = "cibil-semantic"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cibil-core = { path = "../cibil-core" }
+cibil-layout = { path = "../cibil-layout" }
+petgraph = { workspace = true }
+serde = { workspace = true }

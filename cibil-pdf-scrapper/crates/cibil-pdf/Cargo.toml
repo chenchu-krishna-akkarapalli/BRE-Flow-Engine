@@ -1,0 +1,12 @@
+[package]
+name = "cibil-pdf"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cibil-core = { path = "../cibil-core" }
+lopdf = { workspace = true }
+serde = { workspace = true }
+regex = { workspace = true }
+rc4 = { workspace = true }
+md-5 = { workspace = true }

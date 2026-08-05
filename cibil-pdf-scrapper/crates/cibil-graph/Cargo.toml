@@ -1,0 +1,14 @@
+[package]
+name = "cibil-graph"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cibil-core = { path = "../cibil-core" }
+cibil-layout = { path = "../cibil-layout" }
+cibil-pdf = { path = "../cibil-pdf" }
+cibil-domain = { path = "../cibil-domain" }
+cibil-validation = { path = "../cibil-validation" }
+petgraph = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }

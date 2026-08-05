@@ -170,6 +170,27 @@ export function profileTypeFor(draft: Draft): ProfileType {
 }
 
 // Days past due implied by the two repayment answers; 30 keeps the middle case out of the max_dpd=0 banks.
+// Draft fields a parsed CIBIL report is allowed to write, and therefore the
+// exact set the wizard locks behind the verified badge.
+export const CIBIL_POPULATED_FIELDS = [
+  "bureauCibilScore",
+  "hasMissedPayment",
+  "missedOver90",
+  "bureauLoanEnquiry",
+  "bureauCurrentlyOutstanding",
+  "hasWriteOff",
+  "bureauFlagPL",
+  "bureauFlagHome",
+  "bureauFlagConsumer",
+  "bureauFlagAgri",
+  "bureauFlagMSME",
+  "bureauFlagAuto",
+  "bureauFlagCC",
+  "bureauWriteOffAmount",
+  "cibilPlScoreToggle",
+  "bureauCibilPlScore",
+] as const satisfies readonly (keyof Draft)[];
+
 export function dpdDaysFor(draft: Draft): number {
   if (!draft.hasMissedPayment) return 0;
   return draft.missedOver90 ? 90 : 30;
@@ -372,8 +393,15 @@ interface OnboardingState {
   submitting: boolean;
   result: EvaluationResponse | null;
   error: string | null;
+  // Non-null once a CIBIL report has been parsed: the bureau inputs are locked
+  // to what it says, and the badge names the file they came from.
+  cibilVerified: { filename: string; evidence: Record<string, unknown> } | null;
 
   setField: <K extends keyof Draft>(key: K, value: Draft[K]) => void;
+  // Bureau fields read off an uploaded CIBIL report. Set together so the
+  // verified badge and the locked inputs can never disagree about their source.
+  applyCibilExtraction: (fields: Record<string, unknown>, filename: string) => void;
+  clearCibilExtraction: () => void;
   goTo: (stepId: number) => void;
   next: () => void;
   prev: () => void;
@@ -387,6 +415,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   submitting: false,
   result: null,
   error: null,
+  cibilVerified: null,
 
   setField: (key, value) =>
     set((state) => {
@@ -423,6 +452,22 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       }
       return { draft, error: null };
     }),
+
+  applyCibilExtraction: (fields, filename) =>
+    set((state) => {
+      // Only fields the wizard actually owns are written; the response also
+      // carries evidence (worstEverDpd, enquiry counts) that has no input.
+      const draft = { ...state.draft };
+      for (const key of CIBIL_POPULATED_FIELDS) {
+        const value = fields[key];
+        if (value !== undefined && value !== null) {
+          (draft as Record<string, unknown>)[key] = value;
+        }
+      }
+      return { draft, cibilVerified: { filename, evidence: fields }, error: null };
+    }),
+
+  clearCibilExtraction: () => set({ cibilVerified: null }),
 
   goTo: (stepId) => set({ stepId }),
 

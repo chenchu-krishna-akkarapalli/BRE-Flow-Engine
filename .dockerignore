@@ -24,3 +24,19 @@ flow.html
 Backend-Playbook.md
 Rules.md
 SKILL.md
+
+# CIBIL engine workspace: the image needs the compiled binary, nothing else.
+# target/ is ~3.8 GB of build artifacts, and test/ + output/ are REAL consumer
+# credit reports — names, PANs, DOBs. Neither belongs in a distributed image.
+cibil-pdf-scrapper/target/
+cibil-pdf-scrapper/test/
+cibil-pdf-scrapper/test_outputs/
+cibil-pdf-scrapper/output/
+cibil-pdf-scrapper/dedupe_state.json
+cibil-pdf-scrapper/test_1_*.json
+cibil-pdf-scrapper/temp_page_*
+cibil-pdf-scrapper/*.html
+cibil-pdf-scrapper/service/
+cibil-pdf-scrapper/run_tests.py
+cibil-pdf-scrapper/__pycache__/
+cibil-pdf-scrapper/promt.md

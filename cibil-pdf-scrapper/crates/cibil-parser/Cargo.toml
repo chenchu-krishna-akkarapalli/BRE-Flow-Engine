@@ -1,0 +1,11 @@
+[package]
+name = "cibil-parser"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cibil-core = { path = "../cibil-core" }
+cibil-layout = { path = "../cibil-layout" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+regex = { workspace = true }

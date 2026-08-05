@@ -59,6 +59,9 @@ services:
       - SECRET_KEY=${SECRET_KEY:-super-secret-jwt-key-flowbre-enterprise-2026}
       - ALGORITHM=${ALGORITHM:-HS256}
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-1440}
+      # Where the Rust CIBIL parser lands in the image. Overridable so a mounted
+      # build can be swapped in without rebuilding.
+      - CIBIL_ENGINE_BINARY=${CIBIL_ENGINE_BINARY:-/usr/local/bin/cibil-cli}
     volumes:
       - ./app/zen_rules:/app/app/zen_rules:ro
     depends_on:

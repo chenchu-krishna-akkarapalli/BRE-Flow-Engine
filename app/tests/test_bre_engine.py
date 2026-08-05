@@ -104,6 +104,11 @@ def test_latency_sla():
             "write_off_amount": 0.0,
         },
     }
+    # asyncio.run() builds an event loop and evaluate_application's first
+    # to_thread call spawns a pool worker: 5-14 ms of startup that is not rule
+    # evaluation. Timing it cold measures the interpreter, not the SLA.
+    asyncio.run(bre_engine_service.evaluate_application(payload))
+
     start = time.perf_counter()
     result = asyncio.run(bre_engine_service.evaluate_application(payload))
     elapsed_ms = (time.perf_counter() - start) * 1000

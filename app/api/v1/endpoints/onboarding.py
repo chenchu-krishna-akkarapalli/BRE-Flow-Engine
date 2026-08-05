@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_tenant
 from app.api.schemas.onboarding import (
+    CibilExtractionResponse,
     CompanyIdentity,
     DocumentExtractionResponse,
     HUFIdentity,
@@ -30,6 +31,7 @@ from app.db.models.audit_log import AuditLogModel
 from app.db.models.rule_execution import RuleExecutionModel
 from app.db.rls import set_tenant_rls_context
 from app.services.bre_engine import bre_engine_service
+from app.services.cibil_service import CibilEngineError, extract_cibil_report
 from app.services.export_service import build_excel, build_pdf
 from app.services.ocr_service import extract_aadhaar_card, extract_pan_card, validate_upload
 from app.services.verification_service import send_otp, verify_otp
@@ -412,6 +414,35 @@ async def export_application_report(
 # --------------------------------------------------------------------------- #
 
 DOCUMENT_EXTRACTORS = {"pan": extract_pan_card, "aadhaar": extract_aadhaar_card}
+
+
+@router.post("/documents/cibil/extract", response_model=CibilExtractionResponse)
+async def extract_cibil_report_document(
+    file: UploadFile = File(..., description="CIBIL consumer report PDF, up to 5 MB."),
+    tenant_id: str = Depends(get_current_tenant),
+):
+    """Parse a CIBIL report with the Rust engine and return Step-4 bureau fields."""
+    content = await file.read()
+    filename = file.filename or "cibil-report.pdf"
+
+    try:
+        extracted, extraction_status, message = await extract_cibil_report(
+            content, file.content_type, filename
+        )
+    except CibilEngineError as exc:
+        # A missing engine is an operator problem, not a bad request, and never
+        # a fabricated bureau history: the applicant types the values in instead.
+        logger.error(f"CIBIL engine unavailable for tenant '{tenant_id}': {exc}")
+        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, str(exc))
+
+    return CibilExtractionResponse(
+        success=extraction_status == "SUCCESS",
+        filename=filename,
+        size_bytes=len(content),
+        status=extraction_status,
+        message=message,
+        extracted=extracted,
+    )
 
 
 @router.post("/documents/{document_type}/extract", response_model=DocumentExtractionResponse)

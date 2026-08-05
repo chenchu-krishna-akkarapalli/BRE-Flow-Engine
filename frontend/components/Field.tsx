@@ -50,6 +50,7 @@ export function TextInput({
   error,
   numeric = false,
   verified = false,
+  disabled = false,
 }: {
   id: string;
   value: string | number;
@@ -59,6 +60,7 @@ export function TextInput({
   error?: string;
   numeric?: boolean;
   verified?: boolean;
+  disabled?: boolean;
 }) {
   const state = error
     ? "border-danger focus:border-danger focus:shadow-none"
@@ -72,6 +74,7 @@ export function TextInput({
         type={type}
         value={value}
         placeholder={placeholder}
+        disabled={disabled}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
         onChange={(e) => onChange(e.target.value)}
@@ -138,16 +141,20 @@ export function Checkbox({
   checked,
   onChange,
   label,
+  disabled = false,
 }: {
   id: string;
   checked: boolean;
   onChange: (v: boolean) => void;
   label: string;
+  disabled?: boolean;
 }) {
   return (
     <label
       htmlFor={id}
-      className={`group flex min-h-[48px] cursor-pointer items-center gap-3 rounded-xl border p-3.5 transition-all duration-200 ${
+      className={`group flex min-h-[48px] items-center gap-3 rounded-xl border p-3.5 transition-all duration-200 ${
+        disabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+      } ${
         checked
           ? "border-brand-500 bg-brand-500/10 text-ink font-medium shadow-sm"
           : "border-line bg-white text-ink-muted hover:border-line-strong hover:bg-bg-raised"
@@ -158,6 +165,7 @@ export function Checkbox({
           id={id}
           type="checkbox"
           checked={checked}
+          disabled={disabled}
           onChange={(e) => onChange(e.target.checked)}
           className="peer sr-only"
         />
@@ -183,12 +191,14 @@ export function RadioCards({
   onChange,
   options,
   label,
+  disabled = false,
 }: {
   name: string;
   value: string;
   onChange: (v: string) => void;
   options: readonly { value: string; label: string }[];
   label?: string;
+  disabled?: boolean;
 }) {
   const columns =
     options.length === 2
@@ -204,7 +214,9 @@ export function RadioCards({
         return (
           <label
             key={opt.value}
-            className={`group relative flex min-h-[52px] cursor-pointer items-center justify-between rounded-xl border px-4 py-3.5 text-left transition-all duration-200 ${
+            className={`group relative flex min-h-[52px] items-center justify-between rounded-xl border px-4 py-3.5 text-left transition-all duration-200 ${
+              disabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+            } ${
               active
                 ? "border-brand-500 bg-gradient-to-r from-brand-500/15 to-brand-indigo/10 font-semibold text-ink shadow-[0_2px_12px_rgba(13,148,136,0.15)] ring-1 ring-brand-500/40 scale-[1.01]"
                 : "border-line bg-white text-ink-muted hover:scale-[1.01] hover:border-line-strong hover:bg-bg-raised hover:text-ink"
@@ -215,6 +227,7 @@ export function RadioCards({
               name={name}
               value={opt.value}
               checked={active}
+              disabled={disabled}
               onChange={() => onChange(opt.value)}
               className="sr-only"
             />

@@ -146,6 +146,14 @@ make check-sla     # latency benchmarks only
 .venv/Scripts/python.exe scripts/check_ocr_stack.py   # Windows
 .venv/bin/python scripts/check_ocr_stack.py           # Linux / macOS
 
+# CIBIL report parsing — a Rust binary, not a pip package. It IS the extraction
+# path for /documents/cibil/extract; without it that endpoint answers 503.
+cd cibil-pdf-scrapper && cargo build --release --bin cibil-cli
+
+# The image builds it in its own stage, so `docker-compose up --build` needs
+# nothing extra. Locally the service finds cibil-pdf-scrapper/target/release/,
+# then PATH; CIBIL_ENGINE_BINARY overrides both.
+
 # Containers — Postgres 127.0.0.1:5435, Redis 6379, FastAPI 8000
 docker-compose up -d --build
 docker-compose ps

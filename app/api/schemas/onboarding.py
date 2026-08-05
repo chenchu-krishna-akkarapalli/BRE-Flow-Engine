@@ -933,6 +933,19 @@ class DocumentExtractionResponse(BaseModel):
     simulated: bool = False
 
 
+class CibilExtractionResponse(BaseModel):
+    """Bureau fields lifted off an uploaded CIBIL report. The PDF is discarded."""
+
+    success: bool
+    filename: str
+    size_bytes: int
+    # SUCCESS | UNKNOWN_CONSUMER | DUPLICATE_DOCUMENT — only SUCCESS carries fields.
+    status: str
+    message: str = ""
+    # Step-4 field names, ready to merge into the wizard's banking step.
+    extracted: Dict[str, Any] = Field(default_factory=dict)
+
+
 class OtpSendRequest(BaseModel):
     channel: Literal["email", "mobile"]
     target: str = Field(min_length=1, max_length=254, description="Email address or 10-digit mobile.")

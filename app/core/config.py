@@ -44,6 +44,11 @@ class Settings(BaseSettings):
     # never be mistaken for a reading of the applicant's card.
     OCR_REQUIRE_REAL: bool = False
 
+    # CIBIL report parsing. Empty resolves to the workspace release build, then
+    # PATH; the endpoint 503s naming the missing half when neither is present.
+    CIBIL_ENGINE_BINARY: str = ""
+    CIBIL_ENGINE_TIMEOUT_S: float = 25.0
+
     # Latency SLA Targets (ms)
     SLA_GET_LOOKUP_MS: float = 30.0
     SLA_CRUD_EVAL_MS: float = 80.0

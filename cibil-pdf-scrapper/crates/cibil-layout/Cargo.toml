@@ -1,0 +1,11 @@
+[package]
+name = "cibil-layout"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cibil-core = { path = "../cibil-core" }
+serde = { workspace = true }
+indexmap = { workspace = true }
+smallvec = { workspace = true }
+regex = { workspace = true }
