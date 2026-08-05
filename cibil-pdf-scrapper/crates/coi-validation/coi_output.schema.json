@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flowbre.local/schemas/coi_output.schema.json",
+  "title": "Computation of Income extraction output",
+  "type": "object",
+  "required": ["source", "format", "assessee", "heads", "deductions", "tax", "credits", "raw"],
+  "additionalProperties": false,
+  "properties": {
+    "source": { "type": "string", "minLength": 1 },
+    "format": { "type": "string", "enum": ["Pdf", "Rtf"] },
+    "regime": { "type": ["string", "null"] },
+    "assessment_year": { "$ref": "#/$defs/yearRange" },
+    "financial_year": { "$ref": "#/$defs/yearRange" },
+    "financial_year_source": { "type": ["string", "null"], "enum": ["stated", "derived", null] },
+    "assessee": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": ["string", "null"] },
+        "fathers_name": { "type": ["string", "null"] },
+        "address": { "type": ["string", "null"] },
+        "email": { "type": ["string", "null"] },
+        "status": { "type": ["string", "null"] },
+        "pan": {
+          "type": ["string", "null"],
+          "pattern": "^[A-Z]{5}[0-9]{4}[A-Z]$"
+        },
+        "aadhaar": {
+          "description": "Never the digits. Redacted at parse time, so the only permitted value is the marker.",
+          "type": ["string", "null"],
+          "enum": ["[Aadhaar Redacted]", null]
+        },
+        "date_of_birth": { "type": ["string", "null"] },
+        "residential_status": { "type": ["string", "null"] },
+        "gender": { "type": ["string", "null"] },
+        "ward": { "type": ["string", "null"] },
+        "nature_of_business": { "type": ["string", "null"] },
+        "filing_status": { "type": ["string", "null"] },
+        "bank": { "type": ["string", "null"] }
+      }
+    },
+    "heads": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "salary": { "$ref": "#/$defs/money" },
+        "house_property": { "$ref": "#/$defs/money" },
+        "business_profession": { "$ref": "#/$defs/money" },
+        "capital_gains": { "$ref": "#/$defs/money" },
+        "other_sources": { "$ref": "#/$defs/money" }
+      }
+    },
+    "gross_total_income": { "$ref": "#/$defs/money" },
+    "deductions": {
+      "type": "object",
+      "required": ["items"],
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["section", "label", "raw_line"],
+            "additionalProperties": false,
+            "properties": {
+              "section": { "type": "string", "minLength": 2 },
+              "label": { "type": "string" },
+              "amount": { "$ref": "#/$defs/money" },
+              "raw_line": { "type": "string" }
+            }
+          }
+        },
+        "total": { "$ref": "#/$defs/money" }
+      }
+    },
+    "total_income": { "$ref": "#/$defs/money" },
+    "rounded_total_income": { "$ref": "#/$defs/money" },
+    "tax": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tax_due": { "$ref": "#/$defs/money" },
+        "surcharge": { "$ref": "#/$defs/money" },
+        "health_education_cess": { "$ref": "#/$defs/money" },
+        "rebate_87a": { "$ref": "#/$defs/money" },
+        "relief": { "$ref": "#/$defs/money" },
+        "interest_234a": { "$ref": "#/$defs/money" },
+        "interest_234b": { "$ref": "#/$defs/money" },
+        "interest_234c": { "$ref": "#/$defs/money" },
+        "total_tax": { "$ref": "#/$defs/money" },
+        "net_tax_payable": { "$ref": "#/$defs/money" }
+      }
+    },
+    "credits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tds": { "$ref": "#/$defs/money" },
+        "tcs": { "$ref": "#/$defs/money" },
+        "advance_tax": { "$ref": "#/$defs/money" },
+        "self_assessment_140a": { "$ref": "#/$defs/money" }
+      }
+    },
+    "raw": {
+      "type": "object",
+      "required": ["page_count", "lines", "table"],
+      "additionalProperties": false,
+      "properties": {
+        "page_count": { "type": "integer", "minimum": 0 },
+        "lines": { "type": "array", "items": { "$ref": "#/$defs/line" } },
+        "table": { "$ref": "#/$defs/table" }
+      }
+    }
+  },
+  "$defs": {
+    "money": {
+      "type": ["object", "null"],
+      "required": ["paise", "raw"],
+      "additionalProperties": false,
+      "properties": {
+        "paise": {
+          "description": "Integer paise. Floats would break the cross-footing equalities this document is validated against.",
+          "type": "integer"
+        },
+        "raw": { "type": "string" }
+      }
+    },
+    "yearRange": {
+      "type": ["object", "null"],
+      "required": ["start", "end"],
+      "additionalProperties": false,
+      "properties": {
+        "start": { "type": "integer", "minimum": 1990, "maximum": 2100 },
+        "end": { "type": "integer", "minimum": 1991, "maximum": 2101 }
+      }
+    },
+    "bbox": {
+      "type": "object",
+      "required": ["x", "y", "width", "height"],
+      "additionalProperties": false,
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "width": { "type": "number", "minimum": 0 },
+        "height": { "type": "number", "minimum": 0 }
+      }
+    },
+    "table": {
+      "description": "The sheet as a column grid. Bands are [x0, x1] pairs; each cell names the band it aligns to.",
+      "type": "object",
+      "required": ["columns", "rows"],
+      "additionalProperties": false,
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [{ "type": "number" }, { "type": "number" }],
+            "minItems": 2,
+            "maxItems": 2
+          }
+        },
+        "rows": { "type": "array", "items": { "$ref": "#/$defs/row" } }
+      }
+    },
+    "row": {
+      "type": "object",
+      "required": ["page", "cells"],
+      "additionalProperties": false,
+      "properties": {
+        "page": { "type": "integer", "minimum": 1 },
+        "cells": { "type": "array", "items": { "$ref": "#/$defs/cell" } }
+      }
+    },
+    "cell": {
+      "type": "object",
+      "required": ["text", "bbox"],
+      "additionalProperties": false,
+      "properties": {
+        "text": { "type": "string" },
+        "bbox": { "$ref": "#/$defs/bbox" },
+        "column": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    },
+    "line": {
+      "type": "object",
+      "required": ["page", "bbox", "segments", "segment_boxes"],
+      "additionalProperties": false,
+      "properties": {
+        "page": { "type": "integer", "minimum": 1 },
+        "bbox": { "$ref": "#/$defs/bbox" },
+        "segments": { "type": "array", "items": { "type": "string" } },
+        "segment_boxes": { "type": "array", "items": { "$ref": "#/$defs/bbox" } }
+      }
+    }
+  }
+}

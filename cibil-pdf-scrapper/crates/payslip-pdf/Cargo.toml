@@ -1,0 +1,13 @@
+[package]
+name = "payslip-pdf"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+payslip-core = { path = "../payslip-core" }
+# Reuses the glyph-metric / CTM content-stream decoder already validated against
+# 38 production documents, rather than carrying a second copy of it.
+cibil-pdf = { path = "../cibil-pdf" }
+cibil-core = { path = "../cibil-core" }
+lopdf = { workspace = true }
+serde = { workspace = true }

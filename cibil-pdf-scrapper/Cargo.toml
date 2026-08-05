@@ -6,7 +6,20 @@ members = [
     "crates/cibil-semantic",
     "crates/cibil-domain",
     "crates/cibil-validation",
-    "crates/cibil-graph"
+    "crates/cibil-graph",
+    "crates/payslip-core",
+    "crates/payslip-pdf",
+    "crates/payslip-layout",
+    "crates/payslip-domain",
+    "crates/payslip-parser",
+    "crates/payslip-cli",
+    "crates/coi-core",
+    "crates/coi-pdf",
+    "crates/coi-layout",
+    "crates/coi-domain",
+    "crates/coi-parser",
+    "crates/coi-validation",
+    "crates/coi-cli"
 ]
 resolver = "2"
 

@@ -1,0 +1,10 @@
+[package]
+name = "coi-parser"
+version = "0.1.0"
+edition = "2021"
+[dependencies]
+coi-core = { path = "../coi-core" }
+coi-layout = { path = "../coi-layout" }
+coi-domain = { path = "../coi-domain" }
+regex = { workspace = true }
+serde = { workspace = true }

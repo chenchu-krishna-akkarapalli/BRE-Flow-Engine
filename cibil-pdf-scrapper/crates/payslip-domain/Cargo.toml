@@ -1,0 +1,9 @@
+[package]
+name = "payslip-domain"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+payslip-core = { path = "../payslip-core" }
+payslip-layout = { path = "../payslip-layout" }
+serde = { workspace = true }

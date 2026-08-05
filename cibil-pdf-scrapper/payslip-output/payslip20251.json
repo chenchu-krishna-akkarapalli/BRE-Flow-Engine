@@ -1,0 +1,1954 @@
+{
+  "deductions": [
+    {
+      "amount": {
+        "paise": 1536000,
+        "raw": "15,360.00"
+      },
+      "label": "Employee PF",
+      "raw_line": "Basic 1,28,000.00 Employee PF 15,360.00"
+    },
+    {
+      "amount": {
+        "paise": 6144900,
+        "raw": "61,449.00"
+      },
+      "label": "TDS",
+      "raw_line": "HRA 64,000.00 TDS 61,449.00"
+    }
+  ],
+  "earnings": [
+    {
+      "amount": {
+        "paise": 12800000,
+        "raw": "1,28,000.00"
+      },
+      "label": "Basic",
+      "raw_line": "Basic 1,28,000.00 Employee PF 15,360.00"
+    },
+    {
+      "amount": {
+        "paise": 6400000,
+        "raw": "64,000.00"
+      },
+      "label": "HRA",
+      "raw_line": "HRA 64,000.00 TDS 61,449.00"
+    },
+    {
+      "amount": {
+        "paise": 7301000,
+        "raw": "73,010.00"
+      },
+      "label": "Special Allowance",
+      "raw_line": "Special Allowance 73,010.00"
+    },
+    {
+      "amount": {
+        "paise": 500000,
+        "raw": "5,000.00"
+      },
+      "label": "Taxable L.T.A.",
+      "raw_line": "Taxable L.T.A. 5,000.00"
+    },
+    {
+      "amount": {
+        "paise": 420000,
+        "raw": "4,200.00"
+      },
+      "label": "Night Shift Allowance",
+      "raw_line": "Night Shift Allowance 4,200.00"
+    },
+    {
+      "amount": {
+        "paise": 500000,
+        "raw": "5,000.00"
+      },
+      "label": "Telephone Stipend",
+      "raw_line": "Telephone Stipend 5,000.00"
+    },
+    {
+      "amount": {
+        "paise": 175000,
+        "raw": "1,750.00"
+      },
+      "label": "Arrears-Night Shift Allowance",
+      "raw_line": "Arrears-Night Shift Allowance 1,750.00"
+    },
+    {
+      "amount": {
+        "paise": 20415100,
+        "raw": "INR 2,04,151.00"
+      },
+      "label": "Amount Paid:",
+      "raw_line": "Amount Paid: INR 2,04,151.00"
+    },
+    {
+      "amount": null,
+      "label": "Note:",
+      "raw_line": "Note:"
+    },
+    {
+      "amount": null,
+      "label": "Amount in words: Rupees Two Lac Four Thousand One Hundred Fifty One only",
+      "raw_line": "Amount in words: Rupees Two Lac Four Thousand One Hundred Fifty One only"
+    },
+    {
+      "amount": null,
+      "label": "Non Paid Benefits",
+      "raw_line": "Non Paid Benefits"
+    },
+    {
+      "amount": {
+        "paise": 1536000,
+        "raw": "15,360.00"
+      },
+      "label": "Employer PF",
+      "raw_line": "Employer PF 15,360.00"
+    },
+    {
+      "amount": {
+        "paise": 110000,
+        "raw": "1,100.00"
+      },
+      "label": "Food Coupon",
+      "raw_line": "Food Coupon 1,100.00"
+    },
+    {
+      "amount": {
+        "paise": 110000,
+        "raw": "1,100.00"
+      },
+      "label": "Food Coupon (Tax Free)",
+      "raw_line": "Food Coupon (Tax Free) 1,100.00"
+    },
+    {
+      "amount": null,
+      "label": "Payroll processed on: 29 Jan, 25 11:42AM",
+      "raw_line": "Payroll processed on: 29 Jan, 25 11:42AM Payslip generated on: 18 Apr, 25 2:05PM"
+    },
+    {
+      "amount": null,
+      "label": "This is a computer generated pay slip hence does not need any authentication.",
+      "raw_line": "This is a computer generated pay slip hence does not need any authentication."
+    }
+  ],
+  "employee": {
+    "bank_account": "00941140026593",
+    "date_of_joining": "18 Mar, 19",
+    "department": null,
+    "designation": "Manager - Cloud Engineering",
+    "employee_id": "120402",
+    "esi_number": null,
+    "name": "Amit Rao",
+    "pan": "ATQPR7596B",
+    "pf_number": "GNGGN171644600010203",
+    "uan": "100771552309"
+  },
+  "employer": {
+    "address": "NOVOTEL PULLMAN HOTEL, AEROCITY",
+    "name": "Verint CES India Private Ltd"
+  },
+  "format": "generic-payslip",
+  "gross_earnings": {
+    "paise": 28096000,
+    "raw": "2,80,960.00"
+  },
+  "net_pay": {
+    "paise": 20415100,
+    "raw": "2,04,151.00"
+  },
+  "net_pay_words": "Amount in words: Rupees Two Lac Four Thousand One Hundred Fifty One only",
+  "period": {
+    "lop_days": null,
+    "month": "Jan",
+    "paid_days": null,
+    "raw": "Pay slip for Jan 2025",
+    "year": 2025
+  },
+  "raw": {
+    "lines": [
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 168.0,
+          "x": 241.5,
+          "y": 48.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 168.0,
+            "x": 241.5,
+            "y": 48.0
+          }
+        ],
+        "segments": [
+          "Verint CES India Private Ltd"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 210.0,
+          "x": 241.5,
+          "y": 72.47998046875
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 210.0,
+            "x": 241.5,
+            "y": 72.47998046875
+          }
+        ],
+        "segments": [
+          "05TH FLOOR, CADDIE COMMERCIAL TOWER"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 186.0,
+          "x": 241.5,
+          "y": 96.969970703125
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 186.0,
+            "x": 241.5,
+            "y": 96.969970703125
+          }
+        ],
+        "segments": [
+          "NOVOTEL PULLMAN HOTEL, AEROCITY"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 108.0,
+          "x": 241.5,
+          "y": 121.449951171875
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 108.0,
+            "x": 241.5,
+            "y": 121.449951171875
+          }
+        ],
+        "segments": [
+          "South Delhi-110037"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 72.0,
+          "x": 241.5,
+          "y": 145.93994140625
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 72.0,
+            "x": 241.5,
+            "y": 145.93994140625
+          }
+        ],
+        "segments": [
+          "Delhi, India"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 150.0,
+          "x": 241.5,
+          "y": 170.41998291015625
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 150.0,
+            "x": 241.5,
+            "y": 170.41998291015625
+          }
+        ],
+        "segments": [
+          "CIN:U74999DL2017FTC325845"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 126.0,
+          "x": 241.5,
+          "y": 194.9000244140625
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 126.0,
+            "x": 241.5,
+            "y": 194.9000244140625
+          }
+        ],
+        "segments": [
+          "Pay slip for Jan 2025"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 475.0,
+          "x": 46.0,
+          "y": 223.3900146484375
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 90.0,
+            "x": 46.0,
+            "y": 223.3900146484375
+          },
+          {
+            "height": 12.0,
+            "width": 90.0,
+            "x": 431.0,
+            "y": 223.3900146484375
+          }
+        ],
+        "segments": [
+          "Emp No: 120402",
+          "Name: Amit Rao"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 625.0,
+          "x": 46.0,
+          "y": 241.3900146484375
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 246.0,
+            "x": 46.0,
+            "y": 241.3900146484375
+          },
+          {
+            "height": 12.0,
+            "width": 240.0,
+            "x": 431.0,
+            "y": 241.3900146484375
+          }
+        ],
+        "segments": [
+          "Designation: Manager - Cloud Engineering",
+          "Function: 7551 - Product Mgmt - General"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 439.0,
+          "x": 46.0,
+          "y": 259.3900146484375
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 168.0,
+            "x": 46.0,
+            "y": 259.3900146484375
+          },
+          {
+            "height": 12.0,
+            "width": 54.0,
+            "x": 431.0,
+            "y": 259.3900146484375
+          }
+        ],
+        "segments": [
+          "Date of Joining: 18 Mar, 19",
+          "PRAN No:"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 553.0,
+          "x": 46.0,
+          "y": 277.3900146484375
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 96.0,
+            "x": 46.0,
+            "y": 277.3900146484375
+          },
+          {
+            "height": 12.0,
+            "width": 168.0,
+            "x": 431.0,
+            "y": 277.3900146484375
+          }
+        ],
+        "segments": [
+          "PAN: ATQPR7596B",
+          "PF No: GNGGN171644600010203"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 108.0,
+          "x": 46.0,
+          "y": 295.3900146484375
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 108.0,
+            "x": 46.0,
+            "y": 295.3900146484375
+          }
+        ],
+        "segments": [
+          "UAN: 100771552309"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 487.0,
+          "x": 46.0,
+          "y": 313.3900146484375
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 126.0,
+            "x": 46.0,
+            "y": 313.3900146484375
+          },
+          {
+            "height": 12.0,
+            "width": 102.0,
+            "x": 431.0,
+            "y": 313.3900146484375
+          }
+        ],
+        "segments": [
+          "Standard Days: 31.00",
+          "Paid Days: 31.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 547.0,
+          "x": 46.0,
+          "y": 331.3900146484375
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 150.0,
+            "x": 46.0,
+            "y": 331.3900146484375
+          },
+          {
+            "height": 12.0,
+            "width": 162.0,
+            "x": 431.0,
+            "y": 331.3900146484375
+          }
+        ],
+        "segments": [
+          "Bank Name: HDFC BANK LTD",
+          "Account No: 00941140026593"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 751.3400268554688,
+          "x": 48.0,
+          "y": 357.8699951171875
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 54.0,
+            "x": 48.0,
+            "y": 357.8699951171875
+          },
+          {
+            "height": 12.0,
+            "width": 18.0,
+            "x": 396.3399963378906,
+            "y": 357.8699951171875
+          },
+          {
+            "height": 12.0,
+            "width": 66.0,
+            "x": 433.0,
+            "y": 357.8699951171875
+          },
+          {
+            "height": 12.0,
+            "width": 18.0,
+            "x": 781.3400268554688,
+            "y": 357.8699951171875
+          }
+        ],
+        "segments": [
+          "Earnings",
+          "INR",
+          "Deductions",
+          "INR"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 84.0,
+          "x": 46.0,
+          "y": 384.3599853515625
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 84.0,
+            "x": 46.0,
+            "y": 384.3599853515625
+          }
+        ],
+        "segments": [
+          "Salary Details"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 754.6199951171875,
+          "x": 48.0,
+          "y": 410.84002685546875
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 30.0,
+            "x": 48.0,
+            "y": 410.84002685546875
+          },
+          {
+            "height": 12.0,
+            "width": 66.0,
+            "x": 353.6199951171875,
+            "y": 410.84002685546875
+          },
+          {
+            "height": 12.0,
+            "width": 66.0,
+            "x": 433.0,
+            "y": 410.84002685546875
+          },
+          {
+            "height": 12.0,
+            "width": 54.0,
+            "x": 748.6199951171875,
+            "y": 410.84002685546875
+          }
+        ],
+        "segments": [
+          "Basic",
+          "1,28,000.00",
+          "Employee PF",
+          "15,360.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 754.6199951171875,
+          "x": 48.0,
+          "y": 435.32000732421875
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 18.0,
+            "x": 48.0,
+            "y": 435.32000732421875
+          },
+          {
+            "height": 12.0,
+            "width": 54.0,
+            "x": 363.6199951171875,
+            "y": 435.32000732421875
+          },
+          {
+            "height": 12.0,
+            "width": 18.0,
+            "x": 433.0,
+            "y": 435.32000732421875
+          },
+          {
+            "height": 12.0,
+            "width": 54.0,
+            "x": 748.6199951171875,
+            "y": 435.32000732421875
+          }
+        ],
+        "segments": [
+          "HRA",
+          "64,000.00",
+          "TDS",
+          "61,449.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 369.6199951171875,
+          "x": 48.0,
+          "y": 459.80999755859375
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 102.0,
+            "x": 48.0,
+            "y": 459.80999755859375
+          },
+          {
+            "height": 12.0,
+            "width": 54.0,
+            "x": 363.6199951171875,
+            "y": 459.80999755859375
+          }
+        ],
+        "segments": [
+          "Special Allowance",
+          "73,010.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 370.29998779296875,
+          "x": 48.0,
+          "y": 484.28997802734375
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 84.0,
+            "x": 48.0,
+            "y": 484.28997802734375
+          },
+          {
+            "height": 12.0,
+            "width": 48.0,
+            "x": 370.29998779296875,
+            "y": 484.28997802734375
+          }
+        ],
+        "segments": [
+          "Taxable L.T.A.",
+          "5,000.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 370.29998779296875,
+          "x": 48.0,
+          "y": 508.780029296875
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 126.0,
+            "x": 48.0,
+            "y": 508.780029296875
+          },
+          {
+            "height": 12.0,
+            "width": 48.0,
+            "x": 370.29998779296875,
+            "y": 508.780029296875
+          }
+        ],
+        "segments": [
+          "Night Shift Allowance",
+          "4,200.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 370.29998779296875,
+          "x": 48.0,
+          "y": 533.260009765625
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 102.0,
+            "x": 48.0,
+            "y": 533.260009765625
+          },
+          {
+            "height": 12.0,
+            "width": 48.0,
+            "x": 370.29998779296875,
+            "y": 533.260009765625
+          }
+        ],
+        "segments": [
+          "Telephone Stipend",
+          "5,000.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 370.29998779296875,
+          "x": 48.0,
+          "y": 557.739990234375
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 174.0,
+            "x": 48.0,
+            "y": 557.739990234375
+          },
+          {
+            "height": 12.0,
+            "width": 48.0,
+            "x": 370.29998779296875,
+            "y": 557.739990234375
+          }
+        ],
+        "segments": [
+          "Arrears-Night Shift Allowance",
+          "1,750.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 758.6199951171875,
+          "x": 46.0,
+          "y": 584.22998046875
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 54.0,
+            "x": 46.0,
+            "y": 584.22998046875
+          },
+          {
+            "height": 12.0,
+            "width": 165.3800048828125,
+            "x": 331.6199951171875,
+            "y": 584.22998046875
+          },
+          {
+            "height": 12.0,
+            "width": 78.0,
+            "x": 726.6199951171875,
+            "y": 584.22998046875
+          }
+        ],
+        "segments": [
+          "Earnings:",
+          "INR 2,80,960.00 Deductions:",
+          "INR 76,809.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 375.6199951171875,
+          "x": 46.0,
+          "y": 608.7100219726562
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 72.0,
+            "x": 46.0,
+            "y": 608.7100219726562
+          },
+          {
+            "height": 12.0,
+            "width": 90.0,
+            "x": 331.6199951171875,
+            "y": 608.7100219726562
+          }
+        ],
+        "segments": [
+          "Amount Paid:",
+          "INR 2,04,151.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 42.0,
+          "x": 46.0,
+          "y": 665.2000122070312
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 42.0,
+            "x": 46.0,
+            "y": 665.2000122070312
+          }
+        ],
+        "segments": [
+          "Note:"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 758.6199951171875,
+          "x": 46.0,
+          "y": 689.6799926757812
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 174.0,
+            "x": 46.0,
+            "y": 689.6799926757812
+          },
+          {
+            "height": 12.0,
+            "width": 285.3800048828125,
+            "x": 331.6199951171875,
+            "y": 689.6799926757812
+          },
+          {
+            "height": 12.0,
+            "width": 78.0,
+            "x": 726.6199951171875,
+            "y": 689.6799926757812
+          }
+        ],
+        "segments": [
+          "Total Earnings for the month:",
+          "INR 2,80,960.00 Total Deductions for the month:",
+          "INR 76,809.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 264.0,
+          "x": 46.0,
+          "y": 714.1600341796875
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 264.0,
+            "x": 46.0,
+            "y": 714.1600341796875
+          }
+        ],
+        "segments": [
+          "Net Amount paid in Jan, 25: INR  2,04,151.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 432.0,
+          "x": 46.0,
+          "y": 738.6500244140625
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 432.0,
+            "x": 46.0,
+            "y": 738.6500244140625
+          }
+        ],
+        "segments": [
+          "Amount in words: Rupees Two Lac Four Thousand One Hundred Fifty One only"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 102.0,
+          "x": 46.0,
+          "y": 787.6199951171875
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 102.0,
+            "x": 46.0,
+            "y": 787.6199951171875
+          }
+        ],
+        "segments": [
+          "Non Paid Benefits"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 754.6199951171875,
+          "x": 48.0,
+          "y": 814.0999755859375
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 66.0,
+            "x": 48.0,
+            "y": 814.0999755859375
+          },
+          {
+            "height": 12.0,
+            "width": 54.0,
+            "x": 748.6199951171875,
+            "y": 814.0999755859375
+          }
+        ],
+        "segments": [
+          "Employer PF",
+          "15,360.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 755.2999877929688,
+          "x": 48.0,
+          "y": 838.5799560546875
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 66.0,
+            "x": 48.0,
+            "y": 838.5799560546875
+          },
+          {
+            "height": 12.0,
+            "width": 48.0,
+            "x": 755.2999877929688,
+            "y": 838.5799560546875
+          }
+        ],
+        "segments": [
+          "Food Coupon",
+          "1,100.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 755.2999877929688,
+          "x": 48.0,
+          "y": 863.0700073242188
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 132.0,
+            "x": 48.0,
+            "y": 863.0700073242188
+          },
+          {
+            "height": 12.0,
+            "width": 48.0,
+            "x": 755.2999877929688,
+            "y": 863.0700073242188
+          }
+        ],
+        "segments": [
+          "Food Coupon (Tax Free)",
+          "1,100.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 775.2100219726562,
+          "x": 46.0,
+          "y": 889.5499877929688
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 246.0,
+            "x": 46.0,
+            "y": 889.5499877929688
+          },
+          {
+            "height": 12.0,
+            "width": 240.0,
+            "x": 581.2100219726562,
+            "y": 889.5499877929688
+          }
+        ],
+        "segments": [
+          "Payroll processed on: 29 Jan, 25 11:42AM",
+          "Payslip generated on: 18 Apr, 25 2:05PM"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 12.0,
+          "width": 468.0,
+          "x": 46.0,
+          "y": 914.0400390625
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 12.0,
+            "width": 468.0,
+            "x": 46.0,
+            "y": 914.0400390625
+          }
+        ],
+        "segments": [
+          "This is a computer generated pay slip hence does not need any authentication."
+        ]
+      }
+    ],
+    "page_count": 1,
+    "table": {
+      "columns": [
+        [
+          46.0,
+          514.0
+        ],
+        [
+          241.5,
+          451.5
+        ],
+        [
+          331.6199951171875,
+          617.0
+        ],
+        [
+          353.6199951171875,
+          419.6199951171875
+        ],
+        [
+          363.6199951171875,
+          417.6199951171875
+        ],
+        [
+          370.29998779296875,
+          418.29998779296875
+        ],
+        [
+          396.3399963378906,
+          414.3399963378906
+        ],
+        [
+          431.0,
+          671.0
+        ],
+        [
+          581.2100219726562,
+          821.2100219726562
+        ],
+        [
+          726.6199951171875,
+          804.6199951171875
+        ],
+        [
+          748.6199951171875,
+          802.6199951171875
+        ],
+        [
+          755.2999877929688,
+          803.2999877929688
+        ],
+        [
+          781.3400268554688,
+          799.3400268554688
+        ]
+      ],
+      "rows": [
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 168.0,
+                "x": 241.5,
+                "y": 48.0
+              },
+              "column": 1,
+              "text": "Verint CES India Private Ltd"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 210.0,
+                "x": 241.5,
+                "y": 72.47998046875
+              },
+              "column": 1,
+              "text": "05TH FLOOR, CADDIE COMMERCIAL TOWER"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 186.0,
+                "x": 241.5,
+                "y": 96.969970703125
+              },
+              "column": 1,
+              "text": "NOVOTEL PULLMAN HOTEL, AEROCITY"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 108.0,
+                "x": 241.5,
+                "y": 121.449951171875
+              },
+              "column": 1,
+              "text": "South Delhi-110037"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 72.0,
+                "x": 241.5,
+                "y": 145.93994140625
+              },
+              "column": 1,
+              "text": "Delhi, India"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 150.0,
+                "x": 241.5,
+                "y": 170.41998291015625
+              },
+              "column": 1,
+              "text": "CIN:U74999DL2017FTC325845"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 126.0,
+                "x": 241.5,
+                "y": 194.9000244140625
+              },
+              "column": 1,
+              "text": "Pay slip for Jan 2025"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 90.0,
+                "x": 46.0,
+                "y": 223.3900146484375
+              },
+              "column": 0,
+              "text": "Emp No: 120402"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 90.0,
+                "x": 431.0,
+                "y": 223.3900146484375
+              },
+              "column": 7,
+              "text": "Name: Amit Rao"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 246.0,
+                "x": 46.0,
+                "y": 241.3900146484375
+              },
+              "column": 0,
+              "text": "Designation: Manager - Cloud Engineering"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 240.0,
+                "x": 431.0,
+                "y": 241.3900146484375
+              },
+              "column": 7,
+              "text": "Function: 7551 - Product Mgmt - General"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 168.0,
+                "x": 46.0,
+                "y": 259.3900146484375
+              },
+              "column": 0,
+              "text": "Date of Joining: 18 Mar, 19"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 54.0,
+                "x": 431.0,
+                "y": 259.3900146484375
+              },
+              "column": 7,
+              "text": "PRAN No:"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 96.0,
+                "x": 46.0,
+                "y": 277.3900146484375
+              },
+              "column": 0,
+              "text": "PAN: ATQPR7596B"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 168.0,
+                "x": 431.0,
+                "y": 277.3900146484375
+              },
+              "column": 7,
+              "text": "PF No: GNGGN171644600010203"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 108.0,
+                "x": 46.0,
+                "y": 295.3900146484375
+              },
+              "column": 0,
+              "text": "UAN: 100771552309"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 126.0,
+                "x": 46.0,
+                "y": 313.3900146484375
+              },
+              "column": 0,
+              "text": "Standard Days: 31.00"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 102.0,
+                "x": 431.0,
+                "y": 313.3900146484375
+              },
+              "column": 7,
+              "text": "Paid Days: 31.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 150.0,
+                "x": 46.0,
+                "y": 331.3900146484375
+              },
+              "column": 0,
+              "text": "Bank Name: HDFC BANK LTD"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 162.0,
+                "x": 431.0,
+                "y": 331.3900146484375
+              },
+              "column": 7,
+              "text": "Account No: 00941140026593"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 54.0,
+                "x": 48.0,
+                "y": 357.8699951171875
+              },
+              "column": 0,
+              "text": "Earnings"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 18.0,
+                "x": 396.3399963378906,
+                "y": 357.8699951171875
+              },
+              "column": 6,
+              "text": "INR"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 66.0,
+                "x": 433.0,
+                "y": 357.8699951171875
+              },
+              "column": 7,
+              "text": "Deductions"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 18.0,
+                "x": 781.3400268554688,
+                "y": 357.8699951171875
+              },
+              "column": 12,
+              "text": "INR"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 84.0,
+                "x": 46.0,
+                "y": 384.3599853515625
+              },
+              "column": 0,
+              "text": "Salary Details"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 30.0,
+                "x": 48.0,
+                "y": 410.84002685546875
+              },
+              "column": 0,
+              "text": "Basic"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 66.0,
+                "x": 353.6199951171875,
+                "y": 410.84002685546875
+              },
+              "column": 3,
+              "text": "1,28,000.00"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 66.0,
+                "x": 433.0,
+                "y": 410.84002685546875
+              },
+              "column": 7,
+              "text": "Employee PF"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 54.0,
+                "x": 748.6199951171875,
+                "y": 410.84002685546875
+              },
+              "column": 10,
+              "text": "15,360.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 18.0,
+                "x": 48.0,
+                "y": 435.32000732421875
+              },
+              "column": 0,
+              "text": "HRA"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 54.0,
+                "x": 363.6199951171875,
+                "y": 435.32000732421875
+              },
+              "column": 4,
+              "text": "64,000.00"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 18.0,
+                "x": 433.0,
+                "y": 435.32000732421875
+              },
+              "column": 7,
+              "text": "TDS"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 54.0,
+                "x": 748.6199951171875,
+                "y": 435.32000732421875
+              },
+              "column": 10,
+              "text": "61,449.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 102.0,
+                "x": 48.0,
+                "y": 459.80999755859375
+              },
+              "column": 0,
+              "text": "Special Allowance"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 54.0,
+                "x": 363.6199951171875,
+                "y": 459.80999755859375
+              },
+              "column": 4,
+              "text": "73,010.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 84.0,
+                "x": 48.0,
+                "y": 484.28997802734375
+              },
+              "column": 0,
+              "text": "Taxable L.T.A."
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 48.0,
+                "x": 370.29998779296875,
+                "y": 484.28997802734375
+              },
+              "column": 5,
+              "text": "5,000.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 126.0,
+                "x": 48.0,
+                "y": 508.780029296875
+              },
+              "column": 0,
+              "text": "Night Shift Allowance"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 48.0,
+                "x": 370.29998779296875,
+                "y": 508.780029296875
+              },
+              "column": 5,
+              "text": "4,200.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 102.0,
+                "x": 48.0,
+                "y": 533.260009765625
+              },
+              "column": 0,
+              "text": "Telephone Stipend"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 48.0,
+                "x": 370.29998779296875,
+                "y": 533.260009765625
+              },
+              "column": 5,
+              "text": "5,000.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 174.0,
+                "x": 48.0,
+                "y": 557.739990234375
+              },
+              "column": 0,
+              "text": "Arrears-Night Shift Allowance"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 48.0,
+                "x": 370.29998779296875,
+                "y": 557.739990234375
+              },
+              "column": 5,
+              "text": "1,750.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 54.0,
+                "x": 46.0,
+                "y": 584.22998046875
+              },
+              "column": 0,
+              "text": "Earnings:"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 165.3800048828125,
+                "x": 331.6199951171875,
+                "y": 584.22998046875
+              },
+              "column": 2,
+              "text": "INR 2,80,960.00 Deductions:"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 78.0,
+                "x": 726.6199951171875,
+                "y": 584.22998046875
+              },
+              "column": 9,
+              "text": "INR 76,809.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 72.0,
+                "x": 46.0,
+                "y": 608.7100219726562
+              },
+              "column": 0,
+              "text": "Amount Paid:"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 90.0,
+                "x": 331.6199951171875,
+                "y": 608.7100219726562
+              },
+              "column": 2,
+              "text": "INR 2,04,151.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 42.0,
+                "x": 46.0,
+                "y": 665.2000122070312
+              },
+              "column": 0,
+              "text": "Note:"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 174.0,
+                "x": 46.0,
+                "y": 689.6799926757812
+              },
+              "column": 0,
+              "text": "Total Earnings for the month:"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 285.3800048828125,
+                "x": 331.6199951171875,
+                "y": 689.6799926757812
+              },
+              "column": 2,
+              "text": "INR 2,80,960.00 Total Deductions for the month:"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 78.0,
+                "x": 726.6199951171875,
+                "y": 689.6799926757812
+              },
+              "column": 9,
+              "text": "INR 76,809.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 264.0,
+                "x": 46.0,
+                "y": 714.1600341796875
+              },
+              "column": 0,
+              "text": "Net Amount paid in Jan, 25: INR  2,04,151.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 432.0,
+                "x": 46.0,
+                "y": 738.6500244140625
+              },
+              "column": 0,
+              "text": "Amount in words: Rupees Two Lac Four Thousand One Hundred Fifty One only"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 102.0,
+                "x": 46.0,
+                "y": 787.6199951171875
+              },
+              "column": 0,
+              "text": "Non Paid Benefits"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 66.0,
+                "x": 48.0,
+                "y": 814.0999755859375
+              },
+              "column": 0,
+              "text": "Employer PF"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 54.0,
+                "x": 748.6199951171875,
+                "y": 814.0999755859375
+              },
+              "column": 10,
+              "text": "15,360.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 66.0,
+                "x": 48.0,
+                "y": 838.5799560546875
+              },
+              "column": 0,
+              "text": "Food Coupon"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 48.0,
+                "x": 755.2999877929688,
+                "y": 838.5799560546875
+              },
+              "column": 11,
+              "text": "1,100.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 132.0,
+                "x": 48.0,
+                "y": 863.0700073242188
+              },
+              "column": 0,
+              "text": "Food Coupon (Tax Free)"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 48.0,
+                "x": 755.2999877929688,
+                "y": 863.0700073242188
+              },
+              "column": 11,
+              "text": "1,100.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 246.0,
+                "x": 46.0,
+                "y": 889.5499877929688
+              },
+              "column": 0,
+              "text": "Payroll processed on: 29 Jan, 25 11:42AM"
+            },
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 240.0,
+                "x": 581.2100219726562,
+                "y": 889.5499877929688
+              },
+              "column": 8,
+              "text": "Payslip generated on: 18 Apr, 25 2:05PM"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 12.0,
+                "width": 468.0,
+                "x": 46.0,
+                "y": 914.0400390625
+              },
+              "column": 0,
+              "text": "This is a computer generated pay slip hence does not need any authentication."
+            }
+          ],
+          "page": 1
+        }
+      ]
+    }
+  },
+  "source": "payslip20251.pdf",
+  "total_deductions": {
+    "paise": 7680900,
+    "raw": "76,809.00"
+  }
+}

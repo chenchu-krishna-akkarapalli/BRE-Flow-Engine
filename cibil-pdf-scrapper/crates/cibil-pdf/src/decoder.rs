@@ -43,40 +43,64 @@ pub struct CMap {
 }
 
 impl CMap {
+    /// Parse a /ToUnicode CMap.
+    ///
+    /// Token-oriented, not line-oriented: generators routinely emit a whole
+    /// `beginbfchar` block on one line, and reading a pair per line then maps
+    /// only the first entry and leaves the rest of the page as mojibake.
     pub fn parse(data: &[u8]) -> Self {
         let mut mappings = HashMap::new();
         let text = String::from_utf8_lossy(data);
-        
+
         let bfchar_re = Regex::new(r"(?s)beginbfchar(.*?)endbfchar").unwrap();
         let bfrange_re = Regex::new(r"(?s)beginbfrange(.*?)endbfrange").unwrap();
-        let hex_re = Regex::new(r"<([0-9a-fA-F]+)>").unwrap();
 
         for cap in bfchar_re.captures_iter(&text) {
-            let block = &cap[1];
-            for line in block.lines() {
-                let parts: Vec<&str> = hex_re.find_iter(line).map(|m| m.as_str()).collect();
-                if parts.len() >= 2 {
-                    if let (Some(g), Some(u)) = (parse_hex(parts[0]), parse_hex_str(parts[1])) {
-                        mappings.insert(g, u);
-                    }
+            let tokens = tokenize(&cap[1]);
+            for pair in tokens.chunks(2) {
+                let [Token::Hex(src), Token::Hex(dst)] = pair else { continue };
+                if let (Some(code), Some(text)) = (parse_hex(src), parse_hex_str(dst)) {
+                    mappings.insert(code, text);
                 }
             }
         }
 
         for cap in bfrange_re.captures_iter(&text) {
-            let block = &cap[1];
-            for line in block.lines() {
-                let parts: Vec<&str> = hex_re.find_iter(line).map(|m| m.as_str()).collect();
-                if parts.len() >= 3 {
-                    if let (Some(g_start), Some(g_end), Some(u_start)) = (parse_hex(parts[0]), parse_hex(parts[1]), parse_hex(parts[2])) {
-                        for g in g_start..=g_end {
-                            let offset = g - g_start;
-                            let u_val = u_start + offset;
-                            if let Some(c) = char::from_u32(u_val) {
-                                mappings.insert(g, c.to_string());
+            let tokens = tokenize(&cap[1]);
+            let mut index = 0usize;
+            while index + 2 < tokens.len() + 1 {
+                let (Some(Token::Hex(lo)), Some(Token::Hex(hi))) =
+                    (tokens.get(index), tokens.get(index + 1))
+                else {
+                    break;
+                };
+                let (Some(start), Some(end)) = (parse_hex(lo), parse_hex(hi)) else { break };
+
+                match tokens.get(index + 2) {
+                    // <lo> <hi> <dstStart>: consecutive code points.
+                    Some(Token::Hex(dst)) => {
+                        if let Some(base) = parse_hex(dst) {
+                            // A malformed range must not materialise millions of entries.
+                            if end >= start && end - start < 65_536 {
+                                for code in start..=end {
+                                    if let Some(c) = char::from_u32(base + (code - start)) {
+                                        mappings.insert(code, c.to_string());
+                                    }
+                                }
                             }
                         }
+                        index += 3;
                     }
+                    // <lo> <hi> [<d1> <d2> ...]: one destination per code.
+                    Some(Token::Array(items)) => {
+                        for (offset, item) in items.iter().enumerate() {
+                            if let Some(text) = parse_hex_str(item) {
+                                mappings.insert(start + offset as u32, text);
+                            }
+                        }
+                        index += 3;
+                    }
+                    None => break,
                 }
             }
         }
@@ -645,4 +669,89 @@ pub fn cmaps_for_page(doc: &Document, page_id: (u32, u16)) -> HashMap<String, CM
         }
     }
     cmaps
+}
+
+#[derive(Debug)]
+enum Token {
+    Hex(String),
+    Array(Vec<String>),
+}
+
+/// Split a CMap block into `<hex>` tokens and `[ ... ]` groups, ignoring newlines.
+fn tokenize(block: &str) -> Vec<Token> {
+    let mut tokens = Vec::new();
+    let chars: Vec<char> = block.chars().collect();
+    let mut index = 0usize;
+
+    while index < chars.len() {
+        match chars[index] {
+            '<' => {
+                let start = index + 1;
+                let mut end = start;
+                while end < chars.len() && chars[end] != '>' {
+                    end += 1;
+                }
+                tokens.push(Token::Hex(chars[start..end].iter().collect()));
+                index = end + 1;
+            }
+            '[' => {
+                let mut items = Vec::new();
+                index += 1;
+                while index < chars.len() && chars[index] != ']' {
+                    if chars[index] == '<' {
+                        let start = index + 1;
+                        let mut end = start;
+                        while end < chars.len() && chars[end] != '>' {
+                            end += 1;
+                        }
+                        items.push(chars[start..end].iter().collect::<String>());
+                        index = end + 1;
+                    } else {
+                        index += 1;
+                    }
+                }
+                tokens.push(Token::Array(items));
+                index += 1;
+            }
+            _ => index += 1,
+        }
+    }
+    tokens
+}
+
+#[cfg(test)]
+mod cmap_tests {
+    use super::CMap;
+
+    #[test]
+    fn a_whole_bfchar_block_on_one_line_maps_every_entry() {
+        // Real generators emit exactly this shape; a line-oriented parser reads
+        // only the first pair and the rest of the document decodes to mojibake.
+        let cmap = b"begincmap 3 beginbfchar <0003> <0020> <0004> <0041> <0011> <0042> endbfchar endcmap";
+        let parsed = CMap::parse(cmap);
+
+        assert_eq!(parsed.decode(&[0x00, 0x04]), "A");
+        assert_eq!(parsed.decode(&[0x00, 0x11]), "B");
+        assert_eq!(parsed.decode(&[0x00, 0x03]), " ");
+    }
+
+    #[test]
+    fn bfrange_maps_consecutive_code_points() {
+        let cmap = b"beginbfrange <0004> <0006> <0041> endbfrange";
+        let parsed = CMap::parse(cmap);
+
+        assert_eq!(parsed.decode(&[0x00, 0x04]), "A");
+        assert_eq!(parsed.decode(&[0x00, 0x05]), "B");
+        assert_eq!(parsed.decode(&[0x00, 0x06]), "C");
+    }
+
+    #[test]
+    fn bfrange_array_form_maps_each_destination() {
+        let cmap = b"beginbfrange <0004> <0006> [<0041> <0058> <0059>] endbfrange";
+        let parsed = CMap::parse(cmap);
+
+        assert_eq!(parsed.decode(&[0x00, 0x04]), "A");
+        assert_eq!(parsed.decode(&[0x00, 0x05]), "X");
+        assert_eq!(parsed.decode(&[0x00, 0x06]), "Y");
+    }
 }

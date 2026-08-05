@@ -1,0 +1,16 @@
+[package]
+name = "coi-cli"
+version = "0.1.0"
+edition = "2021"
+[[bin]]
+name = "coi-cli"
+path = "src/main.rs"
+[dependencies]
+coi-core = { path = "../coi-core" }
+coi-pdf = { path = "../coi-pdf" }
+coi-layout = { path = "../coi-layout" }
+coi-domain = { path = "../coi-domain" }
+coi-parser = { path = "../coi-parser" }
+coi-validation = { path = "../coi-validation" }
+serde = { workspace = true }
+serde_json = { workspace = true }
