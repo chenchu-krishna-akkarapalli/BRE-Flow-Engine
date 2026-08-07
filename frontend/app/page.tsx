@@ -11,7 +11,9 @@ import {
   Step1Identity, Step2Address, Step3Occupation, Step4Banking, Step5CoApplicant,
 } from "@/components/steps/Steps";
 import { STEP_PLAN } from "@/lib/form-schema";
-import { useOnboardingStore } from "@/store/useOnboardingStore";
+import { terminationReason, useOnboardingStore } from "@/store/useOnboardingStore";
+
+const OCCUPATION_STEP = 3;
 
 const STEP_COMPONENTS: Record<number, () => JSX.Element> = {
   1: Step1Identity,
@@ -40,6 +42,10 @@ export default function OnboardingWizard() {
   const isFirst = plan.indexOf(stepId) === 0;
   const isLast = plan.indexOf(stepId) === plan.length - 1;
   const StepBody = STEP_COMPONENTS[stepId];
+
+  // add-on.md §5/§6: these end the application where they are answered, so the
+  // applicant is told at step 3 rather than after four more steps of questions.
+  const termination = stepId === OCCUPATION_STEP ? terminationReason(draft) : null;
 
   const handleEvaluate = async () => {
     await submit();
@@ -152,6 +158,15 @@ export default function OnboardingWizard() {
                 {StepBody && <StepBody />}
               </section>
 
+              {/* Terminating condition — the application stops here. */}
+              {termination && (
+                <div className="validation-slot">
+                  <div role="alert" className="rounded-2xl border border-danger/30 bg-danger-bg p-5 text-sm font-bold text-danger backdrop-blur-xl shadow-xs">
+                    {termination}
+                  </div>
+                </div>
+              )}
+
               {/* Validation & Error Slot */}
               {error && (
                 <div className="validation-slot">
@@ -186,7 +201,8 @@ export default function OnboardingWizard() {
                   <button
                     type="button"
                     onClick={next}
-                    className="group flex min-h-[48px] items-center gap-2 rounded-xl bg-gradient-to-r from-brand-500 to-brand-indigo px-8 py-3 text-sm font-extrabold text-white shadow-glow transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_4px_20px_rgba(13,148,136,0.3)] active:scale-[0.98]"
+                    disabled={termination !== null}
+                    className="group flex min-h-[48px] items-center gap-2 rounded-xl bg-gradient-to-r from-brand-500 to-brand-indigo px-8 py-3 text-sm font-extrabold text-white shadow-glow transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_4px_20px_rgba(13,148,136,0.3)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100 disabled:shadow-none"
                   >
                     <span>Next question</span>
                     <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />

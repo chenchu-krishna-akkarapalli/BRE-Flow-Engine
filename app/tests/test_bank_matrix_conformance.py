@@ -113,6 +113,19 @@ def _cell(row: Dict[str, Any], *candidates: str) -> Any:
     raise KeyError(f"none of {candidates!r} present; sheet has {sorted(row)}")
 
 
+def _optional_threshold(row: Dict[str, Any], *candidates: str) -> Optional[float]:
+    """A threshold cell that the sheet need not carry at all.
+
+    Distinct from `_cell`, which raises: an absent optional column means the
+    policy does not apply, whereas an absent required one is a sheet error.
+    """
+    try:
+        cell = _cell(row, *candidates)
+    except KeyError:
+        return None
+    return None if cell is None or str(cell).strip() == "" else _threshold(cell)
+
+
 def _read(path: Path) -> Dict[str, Dict[str, Any]]:
     """{bank_code: {column_header: cell}} for one entity-scoped matrix."""
     rows = list(openpyxl.load_workbook(str(path), data_only=True)["decision table"].iter_rows(values_only=True))
@@ -134,6 +147,10 @@ def load_policies() -> Dict[str, Dict[str, Any]]:
         ind, com = individual[code], company[code]
         policies[code] = {
             "min_cibil": _threshold(_cell(ind, "CIBIL Score")),
+            # Optional column: a bank publishing a separate personal-loan floor
+            # accepts either score. Absent for every bank in the current sheet,
+            # so the OR is inert until a cell defines one.
+            "min_cibil_pl": _optional_threshold(ind, "CIBIL PL Score", "CIBIL PL"),
             "allow_write_off": {
                 "PL": _flag(_cell(ind, "PL Write off")),
                 "HL": _flag(_cell(ind, "Home Loan Write off")),
@@ -219,7 +236,14 @@ def sheet_rejects(bank: str, f: Dict[str, Any]) -> List[str]:
             out.append("nri_stay")
 
     # Bureau
-    if f["cibil"] < p["min_cibil"]:
+    # Either score clears the bank, when the bank publishes a PL floor at all.
+    pl_floor = p.get("min_cibil_pl")
+    pl_clears = (
+        pl_floor is not None
+        and f.get("cibil_pl") is not None
+        and f["cibil_pl"] >= pl_floor
+    )
+    if f["cibil"] < p["min_cibil"] and not pl_clears:
         out.append("cibil")
     if f["dpd"] > p["max_dpd"]:
         out.append("dpd")
@@ -243,15 +267,22 @@ def sheet_rejects(bank: str, f: Dict[str, Any]) -> List[str]:
         out.append("agriculture")
 
     # Employment & income
-    if f["occupation"] == "Salaried":
+    if f["occupation"] == "Rental Income":
+        # add-on §7: neither the employment nor the business floors apply; only
+        # the rental configuration and the salaried age ceiling do.
+        if f["age_at_last_emi"] > p["max_age_emi_salaried"]:
+            out.append("age_emi_salaried")
+    elif f["occupation"] == "Salaried":
         if f["salary"] < p["min_salary"]:
             out.append("min_salary")
         if f["cash_salary"] and not p["allow_cash_salary"]:
             out.append("cash_salary")
-        if f["work_exp_years"] < p["min_total_experience_years"]:
-            out.append("work_experience")
-        if f["current_company_years"] < p["min_current_company_years"]:
-            out.append("company_tenure")
+        # add-on §4: government service is exempt from BOTH experience floors.
+        if not f["government_employee"]:
+            if f["work_exp_years"] < p["min_total_experience_years"]:
+                out.append("work_experience")
+            if f["current_company_years"] < p["min_current_company_years"]:
+                out.append("company_tenure")
         if f["no_income_proof"]:
             if not p["allow_no_income_proof"]:
                 out.append("no_income_proof")
@@ -333,16 +364,17 @@ WRITE_OFF_FORM_FLAG = {
 DEFAULTS: Dict[str, Any] = {
     "entity": "Individual", "occupation": "Salaried", "selected": "BOI",
     "age": 34, "is_nri": False, "nri_months": 0,
-    "cibil": 800, "dpd": 0, "currently_outstanding": 0.0, "loan_enquiry": False,
+    "cibil": 800, "cibil_pl": None, "dpd": 0, "currently_outstanding": 0.0, "loan_enquiry": False,
     "write_off_type": None, "write_off_amount": 0.0,
     # Bank code the applicant's car loan runs with, or None for no car loan.
     "age_at_last_emi": 55, "car_loan": None,
     "salary_band": "gt25000", "cash_salary": False, "tenure_band": "2y+", "form16_years": 2,
+    "employer_type": "Private Sector",
     "prev_joining_years_ago": None, "no_income_proof": False, "rental": None,
     "current_itr": 500000.0, "previous_itr": 350000.0, "itr_filed": True,
     "business_years_ago": 10, "business_itr_years": 5, "business_proof": True, "business_entity": "Propreitorship",
     "residence": "Owned House", "office": None, "office_status": None, "guarantor": None,
-    "coapp_age": "None", "coapp_income": "None",
+    "coapp_age": "None", "coapp_income": "None", "coapp_itr": 0.0,
 }
 
 TENURE_MONTHS = {"0-6m": 0, "6m-1y": 6, "1y-2y": 12, "2y+": 24}
@@ -353,6 +385,9 @@ def derive(c: Dict[str, Any]) -> Dict[str, Any]:
     months = TENURE_MONTHS[c["tenure_band"]]
     work_exp = c["prev_joining_years_ago"] if c["prev_joining_years_ago"] else months // 12
     is_huf = c["entity"] == "HUF" or c["business_entity"] == "HUF"
+    # add-on §8: income clubbing — a named income co-applicant's returns are
+    # added to the applicant's before the ITR floors are scored.
+    pooled = c["coapp_itr"] if c["coapp_income"] != "None" else 0.0
     coapp = []
     if c["coapp_age"] != "None":
         coapp.append(f"AGE_{c['coapp_age']}")
@@ -363,6 +398,7 @@ def derive(c: Dict[str, Any]) -> Dict[str, Any]:
         "is_nri": c["is_nri"],
         "nri_stay_years": c["nri_months"] / 12.0,
         "cibil": c["cibil"],
+        "cibil_pl": c["cibil_pl"],
         "dpd": c["dpd"],
         "currently_outstanding": c["currently_outstanding"],
         "loan_enquiry": bool(c["loan_enquiry"]),
@@ -370,12 +406,14 @@ def derive(c: Dict[str, Any]) -> Dict[str, Any]:
         "write_off_amount": c["write_off_amount"],
         "is_huf": is_huf,
         "is_agriculture": c["business_entity"] == "Agriculture",
-        "occupation": c["occupation"],
+        # A rental claim IS the occupation now, not a rider on another one.
+        "occupation": "Rental Income" if c["rental"] else c["occupation"],
         "salary": 50000.0 if c["salary_band"] == "gt25000" else 20000.0,
         "cash_salary": c["cash_salary"],
         "work_exp_years": work_exp,
         "current_company_years": months / 12.0,
         "no_income_proof": c["no_income_proof"],
+        "government_employee": c["employer_type"] == "Government Sector",
         "form_16_years": 0 if c["no_income_proof"] else c["form16_years"],
         "age_at_last_emi": c["age_at_last_emi"],
         "business_years": c["business_years_ago"],
@@ -385,8 +423,8 @@ def derive(c: Dict[str, Any]) -> Dict[str, Any]:
             c["business_years_ago"] if c["entity"] == "HUF" else c["business_itr_years"]
         ),
         "itr_filed": c["itr_filed"],
-        "current_itr": c["current_itr"],
-        "previous_itr": c["previous_itr"],
+        "current_itr": c["current_itr"] + pooled,
+        "previous_itr": c["previous_itr"] + pooled,
         "business_proof": c["business_proof"],
         "rental": c["rental"],
         # The office runs out of a rented residence — the only guarantor trigger.
@@ -414,6 +452,9 @@ def build_form(c: Dict[str, Any]) -> Dict[str, Any]:
         "bureauCurrentlyOutstanding": c["currently_outstanding"],
         "bureauAgeAtLastEMI": c["age_at_last_emi"],
     }
+    if c["cibil_pl"] is not None:
+        banking["cibilPlScoreToggle"] = True
+        banking["bureauCibilPlScore"] = c["cibil_pl"]
     if c["write_off_type"]:
         banking[WRITE_OFF_FORM_FLAG[c["write_off_type"]]] = True
         banking["bureauWriteOffAmount"] = c["write_off_amount"]
@@ -432,8 +473,6 @@ def build_form(c: Dict[str, Any]) -> Dict[str, Any]:
         if c["itr_filed"]:
             occupation["currentITRAmount"] = c["current_itr"]
             occupation["prevITRAmount"] = c["previous_itr"]
-        if c["rental"]:
-            occupation["rentalIncomeTypeSelfEmployed"] = RENTAL_FORM_VALUE[c["rental"]]
     else:
         identity = {
             "entityType": "Individual", "applicantName": "Rohan Sharma",
@@ -444,9 +483,24 @@ def build_form(c: Dict[str, Any]) -> Dict[str, Any]:
         if c["is_nri"]:
             identity["nriStayPeriod"] = c["nri_months"]
 
-        if c["occupation"] == "Salaried":
+        if c["rental"]:
+            # add-on §7: rent is its own top-level category, so a rental case
+            # posts the Rental Income profile rather than a rider field.
+            occupation = {
+                "profileType": "Rental Income",
+                "rentalPropertyAddress": "12 MG Road, Bengaluru",
+                "rentalIncomeDocumentation": RENTAL_FORM_VALUE[c["rental"]],
+            }
+            if c["rental"] == "ITR_NOT_IN_BANK":
+                occupation["currentYearItr"] = c["current_itr"]
+                occupation["previousYearItr"] = c["previous_itr"]
+            elif c["rental"] == "NO_ITR_IN_BANK":
+                occupation["rentalBankStatementProvided"] = True
+                occupation["rentalIncomeAmount"] = 40000.0
+        elif c["occupation"] == "Salaried":
             occupation = {
                 "profileType": "Salaried", "tenureBand": c["tenure_band"],
+                "employerType": c["employer_type"],
                 "grossSalary": 50000.0 if c["salary_band"] == "gt25000" else 20000.0,
                 "salaryMode": "Salary payment mode-Cash" if c["cash_salary"]
                               else "Salary payment mode- Bank Credit",
@@ -458,8 +512,23 @@ def build_form(c: Dict[str, Any]) -> Dict[str, Any]:
                 prev = TODAY.replace(year=TODAY.year - c["prev_joining_years_ago"])
                 occupation["prevCompanyName"] = "Prior Employer Pvt Ltd"
                 occupation["prevCompanyJoining"] = prev.isoformat()
-            if c["rental"]:
-                occupation["rentalIncomeTypeSalaried"] = RENTAL_FORM_VALUE[c["rental"]]
+        elif c["business_entity"] == "Agriculture":
+            # add-on §3: farming collects land and income, never a GST number,
+            # a work location or a guarantor.
+            occupation = {
+                "profileType": "Self-Employed",
+                "businessEntityType": "Agriculture",
+                "ownsAgriculturalLand": c["business_proof"],
+                "agriculturalLandLocation": "Survey 42, Mandya, Karnataka",
+                "annualAgriculturalIncome": c["current_itr"],
+                "agricultureItrFiled": c["itr_filed"],
+            }
+            if c["itr_filed"]:
+                occupation["currentITRAmount"] = c["current_itr"]
+                occupation["prevITRAmount"] = c["previous_itr"]
+                occupation["businessItrAmount"] = c["business_itr_years"]
+            else:
+                occupation["agriculturalIncomeProof"] = "Village revenue record"
         else:
             occupation = {
                 "profileType": "Self-Employed",
@@ -476,8 +545,6 @@ def build_form(c: Dict[str, Any]) -> Dict[str, Any]:
                     occupation["officePremisesStatus"] = c["office_status"]
             if c["guarantor"]:
                 occupation["guarantorStatus"] = c["guarantor"]
-            if c["rental"]:
-                occupation["rentalIncomeTypeSelfEmployed"] = RENTAL_FORM_VALUE[c["rental"]]
 
     payload: Dict[str, Any] = {
         "identity": identity,
@@ -490,6 +557,8 @@ def build_form(c: Dict[str, Any]) -> Dict[str, Any]:
         payload["coApplicant"].update({
             "coApplicantName": "Anil Sharma", "coApplicantDob": "1965-03-10",
             "coApplicantOccupation": "Salaried",
+            "coApplicantCurrentItr": c["coapp_itr"],
+            "coApplicantPreviousItr": c["coapp_itr"],
         })
     return payload
 
@@ -519,6 +588,13 @@ def cases() -> List[Tuple[str, Dict[str, Any]]]:
         add(f"{bank}/clean-self-employed", **b, **SELF_EMPLOYED)
         add(f"{bank}/cibil-at-floor", **b, cibil=floor)
         add(f"{bank}/cibil-below-floor", **b, cibil=floor - 1)
+        # add-on §1: the PL score is scored at every bank, so the banks WITHOUT
+        # a PL floor prove the OR stays inert rather than leaking permissiveness.
+        pl_floor = POLICIES[bank]["min_cibil_pl"]
+        pl = int(pl_floor) if pl_floor is not None else 701
+        add(f"{bank}/pl-clears-cibil-below", **b, cibil=floor - 1, cibil_pl=pl)
+        add(f"{bank}/pl-below-cibil-below", **b, cibil=floor - 1, cibil_pl=pl - 1)
+        add(f"{bank}/pl-below-cibil-clears", **b, cibil=floor, cibil_pl=pl - 1)
         add(f"{bank}/dpd-1", **b, dpd=1)
         add(f"{bank}/dpd-89", **b, dpd=89)
         add(f"{bank}/dpd-90", **b, dpd=90)
@@ -539,6 +615,11 @@ def cases() -> List[Tuple[str, Dict[str, Any]]]:
         add(f"{bank}/form16-1-year", **b, form16_years=1)
         add(f"{bank}/tenure-1y", **b, tenure_band="1y-2y", prev_joining_years_ago=4)
         add(f"{bank}/tenure-6m", **b, tenure_band="6m-1y", prev_joining_years_ago=4)
+        # add-on §4: a government applicant six months into their first job
+        # clears every bank, where the same private-sector applicant would not.
+        add(f"{bank}/govt-tenure-6m", **b, employer_type="Government Sector",
+            tenure_band="6m-1y")
+        add(f"{bank}/govt-clean", **b, employer_type="Government Sector")
         # Both halves of EXB-702: a car loan with this bank, and one with a
         # different lender that must leave every bank's verdict untouched.
         add(f"{bank}/car-loan-same-bank", **b, car_loan=bank)
@@ -564,6 +645,14 @@ def cases() -> List[Tuple[str, Dict[str, Any]]]:
         add(f"{bank}/coapp-age-brother", **b, coapp_age="Brother")
         add(f"{bank}/coapp-income-sister", **b, coapp_income="Sister")
         add(f"{bank}/coapp-income-father", **b, coapp_income="Father")
+        # add-on §8: clubbing must lift a self-employed applicant whose own
+        # returns fall short of the bank's floors.
+        add(f"{bank}/coapp-income-clubbed", **b, **SELF_EMPLOYED,
+            coapp_income="Father", coapp_itr=400000.0,
+            current_itr=90000.0, previous_itr=90000.0)
+        add(f"{bank}/coapp-income-clubbed-still-short", **b, **SELF_EMPLOYED,
+            coapp_income="Father", coapp_itr=1000.0,
+            current_itr=90000.0, previous_itr=90000.0)
 
     return out
 
@@ -638,6 +727,15 @@ def test_policy_constants_match_spreadsheet(bank: str) -> None:
         assert float(sheet[sheet_key]) == float(code_policy[code_key]), (
             f"{bank}.{code_key}: sheet={sheet[sheet_key]} code={code_policy[code_key]}"
         )
+
+    # Optional column: the code key must be present exactly when the cell is,
+    # so a bank cannot gain or lose the OR without the sheet saying so.
+    sheet_pl, code_pl = sheet["min_cibil_pl"], code_policy.get("min_cibil_pl")
+    assert (sheet_pl is None) == (code_pl is None), (
+        f"{bank}.min_cibil_pl: sheet={sheet_pl} code={code_pl}"
+    )
+    if sheet_pl is not None:
+        assert float(sheet_pl) == float(code_pl), f"{bank}.min_cibil_pl"
 
     for rental_class, allowed in sheet["allow_rental"].items():
         code_key = RENTAL_CLASS_TO_FLAG[rental_class]
@@ -735,7 +833,7 @@ METADATA_COLUMNS = {"Bank Name", "Description"}
 
 # Columns with a rejection path in the engine, conformance-tested above.
 EVALUATED_COLUMNS = {
-    "CIBIL Score",
+    "CIBIL Score", "CIBIL PL Score",
     "PL Write off", "Home Loan Write off", "Consumer Loan  Write off",
     "Agri Loan  Write off", "MSME Loan  Write off", "Auto Loan  Write off",
     "Credit Card Write Off History", "Credit Card Write Off history",

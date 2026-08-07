@@ -350,9 +350,6 @@ class SalariedOccupation(FormModel):
     # Collected instead of Form-16 years when the proof offered is an ITR.
     current_year_itr: Optional[float] = Field(default=None, alias="currentYearItr", ge=0.0)
     previous_year_itr: Optional[float] = Field(default=None, alias="previousYearItr", ge=0.0)
-    rental_income_type: RentalIncomeType = Field(
-        default=RentalIncomeType.NONE, alias="rentalIncomeTypeSalaried"
-    )
 
     @model_validator(mode="after")
     def _validate_income_proof(self) -> "SalariedOccupation":
@@ -368,10 +365,27 @@ class SalariedOccupation(FormModel):
             raise ValueError("currentYearItr / previousYearItr are only collected when ITR is the proof.")
         return self
 
+    @property
+    def is_government_employee(self) -> bool:
+        """Government service, whose tenure the matrix does not score.
+
+        An unstated employer type reads as private: the validated path is the
+        conservative one, so an omitted field can never buy the exemption.
+        """
+        return self.employer_type is EmployerType.GOVERNMENT_SECTOR
+
     @model_validator(mode="after")
     def _require_previous_employer(self) -> "SalariedOccupation":
         # Under 2 years with the current employer, the prior employment record
         # is what establishes total work experience — the matrix scores it.
+        # Government service is exempt (add-on §4): its tenure is not scored,
+        # so a prior employer would be collected and then never read.
+        if self.is_government_employee:
+            if self.prev_company_name or self.prev_company_joining is not None:
+                raise ValueError(
+                    "prevCompanyName / prevCompanyJoining are not collected for Government Sector."
+                )
+            return self
         if self.tenure_band is not TenureBand.TWO_Y_PLUS:
             if not self.prev_company_name or self.prev_company_joining is None:
                 raise ValueError(
@@ -415,7 +429,13 @@ class SalariedOccupation(FormModel):
             ),
             "form_16_years": FORM_16_ABSENT_YEARS if no_income_proof else (self.form_16_years or 0),
             "no_income_proof_segment": no_income_proof,
-            "rental_income_class": RENTAL_INCOME_TO_CLASS[self.rental_income_type],
+            # Suppresses the two experience rules only; every other salaried
+            # rule (salary floor, payment mode, Form-16 history) still binds.
+            "government_employee": self.is_government_employee,
+            # Carried so step 5's clubbing trigger reads one vocabulary for
+            # every profile. No salaried rule scores them.
+            "current_itr": self.current_year_itr,
+            "previous_itr": self.previous_year_itr,
         }
 
 
@@ -434,19 +454,53 @@ class SelfEmployedOccupation(FormModel):
         default=FormBusinessEntityType.PROPRIETORSHIP, alias="businessEntityType"
     )
     business_proof: Optional[str] = Field(default=None, alias="businessProof", max_length=128)
-    business_establishment_date: date = Field(alias="businessEstablishmentDate")
-    current_itr_amount: float = Field(alias="currentITRAmount", ge=0.0)
-    prev_itr_amount: float = Field(alias="prevITRAmount", ge=0.0)
+    # add-on §3: optional only because the farming branch does not collect a
+    # business start date; a trade or profession must still supply one.
+    business_establishment_date: Optional[date] = Field(
+        default=None, alias="businessEstablishmentDate"
+    )
+    current_itr_amount: Optional[float] = Field(default=None, alias="currentITRAmount", ge=0.0)
+    prev_itr_amount: Optional[float] = Field(default=None, alias="prevITRAmount", ge=0.0)
     # Years of filed business ITRs (matrix col 47), NOT a rupee amount. The
     # form labels it "Business ITR" but the matrix threshold it feeds is a
     # count of filing years.
-    business_itr_years: int = Field(alias="businessItrAmount", ge=0, le=60)
-    rental_income_type: RentalIncomeType = Field(
-        default=RentalIncomeType.NONE, alias="rentalIncomeTypeSelfEmployed"
+    business_itr_years: Optional[int] = Field(
+        default=None, alias="businessItrAmount", ge=0, le=60
+    )
+
+    # --- add-on §3: farming's own field set ---------------------------------
+    owns_agricultural_land: Optional[bool] = Field(default=None, alias="ownsAgriculturalLand")
+    agricultural_land_location: Optional[str] = Field(
+        default=None, alias="agriculturalLandLocation", max_length=256
+    )
+    annual_agricultural_income: Optional[float] = Field(
+        default=None, alias="annualAgriculturalIncome", ge=0.0
+    )
+    agriculture_itr_filed: Optional[bool] = Field(default=None, alias="agricultureItrFiled")
+    agricultural_income_proof: Optional[str] = Field(
+        default=None, alias="agriculturalIncomeProof", max_length=128
+    )
+
+    @property
+    def is_agriculture(self) -> bool:
+        return self.business_entity_type is FormBusinessEntityType.AGRICULTURE
+
+    @property
+    def itr_filed(self) -> bool:
+        """A trade always files; farming answers the question explicitly."""
+        return bool(self.agriculture_itr_filed) if self.is_agriculture else True
+
+    # Fields the farming branch never collects, and the trade branch always does.
+    _TRADE_ONLY = ("business_proof", "office_address", "office_premises_status", "guarantor_status")
+    _FARM_ONLY = (
+        "owns_agricultural_land", "agricultural_land_location",
+        "annual_agricultural_income", "agriculture_itr_filed",
     )
 
     @model_validator(mode="after")
     def _require_separate_office_details(self) -> "SelfEmployedOccupation":
+        if self.is_agriculture:
+            return self
         if self.office_address_type is OfficeAddressType.SEPARATE:
             if not self.office_address or self.office_premises_status is None:
                 raise ValueError(
@@ -458,23 +512,90 @@ class SelfEmployedOccupation(FormModel):
             )
         return self
 
+    @model_validator(mode="after")
+    def _split_farming_from_trade(self) -> "SelfEmployedOccupation":
+        """add-on §3: farming and trade collect disjoint field sets.
+
+        Enforced rather than merely rendered differently, so a stale client
+        cannot post a farming application carrying a GST number the branch never
+        asked for — the sheet's agriculture column would then be scored against
+        evidence that does not exist.
+        """
+        if self.is_agriculture:
+            leaked = [f for f in self._TRADE_ONLY if getattr(self, f) is not None]
+            if leaked:
+                raise ValueError(
+                    f"{', '.join(leaked)} are not collected for Agriculture / Farming."
+                )
+            missing = [
+                f for f in ("owns_agricultural_land", "agricultural_land_location",
+                            "annual_agricultural_income", "agriculture_itr_filed")
+                if getattr(self, f) is None
+            ]
+            if missing:
+                raise ValueError(
+                    f"{', '.join(missing)} are required for Agriculture / Farming."
+                )
+            if self.agriculture_itr_filed:
+                if self.current_itr_amount is None or self.prev_itr_amount is None or self.business_itr_years is None:
+                    raise ValueError(
+                        "currentITRAmount, prevITRAmount and businessItrAmount are required when "
+                        "the farmer has filed an ITR."
+                    )
+            elif not self.agricultural_income_proof:
+                raise ValueError(
+                    "agriculturalIncomeProof is required when the farmer has not filed an ITR."
+                )
+            return self
+
+        leaked = [f for f in self._FARM_ONLY if getattr(self, f) is not None]
+        if self.agricultural_income_proof is not None:
+            leaked.append("agricultural_income_proof")
+        if leaked:
+            raise ValueError(
+                f"{', '.join(leaked)} are only collected for Agriculture / Farming."
+            )
+        missing = [
+            name for name, value in (
+                ("businessEstablishmentDate", self.business_establishment_date),
+                ("currentITRAmount", self.current_itr_amount),
+                ("prevITRAmount", self.prev_itr_amount),
+                ("businessItrAmount", self.business_itr_years),
+            )
+            if value is None
+        ]
+        if missing:
+            raise ValueError(f"{', '.join(missing)} are required for self-employed applicants.")
+        return self
+
     @property
     def guarantor_provided(self) -> bool:
         return self.guarantor_status is GuarantorStatus.WITH_GUARANTOR
 
     def engine_inputs(self) -> Dict[str, Any]:
-        return {
+        inputs: Dict[str, Any] = {
             "occupation": OccupationType.SELF_EMPLOYED.value,
-            "business_establishment_date": self.business_establishment_date.isoformat(),
-            "business_experience_years": (_completed_years(self.business_establishment_date)),
-            "current_itr": self.current_itr_amount,
-            "previous_itr": self.prev_itr_amount,
-            "itr_filed": True,
-            "business_itr_years": self.business_itr_years,
-            "business_proof": bool(self.business_proof),
+            # An unfiled return proves no income; falling through to the
+            # engine's permissive default would approve on absent evidence.
+            "current_itr": self.current_itr_amount or 0.0,
+            "previous_itr": self.prev_itr_amount or 0.0,
+            "itr_filed": self.itr_filed,
+            "business_itr_years": self.business_itr_years or 0,
             "business_entity_type": self.business_entity_type.value,
-            "rental_income_class": RENTAL_INCOME_TO_CLASS[self.rental_income_type],
+            # Farming evidences itself with the land and either a return or an
+            # income proof; BUS-302 is satisfied by those, not by a GST number
+            # the branch is forbidden to ask for.
+            "business_proof": (
+                bool(self.owns_agricultural_land
+                     and (self.itr_filed or self.agricultural_income_proof))
+                if self.is_agriculture
+                else bool(self.business_proof)
+            ),
         }
+        if self.business_establishment_date is not None:
+            inputs["business_establishment_date"] = self.business_establishment_date.isoformat()
+            inputs["business_experience_years"] = _completed_years(self.business_establishment_date)
+        return inputs
 
 
 class HUFBusiness(FormModel):
@@ -530,6 +651,82 @@ class HUFBusiness(FormModel):
         }
 
 
+class RentalIncomeOccupation(FormModel):
+    """add-on §7: rent as the applicant's own income category.
+
+    It replaces the "do you also earn rent?" sub-questions that used to hang off
+    the salaried and self-employed branches. Neither the employment floors nor
+    the business-ITR floors apply — the bank's three rental-configuration
+    columns (INC-601) are what decide it.
+    """
+
+    profile_type: Literal["Rental Income"] = Field(alias="profileType")
+    occupation: Literal[OccupationType.RENTAL_INCOME] = OccupationType.RENTAL_INCOME
+    rental_property_address: str = Field(
+        alias="rentalPropertyAddress", min_length=1, max_length=256
+    )
+    # "None" is not offerable here: choosing this category IS the claim to rent.
+    rental_income_type: RentalIncomeType = Field(alias="rentalIncomeDocumentation")
+    current_year_itr: Optional[float] = Field(default=None, alias="currentYearItr", ge=0.0)
+    previous_year_itr: Optional[float] = Field(default=None, alias="previousYearItr", ge=0.0)
+    bank_statement_provided: bool = Field(default=False, alias="rentalBankStatementProvided")
+    rental_income_amount: Optional[float] = Field(
+        default=None, alias="rentalIncomeAmount", ge=0.0
+    )
+
+    @model_validator(mode="after")
+    def _validate_documentation(self) -> "RentalIncomeOccupation":
+        if self.rental_income_type is RentalIncomeType.NONE:
+            raise ValueError(
+                "rentalIncomeDocumentation must name a documentation option for the "
+                "Rental Income profile."
+            )
+
+        wants_itr = self.rental_income_type.requires_itr
+        if wants_itr and (self.current_year_itr is None or self.previous_year_itr is None):
+            raise ValueError(
+                "currentYearItr and previousYearItr are required when the rent is evidenced by a tax return."
+            )
+        if not wants_itr and (self.current_year_itr is not None or self.previous_year_itr is not None):
+            raise ValueError(
+                "currentYearItr / previousYearItr are only collected for the filed-ITR documentation option."
+            )
+
+        wants_statement = self.rental_income_type.requires_bank_statement
+        if wants_statement and (not self.bank_statement_provided or self.rental_income_amount is None):
+            raise ValueError(
+                "rentalBankStatementProvided and rentalIncomeAmount are required when the rent is paid into the bank."
+            )
+        if not wants_statement and (self.bank_statement_provided or self.rental_income_amount is not None):
+            raise ValueError(
+                "rentalBankStatementProvided / rentalIncomeAmount are only collected for the paid-into-bank option."
+            )
+        return self
+
+    @property
+    def office_address_type(self) -> Optional[OfficeAddressType]:
+        return None
+
+    @property
+    def office_premises_status(self) -> Optional[OfficePremisesStatus]:
+        return None
+
+    @property
+    def guarantor_provided(self) -> bool:
+        return False
+
+    def engine_inputs(self) -> Dict[str, Any]:
+        return {
+            "occupation": OccupationType.RENTAL_INCOME.value,
+            "rental_income_class": RENTAL_INCOME_TO_CLASS[self.rental_income_type],
+            # Carried so step 5's income-clubbing trigger can read them; the
+            # bank ITR floors are self-employed rules and do not apply here.
+            "current_itr": self.current_year_itr,
+            "previous_itr": self.previous_year_itr,
+            "rental_income_amount": self.rental_income_amount,
+        }
+
+
 class CompanyBusiness(FormModel):
     profile_type: Literal["Company"] = Field(alias="profileType")
     company_establishment_date: date = Field(alias="companyEstablishmentDate")
@@ -564,13 +761,19 @@ class CompanyBusiness(FormModel):
 
 
 OccupationStep = Annotated[
-    Union[SalariedOccupation, SelfEmployedOccupation, HUFBusiness, CompanyBusiness],
+    Union[
+        SalariedOccupation,
+        SelfEmployedOccupation,
+        RentalIncomeOccupation,
+        HUFBusiness,
+        CompanyBusiness,
+    ],
     Field(discriminator="profile_type"),
 ]
 
 # Which step-3 branches each entity type is allowed to submit.
 ENTITY_TYPE_TO_PROFILE_TYPES: Dict[EntityType, frozenset] = {
-    EntityType.INDIVIDUAL: frozenset({"Salaried", "Self-Employed"}),
+    EntityType.INDIVIDUAL: frozenset({"Salaried", "Self-Employed", "Rental Income"}),
     EntityType.HUF: frozenset({"HUF"}),
     EntityType.COMPANY: frozenset({"Company"}),
 }
@@ -659,6 +862,9 @@ class BankingBureauStep(FormModel):
             "age_at_last_emi_self_employed": self.age_at_last_emi,
             "credit_bureau": {
                 "cibil_score": self.cibil_score,
+                # Only forwarded when the applicant actually claimed one; the
+                # toggle being off must not present a stale score to BUR-405.
+                "cibil_pl_score": self.cibil_pl_score if self.cibil_pl_score_available else None,
                 "dpd_history": [self.dpd],
                 # A ticked write-off flag with no amount still has to reach the
                 # engine as a write-off, so it is floored at a positive rupee.
@@ -686,16 +892,29 @@ class CoApplicantStep(FormModel):
     co_applicant_occupation: Optional[OccupationType] = Field(
         default=None, alias="coApplicantOccupation"
     )
+    # add-on §8: the co-applicant's own filed returns, clubbed with the
+    # applicant's before the bank ITR floors are scored.
+    co_applicant_current_itr: Optional[float] = Field(
+        default=None, alias="coApplicantCurrentItr", ge=0.0
+    )
+    co_applicant_prev_itr: Optional[float] = Field(
+        default=None, alias="coApplicantPreviousItr", ge=0.0
+    )
+
+    @property
+    def pools_income(self) -> bool:
+        return self.income_relation is not CoApplicantIncomeRelation.NONE
 
     @model_validator(mode="after")
     def _require_co_applicant_profile(self) -> "CoApplicantStep":
-        if self.income_relation is not CoApplicantIncomeRelation.NONE:
+        if self.pools_income:
             missing = [
                 name
                 for name, value in (
                     ("coApplicantName", self.co_applicant_name),
                     ("coApplicantDob", self.co_applicant_dob),
-                    ("coApplicantOccupation", self.co_applicant_occupation),
+                    ("coApplicantCurrentItr", self.co_applicant_current_itr),
+                    ("coApplicantPreviousItr", self.co_applicant_prev_itr),
                 )
                 if value is None
             ]
@@ -703,6 +922,11 @@ class CoApplicantStep(FormModel):
                 raise ValueError(
                     f"{', '.join(missing)} required when coAppIncomeRelation pools income."
                 )
+        elif self.co_applicant_current_itr is not None or self.co_applicant_prev_itr is not None:
+            raise ValueError(
+                "coApplicantCurrentItr / coApplicantPreviousItr are only collected when "
+                "coAppIncomeRelation pools income."
+            )
         return self
 
     @property
@@ -802,6 +1026,17 @@ class OnboardingFormRequest(FormModel):
         payload["sibling_co_applicant"] = (
             self.co_applicant.has_sibling_co_applicant if self.co_applicant else False
         )
+        # add-on §8: income clubbing. Applied AFTER the applicant's own figures
+        # are assembled, so the bank ITR floors are scored against the combined
+        # amount — which is the entire point of naming an income co-applicant.
+        if self.co_applicant is not None and self.co_applicant.pools_income:
+            payload["current_itr"] = (
+                (payload.get("current_itr") or 0.0) + self.co_applicant.co_applicant_current_itr
+            )
+            payload["previous_itr"] = (
+                (payload.get("previous_itr") or 0.0) + self.co_applicant.co_applicant_prev_itr
+            )
+            payload["income_clubbed"] = True
         if self.address is not None:
             payload["aadhaar_number"] = self.address.aadhaar_number
             payload["pincode"] = self.address.pincode
@@ -833,13 +1068,12 @@ class OnboardingFormRequest(FormModel):
                 },
                 "occupation": {
                     "profileType": "Salaried",
-                    "employerType": "Employment-Pvt Ltd",
+                    "employerType": "Private Sector",
                     "tenureBand": "2y+",
                     "grossSalary": 60000,
                     "salaryMode": "Salary payment mode- Bank Credit",
                     "form16Status": "Form 16",
                     "form16Years": 2,
-                    "rentalIncomeTypeSalaried": "None",
                 },
                 "banking": {
                     "existingAccountBank": "BOI",

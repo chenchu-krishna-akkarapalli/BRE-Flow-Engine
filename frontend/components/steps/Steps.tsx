@@ -5,7 +5,7 @@ import { Checkbox, Field, RadioCards, Select, TextInput, SearchableSelect } from
 import {
   ACCOUNT_BANKS, AGE_RELATIONS, BUSINESS_ENTITIES, CAR_LOAN_BANKS, CITIZENSHIP,
   ADDRESS_PROOF_DETAIL, ADDRESS_PROOF_HELPER, ADDRESS_PROOF_TYPES, formatAadhaar,
-  EMPLOYER_TYPES, ENTITY_TYPES, GENDERS, INCOME_PROOF,
+  EMPLOYER_TYPES, ENTITY_TYPES, GENDERS, GOVERNMENT_SECTOR, INCOME_PROOF,
   INCOME_RELATIONS,
   LOAN_TYPES, MARITAL, PATTERNS, RENTAL_INCOME, RESIDENCE,
   COMPANY_TYPES, YES_NO,
@@ -16,7 +16,9 @@ import { CibilUpload } from "@/components/CibilUpload";
 import { DocumentUpload } from "@/components/DocumentUpload";
 import { VerifyField } from "@/components/VerifyField";
 import {
-  LOAN_TENOR_YEARS, ageAtLastEmiFor, isResiCumOfficeRented, needsCoApplicant,
+  CO_APPLICANT_ITR_THRESHOLD, LOAN_TENOR_YEARS, RENTAL_DOC_IN_BANK, RENTAL_DOC_WITH_ITR,
+  ageAtLastEmiFor, clubbedCurrentItr, clubbedPreviousItr, isAgriculture,
+  isResiCumOfficeRented, needsCoApplicant, needsIncomeCoApplicant,
   profileTypeFor, useOnboardingStore,
 } from "@/store/useOnboardingStore";
 import type { Draft } from "@/store/useOnboardingStore";
@@ -93,28 +95,148 @@ function AgeAtLastEmi() {
   );
 }
 
-// Yes/no radio in front of the rental-income category dropdown (add-on.md §3.2c).
-function RentalIncomeQuestion() {
+// add-on.md §7: rent is a top-level occupation, so this is a whole branch of
+// step 3 rather than two sub-questions hanging off the salaried flow.
+function RentalIncomeBranch() {
   const { draft, set } = useField();
+  const k = <K extends keyof Draft>(key: K) => (v: Draft[K]) => set(key, v);
+  const withItr = draft.rentalIncomeType === RENTAL_DOC_WITH_ITR;
+  const inBank = draft.rentalIncomeType === RENTAL_DOC_IN_BANK;
+
   return (
     <>
-      <Field label="Do you earn any rent from a property you own?" htmlFor="hasRentalIncome">
+      <Field label="What is the address of the property you rent out?" htmlFor="rentalPropertyAddress">
+        <TextInput id="rentalPropertyAddress" value={draft.rentalPropertyAddress} onChange={k("rentalPropertyAddress")} />
+      </Field>
+
+      <Field label="How is that rental income documented?" htmlFor="rentalIncomeType">
         <RadioCards
-          name="hasRentalIncome"
-          label="Do you earn any rent from a property you own?"
-          value={yn(draft.hasRentalIncome)}
-          onChange={(v) => set("hasRentalIncome", v === "yes")}
+          name="rentalIncomeType"
+          label="How is that rental income documented?"
+          value={draft.rentalIncomeType}
+          onChange={k("rentalIncomeType")}
+          options={RENTAL_INCOME}
+        />
+      </Field>
+
+      {withItr && (
+        <div className="grid gap-6 sm:grid-cols-2">
+          <ItrField
+            id="rentalCurrentYearItr"
+            label="Current Year ITR"
+            value={draft.rentalCurrentYearItr}
+            onChange={(v) => set("rentalCurrentYearItr", v)}
+          />
+          <ItrField
+            id="rentalPreviousYearItr"
+            label="Previous Year ITR"
+            value={draft.rentalPreviousYearItr}
+            onChange={(v) => set("rentalPreviousYearItr", v)}
+          />
+        </div>
+      )}
+
+      {inBank && (
+        <>
+          <Field label="Upload the bank statement showing the rent credits" htmlFor="rentalBankStatement">
+            <DocumentUpload
+              id="rentalBankStatement"
+              label="Upload bank statement"
+              helper="The statement must show the rent arriving in your account."
+              onAttached={(attached) => set("rentalBankStatementProvided", attached)}
+            />
+          </Field>
+          <Field label="How much rent do you receive each month? (₹)" htmlFor="rentalIncomeAmount">
+            <TextInput id="rentalIncomeAmount" type="number" value={draft.rentalIncomeAmount} onChange={(v) => set("rentalIncomeAmount", num(v))} numeric />
+          </Field>
+        </>
+      )}
+    </>
+  );
+}
+
+// add-on.md §3: farming's own field set. None of the trade questions — work
+// location, guarantor, business registration, GST — are asked here.
+function AgricultureBranch() {
+  const { draft, set } = useField();
+  const k = <K extends keyof Draft>(key: K) => (v: Draft[K]) => set(key, v);
+
+  return (
+    <>
+      <Field label="Do you own the agricultural land?" htmlFor="ownsAgriculturalLand">
+        <RadioCards
+          name="ownsAgriculturalLand"
+          label="Do you own the agricultural land?"
+          value={yn(draft.ownsAgriculturalLand)}
+          onChange={(v) => set("ownsAgriculturalLand", v === "yes")}
           options={YES_NO}
         />
       </Field>
-      {draft.hasRentalIncome && (
-        <Field label="How is that rental income documented?" htmlFor="rentalIncomeType">
-          <Select
-            id="rentalIncomeType"
-            value={draft.rentalIncomeType}
-            onChange={(v) => set("rentalIncomeType", v)}
-            options={RENTAL_INCOME}
-          />
+
+      <Field label="Where is the agricultural land located?" htmlFor="agriculturalLandLocation">
+        <TextInput id="agriculturalLandLocation" value={draft.agriculturalLandLocation} onChange={k("agriculturalLandLocation")} placeholder="Village, taluk and district" />
+      </Field>
+
+      <Field label="What is your approximate annual agricultural income? (₹)" htmlFor="annualAgriculturalIncome">
+        <TextInput id="annualAgriculturalIncome" type="number" value={draft.annualAgriculturalIncome} onChange={(v) => set("annualAgriculturalIncome", num(v))} numeric />
+      </Field>
+
+      <Field label="Have you filed an income tax return?" htmlFor="agricultureItrFiled">
+        <RadioCards
+          name="agricultureItrFiled"
+          label="Have you filed an income tax return?"
+          value={yn(draft.agricultureItrFiled)}
+          onChange={(v) => set("agricultureItrFiled", v === "yes")}
+          options={YES_NO}
+        />
+      </Field>
+
+      {draft.agricultureItrFiled ? (
+        <>
+          <div className="grid gap-6 sm:grid-cols-2">
+            <ItrField
+              id="currentITRAmount"
+              label="Current Year ITR"
+              value={draft.currentITRAmount}
+              onChange={(v) => set("currentITRAmount", v)}
+            />
+            <ItrField
+              id="prevITRAmount"
+              label="Previous Year ITR"
+              value={draft.prevITRAmount}
+              onChange={(v) => set("prevITRAmount", v)}
+            />
+          </div>
+          <Field label="For how many years have you filed tax returns?" htmlFor="businessItrYears">
+            <TextInput id="businessItrYears" type="number" value={draft.businessItrYears} onChange={(v) => set("businessItrYears", num(v))} numeric />
+          </Field>
+        </>
+      ) : (
+        <Field
+          label="Agricultural income proof"
+          htmlFor="agriculturalIncomeProof"
+          error={draft.agriculturalIncomeProof.trim() === ""
+            ? "Without a filed return, this proof is what evidences the income."
+            : undefined}
+        >
+          <div className="flex flex-col gap-3">
+            <TextInput
+              id="agriculturalIncomeProof"
+              value={draft.agriculturalIncomeProof}
+              onChange={(v) => { set("agriculturalIncomeProof", v); set("agriculturalIncomeProofVerified", false); }}
+              placeholder="Reference on the document you upload"
+              verified={draft.agriculturalIncomeProofVerified}
+            />
+            <div className="flex flex-wrap items-start gap-3">
+              <DocumentUpload id="agriculturalIncomeProofUpload" label="Upload" />
+              <VerifyField
+                channel="email"
+                target={draft.email || "agri@document.verify"}
+                verified={draft.agriculturalIncomeProofVerified}
+                onVerified={(v) => set("agriculturalIncomeProofVerified", v)}
+              />
+            </div>
+          </div>
         </Field>
       )}
     </>
@@ -194,15 +316,8 @@ export function Step1Identity() {
             </Field>
           </div>
 
-          <Field label="Do you live in India, or are you an NRI living abroad?" htmlFor="citizenshipStatus">
-            <Select id="citizenshipStatus" value={draft.citizenshipStatus} onChange={k("citizenshipStatus")} options={CITIZENSHIP} />
-          </Field>
-
-          {draft.citizenshipStatus === "NRI/PIO" && (
-            <Field label="How many months have you stayed in India?" htmlFor="nriStayPeriod">
-              <TextInput id="nriStayPeriod" type="number" value={draft.nriStayPeriod} onChange={(v) => set("nriStayPeriod", num(v))} numeric />
-            </Field>
-          )}
+          {/* add-on.md §2: residency moved to step 3 and is asked only of
+              salaried applicants; it is not collected here any more. */}
 
           <div className="grid gap-6 sm:grid-cols-2">
             <Field
@@ -486,6 +601,8 @@ export function Step3Occupation() {
   const { draft, set } = useField();
   const k = <K extends keyof Draft>(key: K) => (v: Draft[K]) => set(key, v);
   const profile = profileTypeFor(draft);
+  const isGovernment = draft.employerType === GOVERNMENT_SECTOR;
+  const isFarming = isAgriculture(draft);
   const shortTenure = draft.tenureBand !== "2y+";
   const totalExperience = shortTenure
     ? totalWorkExperienceYears(draft.prevCompanyJoining, draft.tenureBand)
@@ -503,23 +620,41 @@ export function Step3Occupation() {
             options={[
               { value: "Salaried", label: "Salaried" },
               { value: "Self-Employed", label: "Self-employed" },
+              { value: "Rental Income", label: "Rental income" },
             ]}
           />
         </Field>
       )}
 
+      {profile === "Rental Income" && <RentalIncomeBranch />}
+
       {profile === "Salaried" && (
         <>
           <Field label="What kind of organisation do you work for?" htmlFor="employerType">
-            <Select id="employerType" value={draft.employerType} onChange={k("employerType")} options={EMPLOYER_TYPES} />
+            <RadioCards
+              name="employerType"
+              label="What kind of organisation do you work for?"
+              value={draft.employerType}
+              onChange={k("employerType")}
+              options={EMPLOYER_TYPES}
+            />
           </Field>
 
           <Field label="How long have you worked at your current job?" htmlFor="tenureBand">
             <Select id="tenureBand" value={draft.tenureBand} onChange={k("tenureBand")} options={TENURE_BANDS} />
           </Field>
 
+          {/* add-on.md §4: government service is not scored on tenure, so the
+              prior-employer questions are not asked and short tenure is fine. */}
+          {isGovernment && (
+            <p className="rounded-md bg-bg-raised p-3 text-[0.8125rem] text-ink-muted">
+              Government service is not assessed against a minimum length of
+              employment, so you can continue whatever you answered above.
+            </p>
+          )}
+
           {/* Under 2 years here, prior employment establishes total experience. */}
-          {shortTenure && (
+          {!isGovernment && shortTenure && (
             <>
               <div className="grid gap-6 sm:grid-cols-2">
                 <Field label="Where did you work before this job?" htmlFor="prevCompanyName">
@@ -590,10 +725,32 @@ export function Step3Occupation() {
               />
             </div>
           )}
+
+          {/* add-on.md §2: residency is asked here, and only of salaried
+              applicants — the NRI matrix columns score employment income. */}
+          <Field label="Do you live in India, or are you an NRI living abroad?" htmlFor="citizenshipStatus">
+            <Select id="citizenshipStatus" value={draft.citizenshipStatus} onChange={k("citizenshipStatus")} options={CITIZENSHIP} />
+          </Field>
+
+          {draft.citizenshipStatus === "NRI/PIO" && (
+            <Field label="How many months have you stayed in India?" htmlFor="nriStayPeriod">
+              <TextInput id="nriStayPeriod" type="number" value={draft.nriStayPeriod} onChange={(v) => set("nriStayPeriod", num(v))} numeric />
+            </Field>
+          )}
         </>
       )}
 
+      {/* add-on.md §3: "How is your business set up?" comes FIRST, because its
+          answer decides whether the trade questions or the farming ones apply. */}
       {profile === "Self-Employed" && (
+        <Field label="How is your business set up?" htmlFor="businessEntityType">
+          <Select id="businessEntityType" value={draft.businessEntityType} onChange={k("businessEntityType")} options={BUSINESS_ENTITIES} />
+        </Field>
+      )}
+
+      {profile === "Self-Employed" && isFarming && <AgricultureBranch />}
+
+      {profile === "Self-Employed" && !isFarming && (
         <>
           <Field label="Do you work from where you live, or from a separate place?" htmlFor="officeAddressType">
             <RadioCards
@@ -647,11 +804,13 @@ export function Step3Occupation() {
             <TextInput id="businessEstablishmentDate" type="date" value={draft.businessEstablishmentDate} onChange={k("businessEstablishmentDate")} />
           </Field>
 
-          <Field label="How is your business set up?" htmlFor="businessEntityType">
-            <Select id="businessEntityType" value={draft.businessEntityType} onChange={k("businessEntityType")} options={BUSINESS_ENTITIES} />
-          </Field>
-
-          <Field label="What is your business registration or GST number?" htmlFor="businessProof">
+          <Field
+            label="What is your business registration or GST number?"
+            htmlFor="businessProof"
+            error={draft.businessProof.trim() === ""
+              ? "Business proof is mandatory — onboarding cannot continue without it."
+              : undefined}
+          >
             <div className="flex flex-col gap-3">
               <TextInput id="businessProof" value={draft.businessProof} onChange={k("businessProof")} placeholder="29AAAAA0000A1Z5" />
               <div className="flex flex-wrap items-start gap-3">
@@ -711,7 +870,6 @@ export function Step3Occupation() {
         </>
       )}
 
-      {profile !== "Company" && <RentalIncomeQuestion />}
     </div>
   );
 }
@@ -852,15 +1010,19 @@ export function Step5CoApplicant() {
   const k = <K extends keyof Draft>(key: K) => (v: Draft[K]) => set(key, v);
   const pooling = draft.coAppIncomeRelation !== "None";
 
-  // add-on.md §5: a co-applicant only matters when the loan outlives the
-  // banks' age ceiling. Below the threshold the questions are not asked at all.
-  if (!needsCoApplicant(draft)) {
-    const age = ageAtLastEmiFor(draft);
+  // add-on.md §8: the two questions are now triggered independently — age by
+  // the EMI ceiling, income by the applicant's own filed returns.
+  const forAge = needsCoApplicant(draft);
+  const forIncome = needsIncomeCoApplicant(draft);
+  const age = ageAtLastEmiFor(draft);
+
+  if (!forAge && !forIncome) {
     return (
       <p className="text-[0.9375rem] text-ink">
         {age === null
           ? "Add your date of birth in step 1 to see whether a co-applicant is needed."
-          : `You will be ${age} at your last payment, which is inside every bank's age limit. `
+          : `You will be ${age} at your last payment, which is inside every bank's age limit, `
+            + "and your declared income clears the threshold on its own. "
             + "No co-applicant is needed — continue to submit."}
       </p>
     );
@@ -868,35 +1030,58 @@ export function Step5CoApplicant() {
 
   return (
     <div className="flex flex-col gap-6">
-      <Field label="Is anyone joining your application to help meet the age limit?" htmlFor="coAppAgeRelation">
-        <Select id="coAppAgeRelation" value={draft.coAppAgeRelation} onChange={k("coAppAgeRelation")} options={AGE_RELATIONS} />
-      </Field>
+      {forAge && (
+        <Field label="Is anyone joining your application to help meet the age limit?" htmlFor="coAppAgeRelation">
+          <Select id="coAppAgeRelation" value={draft.coAppAgeRelation} onChange={k("coAppAgeRelation")} options={AGE_RELATIONS} />
+        </Field>
+      )}
 
-      <Field label="Is anyone adding their income to yours on this application?" htmlFor="coAppIncomeRelation">
-        <Select id="coAppIncomeRelation" value={draft.coAppIncomeRelation} onChange={k("coAppIncomeRelation")} options={INCOME_RELATIONS} />
-      </Field>
+      {forIncome && (
+        <>
+          <p className="rounded-md bg-bg-raised p-3 text-[0.8125rem] text-ink-muted">
+            Both of your declared tax returns are under
+            ₹{CO_APPLICANT_ITR_THRESHOLD.toLocaleString("en-IN")}. Adding someone
+            else&rsquo;s income to yours can bring the total above what the banks ask for.
+          </p>
 
-      {pooling && (
-        <div className="grid gap-6 sm:grid-cols-3">
-          <Field label="What is that person's full name?" htmlFor="coApplicantName">
-            <TextInput id="coApplicantName" value={draft.coApplicantName} onChange={k("coApplicantName")} />
+          <Field label="Is anyone adding their income to yours on this application?" htmlFor="coAppIncomeRelation">
+            <Select id="coAppIncomeRelation" value={draft.coAppIncomeRelation} onChange={k("coAppIncomeRelation")} options={INCOME_RELATIONS} />
           </Field>
-          <Field label="On which date were they born?" htmlFor="coApplicantDob">
-            <TextInput id="coApplicantDob" type="date" value={draft.coApplicantDob} onChange={k("coApplicantDob")} />
-          </Field>
-          <Field label="Do they work for a company or for themselves?" htmlFor="coApplicantOccupation">
-            <Select
-              id="coApplicantOccupation"
-              value={draft.coApplicantOccupation}
-              onChange={k("coApplicantOccupation")}
-              options={[
-                { value: "Salaried", label: "For a company" },
-                { value: "Self-Employed", label: "For themselves" },
-              ]}
-              placeholder="Choose one"
+        </>
+      )}
+
+      {forIncome && pooling && (
+        <>
+          <div className="grid gap-6 sm:grid-cols-2">
+            <Field label="What is that person's full name?" htmlFor="coApplicantName">
+              <TextInput id="coApplicantName" value={draft.coApplicantName} onChange={k("coApplicantName")} />
+            </Field>
+            <Field label="On which date were they born?" htmlFor="coApplicantDob">
+              <TextInput id="coApplicantDob" type="date" value={draft.coApplicantDob} onChange={k("coApplicantDob")} />
+            </Field>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2">
+            <ItrField
+              id="coApplicantCurrentItr"
+              label="Their Current Year ITR"
+              value={draft.coApplicantCurrentItr}
+              onChange={(v) => set("coApplicantCurrentItr", v)}
             />
-          </Field>
-        </div>
+            <ItrField
+              id="coApplicantPreviousItr"
+              label="Their Previous Year ITR"
+              value={draft.coApplicantPreviousItr}
+              onChange={(v) => set("coApplicantPreviousItr", v)}
+            />
+          </div>
+
+          <p className="rounded-md bg-bg-raised p-3 text-[0.8125rem] text-ink-muted">
+            Combined for the banks:
+            {" "}current year ₹{clubbedCurrentItr(draft).toLocaleString("en-IN")},
+            {" "}previous year ₹{clubbedPreviousItr(draft).toLocaleString("en-IN")}.
+          </p>
+        </>
       )}
     </div>
   );

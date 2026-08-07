@@ -4,7 +4,7 @@ from datetime import date, timedelta
 from typing import Any, Dict, List
 
 from app.constants.limits import MIN_SELF_EMPLOYED_COMBINED_ITR as COMBINED_ITR_FLOOR
-from app.constants.limits import TENANT_CIBIL_OVERLAY
+from app.constants.limits import MIN_SALARIED_MONTHLY_SALARY, TENANT_CIBIL_OVERLAY
 from app.core.exceptions import InvalidPayloadError
 from app.core.logging import logger, redact_pii
 
@@ -82,6 +82,10 @@ WRITE_OFF_TYPE_TO_FLAG = {
 # it does not trigger the guarantor prompt, whatever its premises status.
 GUARANTOR_PROPERTY_STATUSES = frozenset({"RESI_CUM_OFFICE_RENTED"})
 
+# add-on §7: rent became a top-level occupation, so the engine has a third
+# employment branch that scores neither the salary nor the business floors.
+RENTAL_INCOME_OCCUPATION = "Rental Income"
+
 # Bureau rental-income class -> the per-bank policy flag governing it
 # (matrix cols 38-40). NONE/absent means no secondary rental income claimed.
 RENTAL_CLASS_TO_FLAG = {
@@ -112,6 +116,10 @@ BANKS_DISALLOW_EXISTING_CAR_LOAN = frozenset({"IOB", "BOB"})
 BANK_MATRIX_RULES = {
     "BOI": {
         "min_cibil": 701,
+        # The only bank publishing a separate personal-loan floor. Either score
+        # clearing its own threshold is enough (BUR-405); the key's presence is
+        # what switches the rule to an OR, so adding it elsewhere needs no code.
+        "min_cibil_pl": 701,
         "allow_pl_write_off": False,
         "allow_hl_write_off": False,
         "allow_consumer_write_off": False,
@@ -582,9 +590,30 @@ def _evaluate_bank(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> Li
           not inp["currently_overdue"], inp["currently_overdue"], False,
           "Application declined due to active currently-outstanding overdue balances.")
 
-    check("BUR-405", "CIBIL Score", "Credit Bureau Floor",
-          inp["cibil"] >= policy["min_cibil"], inp["cibil"], f">= {policy['min_cibil']}",
-          f"CIBIL score ({inp['cibil']}) is below {code} minimum threshold of {policy['min_cibil']}.")
+    # A bank that publishes a separate personal-loan floor accepts EITHER score.
+    # Data-driven on purpose: a bank gains the OR by adding `min_cibil_pl` to
+    # its policy, and no bank without the key changes behaviour.
+    pl_floor = policy.get("min_cibil_pl")
+    if pl_floor is None:
+        check("BUR-405", "CIBIL Score", "Credit Bureau Floor",
+              inp["cibil"] >= policy["min_cibil"], inp["cibil"], f">= {policy['min_cibil']}",
+              f"CIBIL score ({inp['cibil']}) is below {code} minimum threshold of {policy['min_cibil']}.")
+    else:
+        pl_score = inp["cibil_pl"]
+        pl_clears = pl_score is not None and pl_score >= pl_floor
+        # The PL score only enters the reported value when one was supplied;
+        # otherwise the row would carry a column the applicant never filled.
+        value = f"{inp['cibil']}" if pl_score is None else f"{inp['cibil']} / PL {pl_score}"
+        shortfall = (
+            f"and no personal-loan score was supplied (needs {pl_floor})"
+            if pl_score is None
+            else f"and the personal-loan score ({pl_score}) is below {pl_floor}"
+        )
+        check("BUR-405", "CIBIL Score", "Credit Bureau Floor",
+              inp["cibil"] >= policy["min_cibil"] or pl_clears,
+              value, f">= {policy['min_cibil']} or PL >= {pl_floor}",
+              f"CIBIL score ({inp['cibil']}) is below {code} minimum threshold of "
+              f"{policy['min_cibil']}, {shortfall}.")
 
     # An applicant with no enquiries always passes; one with enquiries is
     # judged against the bank's col-12 permission.
@@ -641,7 +670,17 @@ def _evaluate_bank(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> Li
               f"({inp['rental_income_class']}).")
 
     # --- Employment / income -------------------------------------------------
-    if inp["occupation"] == "Salaried" and "min_salary" in policy:
+    if inp["occupation"] == RENTAL_INCOME_OCCUPATION:
+        # add-on §7: a rentier has no employer and no business, so neither rule
+        # set applies. INC-601 above is what scores this applicant's income; the
+        # age ceiling uses the SALARIED column, the stricter of the two, because
+        # the matrix publishes no ceiling for a rental profile.
+        if "max_age_emi_salaried" in policy:
+            check("DEM-102", "Age at Last EMI (Rental Income)", "Demographics",
+                  inp["age_emi_sal"] <= policy["max_age_emi_salaried"],
+                  inp["age_emi_sal"], f"<= {policy['max_age_emi_salaried']}",
+                  f"Age at final EMI maturity ({inp['age_emi_sal']}) exceeds {code} limit of {policy['max_age_emi_salaried']} yrs.")
+    elif inp["occupation"] == "Salaried" and "min_salary" in policy:
         check("EMP-SAL-202", "Minimum Salary", "Employment - Salaried",
               inp["salary"] >= policy["min_salary"],
               f"Rs {inp['salary']:,.2f}", f">= Rs {policy['min_salary']:,.0f}",
@@ -650,14 +689,17 @@ def _evaluate_bank(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> Li
               inp["salary_mode"] not in ("CASH", "Salary payment mode-Cash"),
               inp["salary_mode"], "Bank Credit",
               "Cash salary payment mode is ineligible. Direct bank credit required.")
-        check("EMP-SAL-204", "Total Work Experience", "Employment - Salaried",
-              inp["work_exp_years"] >= policy["min_total_experience_years"],
-              inp["work_exp_years"], f">= {policy['min_total_experience_years']} yrs",
-              f"Total work experience ({inp['work_exp_years']} yrs) is below {code} minimum ({policy['min_total_experience_years']} yrs).")
-        check("EMP-SAL-205", "Current Company Tenure", "Employment - Salaried",
-              inp["current_company_years"] >= policy["min_current_company_tenure_years"],
-              f"{inp['current_company_years']:.2f} yrs", f">= {policy['min_current_company_tenure_years']} yrs",
-              f"Current-company tenure ({inp['current_company_years']:.2f} yrs) is below {code} minimum ({policy['min_current_company_tenure_years']} yrs).")
+        # add-on §4: government service is not scored on tenure at all. Recorded
+        # as not-applicable rather than as a pass — the bank verified nothing.
+        if not inp["government_employee"]:
+            check("EMP-SAL-204", "Total Work Experience", "Employment - Salaried",
+                  inp["work_exp_years"] >= policy["min_total_experience_years"],
+                  inp["work_exp_years"], f">= {policy['min_total_experience_years']} yrs",
+                  f"Total work experience ({inp['work_exp_years']} yrs) is below {code} minimum ({policy['min_total_experience_years']} yrs).")
+            check("EMP-SAL-205", "Current Company Tenure", "Employment - Salaried",
+                  inp["current_company_years"] >= policy["min_current_company_tenure_years"],
+                  f"{inp['current_company_years']:.2f} yrs", f">= {policy['min_current_company_tenure_years']} yrs",
+                  f"Current-company tenure ({inp['current_company_years']:.2f} yrs) is below {code} minimum ({policy['min_current_company_tenure_years']} yrs).")
         if inp["no_income_proof"]:
             # No-income-proof segment: rejected unless the bank permits it; when
             # permitted, the Form-16 history requirement does not apply.
@@ -775,6 +817,50 @@ def _evaluate_bank(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> Li
     return outcomes
 
 
+def _termination_outcomes(inp: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """add-on §5 / §6: applicant-level gates that end onboarding outright.
+
+    Not bank policy — these bind whatever the matrix says, so they are scored
+    into every bank the same way the tenant overlay is. Emitted only when they
+    FIRE: a gate that did not apply has verified nothing worth reporting.
+    """
+    outcomes: List[Dict[str, Any]] = []
+
+    if inp["occupation"] == "Salaried" and inp["salary"] < MIN_SALARIED_MONTHLY_SALARY:
+        outcomes.append({
+            "rule_id": "TERM-901",
+            "name": "Minimum Monthly Salary",
+            "category": "Onboarding Termination",
+            "passed": False,
+            "value": f"Rs {inp['salary']:,.2f}",
+            "limit": f">= Rs {MIN_SALARIED_MONTHLY_SALARY:,.0f}",
+            "message": (
+                f"Monthly salary (Rs {inp['salary']:,.2f}) is below the Rs "
+                f"{MIN_SALARIED_MONTHLY_SALARY:,.0f} floor required to onboard at all."
+            ),
+        })
+
+    # Farming evidences itself with land and either a return or an income proof,
+    # so it is not asked for a registration number and is not gated on one.
+    if (inp["occupation"] == "Self-Employed"
+            and not inp["is_agriculture"]
+            and not inp["business_proof"]):
+        outcomes.append({
+            "rule_id": "TERM-902",
+            "name": "Business Proof Mandatory",
+            "category": "Onboarding Termination",
+            "passed": False,
+            "value": "Not provided",
+            "limit": "Mandatory",
+            "message": (
+                "A business registration or GST number is mandatory for self-employed "
+                "applicants; onboarding cannot proceed without it."
+            ),
+        })
+
+    return outcomes
+
+
 def _tenant_overlay_outcomes(tenant_id: str, cibil: int) -> List[Dict[str, Any]]:
     """Tenant risk rules in the same outcome shape as a matrix rule.
 
@@ -863,6 +949,9 @@ class BREEngineService:
 
         max_dpd_value = max(_normalize_dpd_history(bureau.get("dpd_history", [])), default=0)
         cibil_score = bureau.get("cibil_score", payload.get("cibil_score", 750))
+        # None when the applicant did not supply one; a bank with a PL floor
+        # then falls back to the headline score alone rather than passing free.
+        cibil_pl_score = bureau.get("cibil_pl_score", payload.get("cibil_pl_score"))
         write_off_amount = bureau.get("write_off_amount", payload.get("write_off_amount", 0.0))
 
         # Resolve write-off product type -> policy flag key (None = unclassified)
@@ -899,6 +988,7 @@ class BREEngineService:
             "age": age,
             "occupation": payload.get("occupation", "Salaried"),
             "cibil": cibil_score,
+            "cibil_pl": cibil_pl_score,
             "max_dpd": max_dpd_value,
             "is_nri": is_nri,
             "nri_stay_years": nri_stay_years,
@@ -914,6 +1004,7 @@ class BREEngineService:
             "work_exp_years": _resolved_work_experience(payload),
             "current_company_years": payload.get("current_company_tenure_months", 99999) / 12.0,
             "no_income_proof": payload.get("no_income_proof_segment", False),
+            "government_employee": payload.get("government_employee", False),
             "form_16_years": payload.get("form_16_years", 2),
             # "Form 16" | "ITR" | "No Income Proof". An ITR proves income
             # without a Form-16 history, so col 55 does not apply to it.
@@ -962,8 +1053,12 @@ class BREEngineService:
         # Tenant-level overlay (not part of the bank matrix). It gates the
         # applicant, not one lender, so it is scored INTO every bank's outcomes:
         # a bank it suppresses has to show the rule that suppressed it.
+        terminations = _termination_outcomes(inp)
         for outcomes in bank_outcomes.values():
             outcomes.extend(_tenant_overlay_outcomes(tenant_id, cibil_score))
+            # Applicant-level gates, so they bind at every bank regardless of
+            # what that bank's own matrix row permits.
+            outcomes.extend(terminations)
 
         # --- Selected-bank verdict ------------------------------------------
         rejection_reasons = [

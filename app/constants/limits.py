@@ -26,6 +26,16 @@ MIN_SELF_EMPLOYED_COMBINED_ITR: float = 600000.0
 MIN_SELF_EMPLOYED_LOAN_AMOUNT: float = 100000.0
 DPD_WRITE_OFF_MAX_TOLERANCE_DAYS: int = 90
 
+# add-on §6: below this the wizard stops at step 3 rather than collecting the
+# remaining steps and rejecting at the end. Distinct from the per-bank
+# `min_salary` column, which decides eligibility; this decides whether there is
+# an application to score at all.
+MIN_SALARIED_MONTHLY_SALARY: float = 25000.0
+
+# add-on §8: the income co-applicant question appears only when BOTH filed ITRs
+# fall below this. Not a bank threshold — it gates the question, not a verdict.
+MIN_CO_APPLICANT_ITR_TRIGGER: float = 100000.0
+
 # Tenant risk overlays layered on top of the bank matrix: tenant -> (rule id,
 # CIBIL floor). Gates the applicant rather than one lender, so it scores at
 # every bank.

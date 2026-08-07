@@ -58,13 +58,14 @@ export function formatAadhaar(digits: string): string {
   return digits.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
 }
 
+// add-on.md §4: two sectors, not five legal forms. Government service is not
+// scored on tenure, so which of the two is chosen changes what step 3 asks.
 export const EMPLOYER_TYPES = [
-  { value: "Employment-Pvt Ltd", label: "Private Limited (Pvt Ltd)" },
-  { value: "Employment-Public Ltd", label: "Public Limited" },
-  { value: "Employment-Govt", label: "Government Service" },
-  { value: "Employment-PSU", label: "Public Sector Undertaking (PSU)" },
-  { value: "Employment-Firm", label: "Partnership / Proprietorship Firm" },
+  { value: "Private Sector", label: "Private sector" },
+  { value: "Government Sector", label: "Government sector" },
 ];
+
+export const GOVERNMENT_SECTOR = "Government Sector";
 
 export const TENURE_BANDS = [
   { value: "0-6m", label: "0 – 6 Months" },
@@ -212,7 +213,8 @@ export const PATTERNS = {
 export function stepForRule(ruleId: string): number {
   if (ruleId.startsWith("DEM-") || ruleId.startsWith("ENT-50")) return 1;
   if (ruleId.startsWith("RES-") || ruleId.startsWith("REL-502")) return 2;
-  if (ruleId.startsWith("EMP-") || ruleId.startsWith("INC-")) return 3;
+  // add-on.md §5/§6: both terminating conditions are answered in step 3.
+  if (ruleId.startsWith("EMP-") || ruleId.startsWith("INC-") || ruleId.startsWith("TERM-")) return 3;
   if (ruleId.startsWith("BUR-") || ruleId.startsWith("EXB-") || ruleId.startsWith("REL-")) return 4;
   if (ruleId.startsWith("COA-")) return 5;
   return 1;
