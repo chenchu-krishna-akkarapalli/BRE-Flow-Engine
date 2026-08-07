@@ -1,0 +1,12 @@
+[package]
+name = "coi-pdf"
+version = "0.1.0"
+edition = "2021"
+[dependencies]
+coi-core = { path = "../coi-core" }
+# Reuses the glyph-metric / CTM content-stream decoder validated against the
+# CIBIL and payslip corpora rather than carrying a third copy of the PDF spec.
+cibil-pdf = { path = "../cibil-pdf" }
+cibil-core = { path = "../cibil-core" }
+lopdf = { workspace = true }
+serde = { workspace = true }

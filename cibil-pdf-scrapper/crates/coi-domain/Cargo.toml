@@ -1,0 +1,9 @@
+[package]
+name = "coi-domain"
+version = "0.1.0"
+edition = "2021"
+[dependencies]
+coi-core = { path = "../coi-core" }
+coi-layout = { path = "../coi-layout" }
+serde = { workspace = true }
+regex = { workspace = true }

@@ -1,0 +1,11 @@
+[package]
+name = "coi-validation"
+version = "0.1.0"
+edition = "2021"
+[dependencies]
+coi-core = { path = "../coi-core" }
+coi-domain = { path = "../coi-domain" }
+regex = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+jsonschema = { workspace = true }

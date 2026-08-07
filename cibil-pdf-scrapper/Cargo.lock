@@ -279,6 +279,81 @@ dependencies = [
 ]
 
 [[package]]
+name = "coi-cli"
+version = "0.1.0"
+dependencies = [
+ "coi-core",
+ "coi-domain",
+ "coi-layout",
+ "coi-parser",
+ "coi-pdf",
+ "coi-validation",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "coi-core"
+version = "0.1.0"
+dependencies = [
+ "lopdf",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
+name = "coi-domain"
+version = "0.1.0"
+dependencies = [
+ "coi-core",
+ "coi-layout",
+ "regex",
+ "serde",
+]
+
+[[package]]
+name = "coi-layout"
+version = "0.1.0"
+dependencies = [
+ "coi-core",
+ "serde",
+]
+
+[[package]]
+name = "coi-parser"
+version = "0.1.0"
+dependencies = [
+ "coi-core",
+ "coi-domain",
+ "coi-layout",
+ "regex",
+ "serde",
+]
+
+[[package]]
+name = "coi-pdf"
+version = "0.1.0"
+dependencies = [
+ "cibil-core",
+ "cibil-pdf",
+ "coi-core",
+ "lopdf",
+ "serde",
+]
+
+[[package]]
+name = "coi-validation"
+version = "0.1.0"
+dependencies = [
+ "coi-core",
+ "coi-domain",
+ "jsonschema",
+ "regex",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "core-foundation-sys"
 version = "0.8.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1114,6 +1189,67 @@ name = "outref"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1a80800c0488c3a21695ea981a54918fbb37abf04f4d0720c453632255e2ff0e"
+
+[[package]]
+name = "payslip-cli"
+version = "0.1.0"
+dependencies = [
+ "payslip-core",
+ "payslip-domain",
+ "payslip-layout",
+ "payslip-parser",
+ "payslip-pdf",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "payslip-core"
+version = "0.1.0"
+dependencies = [
+ "lopdf",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
+name = "payslip-domain"
+version = "0.1.0"
+dependencies = [
+ "payslip-core",
+ "payslip-layout",
+ "serde",
+]
+
+[[package]]
+name = "payslip-layout"
+version = "0.1.0"
+dependencies = [
+ "payslip-core",
+ "serde",
+]
+
+[[package]]
+name = "payslip-parser"
+version = "0.1.0"
+dependencies = [
+ "payslip-core",
+ "payslip-domain",
+ "payslip-layout",
+ "regex",
+ "serde",
+]
+
+[[package]]
+name = "payslip-pdf"
+version = "0.1.0"
+dependencies = [
+ "cibil-core",
+ "cibil-pdf",
+ "lopdf",
+ "payslip-core",
+ "serde",
+]
 
 [[package]]
 name = "percent-encoding"

@@ -12,7 +12,7 @@ use lopdf::{Document, Object};
 use std::borrow::Cow;
 use std::collections::HashMap;
 
-use crate::decoder::{cmaps_for_page, decode_string_with, get_object_dict_pub, to_f32_pub, to_name_string_pub, CMap};
+use crate::decoder::{decode_string_with, get_object_dict_pub, to_f32_pub, to_name_string_pub, CMap};
 
 // Glyph advances are expressed in 1/1000 of the text-space unit.
 const GLYPH_UNITS: f32 = 1000.0;
@@ -252,12 +252,13 @@ fn load_font_metrics(doc: &Document, font_dict: &lopdf::Dictionary) -> FontMetri
     metrics
 }
 
-fn page_fonts(doc: &Document, page_id: (u32, u16)) -> HashMap<String, FontMetrics> {
+/// Font metrics for one resource dictionary — a page's or a form XObject's.
+fn fonts_from_resources(
+    doc: &Document,
+    resources: Option<&lopdf::Dictionary>,
+) -> HashMap<String, FontMetrics> {
     let mut fonts = HashMap::new();
-    let resources = match doc.get_page_resources(page_id) {
-        Ok((Some(resources), _)) => resources,
-        _ => return fonts,
-    };
+    let Some(resources) = resources else { return fonts };
 
     if let Ok(font_obj) = resources.get(b"Font") {
         if let Some(font_dict) = get_object_dict_pub(doc, font_obj) {
@@ -332,25 +333,66 @@ pub fn decode_page_lines(doc: &Document, page_num: u32) -> Result<Vec<RawTextRun
         .nth((page_num - 1) as usize)
         .ok_or_else(|| CibilError::PdfError(format!("Page {} not found", page_num)))?;
 
-    let content_data = doc
-        .get_page_content(page_id)
-        .map_err(|e| CibilError::PdfError(e.to_string()))?;
-    let content = lopdf::content::Content::decode(&content_data)
+    let content_data = page_content(doc, page_id)?;
+    let resources = page_resources(doc, page_id);
+    let page_height = page_height_of(doc, page_id);
+
+    let mut fragments: Vec<Fragment> = Vec::new();
+    collect_fragments(
+        doc,
+        &content_data,
+        resources.as_ref(),
+        Matrix::identity(),
+        page_num,
+        0,
+        &mut fragments,
+    )?;
+
+    Ok(assemble_lines(fragments, page_num, page_height))
+}
+
+// Deepest XObject nesting we will follow. Guards against a malformed document
+// whose forms reference each other in a cycle.
+const MAX_XOBJECT_DEPTH: u8 = 8;
+
+/// Decode one content stream into fragments, recursing through Form XObjects.
+///
+/// Resources travel with the stream: a form carries its own /Font dictionary,
+/// so decoding it against the page's resources would resolve the wrong glyphs.
+#[allow(clippy::too_many_arguments)]
+fn collect_fragments(
+    doc: &Document,
+    content_data: &[u8],
+    resources: Option<&lopdf::Dictionary>,
+    base_ctm: Matrix,
+    page_num: u32,
+    depth: u8,
+    out: &mut Vec<Fragment>,
+) -> Result<()> {
+    let content = lopdf::content::Content::decode(content_data)
         .map_err(|e| CibilError::PdfError(e.to_string()))?;
 
-    let fonts = page_fonts(doc, page_id);
-    let cmaps: HashMap<String, CMap> = cmaps_for_page(doc, page_id);
-    let page_height = page_height_of(doc, page_id);
+    let fonts = fonts_from_resources(doc, resources);
+    let cmaps: HashMap<String, CMap> = cmaps_from_resources(doc, resources);
+
+    if std::env::var("PDF_TRACE").is_ok() {
+        eprintln!(
+            "page {page_num} depth {depth}: ops={} fonts={} cmaps={}",
+            content.operations.len(),
+            fonts.len(),
+            cmaps.len()
+        );
+    }
 
     let font_names: Vec<String> = fonts.keys().cloned().collect();
     let index_of = |name: &str| font_names.iter().position(|candidate| candidate == name);
 
-    let mut ctm = Matrix::identity();
+    let mut ctm = base_ctm;
     let mut stack: Vec<Matrix> = Vec::new();
     let mut text_matrix = Matrix::identity();
     let mut line_matrix = Matrix::identity();
     let mut state = TextState::default();
-    let mut fragments: Vec<Fragment> = Vec::new();
+    let fragments = out;
 
     for operation in content.operations {
         let ops = &operation.operands;
@@ -426,7 +468,7 @@ pub fn decode_page_lines(doc: &Document, page_num: u32) -> Result<Vec<RawTextRun
                 if let Some(Object::String(bytes, _)) = ops.last() {
                     show_text(
                         bytes, &state, &font_names, &fonts, &cmaps, &ctm, &mut text_matrix,
-                        &mut fragments,
+                        fragments,
                     );
                 }
             }
@@ -436,7 +478,7 @@ pub fn decode_page_lines(doc: &Document, page_num: u32) -> Result<Vec<RawTextRun
                         match item {
                             Object::String(bytes, _) => show_text(
                                 bytes, &state, &font_names, &fonts, &cmaps, &ctm,
-                                &mut text_matrix, &mut fragments,
+                                &mut text_matrix, fragments,
                             ),
                             other => {
                                 if let Some(adjust) = to_f32_pub(other) {
@@ -453,12 +495,118 @@ pub fn decode_page_lines(doc: &Document, page_num: u32) -> Result<Vec<RawTextRun
                     }
                 }
             }
+            // Form XObjects carry their own content stream, resources and
+            // /Matrix. Some generators put the entire payslip inside one, so a
+            // decoder that ignores them reports a text PDF as an empty scan.
+            "Do" => {
+                if depth >= MAX_XOBJECT_DEPTH {
+                    continue;
+                }
+                let Some(name) = ops.first().and_then(to_name_string_pub) else { continue };
+                let Some(form) = lookup_xobject(doc, resources, &name) else { continue };
+                if form.dict.get(b"Subtype").ok().and_then(to_name_string_pub).as_deref()
+                    != Some("Form")
+                {
+                    continue;
+                }
+                let Ok(data) = form.decompressed_content() else { continue };
+                let matrix = form
+                    .dict
+                    .get(b"Matrix")
+                    .ok()
+                    .and_then(|o| resolve(doc, o))
+                    .and_then(|o| o.as_array().ok())
+                    .and_then(|a| Matrix::from_operands(a))
+                    .unwrap_or_else(Matrix::identity);
+                let inner = form
+                    .dict
+                    .get(b"Resources")
+                    .ok()
+                    .and_then(|o| get_object_dict_pub(doc, o))
+                    .or(resources);
+
+                let _ = collect_fragments(
+                    doc, &data, inner, matrix.multiply(&ctm), page_num, depth + 1, fragments,
+                );
+            }
             _ => {}
         }
     }
-
-    Ok(assemble_lines(fragments, page_num, page_height))
+    Ok(())
 }
+
+/// Resolve an XObject by resource name, decompressing an indirect /Filter.
+fn lookup_xobject(
+    doc: &Document,
+    resources: Option<&lopdf::Dictionary>,
+    name: &str,
+) -> Option<lopdf::Stream> {
+    let xobjects = resources?.get(b"XObject").ok().and_then(|o| get_object_dict_pub(doc, o))?;
+    let entry = xobjects.get(name.as_bytes()).ok()?;
+    let stream = match entry {
+        Object::Reference(id) => doc.get_object(*id).ok()?.as_stream().ok()?.clone(),
+        Object::Stream(s) => s.clone(),
+        _ => return None,
+    };
+    Some(normalise_stream(doc, stream))
+}
+
+/// Replace indirect /Filter and /Length with their resolved values.
+///
+/// lopdf reads those keys straight off the stream dictionary, so a document
+/// that stores them as references (`/Filter 12 0 R`) is never decompressed and
+/// its content tokenises into garbage rather than failing loudly.
+fn normalise_stream(doc: &Document, mut stream: lopdf::Stream) -> lopdf::Stream {
+    for key in [b"Filter".as_slice(), b"Length".as_slice()] {
+        let resolved = stream
+            .dict
+            .get(key)
+            .ok()
+            .and_then(|o| match o {
+                Object::Reference(id) => doc.get_object(*id).ok().cloned(),
+                _ => None,
+            });
+        if let Some(value) = resolved {
+            stream.dict.set(key.to_vec(), value);
+        }
+    }
+    stream
+}
+
+/// The page's content streams, concatenated, with filters resolved.
+fn page_content(doc: &Document, page_id: (u32, u16)) -> Result<Vec<u8>> {
+    let contents = match doc.get_dictionary(page_id).ok().and_then(|d| d.get(b"Contents").ok()) {
+        Some(obj) => obj.clone(),
+        None => return doc.get_page_content(page_id).map_err(|e| CibilError::PdfError(e.to_string())),
+    };
+
+    let refs: Vec<Object> = match resolve(doc, &contents) {
+        Some(Object::Array(items)) => items.clone(),
+        _ => vec![contents],
+    };
+
+    let mut data = Vec::new();
+    for item in refs {
+        let stream = match &item {
+            Object::Reference(id) => doc.get_object(*id).ok().and_then(|o| o.as_stream().ok()).cloned(),
+            Object::Stream(s) => Some(s.clone()),
+            _ => None,
+        };
+        if let Some(stream) = stream {
+            if let Ok(bytes) = normalise_stream(doc, stream).decompressed_content() {
+                data.extend_from_slice(&bytes);
+                // Streams may end mid-token; a separator keeps the concatenation lexable.
+                data.push(10);
+            }
+        }
+    }
+
+    if data.is_empty() {
+        return doc.get_page_content(page_id).map_err(|e| CibilError::PdfError(e.to_string()));
+    }
+    Ok(data)
+}
+
 
 #[allow(clippy::too_many_arguments)]
 fn show_text(
@@ -599,4 +747,53 @@ fn flush(group: &[Fragment], page_num: u32, page_height: f32) -> RawTextRun<'sta
         font_size: size,
         page_height,
     }
+}
+
+/// /ToUnicode CMaps for one resource dictionary, page or form.
+fn cmaps_from_resources(
+    doc: &Document,
+    resources: Option<&lopdf::Dictionary>,
+) -> HashMap<String, CMap> {
+    let mut cmaps = HashMap::new();
+    let Some(resources) = resources else { return cmaps };
+
+    if let Ok(fonts_obj) = resources.get(b"Font") {
+        if let Some(fonts_dict) = get_object_dict_pub(doc, fonts_obj) {
+            for (key, font_obj) in fonts_dict.iter() {
+                let name = String::from_utf8_lossy(key).into_owned();
+                if let Some(font_dict) = get_object_dict_pub(doc, font_obj) {
+                    if let Ok(to_unicode) = font_dict.get(b"ToUnicode") {
+                        if let Some(stream) = match to_unicode {
+                            Object::Reference(id) => {
+                                doc.get_object(*id).ok().and_then(|o| o.as_stream().ok()).cloned()
+                            }
+                            Object::Stream(s) => Some(s.clone()),
+                            _ => None,
+                        } {
+                            if let Ok(data) = normalise_stream(doc, stream).decompressed_content() {
+                                cmaps.insert(name, CMap::parse(&data));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    cmaps
+}
+
+/// The page's resource dictionary, following an indirect /Resources reference.
+///
+/// lopdf hands back the inline dictionary and any referenced resource object ids
+/// as separate values. Reading only the inline one leaves fonts and /ToUnicode
+/// maps unloaded on every document that stores /Resources by reference, and the
+/// decoder then falls back to raw bytes and emits mojibake rather than failing.
+fn page_resources(doc: &Document, page_id: (u32, u16)) -> Option<lopdf::Dictionary> {
+    let (inline, referenced) = doc.get_page_resources(page_id).ok()?;
+    if let Some(dict) = inline {
+        return Some(dict.clone());
+    }
+    referenced
+        .into_iter()
+        .find_map(|id| doc.get_dictionary(id).ok().cloned())
 }

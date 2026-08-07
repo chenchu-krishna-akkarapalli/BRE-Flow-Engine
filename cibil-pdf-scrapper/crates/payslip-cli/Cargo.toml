@@ -1,0 +1,17 @@
+[package]
+name = "payslip-cli"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "payslip-cli"
+path = "src/main.rs"
+
+[dependencies]
+payslip-core = { path = "../payslip-core" }
+payslip-pdf = { path = "../payslip-pdf" }
+payslip-layout = { path = "../payslip-layout" }
+payslip-domain = { path = "../payslip-domain" }
+payslip-parser = { path = "../payslip-parser" }
+serde = { workspace = true }
+serde_json = { workspace = true }

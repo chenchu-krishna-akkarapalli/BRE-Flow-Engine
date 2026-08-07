@@ -1,0 +1,4112 @@
+{
+  "computation": {
+    "assessee": {
+      "aadhaar": "[Aadhaar Redacted]",
+      "address": "0, Bilari Ahiraula, Burhanpur, Azamgarh, Azamgarh, Uttar Pradesh, 223221",
+      "bank": "HDFC BANK, , A/C NO:18841930002316, Type: Saving, IFSC: HDFC0001884, Prevalidated: Yes, Nominate for Refund: Yes",
+      "date_of_birth": "08/05/1976",
+      "email": "shashiadv520@gmail.com",
+      "fathers_name": "Amrit Singh",
+      "filing_status": "Original",
+      "gender": "Male",
+      "name": "Page 2",
+      "nature_of_business": "Other Services- Other Services N.e.c. (21008), Trade Name: Sanjay Kumar Singh",
+      "pan": "BPVPS3348A",
+      "residential_status": "Resident",
+      "status": "Individual",
+      "ward": "Year Ended"
+    },
+    "assessment_year": {
+      "end": 2025,
+      "start": 2024
+    },
+    "credits": {
+      "advance_tax": null,
+      "self_assessment_140a": null,
+      "tcs": null,
+      "tds": null
+    },
+    "deductions": {
+      "items": [],
+      "total": null
+    },
+    "financial_year": {
+      "end": 2024,
+      "start": 2023
+    },
+    "financial_year_source": "derived",
+    "format": "Rtf",
+    "gross_total_income": {
+      "paise": 69100100,
+      "raw": "6,91,001"
+    },
+    "heads": {
+      "business_profession": {
+        "paise": 68913000,
+        "raw": "6,89,130"
+      },
+      "capital_gains": null,
+      "house_property": null,
+      "other_sources": {
+        "paise": 187100,
+        "raw": "1,871"
+      },
+      "salary": null
+    },
+    "raw": {
+      "lines": [
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 440.0,
+            "x": 40.0,
+            "y": 40.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 440.0,
+              "x": 40.0,
+              "y": 40.0
+            }
+          ],
+          "segments": [
+            "NAME OF ASSESSEE : Sanjay Kumar Singh   A.Y. 2024-2025  PAN : BPVPS3348A    Code :TAX536"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 30.0,
+            "x": 40.0,
+            "y": 54.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 30.0,
+              "x": 40.0,
+              "y": 54.0
+            }
+          ],
+          "segments": [
+            "Page 2"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 180.0,
+            "x": 40.0,
+            "y": 68.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 80.0,
+              "x": 40.0,
+              "y": 68.0
+            },
+            {
+              "height": 12.0,
+              "width": 90.0,
+              "x": 130.0,
+              "y": 68.0
+            }
+          ],
+          "segments": [
+            "Name of Assessee",
+            "Sanjay Kumar Singh"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 145.0,
+            "x": 40.0,
+            "y": 82.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 65.0,
+              "x": 40.0,
+              "y": 82.0
+            },
+            {
+              "height": 12.0,
+              "width": 55.0,
+              "x": 130.0,
+              "y": 82.0
+            }
+          ],
+          "segments": [
+            "Father's Name",
+            "Amrit Singh"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 450.0,
+            "x": 40.0,
+            "y": 96.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 35.0,
+              "x": 40.0,
+              "y": 96.0
+            },
+            {
+              "height": 12.0,
+              "width": 360.0,
+              "x": 130.0,
+              "y": 96.0
+            }
+          ],
+          "segments": [
+            "Address",
+            "0, Bilari Ahiraula, Burhanpur, Azamgarh, Azamgarh, Uttar Pradesh, 223221"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 360.0,
+            "x": 40.0,
+            "y": 110.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 75.0,
+              "x": 40.0,
+              "y": 110.0
+            },
+            {
+              "height": 12.0,
+              "width": 270.0,
+              "x": 130.0,
+              "y": 110.0
+            }
+          ],
+          "segments": [
+            "Address(Office)",
+            "0, Bilari B.o, Bilari, Azamgarh, Uttar Pradesh, 223221"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 200.0,
+            "x": 40.0,
+            "y": 124.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 30.0,
+              "x": 40.0,
+              "y": 124.0
+            },
+            {
+              "height": 12.0,
+              "width": 110.0,
+              "x": 130.0,
+              "y": 124.0
+            }
+          ],
+          "segments": [
+            "E-Mail",
+            "shashiadv520@gmail.com"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 315.0,
+            "x": 40.0,
+            "y": 138.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 30.0,
+              "x": 40.0,
+              "y": 138.0
+            },
+            {
+              "height": 12.0,
+              "width": 50.0,
+              "x": 130.0,
+              "y": 138.0
+            },
+            {
+              "height": 12.0,
+              "width": 75.0,
+              "x": 220.0,
+              "y": 138.0
+            },
+            {
+              "height": 12.0,
+              "width": 45.0,
+              "x": 310.0,
+              "y": 138.0
+            }
+          ],
+          "segments": [
+            "Status",
+            "Individual",
+            "Assessment Year",
+            "2024-2025"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 315.0,
+            "x": 40.0,
+            "y": 152.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 20.0,
+              "x": 40.0,
+              "y": 152.0
+            },
+            {
+              "height": 12.0,
+              "width": 50.0,
+              "x": 220.0,
+              "y": 152.0
+            },
+            {
+              "height": 12.0,
+              "width": 45.0,
+              "x": 310.0,
+              "y": 152.0
+            }
+          ],
+          "segments": [
+            "Ward",
+            "Year Ended",
+            "31.3.2024"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 320.0,
+            "x": 40.0,
+            "y": 166.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 15.0,
+              "x": 40.0,
+              "y": 166.0
+            },
+            {
+              "height": 12.0,
+              "width": 50.0,
+              "x": 130.0,
+              "y": 166.0
+            },
+            {
+              "height": 12.0,
+              "width": 65.0,
+              "x": 220.0,
+              "y": 166.0
+            },
+            {
+              "height": 12.0,
+              "width": 50.0,
+              "x": 310.0,
+              "y": 166.0
+            }
+          ],
+          "segments": [
+            "PAN",
+            "BPVPS3348A",
+            "Date of Birth",
+            "08/05/1976"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 290.0,
+            "x": 40.0,
+            "y": 180.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 90.0,
+              "x": 40.0,
+              "y": 180.0
+            },
+            {
+              "height": 12.0,
+              "width": 40.0,
+              "x": 130.0,
+              "y": 180.0
+            },
+            {
+              "height": 12.0,
+              "width": 30.0,
+              "x": 220.0,
+              "y": 180.0
+            },
+            {
+              "height": 12.0,
+              "width": 20.0,
+              "x": 310.0,
+              "y": 180.0
+            }
+          ],
+          "segments": [
+            "Residential Status",
+            "Resident",
+            "Gender",
+            "Male"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 475.0,
+            "x": 40.0,
+            "y": 194.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 90.0,
+              "x": 40.0,
+              "y": 194.0
+            },
+            {
+              "height": 12.0,
+              "width": 385.0,
+              "x": 130.0,
+              "y": 194.0
+            }
+          ],
+          "segments": [
+            "Nature of Business",
+            "Other Services- Other Services N.e.c. (21008), Trade Name: Sanjay Kumar Singh"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 130.0,
+            "x": 40.0,
+            "y": 208.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 65.0,
+              "x": 40.0,
+              "y": 208.0
+            },
+            {
+              "height": 12.0,
+              "width": 40.0,
+              "x": 130.0,
+              "y": 208.0
+            }
+          ],
+          "segments": [
+            "Filing Status",
+            "Original"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 130.0,
+            "x": 40.0,
+            "y": 222.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 130.0,
+              "x": 40.0,
+              "y": 222.0
+            },
+            {
+              "height": 12.0,
+              "width": 30.0,
+              "x": 130.0,
+              "y": 222.0
+            }
+          ],
+          "segments": [
+            "Last Year Return Filed u/s",
+            "Normal"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 325.0,
+            "x": 40.0,
+            "y": 236.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 55.0,
+              "x": 40.0,
+              "y": 236.0
+            },
+            {
+              "height": 12.0,
+              "width": 60.0,
+              "x": 130.0,
+              "y": 236.0
+            },
+            {
+              "height": 12.0,
+              "width": 145.0,
+              "x": 220.0,
+              "y": 236.0
+            },
+            {
+              "height": 12.0,
+              "width": 50.0,
+              "x": 310.0,
+              "y": 236.0
+            }
+          ],
+          "segments": [
+            "Aadhaar No:",
+            "[Aadhaar Redacted]",
+            "Mobile No Linked with Aadhaar",
+            "9455433700"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 650.0,
+            "x": 40.0,
+            "y": 250.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 45.0,
+              "x": 40.0,
+              "y": 250.0
+            },
+            {
+              "height": 12.0,
+              "width": 560.0,
+              "x": 130.0,
+              "y": 250.0
+            }
+          ],
+          "segments": [
+            "Bank Name",
+            "HDFC BANK, , A/C NO:18841930002316, Type: Saving, IFSC: HDFC0001884, Prevalidated: Yes, Nominate for Refund: Yes"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 160.0,
+            "x": 40.0,
+            "y": 264.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 25.0,
+              "x": 40.0,
+              "y": 264.0
+            },
+            {
+              "height": 12.0,
+              "width": 70.0,
+              "x": 130.0,
+              "y": 264.0
+            }
+          ],
+          "segments": [
+            "Tele:",
+            "Mob:9455433700"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 225.0,
+            "x": 40.0,
+            "y": 278.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 65.0,
+              "x": 40.0,
+              "y": 278.0
+            },
+            {
+              "height": 12.0,
+              "width": 135.0,
+              "x": 130.0,
+              "y": 278.0
+            }
+          ],
+          "segments": [
+            "Tele(Office):",
+            "9455433700,0 Mob:9455433700"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 340.0,
+            "x": 40.0,
+            "y": 292.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 340.0,
+              "x": 40.0,
+              "y": 292.0
+            }
+          ],
+          "segments": [
+            "Computation of Total Income [As per Section 115BAC (New Tax Regime)]"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 35.0,
+            "x": 40.0,
+            "y": 306.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 35.0,
+              "x": 40.0,
+              "y": 306.0
+            }
+          ],
+          "segments": [
+            "Caution"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 100.0,
+            "x": 40.0,
+            "y": 320.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 100.0,
+              "x": 40.0,
+              "y": 320.0
+            }
+          ],
+          "segments": [
+            "1. 26AS not imported"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 150.0,
+            "x": 40.0,
+            "y": 334.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 150.0,
+              "x": 40.0,
+              "y": 334.0
+            }
+          ],
+          "segments": [
+            "2. AIS/TIS report not imported"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 245.0,
+            "x": 40.0,
+            "y": 348.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 245.0,
+              "x": 40.0,
+              "y": 348.0
+            },
+            {
+              "height": 12.0,
+              "width": 40.0,
+              "x": 130.0,
+              "y": 348.0
+            }
+          ],
+          "segments": [
+            "Income from Business or Profession (Chapter IV D)",
+            "6,89,130"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 310.0,
+            "x": 40.0,
+            "y": 362.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 75.0,
+              "x": 40.0,
+              "y": 362.0
+            },
+            {
+              "height": 12.0,
+              "width": 40.0,
+              "x": 310.0,
+              "y": 362.0
+            }
+          ],
+          "segments": [
+            "Income u/s 44AD",
+            "6,89,130"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 200.0,
+            "x": 40.0,
+            "y": 376.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 200.0,
+              "x": 40.0,
+              "y": 376.0
+            },
+            {
+              "height": 12.0,
+              "width": 25.0,
+              "x": 130.0,
+              "y": 376.0
+            }
+          ],
+          "segments": [
+            "Income from Other Sources (Chapter IV F)",
+            "1,871"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 295.0,
+            "x": 40.0,
+            "y": 390.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 145.0,
+              "x": 40.0,
+              "y": 390.0
+            },
+            {
+              "height": 12.0,
+              "width": 25.0,
+              "x": 310.0,
+              "y": 390.0
+            }
+          ],
+          "segments": [
+            "Interest From Saving Bank A/c",
+            "1,871"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 490.0,
+            "x": 40.0,
+            "y": 404.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 90.0,
+              "x": 40.0,
+              "y": 404.0
+            },
+            {
+              "height": 12.0,
+              "width": 40.0,
+              "x": 490.0,
+              "y": 404.0
+            }
+          ],
+          "segments": [
+            "Gross Total Income",
+            "6,91,001"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 155.0,
+            "x": 40.0,
+            "y": 418.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 155.0,
+              "x": 40.0,
+              "y": 418.0
+            }
+          ],
+          "segments": [
+            "Less: Deductions (Chapter VI-A)"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 8.0,
+            "x": 490.0,
+            "y": 432.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 490.0,
+              "y": 432.0
+            }
+          ],
+          "segments": [
+            "0"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 490.0,
+            "x": 40.0,
+            "y": 446.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 60.0,
+              "x": 40.0,
+              "y": 446.0
+            },
+            {
+              "height": 12.0,
+              "width": 40.0,
+              "x": 490.0,
+              "y": 446.0
+            }
+          ],
+          "segments": [
+            "Total Income",
+            "6,91,001"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 490.0,
+            "x": 40.0,
+            "y": 460.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 95.0,
+              "x": 40.0,
+              "y": 460.0
+            },
+            {
+              "height": 12.0,
+              "width": 40.0,
+              "x": 490.0,
+              "y": 460.0
+            }
+          ],
+          "segments": [
+            "Round off u/s 288 A",
+            "6,91,000"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 415.0,
+            "x": 40.0,
+            "y": 474.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 415.0,
+              "x": 40.0,
+              "y": 474.0
+            }
+          ],
+          "segments": [
+            "Adjusted total income (ATI) is not more than Rs. 20 lakhs hence AMT not applicable."
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 300.0,
+            "x": 40.0,
+            "y": 488.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 180.0,
+              "x": 40.0,
+              "y": 488.0
+            },
+            {
+              "height": 12.0,
+              "width": 30.0,
+              "x": 310.0,
+              "y": 488.0
+            }
+          ],
+          "segments": [
+            "Tax Due (Exemption Limit Rs. 300000)",
+            "24,100"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 300.0,
+            "x": 40.0,
+            "y": 502.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 70.0,
+              "x": 40.0,
+              "y": 502.0
+            },
+            {
+              "height": 12.0,
+              "width": 30.0,
+              "x": 310.0,
+              "y": 502.0
+            }
+          ],
+          "segments": [
+            "Rebate u/s 87A",
+            "24,100"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 8.0,
+            "x": 310.0,
+            "y": 516.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 310.0,
+              "y": 516.0
+            }
+          ],
+          "segments": [
+            "0"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 278.0,
+            "x": 40.0,
+            "y": 530.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 55.0,
+              "x": 40.0,
+              "y": 530.0
+            },
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 310.0,
+              "y": 530.0
+            }
+          ],
+          "segments": [
+            "Tax Payable",
+            "0"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 245.0,
+            "x": 40.0,
+            "y": 544.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 245.0,
+              "x": 40.0,
+              "y": 544.0
+            }
+          ],
+          "segments": [
+            "Tax calculation on Normal income of Rs 6,91,000/-"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 125.0,
+            "x": 40.0,
+            "y": 558.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 125.0,
+              "x": 40.0,
+              "y": 558.0
+            }
+          ],
+          "segments": [
+            "Exemption Limit :3,00,000"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 255.0,
+            "x": 40.0,
+            "y": 572.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 255.0,
+              "x": 40.0,
+              "y": 572.0
+            }
+          ],
+          "segments": [
+            "Tax on (6,00,000 -3,00,000) = 3,00,000 @5% = 15,000"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 240.0,
+            "x": 40.0,
+            "y": 586.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 240.0,
+              "x": 40.0,
+              "y": 586.0
+            }
+          ],
+          "segments": [
+            "Tax on 6,00,001 to 6,91,000= 91,000 @10% = 9,100"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 90.0,
+            "x": 40.0,
+            "y": 600.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 90.0,
+              "x": 40.0,
+              "y": 600.0
+            }
+          ],
+          "segments": [
+            "Total Tax = 24,100"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 1115.0,
+            "x": 40.0,
+            "y": 614.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 1115.0,
+              "x": 40.0,
+              "y": 614.0
+            }
+          ],
+          "segments": [
+            "You have tick the option of Manual interest in prepaid taxes. Now you are required to change interest manually. If you want auto calculation of the inerest, untick the option in prepaid taxes[Middle Left side of the screen]"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 125.0,
+            "x": 40.0,
+            "y": 628.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 125.0,
+              "x": 40.0,
+              "y": 628.0
+            }
+          ],
+          "segments": [
+            "Income Declared u/s 44 AD"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 135.0,
+            "x": 40.0,
+            "y": 642.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 115.0,
+              "x": 40.0,
+              "y": 642.0
+            },
+            {
+              "height": 12.0,
+              "width": 45.0,
+              "x": 130.0,
+              "y": 642.0
+            }
+          ],
+          "segments": [
+            "Gross Receipts/Turnover",
+            "895350.00"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 215.0,
+            "x": 40.0,
+            "y": 656.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 55.0,
+              "x": 40.0,
+              "y": 656.0
+            },
+            {
+              "height": 12.0,
+              "width": 45.0,
+              "x": 130.0,
+              "y": 656.0
+            },
+            {
+              "height": 12.0,
+              "width": 35.0,
+              "x": 220.0,
+              "y": 656.0
+            }
+          ],
+          "segments": [
+            "Book Profit",
+            "689130.00",
+            "76.97 %"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 210.0,
+            "x": 40.0,
+            "y": 670.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 65.0,
+              "x": 40.0,
+              "y": 670.0
+            },
+            {
+              "height": 12.0,
+              "width": 40.0,
+              "x": 130.0,
+              "y": 670.0
+            },
+            {
+              "height": 12.0,
+              "width": 30.0,
+              "x": 220.0,
+              "y": 670.0
+            }
+          ],
+          "segments": [
+            "Deemed Profit",
+            "71628.00",
+            "8.00 %"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 215.0,
+            "x": 40.0,
+            "y": 684.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 95.0,
+              "x": 40.0,
+              "y": 684.0
+            },
+            {
+              "height": 12.0,
+              "width": 45.0,
+              "x": 130.0,
+              "y": 684.0
+            },
+            {
+              "height": 12.0,
+              "width": 35.0,
+              "x": 220.0,
+              "y": 684.0
+            }
+          ],
+          "segments": [
+            "Net Profit Declared",
+            "689130.00",
+            "76.00 %"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 95.0,
+            "x": 40.0,
+            "y": 698.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 95.0,
+              "x": 40.0,
+              "y": 698.0
+            }
+          ],
+          "segments": [
+            "Bank Account Detail"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 725.0,
+            "x": 40.0,
+            "y": 712.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 20.0,
+              "x": 40.0,
+              "y": 712.0
+            },
+            {
+              "height": 12.0,
+              "width": 20.0,
+              "x": 130.0,
+              "y": 712.0
+            },
+            {
+              "height": 12.0,
+              "width": 35.0,
+              "x": 220.0,
+              "y": 712.0
+            },
+            {
+              "height": 12.0,
+              "width": 50.0,
+              "x": 310.0,
+              "y": 712.0
+            },
+            {
+              "height": 12.0,
+              "width": 45.0,
+              "x": 400.0,
+              "y": 712.0
+            },
+            {
+              "height": 12.0,
+              "width": 20.0,
+              "x": 490.0,
+              "y": 712.0
+            },
+            {
+              "height": 12.0,
+              "width": 60.0,
+              "x": 580.0,
+              "y": 712.0
+            },
+            {
+              "height": 12.0,
+              "width": 95.0,
+              "x": 670.0,
+              "y": 712.0
+            }
+          ],
+          "segments": [
+            "S.N.",
+            "Bank",
+            "Address",
+            "Account No",
+            "IFSC Code",
+            "Type",
+            "Prevalidated",
+            "Nominate for refund"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 645.0,
+            "x": 40.0,
+            "y": 726.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 40.0,
+              "y": 726.0
+            },
+            {
+              "height": 12.0,
+              "width": 45.0,
+              "x": 130.0,
+              "y": 726.0
+            },
+            {
+              "height": 12.0,
+              "width": 70.0,
+              "x": 310.0,
+              "y": 726.0
+            },
+            {
+              "height": 12.0,
+              "width": 55.0,
+              "x": 400.0,
+              "y": 726.0
+            },
+            {
+              "height": 12.0,
+              "width": 75.0,
+              "x": 490.0,
+              "y": 726.0
+            },
+            {
+              "height": 12.0,
+              "width": 15.0,
+              "x": 580.0,
+              "y": 726.0
+            },
+            {
+              "height": 12.0,
+              "width": 15.0,
+              "x": 670.0,
+              "y": 726.0
+            }
+          ],
+          "segments": [
+            "1",
+            "HDFC BANK",
+            "18841930002316",
+            "HDFC0001884",
+            "Saving(Primary)",
+            "Yes",
+            "Yes"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 240.0,
+            "x": 40.0,
+            "y": 740.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 240.0,
+              "x": 40.0,
+              "y": 740.0
+            }
+          ],
+          "segments": [
+            "Detail of assets and income given in return form"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 65.0,
+            "x": 130.0,
+            "y": 754.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 65.0,
+              "x": 130.0,
+              "y": 754.0
+            }
+          ],
+          "segments": [
+            "Balance Sheet"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 210.0,
+            "x": 40.0,
+            "y": 768.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 55.0,
+              "x": 40.0,
+              "y": 768.0
+            },
+            {
+              "height": 12.0,
+              "width": 30.0,
+              "x": 220.0,
+              "y": 768.0
+            }
+          ],
+          "segments": [
+            "Liabilities",
+            "Assets"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 570.0,
+            "x": 40.0,
+            "y": 782.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 20.0,
+              "x": 40.0,
+              "y": 782.0
+            },
+            {
+              "height": 12.0,
+              "width": 55.0,
+              "x": 130.0,
+              "y": 782.0
+            },
+            {
+              "height": 12.0,
+              "width": 30.0,
+              "x": 220.0,
+              "y": 782.0
+            },
+            {
+              "height": 12.0,
+              "width": 20.0,
+              "x": 400.0,
+              "y": 782.0
+            },
+            {
+              "height": 12.0,
+              "width": 55.0,
+              "x": 490.0,
+              "y": 782.0
+            },
+            {
+              "height": 12.0,
+              "width": 30.0,
+              "x": 580.0,
+              "y": 782.0
+            }
+          ],
+          "segments": [
+            "S.No",
+            "Particulars",
+            "Amount",
+            "S.No",
+            "Particulars",
+            "Amount"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 548.0,
+            "x": 40.0,
+            "y": 796.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 10.0,
+              "x": 40.0,
+              "y": 796.0
+            },
+            {
+              "height": 12.0,
+              "width": 110.0,
+              "x": 130.0,
+              "y": 796.0
+            },
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 220.0,
+              "y": 796.0
+            },
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 400.0,
+              "y": 796.0
+            },
+            {
+              "height": 12.0,
+              "width": 60.0,
+              "x": 490.0,
+              "y": 796.0
+            },
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 580.0,
+              "y": 796.0
+            }
+          ],
+          "segments": [
+            "1.",
+            "Partner/Member capital",
+            "0",
+            "1",
+            "Fixed Assets",
+            "0"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 548.0,
+            "x": 40.0,
+            "y": 810.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 10.0,
+              "x": 40.0,
+              "y": 810.0
+            },
+            {
+              "height": 12.0,
+              "width": 65.0,
+              "x": 130.0,
+              "y": 810.0
+            },
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 220.0,
+              "y": 810.0
+            },
+            {
+              "height": 12.0,
+              "width": 10.0,
+              "x": 400.0,
+              "y": 810.0
+            },
+            {
+              "height": 12.0,
+              "width": 55.0,
+              "x": 490.0,
+              "y": 810.0
+            },
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 580.0,
+              "y": 810.0
+            }
+          ],
+          "segments": [
+            "2.",
+            "Secured Loans",
+            "0",
+            "2.",
+            "Inventories",
+            "0"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 548.0,
+            "x": 40.0,
+            "y": 824.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 10.0,
+              "x": 40.0,
+              "y": 824.0
+            },
+            {
+              "height": 12.0,
+              "width": 75.0,
+              "x": 130.0,
+              "y": 824.0
+            },
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 220.0,
+              "y": 824.0
+            },
+            {
+              "height": 12.0,
+              "width": 10.0,
+              "x": 400.0,
+              "y": 824.0
+            },
+            {
+              "height": 12.0,
+              "width": 70.0,
+              "x": 490.0,
+              "y": 824.0
+            },
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 580.0,
+              "y": 824.0
+            }
+          ],
+          "segments": [
+            "3.",
+            "Unsecured Loans",
+            "0",
+            "3.",
+            "Sundry debtors",
+            "0"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 548.0,
+            "x": 40.0,
+            "y": 838.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 10.0,
+              "x": 40.0,
+              "y": 838.0
+            },
+            {
+              "height": 12.0,
+              "width": 40.0,
+              "x": 130.0,
+              "y": 838.0
+            },
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 220.0,
+              "y": 838.0
+            },
+            {
+              "height": 12.0,
+              "width": 10.0,
+              "x": 400.0,
+              "y": 838.0
+            },
+            {
+              "height": 12.0,
+              "width": 90.0,
+              "x": 490.0,
+              "y": 838.0
+            },
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 580.0,
+              "y": 838.0
+            }
+          ],
+          "segments": [
+            "4.",
+            "Advances",
+            "0",
+            "4.",
+            "Balance with banks",
+            "0"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 560.0,
+            "x": 40.0,
+            "y": 852.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 10.0,
+              "x": 40.0,
+              "y": 852.0
+            },
+            {
+              "height": 12.0,
+              "width": 80.0,
+              "x": 130.0,
+              "y": 852.0
+            },
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 220.0,
+              "y": 852.0
+            },
+            {
+              "height": 12.0,
+              "width": 10.0,
+              "x": 400.0,
+              "y": 852.0
+            },
+            {
+              "height": 12.0,
+              "width": 60.0,
+              "x": 490.0,
+              "y": 852.0
+            },
+            {
+              "height": 12.0,
+              "width": 20.0,
+              "x": 580.0,
+              "y": 852.0
+            }
+          ],
+          "segments": [
+            "5.",
+            "Sundry Creditors",
+            "0",
+            "5.",
+            "Cash in hand",
+            "4310"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 548.0,
+            "x": 40.0,
+            "y": 866.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 10.0,
+              "x": 40.0,
+              "y": 866.0
+            },
+            {
+              "height": 12.0,
+              "width": 85.0,
+              "x": 130.0,
+              "y": 866.0
+            },
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 220.0,
+              "y": 866.0
+            },
+            {
+              "height": 12.0,
+              "width": 10.0,
+              "x": 400.0,
+              "y": 866.0
+            },
+            {
+              "height": 12.0,
+              "width": 85.0,
+              "x": 490.0,
+              "y": 866.0
+            },
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 580.0,
+              "y": 866.0
+            }
+          ],
+          "segments": [
+            "6.",
+            "Other liabilities",
+            "0",
+            "6.",
+            "Loan and advances",
+            "0"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 188.0,
+            "x": 400.0,
+            "y": 880.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 10.0,
+              "x": 400.0,
+              "y": 880.0
+            },
+            {
+              "height": 12.0,
+              "width": 60.0,
+              "x": 490.0,
+              "y": 880.0
+            },
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 580.0,
+              "y": 880.0
+            }
+          ],
+          "segments": [
+            "7.",
+            "Other Assets",
+            "0"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 470.0,
+            "x": 130.0,
+            "y": 894.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 25.0,
+              "x": 130.0,
+              "y": 894.0
+            },
+            {
+              "height": 12.0,
+              "width": 8.0,
+              "x": 220.0,
+              "y": 894.0
+            },
+            {
+              "height": 12.0,
+              "width": 25.0,
+              "x": 490.0,
+              "y": 894.0
+            },
+            {
+              "height": 12.0,
+              "width": 20.0,
+              "x": 580.0,
+              "y": 894.0
+            }
+          ],
+          "segments": [
+            "Total",
+            "0",
+            "Total",
+            "4310"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 45.0,
+            "x": 130.0,
+            "y": 908.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 45.0,
+              "x": 130.0,
+              "y": 908.0
+            }
+          ],
+          "segments": [
+            "Signature"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 100.0,
+            "x": 130.0,
+            "y": 922.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 100.0,
+              "x": 130.0,
+              "y": 922.0
+            }
+          ],
+          "segments": [
+            "(SANJAY KUMAR SINGH)"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 75.0,
+            "x": 130.0,
+            "y": 936.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 75.0,
+              "x": 130.0,
+              "y": 936.0
+            }
+          ],
+          "segments": [
+            "Date-10.03.2026"
+          ]
+        },
+        {
+          "bbox": {
+            "height": 12.0,
+            "width": 190.0,
+            "x": 40.0,
+            "y": 950.0
+          },
+          "page": 1,
+          "segment_boxes": [
+            {
+              "height": 12.0,
+              "width": 190.0,
+              "x": 40.0,
+              "y": 950.0
+            }
+          ],
+          "segments": [
+            "CompuTax : TAX536 [Sanjay Kumar Singh]"
+          ]
+        }
+      ],
+      "page_count": 1,
+      "table": {
+        "columns": [
+          [
+            40.0,
+            1155.0
+          ],
+          [
+            130.0,
+            690.0
+          ],
+          [
+            220.0,
+            365.0
+          ],
+          [
+            310.0,
+            380.0
+          ],
+          [
+            400.0,
+            455.0
+          ],
+          [
+            490.0,
+            580.0
+          ],
+          [
+            580.0,
+            640.0
+          ],
+          [
+            670.0,
+            765.0
+          ]
+        ],
+        "rows": [
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 440.0,
+                  "x": 40.0,
+                  "y": 40.0
+                },
+                "column": 0,
+                "text": "NAME OF ASSESSEE : Sanjay Kumar Singh   A.Y. 2024-2025  PAN : BPVPS3348A    Code :TAX536"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 30.0,
+                  "x": 40.0,
+                  "y": 54.0
+                },
+                "column": 0,
+                "text": "Page 2"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 80.0,
+                  "x": 40.0,
+                  "y": 68.0
+                },
+                "column": 0,
+                "text": "Name of Assessee"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 90.0,
+                  "x": 130.0,
+                  "y": 68.0
+                },
+                "column": 1,
+                "text": "Sanjay Kumar Singh"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 65.0,
+                  "x": 40.0,
+                  "y": 82.0
+                },
+                "column": 0,
+                "text": "Father's Name"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 55.0,
+                  "x": 130.0,
+                  "y": 82.0
+                },
+                "column": 1,
+                "text": "Amrit Singh"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 35.0,
+                  "x": 40.0,
+                  "y": 96.0
+                },
+                "column": 0,
+                "text": "Address"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 360.0,
+                  "x": 130.0,
+                  "y": 96.0
+                },
+                "column": 1,
+                "text": "0, Bilari Ahiraula, Burhanpur, Azamgarh, Azamgarh, Uttar Pradesh, 223221"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 75.0,
+                  "x": 40.0,
+                  "y": 110.0
+                },
+                "column": 0,
+                "text": "Address(Office)"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 270.0,
+                  "x": 130.0,
+                  "y": 110.0
+                },
+                "column": 1,
+                "text": "0, Bilari B.o, Bilari, Azamgarh, Uttar Pradesh, 223221"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 30.0,
+                  "x": 40.0,
+                  "y": 124.0
+                },
+                "column": 0,
+                "text": "E-Mail"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 110.0,
+                  "x": 130.0,
+                  "y": 124.0
+                },
+                "column": 1,
+                "text": "shashiadv520@gmail.com"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 30.0,
+                  "x": 40.0,
+                  "y": 138.0
+                },
+                "column": 0,
+                "text": "Status"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 50.0,
+                  "x": 130.0,
+                  "y": 138.0
+                },
+                "column": 1,
+                "text": "Individual"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 75.0,
+                  "x": 220.0,
+                  "y": 138.0
+                },
+                "column": 2,
+                "text": "Assessment Year"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 45.0,
+                  "x": 310.0,
+                  "y": 138.0
+                },
+                "column": 3,
+                "text": "2024-2025"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 20.0,
+                  "x": 40.0,
+                  "y": 152.0
+                },
+                "column": 0,
+                "text": "Ward"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 50.0,
+                  "x": 220.0,
+                  "y": 152.0
+                },
+                "column": 2,
+                "text": "Year Ended"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 45.0,
+                  "x": 310.0,
+                  "y": 152.0
+                },
+                "column": 3,
+                "text": "31.3.2024"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 15.0,
+                  "x": 40.0,
+                  "y": 166.0
+                },
+                "column": 0,
+                "text": "PAN"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 50.0,
+                  "x": 130.0,
+                  "y": 166.0
+                },
+                "column": 1,
+                "text": "BPVPS3348A"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 65.0,
+                  "x": 220.0,
+                  "y": 166.0
+                },
+                "column": 2,
+                "text": "Date of Birth"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 50.0,
+                  "x": 310.0,
+                  "y": 166.0
+                },
+                "column": 3,
+                "text": "08/05/1976"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 90.0,
+                  "x": 40.0,
+                  "y": 180.0
+                },
+                "column": 0,
+                "text": "Residential Status"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 40.0,
+                  "x": 130.0,
+                  "y": 180.0
+                },
+                "column": 1,
+                "text": "Resident"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 30.0,
+                  "x": 220.0,
+                  "y": 180.0
+                },
+                "column": 2,
+                "text": "Gender"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 20.0,
+                  "x": 310.0,
+                  "y": 180.0
+                },
+                "column": 3,
+                "text": "Male"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 90.0,
+                  "x": 40.0,
+                  "y": 194.0
+                },
+                "column": 0,
+                "text": "Nature of Business"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 385.0,
+                  "x": 130.0,
+                  "y": 194.0
+                },
+                "column": 1,
+                "text": "Other Services- Other Services N.e.c. (21008), Trade Name: Sanjay Kumar Singh"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 65.0,
+                  "x": 40.0,
+                  "y": 208.0
+                },
+                "column": 0,
+                "text": "Filing Status"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 40.0,
+                  "x": 130.0,
+                  "y": 208.0
+                },
+                "column": 1,
+                "text": "Original"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 130.0,
+                  "x": 40.0,
+                  "y": 222.0
+                },
+                "column": 0,
+                "text": "Last Year Return Filed u/s"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 30.0,
+                  "x": 130.0,
+                  "y": 222.0
+                },
+                "column": 1,
+                "text": "Normal"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 55.0,
+                  "x": 40.0,
+                  "y": 236.0
+                },
+                "column": 0,
+                "text": "Aadhaar No:"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 60.0,
+                  "x": 130.0,
+                  "y": 236.0
+                },
+                "column": 1,
+                "text": "[Aadhaar Redacted]"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 145.0,
+                  "x": 220.0,
+                  "y": 236.0
+                },
+                "column": 2,
+                "text": "Mobile No Linked with Aadhaar"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 50.0,
+                  "x": 310.0,
+                  "y": 236.0
+                },
+                "column": 3,
+                "text": "9455433700"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 45.0,
+                  "x": 40.0,
+                  "y": 250.0
+                },
+                "column": 0,
+                "text": "Bank Name"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 560.0,
+                  "x": 130.0,
+                  "y": 250.0
+                },
+                "column": 1,
+                "text": "HDFC BANK, , A/C NO:18841930002316, Type: Saving, IFSC: HDFC0001884, Prevalidated: Yes, Nominate for Refund: Yes"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 25.0,
+                  "x": 40.0,
+                  "y": 264.0
+                },
+                "column": 0,
+                "text": "Tele:"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 70.0,
+                  "x": 130.0,
+                  "y": 264.0
+                },
+                "column": 1,
+                "text": "Mob:9455433700"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 65.0,
+                  "x": 40.0,
+                  "y": 278.0
+                },
+                "column": 0,
+                "text": "Tele(Office):"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 135.0,
+                  "x": 130.0,
+                  "y": 278.0
+                },
+                "column": 1,
+                "text": "9455433700,0 Mob:9455433700"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 340.0,
+                  "x": 40.0,
+                  "y": 292.0
+                },
+                "column": 0,
+                "text": "Computation of Total Income [As per Section 115BAC (New Tax Regime)]"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 35.0,
+                  "x": 40.0,
+                  "y": 306.0
+                },
+                "column": 0,
+                "text": "Caution"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 100.0,
+                  "x": 40.0,
+                  "y": 320.0
+                },
+                "column": 0,
+                "text": "1. 26AS not imported"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 150.0,
+                  "x": 40.0,
+                  "y": 334.0
+                },
+                "column": 0,
+                "text": "2. AIS/TIS report not imported"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 245.0,
+                  "x": 40.0,
+                  "y": 348.0
+                },
+                "column": 0,
+                "text": "Income from Business or Profession (Chapter IV D)"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 40.0,
+                  "x": 130.0,
+                  "y": 348.0
+                },
+                "column": 1,
+                "text": "6,89,130"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 75.0,
+                  "x": 40.0,
+                  "y": 362.0
+                },
+                "column": 0,
+                "text": "Income u/s 44AD"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 40.0,
+                  "x": 310.0,
+                  "y": 362.0
+                },
+                "column": 3,
+                "text": "6,89,130"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 200.0,
+                  "x": 40.0,
+                  "y": 376.0
+                },
+                "column": 0,
+                "text": "Income from Other Sources (Chapter IV F)"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 25.0,
+                  "x": 130.0,
+                  "y": 376.0
+                },
+                "column": 1,
+                "text": "1,871"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 145.0,
+                  "x": 40.0,
+                  "y": 390.0
+                },
+                "column": 0,
+                "text": "Interest From Saving Bank A/c"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 25.0,
+                  "x": 310.0,
+                  "y": 390.0
+                },
+                "column": 3,
+                "text": "1,871"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 90.0,
+                  "x": 40.0,
+                  "y": 404.0
+                },
+                "column": 0,
+                "text": "Gross Total Income"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 40.0,
+                  "x": 490.0,
+                  "y": 404.0
+                },
+                "column": 5,
+                "text": "6,91,001"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 155.0,
+                  "x": 40.0,
+                  "y": 418.0
+                },
+                "column": 0,
+                "text": "Less: Deductions (Chapter VI-A)"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 490.0,
+                  "y": 432.0
+                },
+                "column": 5,
+                "text": "0"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 60.0,
+                  "x": 40.0,
+                  "y": 446.0
+                },
+                "column": 0,
+                "text": "Total Income"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 40.0,
+                  "x": 490.0,
+                  "y": 446.0
+                },
+                "column": 5,
+                "text": "6,91,001"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 95.0,
+                  "x": 40.0,
+                  "y": 460.0
+                },
+                "column": 0,
+                "text": "Round off u/s 288 A"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 40.0,
+                  "x": 490.0,
+                  "y": 460.0
+                },
+                "column": 5,
+                "text": "6,91,000"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 415.0,
+                  "x": 40.0,
+                  "y": 474.0
+                },
+                "column": 0,
+                "text": "Adjusted total income (ATI) is not more than Rs. 20 lakhs hence AMT not applicable."
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 180.0,
+                  "x": 40.0,
+                  "y": 488.0
+                },
+                "column": 0,
+                "text": "Tax Due (Exemption Limit Rs. 300000)"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 30.0,
+                  "x": 310.0,
+                  "y": 488.0
+                },
+                "column": 3,
+                "text": "24,100"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 70.0,
+                  "x": 40.0,
+                  "y": 502.0
+                },
+                "column": 0,
+                "text": "Rebate u/s 87A"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 30.0,
+                  "x": 310.0,
+                  "y": 502.0
+                },
+                "column": 3,
+                "text": "24,100"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 310.0,
+                  "y": 516.0
+                },
+                "column": 3,
+                "text": "0"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 55.0,
+                  "x": 40.0,
+                  "y": 530.0
+                },
+                "column": 0,
+                "text": "Tax Payable"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 310.0,
+                  "y": 530.0
+                },
+                "column": 3,
+                "text": "0"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 245.0,
+                  "x": 40.0,
+                  "y": 544.0
+                },
+                "column": 0,
+                "text": "Tax calculation on Normal income of Rs 6,91,000/-"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 125.0,
+                  "x": 40.0,
+                  "y": 558.0
+                },
+                "column": 0,
+                "text": "Exemption Limit :3,00,000"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 255.0,
+                  "x": 40.0,
+                  "y": 572.0
+                },
+                "column": 0,
+                "text": "Tax on (6,00,000 -3,00,000) = 3,00,000 @5% = 15,000"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 240.0,
+                  "x": 40.0,
+                  "y": 586.0
+                },
+                "column": 0,
+                "text": "Tax on 6,00,001 to 6,91,000= 91,000 @10% = 9,100"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 90.0,
+                  "x": 40.0,
+                  "y": 600.0
+                },
+                "column": 0,
+                "text": "Total Tax = 24,100"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 1115.0,
+                  "x": 40.0,
+                  "y": 614.0
+                },
+                "column": 0,
+                "text": "You have tick the option of Manual interest in prepaid taxes. Now you are required to change interest manually. If you want auto calculation of the inerest, untick the option in prepaid taxes[Middle Left side of the screen]"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 125.0,
+                  "x": 40.0,
+                  "y": 628.0
+                },
+                "column": 0,
+                "text": "Income Declared u/s 44 AD"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 115.0,
+                  "x": 40.0,
+                  "y": 642.0
+                },
+                "column": 0,
+                "text": "Gross Receipts/Turnover"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 45.0,
+                  "x": 130.0,
+                  "y": 642.0
+                },
+                "column": 1,
+                "text": "895350.00"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 55.0,
+                  "x": 40.0,
+                  "y": 656.0
+                },
+                "column": 0,
+                "text": "Book Profit"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 45.0,
+                  "x": 130.0,
+                  "y": 656.0
+                },
+                "column": 1,
+                "text": "689130.00"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 35.0,
+                  "x": 220.0,
+                  "y": 656.0
+                },
+                "column": 2,
+                "text": "76.97 %"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 65.0,
+                  "x": 40.0,
+                  "y": 670.0
+                },
+                "column": 0,
+                "text": "Deemed Profit"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 40.0,
+                  "x": 130.0,
+                  "y": 670.0
+                },
+                "column": 1,
+                "text": "71628.00"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 30.0,
+                  "x": 220.0,
+                  "y": 670.0
+                },
+                "column": 2,
+                "text": "8.00 %"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 95.0,
+                  "x": 40.0,
+                  "y": 684.0
+                },
+                "column": 0,
+                "text": "Net Profit Declared"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 45.0,
+                  "x": 130.0,
+                  "y": 684.0
+                },
+                "column": 1,
+                "text": "689130.00"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 35.0,
+                  "x": 220.0,
+                  "y": 684.0
+                },
+                "column": 2,
+                "text": "76.00 %"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 95.0,
+                  "x": 40.0,
+                  "y": 698.0
+                },
+                "column": 0,
+                "text": "Bank Account Detail"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 20.0,
+                  "x": 40.0,
+                  "y": 712.0
+                },
+                "column": 0,
+                "text": "S.N."
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 20.0,
+                  "x": 130.0,
+                  "y": 712.0
+                },
+                "column": 1,
+                "text": "Bank"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 35.0,
+                  "x": 220.0,
+                  "y": 712.0
+                },
+                "column": 2,
+                "text": "Address"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 50.0,
+                  "x": 310.0,
+                  "y": 712.0
+                },
+                "column": 3,
+                "text": "Account No"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 45.0,
+                  "x": 400.0,
+                  "y": 712.0
+                },
+                "column": 4,
+                "text": "IFSC Code"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 20.0,
+                  "x": 490.0,
+                  "y": 712.0
+                },
+                "column": 5,
+                "text": "Type"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 60.0,
+                  "x": 580.0,
+                  "y": 712.0
+                },
+                "column": 6,
+                "text": "Prevalidated"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 95.0,
+                  "x": 670.0,
+                  "y": 712.0
+                },
+                "column": 7,
+                "text": "Nominate for refund"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 40.0,
+                  "y": 726.0
+                },
+                "column": 0,
+                "text": "1"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 45.0,
+                  "x": 130.0,
+                  "y": 726.0
+                },
+                "column": 1,
+                "text": "HDFC BANK"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 70.0,
+                  "x": 310.0,
+                  "y": 726.0
+                },
+                "column": 3,
+                "text": "18841930002316"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 55.0,
+                  "x": 400.0,
+                  "y": 726.0
+                },
+                "column": 4,
+                "text": "HDFC0001884"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 75.0,
+                  "x": 490.0,
+                  "y": 726.0
+                },
+                "column": 5,
+                "text": "Saving(Primary)"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 15.0,
+                  "x": 580.0,
+                  "y": 726.0
+                },
+                "column": 6,
+                "text": "Yes"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 15.0,
+                  "x": 670.0,
+                  "y": 726.0
+                },
+                "column": 7,
+                "text": "Yes"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 240.0,
+                  "x": 40.0,
+                  "y": 740.0
+                },
+                "column": 0,
+                "text": "Detail of assets and income given in return form"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 65.0,
+                  "x": 130.0,
+                  "y": 754.0
+                },
+                "column": 1,
+                "text": "Balance Sheet"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 55.0,
+                  "x": 40.0,
+                  "y": 768.0
+                },
+                "column": 0,
+                "text": "Liabilities"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 30.0,
+                  "x": 220.0,
+                  "y": 768.0
+                },
+                "column": 2,
+                "text": "Assets"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 20.0,
+                  "x": 40.0,
+                  "y": 782.0
+                },
+                "column": 0,
+                "text": "S.No"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 55.0,
+                  "x": 130.0,
+                  "y": 782.0
+                },
+                "column": 1,
+                "text": "Particulars"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 30.0,
+                  "x": 220.0,
+                  "y": 782.0
+                },
+                "column": 2,
+                "text": "Amount"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 20.0,
+                  "x": 400.0,
+                  "y": 782.0
+                },
+                "column": 4,
+                "text": "S.No"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 55.0,
+                  "x": 490.0,
+                  "y": 782.0
+                },
+                "column": 5,
+                "text": "Particulars"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 30.0,
+                  "x": 580.0,
+                  "y": 782.0
+                },
+                "column": 6,
+                "text": "Amount"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 10.0,
+                  "x": 40.0,
+                  "y": 796.0
+                },
+                "column": 0,
+                "text": "1."
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 110.0,
+                  "x": 130.0,
+                  "y": 796.0
+                },
+                "column": 1,
+                "text": "Partner/Member capital"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 220.0,
+                  "y": 796.0
+                },
+                "column": 2,
+                "text": "0"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 400.0,
+                  "y": 796.0
+                },
+                "column": 4,
+                "text": "1"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 60.0,
+                  "x": 490.0,
+                  "y": 796.0
+                },
+                "column": 5,
+                "text": "Fixed Assets"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 580.0,
+                  "y": 796.0
+                },
+                "column": 6,
+                "text": "0"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 10.0,
+                  "x": 40.0,
+                  "y": 810.0
+                },
+                "column": 0,
+                "text": "2."
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 65.0,
+                  "x": 130.0,
+                  "y": 810.0
+                },
+                "column": 1,
+                "text": "Secured Loans"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 220.0,
+                  "y": 810.0
+                },
+                "column": 2,
+                "text": "0"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 10.0,
+                  "x": 400.0,
+                  "y": 810.0
+                },
+                "column": 4,
+                "text": "2."
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 55.0,
+                  "x": 490.0,
+                  "y": 810.0
+                },
+                "column": 5,
+                "text": "Inventories"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 580.0,
+                  "y": 810.0
+                },
+                "column": 6,
+                "text": "0"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 10.0,
+                  "x": 40.0,
+                  "y": 824.0
+                },
+                "column": 0,
+                "text": "3."
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 75.0,
+                  "x": 130.0,
+                  "y": 824.0
+                },
+                "column": 1,
+                "text": "Unsecured Loans"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 220.0,
+                  "y": 824.0
+                },
+                "column": 2,
+                "text": "0"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 10.0,
+                  "x": 400.0,
+                  "y": 824.0
+                },
+                "column": 4,
+                "text": "3."
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 70.0,
+                  "x": 490.0,
+                  "y": 824.0
+                },
+                "column": 5,
+                "text": "Sundry debtors"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 580.0,
+                  "y": 824.0
+                },
+                "column": 6,
+                "text": "0"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 10.0,
+                  "x": 40.0,
+                  "y": 838.0
+                },
+                "column": 0,
+                "text": "4."
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 40.0,
+                  "x": 130.0,
+                  "y": 838.0
+                },
+                "column": 1,
+                "text": "Advances"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 220.0,
+                  "y": 838.0
+                },
+                "column": 2,
+                "text": "0"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 10.0,
+                  "x": 400.0,
+                  "y": 838.0
+                },
+                "column": 4,
+                "text": "4."
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 90.0,
+                  "x": 490.0,
+                  "y": 838.0
+                },
+                "column": 5,
+                "text": "Balance with banks"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 580.0,
+                  "y": 838.0
+                },
+                "column": 6,
+                "text": "0"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 10.0,
+                  "x": 40.0,
+                  "y": 852.0
+                },
+                "column": 0,
+                "text": "5."
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 80.0,
+                  "x": 130.0,
+                  "y": 852.0
+                },
+                "column": 1,
+                "text": "Sundry Creditors"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 220.0,
+                  "y": 852.0
+                },
+                "column": 2,
+                "text": "0"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 10.0,
+                  "x": 400.0,
+                  "y": 852.0
+                },
+                "column": 4,
+                "text": "5."
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 60.0,
+                  "x": 490.0,
+                  "y": 852.0
+                },
+                "column": 5,
+                "text": "Cash in hand"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 20.0,
+                  "x": 580.0,
+                  "y": 852.0
+                },
+                "column": 6,
+                "text": "4310"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 10.0,
+                  "x": 40.0,
+                  "y": 866.0
+                },
+                "column": 0,
+                "text": "6."
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 85.0,
+                  "x": 130.0,
+                  "y": 866.0
+                },
+                "column": 1,
+                "text": "Other liabilities"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 220.0,
+                  "y": 866.0
+                },
+                "column": 2,
+                "text": "0"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 10.0,
+                  "x": 400.0,
+                  "y": 866.0
+                },
+                "column": 4,
+                "text": "6."
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 85.0,
+                  "x": 490.0,
+                  "y": 866.0
+                },
+                "column": 5,
+                "text": "Loan and advances"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 580.0,
+                  "y": 866.0
+                },
+                "column": 6,
+                "text": "0"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 10.0,
+                  "x": 400.0,
+                  "y": 880.0
+                },
+                "column": 4,
+                "text": "7."
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 60.0,
+                  "x": 490.0,
+                  "y": 880.0
+                },
+                "column": 5,
+                "text": "Other Assets"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 580.0,
+                  "y": 880.0
+                },
+                "column": 6,
+                "text": "0"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 25.0,
+                  "x": 130.0,
+                  "y": 894.0
+                },
+                "column": 1,
+                "text": "Total"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 8.0,
+                  "x": 220.0,
+                  "y": 894.0
+                },
+                "column": 2,
+                "text": "0"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 25.0,
+                  "x": 490.0,
+                  "y": 894.0
+                },
+                "column": 5,
+                "text": "Total"
+              },
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 20.0,
+                  "x": 580.0,
+                  "y": 894.0
+                },
+                "column": 6,
+                "text": "4310"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 45.0,
+                  "x": 130.0,
+                  "y": 908.0
+                },
+                "column": 1,
+                "text": "Signature"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 100.0,
+                  "x": 130.0,
+                  "y": 922.0
+                },
+                "column": 1,
+                "text": "(SANJAY KUMAR SINGH)"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 75.0,
+                  "x": 130.0,
+                  "y": 936.0
+                },
+                "column": 1,
+                "text": "Date-10.03.2026"
+              }
+            ],
+            "page": 1
+          },
+          {
+            "cells": [
+              {
+                "bbox": {
+                  "height": 12.0,
+                  "width": 190.0,
+                  "x": 40.0,
+                  "y": 950.0
+                },
+                "column": 0,
+                "text": "CompuTax : TAX536 [Sanjay Kumar Singh]"
+              }
+            ],
+            "page": 1
+          }
+        ]
+      }
+    },
+    "regime": "115BAC (New Tax Regime)",
+    "rounded_total_income": {
+      "paise": 69100000,
+      "raw": "6,91,000"
+    },
+    "source": "sanjay kr singh Computation-2024-25.rtf (1).doc",
+    "tax": {
+      "health_education_cess": null,
+      "interest_234a": null,
+      "interest_234b": null,
+      "interest_234c": null,
+      "net_tax_payable": {
+        "paise": 0,
+        "raw": "0"
+      },
+      "rebate_87a": {
+        "paise": 2410000,
+        "raw": "24,100"
+      },
+      "relief": null,
+      "surcharge": null,
+      "tax_due": {
+        "paise": 2410000,
+        "raw": "24,100"
+      },
+      "total_tax": {
+        "paise": 2410000,
+        "raw": "24,100"
+      }
+    },
+    "total_income": {
+      "paise": 69100100,
+      "raw": "6,91,001"
+    }
+  },
+  "schema_errors": [],
+  "validation": {
+    "findings": [
+      {
+        "message": "AY 2024-25 stated; FY 2023-24 derived from it, not cross-checked",
+        "rule": "AY_FY_CONSISTENCY",
+        "severity": "skipped"
+      },
+      {
+        "message": "GTI 691001.00 equals the sum of 2 stated heads",
+        "rule": "GTI_EQUALS_HEADS",
+        "severity": "skipped"
+      },
+      {
+        "message": "total income 691001.00 = GTI 691001.00 - VI-A 0.00",
+        "rule": "TTI_EQUALS_GTI_MINUS_VIA",
+        "severity": "skipped"
+      },
+      {
+        "message": "net tax payable 0.00 reconciles",
+        "rule": "NET_TAX_RECONCILES",
+        "severity": "skipped"
+      },
+      {
+        "message": "PAN well-formed, entity code 'P'",
+        "rule": "PAN_STRUCTURE",
+        "severity": "skipped"
+      },
+      {
+        "message": "Aadhaar present and redacted",
+        "rule": "AADHAAR_REDACTED",
+        "severity": "skipped"
+      }
+    ],
+    "source": "sanjay kr singh Computation-2024-25.rtf (1).doc"
+  }
+}

@@ -1,0 +1,11 @@
+[package]
+name = "payslip-parser"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+payslip-core = { path = "../payslip-core" }
+payslip-layout = { path = "../payslip-layout" }
+payslip-domain = { path = "../payslip-domain" }
+regex = { workspace = true }
+serde = { workspace = true }
