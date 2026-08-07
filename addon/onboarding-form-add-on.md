@@ -20,6 +20,14 @@ When a bank has both a CIBIL score threshold and a CIBIL PL score threshold, the
 - This must be generic/future-proof: if additional banks add a CIBIL PL parameter later, the same OR logic should automatically apply to them without additional code changes.
 - Rule of thumb: **if either score (CIBIL or CIBIL PL) passes, the customer should not be rejected for failing the other score.**
 
+**As implemented (2026-08-07):** the bank carrying the CIBIL PL parameter is **BOI**, at
+**CIBIL ≥ 701 OR CIBIL PL ≥ 701**. The 720/701 figures in the example above are illustrative
+and match no bank in the sheet; BOI's two floors are equal, so the OR changes an outcome in
+exactly one band — CIBIL below 701 with a PL score at 701 or above. Every other bank is
+unchanged. The parameter lives in a `CIBIL PL Score` column in
+`bank_Individual_Eligibility_Matrix.xlsx`, blank for the other seven; filling a cell and its
+`min_cibil_pl` key is all a further bank needs, with no rule code to write.
+
 ---
 
 ## Bug 2: Move NRI Fields to Step 3, Restrict Visibility to Salaried
@@ -157,13 +165,52 @@ Under Self-employed/Salaried flow, there's a question **"Do you earn any rent fr
    - Show **only** when age at last EMI is more than 60 (unchanged trigger, now decoupled from income condition).
 
 2. **Co-applicant for income**
-   - Show when **both** Current ITR amount **and** Previous ITR amount are **less than ₹1,00,000**.
+   - Show when **either** Current ITR amount **or** Previous ITR amount is **less than ₹1,00,000**.
+     > **Superseded 2026-08-07 by Bug 9.** This clause originally read "**both** … **and** …".
+     > The stricter reading hid the question from the applicants it exists for: someone
+     > declaring ₹95,000 current and ₹4,00,000 previous has exactly the weak year that
+     > clubbing covers, and was never offered a co-applicant. Bug 9 specifies **either**
+     > for the self-employed flow; that is now the single rule on both screens.
    - Display with the existing option set.
    - If the applicant selects **any option other than "None" / "No one"**:
      - Show additional fields: Co-applicant name, DOB, Co-applicant's Current ITR, Co-applicant's Previous ITR.
 
-3. **Income clubbing:**
+3. **Which step asks the question**
+   - The **self-employed** flow asks in **Step 3**, directly beneath the two ITR amounts (Bug 9).
+   - Every other flow asks in **Step 5**.
+   - It is asked in exactly one place per applicant. Both screens read and write the same
+     answer, so asking twice could only produce two views of it that disagree — whichever
+     screen was edited last would silently win.
+
+4. **Income clubbing:**
    - Applicant's and co-applicant's income should be **clubbed** using **both Current ITR and Previous ITR** values.
    - Send the clubbed income to the evaluation/parameters check **after final evaluation**, so the parameters sheet is validated against the combined amount.
+   - Pooling applies only while the question is still being asked: editing the ITR amounts
+     back above ₹1,00,000 retracts it, rather than leaving a co-applicant's income clubbed
+     into a total the applicant is no longer shown.
+
+---
+
+## Bug 9: Co-Applicant for Income Not Showing for Self-Employed (Step 3)
+
+**Current behavior:**
+In Step 3, when the applicant selects **Self-employed** and fills in Current Year ITR and Previous Year ITR, the **"Co-applicant for income"** question — with categories Father, Mother, Sister, Brother, Son, Daughter — is not appearing at all, even when ITR values are low.
+
+**Required change:**
+
+1. **Trigger condition:**
+   After the self-employed applicant fills in Current ITR and Previous ITR amounts, show **"Co-applicant for income"** if **either** amount is less than ₹1,00,000.
+
+2. **Co-applicant for income field:** shown with the existing category options — Father, Mother, Sister, Brother, Son, Daughter.
+
+3. **On selecting a category:** ask for the co-applicant's Name, Date of Birth, Current Year ITR and Previous Year ITR.
+
+4. **Final validation:**
+   Cumulate the Current ITR amounts and the Previous ITR amounts of applicant and co-applicant, and validate the combined totals against the parameters in the Excel sheet.
+
+**Resolution of the open question in this bug's note:** the two conditions were *not*
+intentionally separate. Bug 8's "both" was the error and has been corrected above; **either**
+is now the single rule for every flow. The farming branch fills the same two ITR fields, so
+the Step 3 trigger reaches it as well.
 
 ---

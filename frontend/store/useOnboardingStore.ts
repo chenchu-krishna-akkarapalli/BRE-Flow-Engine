@@ -276,13 +276,31 @@ export function applicantItrs(draft: Draft): { current: number; previous: number
   return null;
 }
 
-// Shown when BOTH declared returns fall below the threshold. Undeclared income
-// does not trigger it: there is no figure to judge as too low.
-export function needsIncomeCoApplicant(draft: Draft): boolean {
+// One rule, asked on whichever screen owns the applicant's ITR amounts.
+//
+// EITHER year falling short triggers it (add-on.md bug 9). The stricter "both
+// years" reading in bug 8 hid the question from the applicants who most need
+// it: someone at 95,000 current and 400,000 previous has a weak year the
+// clubbing exists to cover, and would never have been offered a co-applicant.
+// Undeclared income does not trigger it — there is no figure to judge as low.
+function incomeIsShort(draft: Draft): boolean {
   const itrs = applicantItrs(draft);
   if (itrs === null) return false;
   return itrs.current < CO_APPLICANT_ITR_THRESHOLD
-    && itrs.previous < CO_APPLICANT_ITR_THRESHOLD;
+    || itrs.previous < CO_APPLICANT_ITR_THRESHOLD;
+}
+
+// Step 3 asks the self-employed flow, the moment the two ITR amounts are on
+// screen. Step 5 asks everyone else.
+export function needsIncomeCoApplicantInStep3(draft: Draft): boolean {
+  return profileTypeFor(draft) === "Self-Employed" && incomeIsShort(draft);
+}
+
+// Self-employed is excluded because step 3 already asked. There is one answer
+// in the draft, so asking twice could only produce two views of it that
+// disagree — whichever screen the applicant edited last would silently win.
+export function needsIncomeCoApplicant(draft: Draft): boolean {
+  return profileTypeFor(draft) !== "Self-Employed" && incomeIsShort(draft);
 }
 
 function pooledItr(draft: Draft, key: "coApplicantCurrentItr" | "coApplicantPreviousItr"): number {
@@ -516,10 +534,14 @@ function buildBanking(d: Draft): BankingStep {
 }
 
 function buildCoApplicant(d: Draft): CoApplicantStep {
-  const pooling = d.coAppIncomeRelation !== "None";
+  // Income is pooled only while the question is actually being asked. Editing
+  // the ITR amounts back above the threshold retracts the pooling rather than
+  // leaving a co-applicant's income clubbed into a total nobody is still shown.
+  const asked = needsIncomeCoApplicantInStep3(d) || needsIncomeCoApplicant(d);
+  const pooling = asked && d.coAppIncomeRelation !== "None";
   return {
     coAppAgeRelation: d.coAppAgeRelation as never,
-    coAppIncomeRelation: d.coAppIncomeRelation as never,
+    coAppIncomeRelation: (pooling ? d.coAppIncomeRelation : "None") as never,
     coApplicantName: pooling ? d.coApplicantName : undefined,
     coApplicantDob: pooling ? d.coApplicantDob : undefined,
     // add-on.md §8 no longer asks for it, so it is usually absent. Sent through

@@ -32,8 +32,10 @@ DPD_WRITE_OFF_MAX_TOLERANCE_DAYS: int = 90
 # an application to score at all.
 MIN_SALARIED_MONTHLY_SALARY: float = 25000.0
 
-# add-on §8: the income co-applicant question appears only when BOTH filed ITRs
-# fall below this. Not a bank threshold — it gates the question, not a verdict.
+# add-on §8 as corrected by bug 9: the income co-applicant question appears when
+# EITHER filed ITR falls below this. Not a bank threshold — it gates the
+# question, not a verdict, so the wizard owns the comparison and the API only
+# has to accept and club whatever the question produced.
 MIN_CO_APPLICANT_ITR_TRIGGER: float = 100000.0
 
 # Tenant risk overlays layered on top of the bank matrix: tenant -> (rule id,

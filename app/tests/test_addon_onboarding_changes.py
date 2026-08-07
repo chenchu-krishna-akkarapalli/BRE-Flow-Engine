@@ -437,3 +437,66 @@ def test_the_income_trigger_threshold_is_a_named_constant():
     # The wizard shows the income co-applicant question below this figure; the
     # backend does not gate on it, so this guards the two from drifting apart.
     assert MIN_CO_APPLICANT_ITR_TRIGGER == 100_000.0
+
+
+# --------------------------------------------------------------------------- #
+# Bug 9 — the self-employed flow asks for the income co-applicant in step 3
+# --------------------------------------------------------------------------- #
+
+
+def _pooled(**over: Any) -> Dict[str, Any]:
+    return {
+        "coAppIncomeRelation": "Father",
+        "coApplicantName": "Anil Sharma", "coApplicantDob": "1965-03-10",
+        "coApplicantCurrentItr": 400_000.0, "coApplicantPreviousItr": 400_000.0,
+        **over,
+    }
+
+
+@pytest.mark.parametrize(
+    "current, previous",
+    [
+        (90_000.0, 90_000.0),   # both short
+        (90_000.0, 400_000.0),  # only the current year is short
+        (400_000.0, 90_000.0),  # only the previous year is short
+    ],
+)
+def test_a_self_employed_applicant_may_pool_income_on_either_short_year(current, previous):
+    """Bug 9 triggers on EITHER year, so all three shapes must be poolable.
+
+    The trigger itself lives in the wizard; what the API must guarantee is that
+    every one of these submissions is accepted and clubbed, because a payload
+    the wizard can now produce must not 422.
+    """
+    payload = _form(
+        occupation=_self_employed(currentITRAmount=current, prevITRAmount=previous),
+        co_applicant=_pooled(),
+    ).to_engine_payload()
+
+    assert payload["current_itr"] == current + 400_000.0
+    assert payload["previous_itr"] == previous + 400_000.0
+    assert payload["income_clubbed"] is True
+
+
+def test_clubbing_lifts_a_self_employed_applicant_over_the_bank_itr_floors():
+    own = 90_000.0
+    alone = _evaluate(_form(occupation=_self_employed(currentITRAmount=own, prevITRAmount=own)))
+    assert alone["bank_eligibility"]["BOI"] is False
+
+    pooled = _evaluate(_form(
+        occupation=_self_employed(currentITRAmount=own, prevITRAmount=own),
+        co_applicant=_pooled(),
+    ))
+    assert pooled["bank_eligibility"]["BOI"] is True
+    # The floors were scored against the combined amount, not the applicant's.
+    failed = {r["rule_id"] for r in pooled["evaluation_report"]["BOI"]["failed_rules"]}
+    assert "EMP-SE-302" not in failed and "EMP-SE-303" not in failed
+
+
+def test_a_farmer_who_filed_may_also_pool_income():
+    # Farming fills the same two ITR fields, so bug 9's trigger reaches it.
+    payload = _form(
+        occupation=_agriculture(currentITRAmount=90_000.0, prevITRAmount=90_000.0),
+        co_applicant=_pooled(),
+    ).to_engine_payload()
+    assert payload["current_itr"] == 490_000.0

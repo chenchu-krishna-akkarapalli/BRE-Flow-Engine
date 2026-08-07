@@ -17,8 +17,9 @@ import { DocumentUpload } from "@/components/DocumentUpload";
 import { VerifyField } from "@/components/VerifyField";
 import {
   CO_APPLICANT_ITR_THRESHOLD, LOAN_TENOR_YEARS, RENTAL_DOC_IN_BANK, RENTAL_DOC_WITH_ITR,
-  ageAtLastEmiFor, clubbedCurrentItr, clubbedPreviousItr, isAgriculture,
+  ageAtLastEmiFor, applicantItrs, clubbedCurrentItr, clubbedPreviousItr, isAgriculture,
   isResiCumOfficeRented, needsCoApplicant, needsIncomeCoApplicant,
+  needsIncomeCoApplicantInStep3,
   profileTypeFor, useOnboardingStore,
 } from "@/store/useOnboardingStore";
 import type { Draft } from "@/store/useOnboardingStore";
@@ -846,6 +847,10 @@ export function Step3Occupation() {
         </>
       )}
 
+      {/* Bug 9: asked here, as soon as the two ITR amounts are on screen. The
+          farming branch fills the same two fields, so it is covered too. */}
+      {needsIncomeCoApplicantInStep3(draft) && <IncomeCoApplicant />}
+
       {profile === "Company" && (
         <>
           <Field label="On which date was the company incorporated?" htmlFor="companyEstablishmentDate">
@@ -1005,52 +1010,35 @@ export function Step4Banking() {
   );
 }
 
-export function Step5CoApplicant() {
+// The income co-applicant question and the fields it reveals.
+//
+// One component, rendered by step 3 for the self-employed flow and by step 5
+// for everyone else — the answer is a single set of draft fields, so two
+// separately maintained copies could only drift into disagreeing about it.
+function IncomeCoApplicant() {
   const { draft, set } = useField();
   const k = <K extends keyof Draft>(key: K) => (v: Draft[K]) => set(key, v);
   const pooling = draft.coAppIncomeRelation !== "None";
-
-  // add-on.md §8: the two questions are now triggered independently — age by
-  // the EMI ceiling, income by the applicant's own filed returns.
-  const forAge = needsCoApplicant(draft);
-  const forIncome = needsIncomeCoApplicant(draft);
-  const age = ageAtLastEmiFor(draft);
-
-  if (!forAge && !forIncome) {
-    return (
-      <p className="text-[0.9375rem] text-ink">
-        {age === null
-          ? "Add your date of birth in step 1 to see whether a co-applicant is needed."
-          : `You will be ${age} at your last payment, which is inside every bank's age limit, `
-            + "and your declared income clears the threshold on its own. "
-            + "No co-applicant is needed — continue to submit."}
-      </p>
-    );
-  }
+  const itrs = applicantItrs(draft);
+  const bothShort =
+    itrs !== null
+    && itrs.current < CO_APPLICANT_ITR_THRESHOLD
+    && itrs.previous < CO_APPLICANT_ITR_THRESHOLD;
 
   return (
-    <div className="flex flex-col gap-6">
-      {forAge && (
-        <Field label="Is anyone joining your application to help meet the age limit?" htmlFor="coAppAgeRelation">
-          <Select id="coAppAgeRelation" value={draft.coAppAgeRelation} onChange={k("coAppAgeRelation")} options={AGE_RELATIONS} />
-        </Field>
-      )}
+    <>
+      <p className="rounded-md bg-bg-raised p-3 text-[0.8125rem] text-ink-muted">
+        {bothShort ? "Both of your" : "One of your"} declared tax returns
+        {bothShort ? " are" : " is"} under
+        {" "}₹{CO_APPLICANT_ITR_THRESHOLD.toLocaleString("en-IN")}. Adding someone
+        else&rsquo;s income to yours can bring the total above what the banks ask for.
+      </p>
 
-      {forIncome && (
-        <>
-          <p className="rounded-md bg-bg-raised p-3 text-[0.8125rem] text-ink-muted">
-            Both of your declared tax returns are under
-            ₹{CO_APPLICANT_ITR_THRESHOLD.toLocaleString("en-IN")}. Adding someone
-            else&rsquo;s income to yours can bring the total above what the banks ask for.
-          </p>
+      <Field label="Is anyone adding their income to yours on this application?" htmlFor="coAppIncomeRelation">
+        <Select id="coAppIncomeRelation" value={draft.coAppIncomeRelation} onChange={k("coAppIncomeRelation")} options={INCOME_RELATIONS} />
+      </Field>
 
-          <Field label="Is anyone adding their income to yours on this application?" htmlFor="coAppIncomeRelation">
-            <Select id="coAppIncomeRelation" value={draft.coAppIncomeRelation} onChange={k("coAppIncomeRelation")} options={INCOME_RELATIONS} />
-          </Field>
-        </>
-      )}
-
-      {forIncome && pooling && (
+      {pooling && (
         <>
           <div className="grid gap-6 sm:grid-cols-2">
             <Field label="What is that person's full name?" htmlFor="coApplicantName">
@@ -1083,6 +1071,49 @@ export function Step5CoApplicant() {
           </p>
         </>
       )}
+    </>
+  );
+}
+
+export function Step5CoApplicant() {
+  const { draft, set } = useField();
+  const k = <K extends keyof Draft>(key: K) => (v: Draft[K]) => set(key, v);
+  const pooling = draft.coAppIncomeRelation !== "None";
+
+  // add-on.md §8: the two questions are now triggered independently — age by
+  // the EMI ceiling, income by the applicant's own filed returns.
+  const forAge = needsCoApplicant(draft);
+  const forIncome = needsIncomeCoApplicant(draft);
+  const age = ageAtLastEmiFor(draft);
+
+  if (!forAge && !forIncome) {
+    // Step 3 owns the income question for self-employed applicants, so say what
+    // they already answered there rather than claiming nobody is joining.
+    const pooledInStep3 = needsIncomeCoApplicantInStep3(draft) && pooling;
+    return (
+      <p className="text-[0.9375rem] text-ink">
+        {age === null
+          ? "Add your date of birth in step 1 to see whether a co-applicant is needed."
+          : pooledInStep3
+          ? `You added your ${draft.coAppIncomeRelation.toLowerCase()}'s income in step 3, `
+            + `and you will be ${age} at your last payment, which is inside every bank's `
+            + "age limit. Nothing more is needed — continue to submit."
+          : `You will be ${age} at your last payment, which is inside every bank's age limit, `
+            + "and your declared income clears the threshold on its own. "
+            + "No co-applicant is needed — continue to submit."}
+      </p>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      {forAge && (
+        <Field label="Is anyone joining your application to help meet the age limit?" htmlFor="coAppAgeRelation">
+          <Select id="coAppAgeRelation" value={draft.coAppAgeRelation} onChange={k("coAppAgeRelation")} options={AGE_RELATIONS} />
+        </Field>
+      )}
+
+      {forIncome && <IncomeCoApplicant />}
     </div>
   );
 }
