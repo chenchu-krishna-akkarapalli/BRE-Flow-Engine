@@ -1,0 +1,256 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flowbre.local/schemas/coi_relational_output.schema.json",
+  "title": "Computation of Income — nested relational output",
+  "type": "object",
+  "required": ["metadata", "assessee", "income_heads", "chapter_vi_a", "tax_computation"],
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["source", "format", "page_count", "schema_version", "structure_source", "dom_table_count"],
+      "additionalProperties": false,
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "format": { "type": "string", "enum": ["Pdf", "Rtf"] },
+        "page_count": { "type": "integer", "minimum": 0 },
+        "schema_version": { "type": "string" },
+        "structure_source": {
+          "description": "tagged_dom where the generator declared a /StructTreeRoot, layout_grid where the columns were recovered from glyph positions.",
+          "type": "string",
+          "enum": ["tagged_dom", "layout_grid"]
+        },
+        "dom_table_count": { "type": "integer", "minimum": 0 },
+        "assessment_year": { "$ref": "#/$defs/yearRange" },
+        "financial_year": { "$ref": "#/$defs/yearRange" },
+        "financial_year_source": { "type": ["string", "null"], "enum": ["stated", "derived", null] },
+        "regime": { "type": ["string", "null"] }
+      }
+    },
+    "assessee": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": ["string", "null"] },
+        "fathers_name": { "type": ["string", "null"] },
+        "address": { "type": ["string", "null"] },
+        "email": { "type": ["string", "null"] },
+        "status": { "type": ["string", "null"] },
+        "pan": { "type": ["string", "null"], "pattern": "^[A-Z]{5}[0-9]{4}[A-Z]$" },
+        "aadhaar": {
+          "description": "Never the digits. Redacted at parse time, so the only permitted value is the marker.",
+          "type": ["string", "null"],
+          "enum": ["[Aadhaar Redacted]", null]
+        },
+        "date_of_birth": { "type": ["string", "null"] },
+        "residential_status": { "type": ["string", "null"] },
+        "gender": { "type": ["string", "null"] },
+        "ward": { "type": ["string", "null"] },
+        "nature_of_business": { "type": ["string", "null"] },
+        "filing_status": { "type": ["string", "null"] },
+        "bank": { "type": ["string", "null"] }
+      }
+    },
+    "income_heads": {
+      "description": "All five heads, always. A head the sheet never mentioned is present with reported=false, which is a different claim from a head reported as nil.",
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": { "$ref": "#/$defs/incomeHead" }
+    },
+    "chapter_vi_a": {
+      "type": "object",
+      "required": ["entries", "sum_of_entries"],
+      "additionalProperties": false,
+      "properties": {
+        "entries": { "type": "array", "items": { "$ref": "#/$defs/deductionEntry" } },
+        "total_claimed": { "$ref": "#/$defs/money" },
+        "sum_of_entries": { "type": "integer" }
+      }
+    },
+    "tax_computation": {
+      "type": "object",
+      "required": ["credits"],
+      "additionalProperties": false,
+      "properties": {
+        "gross_total_income": { "$ref": "#/$defs/money" },
+        "total_deductions": { "$ref": "#/$defs/money" },
+        "total_income": { "$ref": "#/$defs/money" },
+        "rounded_total_income": { "$ref": "#/$defs/money" },
+        "tax_on_total_income": { "$ref": "#/$defs/money" },
+        "rebate_87a": { "$ref": "#/$defs/money" },
+        "surcharge": { "$ref": "#/$defs/money" },
+        "health_education_cess": { "$ref": "#/$defs/money" },
+        "relief_89": { "$ref": "#/$defs/money" },
+        "interest_234a": { "$ref": "#/$defs/money" },
+        "interest_234b": { "$ref": "#/$defs/money" },
+        "interest_234c": { "$ref": "#/$defs/money" },
+        "total_tax": { "$ref": "#/$defs/money" },
+        "credits": {
+          "type": "object",
+          "required": ["total"],
+          "additionalProperties": false,
+          "properties": {
+            "tds": { "$ref": "#/$defs/money" },
+            "tcs": { "$ref": "#/$defs/money" },
+            "advance_tax": { "$ref": "#/$defs/money" },
+            "self_assessment_140a": { "$ref": "#/$defs/money" },
+            "total": { "type": "integer" }
+          }
+        },
+        "net_tax_payable": { "$ref": "#/$defs/money" },
+        "refundable": { "$ref": "#/$defs/money" }
+      }
+    }
+  },
+  "$defs": {
+    "money": {
+      "type": ["object", "null"],
+      "required": ["paise", "raw"],
+      "additionalProperties": false,
+      "properties": {
+        "paise": {
+          "description": "Integer paise. Floats would break the cross-footing equalities this document is validated against.",
+          "type": "integer"
+        },
+        "raw": { "type": "string" }
+      }
+    },
+    "yearRange": {
+      "type": ["object", "null"],
+      "required": ["start", "end"],
+      "additionalProperties": false,
+      "properties": {
+        "start": { "type": "integer", "minimum": 1990, "maximum": 2100 },
+        "end": { "type": "integer", "minimum": 1991, "maximum": 2101 }
+      }
+    },
+    "component": {
+      "description": "One line printed under a head. Retained whether or not it filled a named slot, so a vendor wording the classifier has not seen is still visible.",
+      "type": "object",
+      "required": ["label", "page", "raw_line"],
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string" },
+        "amount": { "$ref": "#/$defs/money" },
+        "slot": { "type": ["string", "null"] },
+        "page": { "type": "integer", "minimum": 1 },
+        "raw_line": { "type": "string" }
+      }
+    },
+    "incomeHead": {
+      "type": "object",
+      "required": ["head", "chapter", "reported", "detail", "components"],
+      "additionalProperties": false,
+      "properties": {
+        "head": {
+          "type": "string",
+          "enum": ["salary", "house_property", "business_profession", "capital_gains", "other_sources"]
+        },
+        "chapter": { "type": "string", "enum": ["IV A", "IV C", "IV D", "IV E", "IV F"] },
+        "reported": { "type": "boolean" },
+        "total": { "$ref": "#/$defs/money" },
+        "components": { "type": "array", "items": { "$ref": "#/$defs/component" } },
+        "detail": {
+          "description": "Tagged by head, so the named sub-fields can be matched on without inspecting which keys are present.",
+          "oneOf": [
+            { "$ref": "#/$defs/salaryDetail" },
+            { "$ref": "#/$defs/housePropertyDetail" },
+            { "$ref": "#/$defs/businessDetail" },
+            { "$ref": "#/$defs/capitalGainsDetail" },
+            { "$ref": "#/$defs/otherSourcesDetail" }
+          ]
+        }
+      }
+    },
+    "salaryDetail": {
+      "type": "object",
+      "required": ["head"],
+      "additionalProperties": false,
+      "properties": {
+        "head": { "const": "salary" },
+        "gross_salary": { "$ref": "#/$defs/money" },
+        "basic": { "$ref": "#/$defs/money" },
+        "hra": { "$ref": "#/$defs/money" },
+        "allowances": { "$ref": "#/$defs/money" },
+        "perquisites": { "$ref": "#/$defs/money" },
+        "standard_deduction_16ia": { "$ref": "#/$defs/money" },
+        "professional_tax_16iii": { "$ref": "#/$defs/money" },
+        "taxable_salary": { "$ref": "#/$defs/money" }
+      }
+    },
+    "housePropertyDetail": {
+      "type": "object",
+      "required": ["head"],
+      "additionalProperties": false,
+      "properties": {
+        "head": { "const": "house_property" },
+        "occupancy": { "type": ["string", "null"], "enum": ["self_occupied", "let_out", null] },
+        "annual_value": { "$ref": "#/$defs/money" },
+        "municipal_tax": { "$ref": "#/$defs/money" },
+        "standard_deduction_24a": { "$ref": "#/$defs/money" },
+        "interest_24b": { "$ref": "#/$defs/money" }
+      }
+    },
+    "businessDetail": {
+      "type": "object",
+      "required": ["head"],
+      "additionalProperties": false,
+      "properties": {
+        "head": { "const": "business_profession" },
+        "gross_receipts": { "$ref": "#/$defs/money" },
+        "book_profit": { "$ref": "#/$defs/money" },
+        "deemed_profit": { "$ref": "#/$defs/money" },
+        "net_profit": { "$ref": "#/$defs/money" },
+        "assessable_profit": { "$ref": "#/$defs/money" },
+        "depreciation": { "$ref": "#/$defs/money" },
+        "presumptive_44ad": { "$ref": "#/$defs/money" },
+        "presumptive_44ada": { "$ref": "#/$defs/money" },
+        "presumptive_44ae": { "$ref": "#/$defs/money" }
+      }
+    },
+    "capitalGainsDetail": {
+      "type": "object",
+      "required": ["head"],
+      "additionalProperties": false,
+      "properties": {
+        "head": { "const": "capital_gains" },
+        "short_term": { "$ref": "#/$defs/money" },
+        "short_term_111a": { "$ref": "#/$defs/money" },
+        "long_term": { "$ref": "#/$defs/money" },
+        "long_term_112a": { "$ref": "#/$defs/money" },
+        "brought_forward_loss": { "$ref": "#/$defs/money" }
+      }
+    },
+    "otherSourcesDetail": {
+      "type": "object",
+      "required": ["head"],
+      "additionalProperties": false,
+      "properties": {
+        "head": { "const": "other_sources" },
+        "savings_bank_interest": { "$ref": "#/$defs/money" },
+        "fixed_deposit_interest": { "$ref": "#/$defs/money" },
+        "dividend": { "$ref": "#/$defs/money" },
+        "income_tax_refund_interest": { "$ref": "#/$defs/money" },
+        "family_pension": { "$ref": "#/$defs/money" },
+        "agricultural_income": { "$ref": "#/$defs/money" },
+        "other": { "$ref": "#/$defs/money" }
+      }
+    },
+    "deductionEntry": {
+      "type": "object",
+      "required": ["section", "label", "raw_line"],
+      "additionalProperties": false,
+      "properties": {
+        "section": { "type": "string", "minLength": 2 },
+        "label": { "type": "string" },
+        "gross_amount": { "$ref": "#/$defs/money" },
+        "deductible_amount": {
+          "description": "The figure that actually reduces total income; under 80G and 80TTA it is less than the gross claim.",
+          "$ref": "#/$defs/money"
+        },
+        "raw_line": { "type": "string" }
+      }
+    }
+  }
+}

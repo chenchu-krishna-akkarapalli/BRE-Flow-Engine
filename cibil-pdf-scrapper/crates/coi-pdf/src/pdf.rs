@@ -13,6 +13,11 @@ pub fn page_count(data: &[u8]) -> Result<u32> {
     Ok(load(data)?.page_iter().count() as u32)
 }
 
+/// Tagged tables, empty when the generator wrote no structure tree.
+pub fn dom_tables(data: &[u8]) -> Result<Vec<crate::dom::DomTable>> {
+    Ok(crate::dom::extract(&load(data)?)?.map(|root| crate::dom::tables(&root)).unwrap_or_default())
+}
+
 /// Decode every page into positioned runs, verbatim.
 ///
 /// A page that fails is recorded and skipped so one damaged page cannot lose a

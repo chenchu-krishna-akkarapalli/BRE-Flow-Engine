@@ -33,6 +33,8 @@ pub const HOUSE_PROPERTY: &[&str] = &[
 pub const BUSINESS: &[&str] = &[
     "INCOME FROM BUSINESS OR PROFESSION", "PROFITS AND GAINS FROM BUSINESS OR PROFESSION",
     "INCOME FROM BUSINESS", "PROFITS AND GAINS OF BUSINESS OR PROFESSION", "CHAPTER IV D",
+    // Bare heading dialect: the tax-summary table names the head with no verb.
+    "BUSINESS AND PROFESSION",
 ];
 
 pub const CAPITAL_GAINS: &[&str] = &[
@@ -42,6 +44,9 @@ pub const CAPITAL_GAINS: &[&str] = &[
 pub const OTHER_SOURCES: &[&str] = &[
     "INCOME FROM OTHER SOURCES", "INCOME FROM OTHER SOURCE", "OTHER SOURCES (CHAPTER IV F)",
     "CHAPTER IV F",
+    // Bare heading dialect. Safe as a last entry: the head takes the first line
+    // carrying an amount, and the annexure headings below carry none.
+    "OTHER SOURCES",
 ];
 
 pub const GROSS_TOTAL_INCOME: &[&str] = &["GROSS TOTAL INCOME"];

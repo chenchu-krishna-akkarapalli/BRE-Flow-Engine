@@ -1,6 +1,8 @@
 // coi-cli — decode and validate Computation of Income documents.
 //
 //   coi-cli <file>                      parsed computation as JSON
+//   coi-cli <file> --relational         nested relational view
+//   coi-cli <file> --dom                tagged structure tree, where one exists
 //   coi-cli <file> --raw                decoded lines only, no interpretation
 //   coi-cli <file> --validate           validation report only
 //   coi-cli --batch <dir> [--out <dir>] one row per file; exit 1 on any failure
@@ -22,7 +24,7 @@ fn main() -> ExitCode {
 
     if positional.is_empty() {
         eprintln!(
-            "Usage: coi-cli <file> [--raw] [--validate] [--pretty]\n       coi-cli --batch <dir> [--out <dir>] [--json]"
+            "Usage: coi-cli <file> [--relational] [--dom] [--raw] [--validate] [--pretty]\n       coi-cli --batch <dir> [--out <dir>] [--json]"
         );
         return ExitCode::from(2);
     }
@@ -30,7 +32,36 @@ fn main() -> ExitCode {
     if flag("--batch") {
         run_batch(Path::new(positional[0]), value_of("--out"), flag("--json"))
     } else {
-        run_single(Path::new(positional[0]), flag("--raw"), flag("--validate"), flag("--pretty"))
+        let view = if flag("--raw") {
+            View::Raw
+        } else if flag("--dom") {
+            View::Dom
+        } else if flag("--relational") {
+            View::Relational
+        } else if flag("--validate") {
+            View::Validation
+        } else {
+            View::Computation
+        };
+        run_single(Path::new(positional[0]), view, flag("--pretty"))
+    }
+}
+
+#[derive(Clone, Copy, PartialEq)]
+enum View {
+    Computation,
+    Relational,
+    Dom,
+    Raw,
+    Validation,
+}
+
+/// Tagged tables the generator declared. Errors are not fatal: a document with
+/// no readable tag tree is the normal case, and the layout grid still applies.
+fn dom_tables(bytes: &[u8], format: DocumentFormat) -> Vec<coi_pdf::dom::DomTable> {
+    match format {
+        DocumentFormat::Pdf => coi_pdf::pdf::dom_tables(bytes).unwrap_or_default(),
+        DocumentFormat::Rtf => Vec::new(),
     }
 }
 
@@ -41,7 +72,7 @@ fn format_name(format: DocumentFormat) -> &'static str {
     }
 }
 
-fn run_single(path: &Path, raw_only: bool, validate_only: bool, pretty: bool) -> ExitCode {
+fn run_single(path: &Path, view: View, pretty: bool) -> ExitCode {
     let bytes = match fs::read(path) {
         Ok(b) => b,
         Err(e) => {
@@ -59,24 +90,37 @@ fn run_single(path: &Path, raw_only: bool, validate_only: bool, pretty: bool) ->
     };
 
     let name = path.display().to_string();
-    let json = if raw_only {
-        serde_json::json!({
+    let json = match view {
+        // Redacted like every other path: a raw dump is still a serialisation,
+        // and the Aadhaar sits in these lines.
+        View::Raw => serde_json::json!({
             "source": name, "format": format_name(format), "pages": pages,
-            "lines": coi_layout::group_lines(&runs),
-        })
-    } else {
-        let computation =
-            match coi_parser::parse_computation(&name, format_name(format), &runs, pages) {
-                Ok(c) => c,
-                Err(e) => {
-                    eprintln!("{name}: {e}");
-                    return ExitCode::FAILURE;
+            "lines": coi_parser::parser::redact_lines(coi_layout::group_lines(&runs)),
+        }),
+        View::Dom => serde_json::json!({
+            "source": name, "format": format_name(format),
+            "tables": dom_tables(&bytes, format),
+        }),
+        _ => {
+            let computation =
+                match coi_parser::parse_computation(&name, format_name(format), &runs, pages) {
+                    Ok(c) => c,
+                    Err(e) => {
+                        eprintln!("{name}: {e}");
+                        return ExitCode::FAILURE;
+                    }
+                };
+            match view {
+                View::Validation => {
+                    serde_json::to_value(coi_validation::validate(&computation)).unwrap_or_default()
                 }
-            };
-        if validate_only {
-            serde_json::to_value(coi_validation::validate(&computation)).unwrap_or_default()
-        } else {
-            serde_json::to_value(&computation).unwrap_or_default()
+                View::Relational => {
+                    let tables = dom_tables(&bytes, format);
+                    serde_json::to_value(coi_parser::to_relational(&computation, tables.len()))
+                        .unwrap_or_default()
+                }
+                _ => serde_json::to_value(&computation).unwrap_or_default(),
+            }
         }
     };
 
@@ -137,16 +181,23 @@ fn run_batch(dir: &Path, out_dir: Option<PathBuf>, as_json: bool) -> ExitCode {
             CoiLoader.load(&bytes).map_err(|e| e.to_string()).and_then(|(format, runs, pages)| {
                 coi_parser::parse_computation(&name, format_name(format), &runs, pages)
                     .map_err(|e| e.to_string())
-                    .map(|c| (format, c))
+                    .map(|c| (format, dom_tables(&bytes, format).len(), c))
             })
         });
 
         match outcome {
-            Ok((format, computation)) => {
+            Ok((format, tagged_tables, computation)) => {
                 let report = coi_validation::validate(&computation);
                 let value = serde_json::to_value(&computation).unwrap_or_default();
-                let schema_errors =
+                let relational = coi_parser::to_relational(&computation, tagged_tables);
+                let relational_value = serde_json::to_value(&relational).unwrap_or_default();
+
+                let mut schema_errors =
                     coi_validation::validate_against_schema(&value).unwrap_or_else(|e| vec![e.to_string()]);
+                schema_errors.extend(
+                    coi_validation::validate_relational_schema(&relational_value)
+                        .unwrap_or_else(|e| vec![e.to_string()]),
+                );
 
                 if !schema_errors.is_empty() {
                     schema_failures += 1;
@@ -161,6 +212,7 @@ fn run_batch(dir: &Path, out_dir: Option<PathBuf>, as_json: bool) -> ExitCode {
                     ));
                     let document = serde_json::json!({
                         "computation": value,
+                        "relational": relational_value,
                         "validation": report,
                         "schema_errors": schema_errors,
                     });
@@ -173,7 +225,8 @@ fn run_batch(dir: &Path, out_dir: Option<PathBuf>, as_json: bool) -> ExitCode {
 
                 if as_json {
                     records.push(serde_json::json!({
-                        "computation": value, "validation": report, "schema_errors": schema_errors
+                        "computation": value, "relational": relational_value,
+                        "validation": report, "schema_errors": schema_errors
                     }));
                 } else {
                     let status = if !schema_errors.is_empty() {

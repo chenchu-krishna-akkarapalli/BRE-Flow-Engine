@@ -18,7 +18,7 @@ pub fn parse_computation(
     // field leaves the number sitting in the raw lines, which are serialised
     // too — extraction is verbatim except for this, and PII wins that trade.
     let source_text = decoded.iter().map(|l| l.text()).collect::<Vec<_>>().join("\n");
-    let lines: Vec<Line> = decoded.into_iter().map(redact_line).collect();
+    let lines: Vec<Line> = redact_lines(decoded);
 
     let pairs = label_value_pairs(&lines);
     let assessment_year = find_assessment_year(&lines, &pairs);
@@ -45,6 +45,12 @@ pub fn parse_computation(
         credits: extract_credits(&lines),
         raw: RawContent { page_count, table: group_rows(&lines), lines },
     })
+}
+
+/// Redact decoded lines. Public because every path that serialises lines must
+/// use it — a raw dump that skips redaction prints the applicant's Aadhaar.
+pub fn redact_lines(lines: Vec<Line>) -> Vec<Line> {
+    lines.into_iter().map(redact_line).collect()
 }
 
 /// Redact every Aadhaar-shaped value in a line's segments.

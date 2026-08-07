@@ -4,6 +4,7 @@
 // (real glyph metrics, CTM tracking, form XObject recursion); RTF is parsed here
 // because the corpus ships RTF documents named `.doc`.
 
+pub mod dom;
 pub mod pdf;
 pub mod rtf;
 

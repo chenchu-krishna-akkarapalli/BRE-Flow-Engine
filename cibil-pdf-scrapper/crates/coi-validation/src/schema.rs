@@ -5,6 +5,9 @@ use serde_json::Value;
 /// because a file was missing at run time.
 pub const SCHEMA_JSON: &str = include_str!("../coi_output.schema.json");
 
+/// The nested relational contract, separate from the flat one above.
+pub const RELATIONAL_SCHEMA_JSON: &str = include_str!("../coi_relational_output.schema.json");
+
 /// Count Aadhaar-shaped values in arbitrary text.
 ///
 /// Delegates to coi-domain so the leak detector and the redactor can never
@@ -22,7 +25,17 @@ pub fn schema() -> Result<Value> {
 /// Every error is collected, not just the first: a caller fixing output shape
 /// wants the whole list, and a partial one invites a fix-recheck loop.
 pub fn validate_against_schema(instance: &Value) -> Result<Vec<String>> {
-    let schema = schema()?;
+    check(SCHEMA_JSON, instance)
+}
+
+/// Validate a serialised relational view against `coi_relational_output.schema.json`.
+pub fn validate_relational_schema(instance: &Value) -> Result<Vec<String>> {
+    check(RELATIONAL_SCHEMA_JSON, instance)
+}
+
+fn check(schema_json: &str, instance: &Value) -> Result<Vec<String>> {
+    let schema: Value = serde_json::from_str(schema_json)
+        .map_err(|e| CoiError::Schema(format!("schema is invalid: {e}")))?;
     let validator = jsonschema::validator_for(&schema)
         .map_err(|e| CoiError::Schema(format!("schema failed to compile: {e}")))?;
 
@@ -41,6 +54,50 @@ mod tests {
     fn the_bundled_schema_compiles() {
         let value = schema().expect("schema parses");
         assert!(jsonschema::validator_for(&value).is_ok());
+    }
+
+    #[test]
+    fn the_bundled_relational_schema_compiles() {
+        let value: serde_json::Value =
+            serde_json::from_str(super::RELATIONAL_SCHEMA_JSON).expect("schema parses");
+        assert!(jsonschema::validator_for(&value).is_ok());
+    }
+
+    #[test]
+    fn a_relational_head_must_carry_a_detail_matching_its_own_head() {
+        // The oneOf on `detail` is what keeps the tag honest: a salary head
+        // carrying a business detail block would otherwise validate.
+        let head = |detail| {
+            json!({
+                "metadata": {
+                    "source": "x.pdf", "format": "Pdf", "page_count": 1,
+                    "schema_version": "1.0", "structure_source": "layout_grid",
+                    "dom_table_count": 0
+                },
+                "assessee": {},
+                "income_heads": [
+                    { "head": "salary", "chapter": "IV A", "reported": false,
+                      "detail": detail, "components": [] },
+                    { "head": "house_property", "chapter": "IV C", "reported": false,
+                      "detail": { "head": "house_property" }, "components": [] },
+                    { "head": "business_profession", "chapter": "IV D", "reported": false,
+                      "detail": { "head": "business_profession" }, "components": [] },
+                    { "head": "capital_gains", "chapter": "IV E", "reported": false,
+                      "detail": { "head": "capital_gains" }, "components": [] },
+                    { "head": "other_sources", "chapter": "IV F", "reported": false,
+                      "detail": { "head": "other_sources" }, "components": [] }
+                ],
+                "chapter_vi_a": { "entries": [], "sum_of_entries": 0 },
+                "tax_computation": { "credits": { "total": 0 } }
+            })
+        };
+
+        assert_eq!(
+            super::validate_relational_schema(&head(json!({ "head": "salary" }))).expect("runs"),
+            Vec::<String>::new()
+        );
+        let mismatched = json!({ "head": "salary", "gross_receipts": { "paise": 1, "raw": "1" } });
+        assert!(!super::validate_relational_schema(&head(mismatched)).expect("runs").is_empty());
     }
 
     #[test]
