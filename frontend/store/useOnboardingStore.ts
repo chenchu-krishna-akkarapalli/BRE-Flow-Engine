@@ -86,6 +86,7 @@ export interface Draft {
   prevITRAmount: number | "";
   businessItrYears: number | "";
   // add-on.md §3: the farming branch, shown instead of the trade fields.
+  isRegisteredBusiness: boolean;
   ownsAgriculturalLand: boolean;
   agriculturalLandLocation: string;
   annualAgriculturalIncome: number | "";
@@ -158,6 +159,7 @@ const INITIAL_DRAFT: Draft = {
   businessProofVerified: false,
   businessEstablishmentDate: "", currentITRAmount: "", prevITRAmount: "",
   businessItrYears: "",
+  isRegisteredBusiness: false,
   ownsAgriculturalLand: true, agriculturalLandLocation: "",
   annualAgriculturalIncome: "", agricultureItrFiled: true, agriculturalIncomeProof: "",
   agriculturalIncomeProofVerified: false,
@@ -270,7 +272,7 @@ export function applicantItrs(draft: Draft): { current: number; previous: number
       : null;
   }
   if (profile === "Self-Employed") {
-    if (isAgriculture(draft) && !draft.agricultureItrFiled) return null;
+    if (isAgriculture(draft) && !draft.isRegisteredBusiness && !draft.agricultureItrFiled) return null;
     return pair(draft.currentITRAmount, draft.prevITRAmount);
   }
   return null;
@@ -349,7 +351,7 @@ export function terminationReason(draft: Draft): string | null {
 
   // Farming is evidenced by land and either a return or an income proof, so it
   // is never asked for a registration number and is not stopped for lacking one.
-  if (profile === "Self-Employed" && !isAgriculture(draft) && draft.businessProof.trim() === "") {
+  if (profile === "Self-Employed" && (!isAgriculture(draft) || draft.isRegisteredBusiness) && draft.businessProof.trim() === "") {
     return "Business proof is mandatory for self-employed applicants. Add your "
       + "business registration or GST number to continue.";
   }
@@ -361,6 +363,7 @@ export function terminationReason(draft: Draft): string | null {
 export function isResiCumOfficeRented(draft: Draft): boolean {
   return (
     profileTypeFor(draft) === "Self-Employed" &&
+    (!isAgriculture(draft) || draft.isRegisteredBusiness) &&
     draft.residentDetails === "Rented House" &&
     draft.officeAddressType === "Same"
   );
@@ -433,19 +436,46 @@ function buildRentalIncome(d: Draft): Occupation {
 
 function buildAgriculture(d: Draft): Occupation {
   const filed = d.agricultureItrFiled;
-  return {
-    profileType: "Self-Employed",
-    businessEntityType: AGRICULTURE,
-    ownsAgriculturalLand: d.ownsAgriculturalLand,
-    agriculturalLandLocation: d.agriculturalLandLocation,
-    annualAgriculturalIncome: Number(d.annualAgriculturalIncome),
-    agricultureItrFiled: filed,
-    // Filed returns replace the income proof, and vice versa.
-    currentITRAmount: filed ? Number(d.currentITRAmount) : undefined,
-    prevITRAmount: filed ? Number(d.prevITRAmount) : undefined,
-    businessItrAmount: filed ? Number(d.businessItrYears) : undefined,
-    agriculturalIncomeProof: filed ? undefined : opt(d.agriculturalIncomeProof),
-  };
+  const isReg = d.isRegisteredBusiness;
+  if (!isReg) {
+    return {
+      profileType: "Self-Employed",
+      businessEntityType: AGRICULTURE,
+      isRegisteredBusiness: false,
+      ownsAgriculturalLand: d.ownsAgriculturalLand,
+      agriculturalLandLocation: d.agriculturalLandLocation,
+      annualAgriculturalIncome: Number(d.annualAgriculturalIncome),
+      agricultureItrFiled: filed,
+      // Filed returns replace the income proof, and vice versa.
+      currentITRAmount: filed ? Number(d.currentITRAmount) : undefined,
+      prevITRAmount: filed ? Number(d.prevITRAmount) : undefined,
+      businessItrAmount: filed ? Number(d.businessItrYears) : undefined,
+      agriculturalIncomeProof: filed ? undefined : opt(d.agriculturalIncomeProof),
+    };
+  } else {
+    const separate = d.officeAddressType === "Separate";
+    return {
+      profileType: "Self-Employed",
+      businessEntityType: AGRICULTURE,
+      isRegisteredBusiness: true,
+      ownsAgriculturalLand: d.ownsAgriculturalLand,
+      agriculturalLandLocation: d.agriculturalLandLocation,
+      annualAgriculturalIncome: Number(d.annualAgriculturalIncome),
+      officeAddressType: d.officeAddressType as "Same" | "Separate",
+      officeAddress: separate ? d.officeAddress : undefined,
+      officePremisesStatus: separate
+        ? (d.officePremisesStatus as "Owned" | "Rented")
+        : undefined,
+      guarantorStatus: isResiCumOfficeRented(d)
+        ? (d.guarantorStatus as "Without a Gaurantor" | "With a Gaurantor")
+        : undefined,
+      businessProof: opt(d.businessProof),
+      businessEstablishmentDate: d.businessEstablishmentDate,
+      currentITRAmount: Number(d.currentITRAmount),
+      prevITRAmount: Number(d.prevITRAmount),
+      businessItrAmount: Number(d.businessItrYears),
+    };
+  }
 }
 
 function buildOccupation(d: Draft): Occupation {

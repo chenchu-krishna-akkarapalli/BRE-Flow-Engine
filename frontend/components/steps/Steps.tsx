@@ -156,6 +156,108 @@ function RentalIncomeBranch() {
   );
 }
 
+// Shared business-setup sub-flow used by the self-employed categories.
+function TradeBusinessBranch() {
+  const { draft, set } = useField();
+  const k = <K extends keyof Draft>(key: K) => (v: Draft[K]) => set(key, v);
+
+  return (
+    <>
+      <Field label="Do you work from where you live, or from a separate place?" htmlFor="officeAddressType">
+        <RadioCards
+          name="officeAddressType"
+          label="Do you work from where you live, or from a separate place?"
+          value={draft.officeAddressType}
+          onChange={k("officeAddressType")}
+          options={[
+            { value: "Same", label: "From my home" },
+            { value: "Separate", label: "From a separate shop or office" },
+          ]}
+        />
+      </Field>
+
+      {draft.officeAddressType === "Separate" && (
+        <>
+          <Field label="What is the address of your shop or office?" htmlFor="officeAddress">
+            <TextInput id="officeAddress" value={draft.officeAddress} onChange={k("officeAddress")} />
+          </Field>
+          <Field label="Do you own that shop or office, or do you rent it?" htmlFor="officePremisesStatus">
+            <RadioCards
+              name="officePremisesStatus"
+              label="Do you own that shop or office, or do you rent it?"
+              value={draft.officePremisesStatus}
+              onChange={k("officePremisesStatus")}
+              options={[
+                { value: "Owned", label: "I own it" },
+                { value: "Rented", label: "I rent it" },
+              ]}
+            />
+          </Field>
+        </>
+      )}
+
+      {isResiCumOfficeRented(draft) && (
+        <Field label="Can someone stand as a guarantor for your loan?" htmlFor="guarantorStatus">
+          <RadioCards
+            name="guarantorStatus"
+            label="Can someone stand as a guarantor for your loan?"
+            value={draft.guarantorStatus}
+            onChange={k("guarantorStatus")}
+            options={[
+              { value: "With a Gaurantor", label: "Yes, I have a guarantor" },
+              { value: "Without a Gaurantor", label: "No, I do not" },
+            ]}
+          />
+        </Field>
+      )}
+
+      <Field label="On which date did your business start?" htmlFor="businessEstablishmentDate">
+        <TextInput id="businessEstablishmentDate" type="date" value={draft.businessEstablishmentDate} onChange={k("businessEstablishmentDate")} />
+      </Field>
+
+      <Field
+        label="What is your business registration or GST number?"
+        htmlFor="businessProof"
+        error={draft.businessProof.trim() === ""
+          ? "Business proof is mandatory — onboarding cannot continue without it."
+          : undefined}
+      >
+        <div className="flex flex-col gap-3">
+          <TextInput id="businessProof" value={draft.businessProof} onChange={k("businessProof")} placeholder="29AAAAA0000A1Z5" />
+          <div className="flex flex-wrap items-start gap-3">
+            <DocumentUpload id="businessProofUpload" documentType="pan" label="Upload" />
+            <VerifyField
+              channel="email"
+              target={draft.email || "business@document.verify"}
+              verified={draft.businessProofVerified}
+              onVerified={(v) => set("businessProofVerified", v)}
+            />
+          </div>
+        </div>
+      </Field>
+
+      <div className="grid gap-6 sm:grid-cols-2">
+        <ItrField
+          id="currentITRAmount"
+          label="Current Year ITR"
+          value={draft.currentITRAmount}
+          onChange={(v) => set("currentITRAmount", v)}
+        />
+        <ItrField
+          id="prevITRAmount"
+          label="Previous Year ITR"
+          value={draft.prevITRAmount}
+          onChange={(v) => set("prevITRAmount", v)}
+        />
+      </div>
+
+      <Field label="For how many years have you filed tax returns?" htmlFor="businessItrYears">
+        <TextInput id="businessItrYears" type="number" value={draft.businessItrYears} onChange={(v) => set("businessItrYears", num(v))} numeric />
+      </Field>
+    </>
+  );
+}
+
 // add-on.md §3: farming's own field set. None of the trade questions — work
 // location, guarantor, business registration, GST — are asked here.
 function AgricultureBranch() {
@@ -182,63 +284,67 @@ function AgricultureBranch() {
         <TextInput id="annualAgriculturalIncome" type="number" value={draft.annualAgriculturalIncome} onChange={(v) => set("annualAgriculturalIncome", num(v))} numeric />
       </Field>
 
-      <Field label="Have you filed an income tax return?" htmlFor="agricultureItrFiled">
-        <RadioCards
-          name="agricultureItrFiled"
-          label="Have you filed an income tax return?"
-          value={yn(draft.agricultureItrFiled)}
-          onChange={(v) => set("agricultureItrFiled", v === "yes")}
-          options={YES_NO}
-        />
-      </Field>
-
-      {draft.agricultureItrFiled ? (
+      {!draft.isRegisteredBusiness && (
         <>
-          <div className="grid gap-6 sm:grid-cols-2">
-            <ItrField
-              id="currentITRAmount"
-              label="Current Year ITR"
-              value={draft.currentITRAmount}
-              onChange={(v) => set("currentITRAmount", v)}
+          <Field label="Have you filed an income tax return?" htmlFor="agricultureItrFiled">
+            <RadioCards
+              name="agricultureItrFiled"
+              label="Have you filed an income tax return?"
+              value={yn(draft.agricultureItrFiled)}
+              onChange={(v) => set("agricultureItrFiled", v === "yes")}
+              options={YES_NO}
             />
-            <ItrField
-              id="prevITRAmount"
-              label="Previous Year ITR"
-              value={draft.prevITRAmount}
-              onChange={(v) => set("prevITRAmount", v)}
-            />
-          </div>
-          <Field label="For how many years have you filed tax returns?" htmlFor="businessItrYears">
-            <TextInput id="businessItrYears" type="number" value={draft.businessItrYears} onChange={(v) => set("businessItrYears", num(v))} numeric />
           </Field>
+
+          {draft.agricultureItrFiled ? (
+            <>
+              <div className="grid gap-6 sm:grid-cols-2">
+                <ItrField
+                  id="currentITRAmount"
+                  label="Current Year ITR"
+                  value={draft.currentITRAmount}
+                  onChange={(v) => set("currentITRAmount", v)}
+                />
+                <ItrField
+                  id="prevITRAmount"
+                  label="Previous Year ITR"
+                  value={draft.prevITRAmount}
+                  onChange={(v) => set("prevITRAmount", v)}
+                />
+              </div>
+              <Field label="For how many years have you filed tax returns?" htmlFor="businessItrYears">
+                <TextInput id="businessItrYears" type="number" value={draft.businessItrYears} onChange={(v) => set("businessItrYears", num(v))} numeric />
+              </Field>
+            </>
+          ) : (
+            <Field
+              label="Agricultural income proof"
+              htmlFor="agriculturalIncomeProof"
+              error={draft.agriculturalIncomeProof.trim() === ""
+                ? "Without a filed return, this proof is what evidences the income."
+                : undefined}
+            >
+              <div className="flex flex-col gap-3">
+                <TextInput
+                  id="agriculturalIncomeProof"
+                  value={draft.agriculturalIncomeProof}
+                  onChange={(v) => { set("agriculturalIncomeProof", v); set("agriculturalIncomeProofVerified", false); }}
+                  placeholder="Reference on the document you upload"
+                  verified={draft.agriculturalIncomeProofVerified}
+                />
+                <div className="flex flex-wrap items-start gap-3">
+                  <DocumentUpload id="agriculturalIncomeProofUpload" label="Upload" />
+                  <VerifyField
+                    channel="email"
+                    target={draft.email || "agri@document.verify"}
+                    verified={draft.agriculturalIncomeProofVerified}
+                    onVerified={(v) => set("agriculturalIncomeProofVerified", v)}
+                  />
+                </div>
+              </div>
+            </Field>
+          )}
         </>
-      ) : (
-        <Field
-          label="Agricultural income proof"
-          htmlFor="agriculturalIncomeProof"
-          error={draft.agriculturalIncomeProof.trim() === ""
-            ? "Without a filed return, this proof is what evidences the income."
-            : undefined}
-        >
-          <div className="flex flex-col gap-3">
-            <TextInput
-              id="agriculturalIncomeProof"
-              value={draft.agriculturalIncomeProof}
-              onChange={(v) => { set("agriculturalIncomeProof", v); set("agriculturalIncomeProofVerified", false); }}
-              placeholder="Reference on the document you upload"
-              verified={draft.agriculturalIncomeProofVerified}
-            />
-            <div className="flex flex-wrap items-start gap-3">
-              <DocumentUpload id="agriculturalIncomeProofUpload" label="Upload" />
-              <VerifyField
-                channel="email"
-                target={draft.email || "agri@document.verify"}
-                verified={draft.agriculturalIncomeProofVerified}
-                onVerified={(v) => set("agriculturalIncomeProofVerified", v)}
-              />
-            </div>
-          </div>
-        </Field>
       )}
     </>
   );
@@ -749,102 +855,23 @@ export function Step3Occupation() {
         </Field>
       )}
 
-      {profile === "Self-Employed" && isFarming && <AgricultureBranch />}
-
-      {profile === "Self-Employed" && !isFarming && (
+      {profile === "Self-Employed" && isFarming && (
         <>
-          <Field label="Do you work from where you live, or from a separate place?" htmlFor="officeAddressType">
+          <Field label="Do you operate your farming as a registered business (e.g. own a mill, warehouse, trading office, processing unit)?" htmlFor="isRegisteredBusiness">
             <RadioCards
-              name="officeAddressType"
-              label="Do you work from where you live, or from a separate place?"
-              value={draft.officeAddressType}
-              onChange={k("officeAddressType")}
-              options={[
-                { value: "Same", label: "From my home" },
-                { value: "Separate", label: "From a separate shop or office" },
-              ]}
+              name="isRegisteredBusiness"
+              label="Do you operate your farming as a registered business?"
+              value={yn(draft.isRegisteredBusiness)}
+              onChange={(v) => set("isRegisteredBusiness", v === "yes")}
+              options={YES_NO}
             />
           </Field>
-
-          {draft.officeAddressType === "Separate" && (
-            <>
-              <Field label="What is the address of your shop or office?" htmlFor="officeAddress">
-                <TextInput id="officeAddress" value={draft.officeAddress} onChange={k("officeAddress")} />
-              </Field>
-              <Field label="Do you own that shop or office, or do you rent it?" htmlFor="officePremisesStatus">
-                <RadioCards
-                  name="officePremisesStatus"
-                  label="Do you own that shop or office, or do you rent it?"
-                  value={draft.officePremisesStatus}
-                  onChange={k("officePremisesStatus")}
-                  options={[
-                    { value: "Owned", label: "I own it" },
-                    { value: "Rented", label: "I rent it" },
-                  ]}
-                />
-              </Field>
-            </>
-          )}
-
-          {isResiCumOfficeRented(draft) && (
-            <Field label="Can someone stand as a guarantor for your loan?" htmlFor="guarantorStatus">
-              <RadioCards
-                name="guarantorStatus"
-                label="Can someone stand as a guarantor for your loan?"
-                value={draft.guarantorStatus}
-                onChange={k("guarantorStatus")}
-                options={[
-                  { value: "With a Gaurantor", label: "Yes, I have a guarantor" },
-                  { value: "Without a Gaurantor", label: "No, I do not" },
-                ]}
-              />
-            </Field>
-          )}
-
-          <Field label="On which date did your business start?" htmlFor="businessEstablishmentDate">
-            <TextInput id="businessEstablishmentDate" type="date" value={draft.businessEstablishmentDate} onChange={k("businessEstablishmentDate")} />
-          </Field>
-
-          <Field
-            label="What is your business registration or GST number?"
-            htmlFor="businessProof"
-            error={draft.businessProof.trim() === ""
-              ? "Business proof is mandatory — onboarding cannot continue without it."
-              : undefined}
-          >
-            <div className="flex flex-col gap-3">
-              <TextInput id="businessProof" value={draft.businessProof} onChange={k("businessProof")} placeholder="29AAAAA0000A1Z5" />
-              <div className="flex flex-wrap items-start gap-3">
-                <DocumentUpload id="businessProofUpload" documentType="pan" label="Upload" />
-                <VerifyField
-                  channel="email"
-                  target={draft.email || "business@document.verify"}
-                  verified={draft.businessProofVerified}
-                  onVerified={(v) => set("businessProofVerified", v)}
-                />
-              </div>
-            </div>
-          </Field>
-
-          <div className="grid gap-6 sm:grid-cols-2">
-            <ItrField
-              id="currentITRAmount"
-              label="Current Year ITR"
-              value={draft.currentITRAmount}
-              onChange={(v) => set("currentITRAmount", v)}
-            />
-            <ItrField
-              id="prevITRAmount"
-              label="Previous Year ITR"
-              value={draft.prevITRAmount}
-              onChange={(v) => set("prevITRAmount", v)}
-            />
-          </div>
-
-          <Field label="For how many years have you filed tax returns?" htmlFor="businessItrYears">
-            <TextInput id="businessItrYears" type="number" value={draft.businessItrYears} onChange={(v) => set("businessItrYears", num(v))} numeric />
-          </Field>
+          <AgricultureBranch />
         </>
+      )}
+
+      {profile === "Self-Employed" && (!isFarming || draft.isRegisteredBusiness) && (
+        <TradeBusinessBranch />
       )}
 
       {/* Bug 9: asked here, as soon as the two ITR amounts are on screen. The

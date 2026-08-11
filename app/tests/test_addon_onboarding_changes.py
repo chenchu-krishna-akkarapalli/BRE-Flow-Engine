@@ -43,6 +43,7 @@ def _self_employed(**over: Any) -> Dict[str, Any]:
 def _agriculture(**over: Any) -> Dict[str, Any]:
     return {
         "profileType": "Self-Employed", "businessEntityType": "Agriculture",
+        "isRegisteredBusiness": False,
         "ownsAgriculturalLand": True,
         "agriculturalLandLocation": "Survey 42, Mandya, Karnataka",
         "annualAgriculturalIncome": 500000.0, "agricultureItrFiled": True,
@@ -269,6 +270,69 @@ def test_farming_without_land_or_evidence_fails_business_proof():
         _agriculture(ownsAgriculturalLand=False)
     ).engine_inputs()
     assert inputs["business_proof"] is False
+
+
+def test_registered_farming_requires_trade_fields():
+    with pytest.raises(ValidationError, match="owns_agricultural_land, agricultural_land_location, annual_agricultural_income are required"):
+        _occupation(_agriculture(isRegisteredBusiness=True, ownsAgriculturalLand=None, agriculturalLandLocation=None, annualAgriculturalIncome=None))
+
+    with pytest.raises(ValidationError, match="only collected for subsistence Agriculture"):
+        _occupation(_agriculture(isRegisteredBusiness=True, agricultureItrFiled=True))
+
+    with pytest.raises(ValidationError, match="businessEstablishmentDate, currentITRAmount, prevITRAmount, businessItrAmount are required"):
+        _occupation(_agriculture(isRegisteredBusiness=True, agricultureItrFiled=None, businessEstablishmentDate=None, currentITRAmount=None, prevITRAmount=None, businessItrAmount=None))
+
+    ok = _occupation(_agriculture(
+        isRegisteredBusiness=True,
+        agricultureItrFiled=None,
+        businessEstablishmentDate="2020-01-01",
+        businessProof="GSTIN: 29AAAAA0000A1Z5",
+        officeAddressType="Same",
+    ))
+    inputs = ok.engine_inputs()
+    assert inputs["business_proof"] is True
+    assert inputs["business_entity_type"] == FormBusinessEntityType.AGRICULTURE.value
+
+
+def test_farming_guarantor_status_derivation():
+    from app.constants.enums import PropertyStatus
+
+    def make_req(owns_land: bool):
+        return OnboardingFormRequest.model_validate({
+            "identity": {
+                "entityType": "Individual",
+                "applicantName": "Farmer Name",
+                "dob": "1990-01-01",
+                "gender": "Male",
+                "pan": "ABCDE1234F",
+                "maritalStatus": "Unmarried",
+                "citizenshipStatus": "Resident Indian",
+                "phone": "9876543210",
+                "email": "farmer@example.com",
+            },
+            "address": {
+                "pincode": "560001",
+                "residentDetails": "Rented House",
+            },
+            "occupation": _agriculture(ownsAgriculturalLand=owns_land),
+            "banking": {
+                "existingAccountBank": "BOI",
+                "loanType": "Auto Loan",
+                "bureauCibilScore": 750,
+            }
+        })
+
+    req_owned = make_req(owns_land=True)
+    assert req_owned.property_status == PropertyStatus.RESI_CUM_OFFICE_OWNED
+    payload_owned = req_owned.to_engine_payload()
+    assert payload_owned["property_status"] == "RESI_CUM_OFFICE_OWNED"
+    assert payload_owned["guarantor_provided"] is False
+
+    req_rented = make_req(owns_land=False)
+    assert req_rented.property_status == PropertyStatus.RESI_CUM_OFFICE_RENTED
+    payload_rented = req_rented.to_engine_payload()
+    assert payload_rented["property_status"] == "RESI_CUM_OFFICE_RENTED"
+    assert payload_rented["guarantor_provided"] is False
 
 
 # --------------------------------------------------------------------------- #

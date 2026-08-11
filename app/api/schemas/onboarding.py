@@ -454,6 +454,7 @@ class SelfEmployedOccupation(FormModel):
         default=FormBusinessEntityType.PROPRIETORSHIP, alias="businessEntityType"
     )
     business_proof: Optional[str] = Field(default=None, alias="businessProof", max_length=128)
+    is_registered_business: Optional[bool] = Field(default=None, alias="isRegisteredBusiness")
     # add-on §3: optional only because the farming branch does not collect a
     # business start date; a trade or profession must still supply one.
     business_establishment_date: Optional[date] = Field(
@@ -488,7 +489,9 @@ class SelfEmployedOccupation(FormModel):
     @property
     def itr_filed(self) -> bool:
         """A trade always files; farming answers the question explicitly."""
-        return bool(self.agriculture_itr_filed) if self.is_agriculture else True
+        if self.is_agriculture and not self.is_registered_business:
+            return bool(self.agriculture_itr_filed)
+        return True
 
     # Fields the farming branch never collects, and the trade branch always does.
     _TRADE_ONLY = ("business_proof", "office_address", "office_premises_status", "guarantor_status")
@@ -499,7 +502,7 @@ class SelfEmployedOccupation(FormModel):
 
     @model_validator(mode="after")
     def _require_separate_office_details(self) -> "SelfEmployedOccupation":
-        if self.is_agriculture:
+        if self.is_agriculture and not self.is_registered_business:
             return self
         if self.office_address_type is OfficeAddressType.SEPARATE:
             if not self.office_address or self.office_premises_status is None:
@@ -522,32 +525,66 @@ class SelfEmployedOccupation(FormModel):
         evidence that does not exist.
         """
         if self.is_agriculture:
-            leaked = [f for f in self._TRADE_ONLY if getattr(self, f) is not None]
-            if leaked:
-                raise ValueError(
-                    f"{', '.join(leaked)} are not collected for Agriculture / Farming."
-                )
-            missing = [
-                f for f in ("owns_agricultural_land", "agricultural_land_location",
-                            "annual_agricultural_income", "agriculture_itr_filed")
-                if getattr(self, f) is None
-            ]
-            if missing:
-                raise ValueError(
-                    f"{', '.join(missing)} are required for Agriculture / Farming."
-                )
-            if self.agriculture_itr_filed:
-                if self.current_itr_amount is None or self.prev_itr_amount is None or self.business_itr_years is None:
+            if self.is_registered_business is None:
+                raise ValueError("isRegisteredBusiness is required for Agriculture / Farming.")
+            if not self.is_registered_business:
+                leaked = [f for f in self._TRADE_ONLY if getattr(self, f) is not None]
+                if leaked:
                     raise ValueError(
-                        "currentITRAmount, prevITRAmount and businessItrAmount are required when "
-                        "the farmer has filed an ITR."
+                        f"{', '.join(leaked)} are not collected for Agriculture / Farming."
                     )
-            elif not self.agricultural_income_proof:
-                raise ValueError(
-                    "agriculturalIncomeProof is required when the farmer has not filed an ITR."
-                )
-            return self
+                missing = [
+                    f for f in ("owns_agricultural_land", "agricultural_land_location",
+                                "annual_agricultural_income", "agriculture_itr_filed")
+                    if getattr(self, f) is None
+                ]
+                if missing:
+                    raise ValueError(
+                        f"{', '.join(missing)} are required for Agriculture / Farming."
+                    )
+                if self.agriculture_itr_filed:
+                    if self.current_itr_amount is None or self.prev_itr_amount is None or self.business_itr_years is None:
+                        raise ValueError(
+                            "currentITRAmount, prevITRAmount and businessItrAmount are required when "
+                            "the farmer has filed an ITR."
+                        )
+                elif not self.agricultural_income_proof:
+                    raise ValueError(
+                        "agriculturalIncomeProof is required when the farmer has not filed an ITR."
+                    )
+                return self
+            else:
+                missing_land = [
+                    f for f in ("owns_agricultural_land", "agricultural_land_location", "annual_agricultural_income")
+                    if getattr(self, f) is None
+                ]
+                if missing_land:
+                    raise ValueError(
+                        f"{', '.join(missing_land)} are required for Agriculture / Farming."
+                    )
+                leaked_farm = [
+                    f for f in ("agriculture_itr_filed", "agricultural_income_proof")
+                    if getattr(self, f) is not None
+                ]
+                if leaked_farm:
+                    raise ValueError(
+                        f"{', '.join(leaked_farm)} are only collected for subsistence Agriculture / Farming."
+                    )
+                missing_trade = [
+                    name for name, value in (
+                        ("businessEstablishmentDate", self.business_establishment_date),
+                        ("currentITRAmount", self.current_itr_amount),
+                        ("prevITRAmount", self.prev_itr_amount),
+                        ("businessItrAmount", self.business_itr_years),
+                    )
+                    if value is None
+                ]
+                if missing_trade:
+                    raise ValueError(f"{', '.join(missing_trade)} are required for self-employed applicants.")
+                return self
 
+        if self.is_registered_business is not None:
+            raise ValueError("isRegisteredBusiness is only collected for Agriculture / Farming.")
         leaked = [f for f in self._FARM_ONLY if getattr(self, f) is not None]
         if self.agricultural_income_proof is not None:
             leaked.append("agricultural_income_proof")
@@ -588,7 +625,7 @@ class SelfEmployedOccupation(FormModel):
             "business_proof": (
                 bool(self.owns_agricultural_land
                      and (self.itr_filed or self.agricultural_income_proof))
-                if self.is_agriculture
+                if (self.is_agriculture and not self.is_registered_business)
                 else bool(self.business_proof)
             ),
         }
@@ -977,20 +1014,23 @@ class OnboardingFormRequest(FormModel):
         # The guarantor question is only asked — and is then mandatory — when
         # residence and office are both rented (form step-3 description).
         if isinstance(self.occupation, SelfEmployedOccupation):
-            # A separately addressed office is assessed on its own premises
-            # tenure and never triggers the guarantor question.
-            resi_cum_office_rented = (
-                self.property_status is PropertyStatus.RESI_CUM_OFFICE_RENTED
-            )
-            if resi_cum_office_rented and self.occupation.guarantor_status is None:
-                raise ValueError(
-                    "guarantorStatus is required when the office operates out of a rented residence."
+            if self.occupation.is_agriculture and not self.occupation.is_registered_business:
+                pass
+            else:
+                # A separately addressed office is assessed on its own premises
+                # tenure and never triggers the guarantor question.
+                resi_cum_office_rented = (
+                    self.property_status is PropertyStatus.RESI_CUM_OFFICE_RENTED
                 )
-            if not resi_cum_office_rented and self.occupation.guarantor_status is not None:
-                raise ValueError(
-                    "guarantorStatus is only collected when the office operates out of a "
-                    "rented residence."
-                )
+                if resi_cum_office_rented and self.occupation.guarantor_status is None:
+                    raise ValueError(
+                        "guarantorStatus is required when the office operates out of a rented residence."
+                    )
+                if not resi_cum_office_rented and self.occupation.guarantor_status is not None:
+                    raise ValueError(
+                        "guarantorStatus is only collected when the office operates out of a "
+                        "rented residence."
+                    )
 
         return self
 
@@ -999,6 +1039,16 @@ class OnboardingFormRequest(FormModel):
         """Resolve residence + workplace tenure into the matrix's vocabulary."""
         if self.address is None:
             return PropertyStatus.OWNED
+        if (
+            isinstance(self.occupation, SelfEmployedOccupation)
+            and self.occupation.is_agriculture
+            and not self.occupation.is_registered_business
+        ):
+            if self.occupation.owns_agricultural_land:
+                return PropertyStatus.RESI_CUM_OFFICE_OWNED
+            else:
+                return PropertyStatus.RESI_CUM_OFFICE_RENTED
+
         key = (
             self.address.resident_details,
             self.occupation.office_address_type,

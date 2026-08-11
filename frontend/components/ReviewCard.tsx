@@ -102,11 +102,19 @@ export function ReviewCard({
               ["Documentation", draft.rentalIncomeType],
             ]
           : isAgriculture(draft)
-          ? [
+          ? ([
               ["Profile Type", "Agriculture / Farming"],
+              ["Registered Business?", draft.isRegisteredBusiness ? "Yes" : "No"],
               ["Land", `${draft.ownsAgriculturalLand ? "Owned" : "Not owned"} — ${draft.agriculturalLandLocation || "—"}`],
               ["Annual Agricultural Income", `₹${Number(draft.annualAgriculturalIncome || 0).toLocaleString("en-IN")}`],
-            ]
+              ...(draft.isRegisteredBusiness
+                ? [
+                    ["Business Inception", draft.businessEstablishmentDate || "—"],
+                    ["Business Proof", draft.businessProof || "—"],
+                    ["Declared ITR", `₹${Number(draft.currentITRAmount || 0).toLocaleString("en-IN")}`],
+                  ]
+                : []),
+            ] as [string, string][])
           : [
               ["Profile Type", "Self-Employed Entity"],
               ["Business Inception", draft.businessEstablishmentDate || "—"],

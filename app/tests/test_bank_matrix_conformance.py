@@ -518,6 +518,7 @@ def build_form(c: Dict[str, Any]) -> Dict[str, Any]:
             occupation = {
                 "profileType": "Self-Employed",
                 "businessEntityType": "Agriculture",
+                "isRegisteredBusiness": False,
                 "ownsAgriculturalLand": c["business_proof"],
                 "agriculturalLandLocation": "Survey 42, Mandya, Karnataka",
                 "annualAgriculturalIncome": c["current_itr"],
