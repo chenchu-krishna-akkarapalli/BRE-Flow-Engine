@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["_meta", "assessee_info", "bank_details", "return_details", "computation_of_total_income", "tax_computation", "financial_particulars"],
+  "properties": {
+    "_meta": {
+      "type": "object",
+      "required": ["ocr_used", "source", "confidence_score", "confidence_breakdown", "low_confidence_fields"],
+      "properties": {
+        "ocr_used": {"type": "boolean"},
+        "source": {"type": "string"},
+        "confidence_score": {"type": "number", "minimum": 0, "maximum": 1},
+        "confidence_breakdown": {
+          "type": "object",
+          "required": ["assessee_info", "bank_details", "return_details", "computation", "tax_computation"],
+          "additionalProperties": false,
+          "properties": {
+            "assessee_info": {"type": "number", "minimum": 0, "maximum": 1},
+            "bank_details": {"type": "number", "minimum": 0, "maximum": 1},
+            "return_details": {"type": "number", "minimum": 0, "maximum": 1},
+            "computation": {"type": "number", "minimum": 0, "maximum": 1},
+            "tax_computation": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        },
+        "low_confidence_fields": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "assessee_info": {"$ref": "#/$defs/assessee_info"},
+    "bank_details": {"$ref": "#/$defs/bank_details"},
+    "return_details": {"$ref": "#/$defs/return_details"},
+    "computation_of_total_income": {"$ref": "#/$defs/computation"},
+    "tax_computation": {"$ref": "#/$defs/tax_computation"},
+    "financial_particulars": {"$ref": "#/$defs/financial_particulars"}
+  },
+  "$defs": {
+    "string_or_null": {"type": ["string", "null"]},
+    "integer_or_null": {"type": ["integer", "null"]},
+    "assessee_info": {"type": "object", "additionalProperties": false, "required": ["name", "pan", "father_name", "residential_address", "status", "assessment_year", "ward_no", "financial_year", "gender", "date_of_birth", "email", "residential_status"], "properties": {"name": {"$ref": "#/$defs/string_or_null"}, "pan": {"$ref": "#/$defs/string_or_null"}, "father_name": {"$ref": "#/$defs/string_or_null"}, "residential_address": {"$ref": "#/$defs/string_or_null"}, "status": {"$ref": "#/$defs/string_or_null"}, "assessment_year": {"$ref": "#/$defs/string_or_null"}, "ward_no": {"$ref": "#/$defs/string_or_null"}, "financial_year": {"$ref": "#/$defs/string_or_null"}, "gender": {"$ref": "#/$defs/string_or_null"}, "date_of_birth": {"$ref": "#/$defs/string_or_null"}, "email": {"$ref": "#/$defs/string_or_null"}, "residential_status": {"$ref": "#/$defs/string_or_null"}}},
+    "bank_details": {"type": "object", "additionalProperties": false, "required": ["bank_name", "ifsc_code", "account_no", "branch_address"], "properties": {"bank_name": {"$ref": "#/$defs/string_or_null"}, "ifsc_code": {"$ref": "#/$defs/string_or_null"}, "account_no": {"$ref": "#/$defs/string_or_null"}, "branch_address": {"$ref": "#/$defs/string_or_null"}}},
+    "return_details": {"type": "object", "additionalProperties": false, "required": ["form_type", "filing_status", "filing_date", "acknowledgement_no"], "properties": {"form_type": {"$ref": "#/$defs/string_or_null"}, "filing_status": {"$ref": "#/$defs/string_or_null"}, "filing_date": {"$ref": "#/$defs/string_or_null"}, "acknowledgement_no": {"$ref": "#/$defs/string_or_null"}}},
+    "tier": {"type": "object", "additionalProperties": false, "required": ["presumptive_rate_pct", "deemed_base_turnover", "deemed_profit", "declared_profit", "profit_taken_higher_of_declared_or_deemed"], "properties": {"presumptive_rate_pct": {"$ref": "#/$defs/integer_or_null"}, "deemed_base_turnover": {"$ref": "#/$defs/integer_or_null"}, "deemed_profit": {"$ref": "#/$defs/integer_or_null"}, "declared_profit": {"$ref": "#/$defs/integer_or_null"}, "profit_taken_higher_of_declared_or_deemed": {"$ref": "#/$defs/integer_or_null"}}},
+    "computation": {"type": "object", "additionalProperties": false, "required": ["profits_and_gains_business_profession", "gross_total_income", "total_income", "total_income_rounded_288a"], "properties": {"profits_and_gains_business_profession": {"type": "object", "additionalProperties": false, "required": ["tiers", "section_total"], "properties": {"tiers": {"type": "array", "items": {"$ref": "#/$defs/tier"}}, "section_total": {"$ref": "#/$defs/integer_or_null"}}}, "gross_total_income": {"$ref": "#/$defs/integer_or_null"}, "total_income": {"$ref": "#/$defs/integer_or_null"}, "total_income_rounded_288a": {"$ref": "#/$defs/integer_or_null"}}},
+    "tax_slab": {"type": "object", "additionalProperties": false, "required": ["slab_upper_limit_or_amount", "tax"], "properties": {"slab_upper_limit_or_amount": {"$ref": "#/$defs/integer_or_null"}, "tax": {"$ref": "#/$defs/integer_or_null"}}},
+    "tds": {"type": "object", "additionalProperties": false, "required": ["section", "description", "amount"], "properties": {"section": {"$ref": "#/$defs/string_or_null"}, "description": {"$ref": "#/$defs/string_or_null"}, "amount": {"$ref": "#/$defs/integer_or_null"}}},
+    "tax_computation": {"type": "object", "additionalProperties": false, "required": ["slabs", "rebate_87a", "tds", "refundable"], "properties": {"slabs": {"type": "array", "items": {"$ref": "#/$defs/tax_slab"}}, "rebate_87a": {"$ref": "#/$defs/integer_or_null"}, "tds": {"type": "array", "items": {"$ref": "#/$defs/tds"}}, "refundable": {"$ref": "#/$defs/integer_or_null"}}},
+    "financial_particulars": {"type": "object", "additionalProperties": false, "required": ["sundry_creditors", "total_capital_and_liabilities", "inventories", "sundry_debtors", "balance_with_banks", "cash_in_hand", "total_assets"], "properties": {"sundry_creditors": {"$ref": "#/$defs/integer_or_null"}, "total_capital_and_liabilities": {"$ref": "#/$defs/integer_or_null"}, "inventories": {"$ref": "#/$defs/integer_or_null"}, "sundry_debtors": {"$ref": "#/$defs/integer_or_null"}, "balance_with_banks": {"$ref": "#/$defs/integer_or_null"}, "cash_in_hand": {"$ref": "#/$defs/integer_or_null"}, "total_assets": {"$ref": "#/$defs/integer_or_null"}}}
+  }
+}

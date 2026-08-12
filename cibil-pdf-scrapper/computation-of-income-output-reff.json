@@ -1,0 +1,90 @@
+{
+  "_meta": {
+    "ocr_used": false,
+    "source": "text_layer"
+  },
+  "assessee_info": {
+    "name": "ANTU RAHOURA",
+    "pan": "DRXPR6032J",
+    "father_name": "MUNNA LAL RAHOURA",
+    "residential_address": "badera, badera shivpuri, Badera B.O, Badera, MADHYA PRADESH-473670",
+    "status": "INDIVIDUAL",
+    "assessment_year": "2026 - 2027",
+    "ward_no": "ITO-ASHOK NAGAR/",
+    "financial_year": "2025 - 2026",
+    "gender": "MALE",
+    "date_of_birth": "01/01/1994",
+    "email": "arahora20@gmail.com",
+    "residential_status": "RESIDENT"
+  },
+  "bank_details": {
+    "bank_name": "STATE BANK OF INDIA",
+    "ifsc_code": "SBIN0030088",
+    "account_no": "37930252301",
+    "branch_address": "CHANDERI ROAD, PICHORE"
+  },
+  "return_details": {
+    "form_type": "ITR-4",
+    "filing_status": "ORIGINAL",
+    "filing_date": "27/07/2026",
+    "acknowledgement_no": "416769700270726"
+  },
+  "computation_of_total_income": {
+    "profits_and_gains_business_profession": {
+      "tiers": [
+        {
+          "presumptive_rate_pct": 8,
+          "deemed_base_turnover": 986248,
+          "deemed_profit": 78900,
+          "declared_profit": 374774,
+          "profit_taken_higher_of_declared_or_deemed": 374774
+        },
+        {
+          "presumptive_rate_pct": 6,
+          "deemed_base_turnover": 632587,
+          "deemed_profit": 37956,
+          "declared_profit": 240383,
+          "profit_taken_higher_of_declared_or_deemed": 240383
+        }
+      ],
+      "section_total": 615157
+    },
+    "gross_total_income": 615157,
+    "total_income": 615157,
+    "total_income_rounded_288a": 615160
+  },
+  "tax_computation": {
+    "slabs": [
+      {
+        "slab_upper_limit_or_amount": 400000,
+        "tax": 0
+      },
+      {
+        "slab_upper_limit_or_amount": 215160,
+        "tax": 10758
+      },
+      {
+        "slab_upper_limit_or_amount": 615160,
+        "tax": 10758
+      }
+    ],
+    "rebate_87a": 10758,
+    "tds": [
+      {
+        "section": "194C",
+        "description": "CONTRACTORS AND SUB-CONTRACTORS",
+        "amount": 6190
+      }
+    ],
+    "refundable": 6190
+  },
+  "financial_particulars": {
+    "sundry_creditors": 0,
+    "total_capital_and_liabilities": 0,
+    "inventories": 0,
+    "sundry_debtors": 0,
+    "balance_with_banks": 0,
+    "cash_in_hand": 28654,
+    "total_assets": 28654
+  }
+}

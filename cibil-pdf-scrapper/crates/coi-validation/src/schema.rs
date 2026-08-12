@@ -7,6 +7,7 @@ pub const SCHEMA_JSON: &str = include_str!("../coi_output.schema.json");
 
 /// The nested relational contract, separate from the flat one above.
 pub const RELATIONAL_SCHEMA_JSON: &str = include_str!("../coi_relational_output.schema.json");
+pub const CONTRACT_SCHEMA_JSON: &str = include_str!("../coi_contract.schema.json");
 
 /// Count Aadhaar-shaped values in arbitrary text.
 ///
@@ -31,6 +32,10 @@ pub fn validate_against_schema(instance: &Value) -> Result<Vec<String>> {
 /// Validate a serialised relational view against `coi_relational_output.schema.json`.
 pub fn validate_relational_schema(instance: &Value) -> Result<Vec<String>> {
     check(RELATIONAL_SCHEMA_JSON, instance)
+}
+
+pub fn validate_contract(instance: &Value) -> Result<Vec<String>> {
+    check(CONTRACT_SCHEMA_JSON, instance)
 }
 
 fn check(schema_json: &str, instance: &Value) -> Result<Vec<String>> {
