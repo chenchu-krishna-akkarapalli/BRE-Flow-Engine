@@ -73,6 +73,7 @@ export interface SelfEmployedOccupation {
   guarantorStatus?: "Without a Gaurantor" | "With a Gaurantor";
   businessEntityType: string;
   businessProof?: string;
+  isRegisteredBusiness?: boolean;
   businessEstablishmentDate?: string;
   currentITRAmount?: number;
   prevITRAmount?: number;
