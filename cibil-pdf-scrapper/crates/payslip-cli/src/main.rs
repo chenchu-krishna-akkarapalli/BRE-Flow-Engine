@@ -1,8 +1,9 @@
 // payslip-cli — decode one payslip or a whole directory.
 //
 //   payslip-cli <file.pdf>              parsed payslip as JSON
+//   payslip-cli <file.pdf> --relational nested relational payslip JSON
 //   payslip-cli <file.pdf> --raw        raw runs + lines only, no interpretation
-//   payslip-cli --batch <dir>           one summary row per file, exit 1 on any failure
+//   payslip-cli --batch <dir>           one summary row per file, writes target/payslip-output
 //   payslip-cli --batch <dir> --out <d> plus one JSON document per payslip
 
 use std::fs;
@@ -20,7 +21,7 @@ fn main() -> ExitCode {
 
     if positional.is_empty() {
         eprintln!(
-            "Usage: payslip-cli <file.pdf> [--raw] [--pretty]\n       payslip-cli --batch <dir> [--json]"
+            "Usage: payslip-cli <file.pdf> [--raw] [--relational] [--pretty]\n       payslip-cli --batch <dir> [--relational] [--json]"
         );
         return ExitCode::from(2);
     }
@@ -31,13 +32,24 @@ fn main() -> ExitCode {
             .position(|a| a == "--out")
             .and_then(|i| args.get(i + 1))
             .map(PathBuf::from);
-        run_batch(Path::new(positional[0]), flag("--json"), out_dir)
+        run_batch(
+            Path::new(positional[0]),
+            flag("--json"),
+            flag("--relational"),
+            out_dir.or_else(|| {
+                Some(PathBuf::from(if flag("--relational") {
+                    "target/payslip-relational-output"
+                } else {
+                    "target/payslip-output"
+                }))
+            }),
+        )
     } else {
-        run_single(Path::new(positional[0]), flag("--raw"), flag("--pretty"))
+        run_single(Path::new(positional[0]), flag("--raw"), flag("--relational"), flag("--pretty"))
     }
 }
 
-fn run_single(path: &Path, raw_only: bool, pretty: bool) -> ExitCode {
+fn run_single(path: &Path, raw_only: bool, relational: bool, pretty: bool) -> ExitCode {
     let (bytes, name) = if path == Path::new("-") {
         let mut buf = Vec::new();
         if let Err(e) = std::io::stdin().read_to_end(&mut buf) {
@@ -80,7 +92,14 @@ fn run_single(path: &Path, raw_only: bool, pretty: bool) -> ExitCode {
         serde_json::json!({ "source": name, "pages": pages, "runs": runs, "lines": lines })
     } else {
         match payslip_parser::parse_payslip(&name, &runs, pages) {
-            Ok(p) => serde_json::to_value(&p).unwrap_or_else(|e| serde_json::json!({ "error": e.to_string() })),
+            Ok(p) => {
+                if relational {
+                    serde_json::to_value(payslip_parser::to_relational(&p))
+                } else {
+                    serde_json::to_value(&p)
+                }
+                .unwrap_or_else(|e| serde_json::json!({ "error": e.to_string() }))
+            }
             Err(e) => {
                 eprintln!("{name}: {e}");
                 return ExitCode::FAILURE;
@@ -103,7 +122,7 @@ fn run_single(path: &Path, raw_only: bool, pretty: bool) -> ExitCode {
     ExitCode::SUCCESS
 }
 
-fn run_batch(dir: &Path, as_json: bool, out_dir: Option<PathBuf>) -> ExitCode {
+fn run_batch(dir: &Path, as_json: bool, relational: bool, out_dir: Option<PathBuf>) -> ExitCode {
     if let Some(out) = &out_dir {
         if let Err(e) = fs::create_dir_all(out) {
             eprintln!("{}: {e}", out.display());
@@ -158,10 +177,14 @@ fn run_batch(dir: &Path, as_json: bool, out_dir: Option<PathBuf>) -> ExitCode {
         if let Some(out) = &out_dir {
             let target = out.join(format!("{}.json", path.file_stem().unwrap_or_default().to_string_lossy()));
             let document = match &outcome {
-                Ok(slip) => serde_json::to_value(slip).unwrap_or_else(|e| {
+                Ok(slip) => if relational {
+                    serde_json::to_value(payslip_parser::to_relational(slip))
+                } else {
+                    serde_json::to_value(slip)
+                }.unwrap_or_else(|e| {
                     serde_json::json!({ "source": name, "error": e.to_string() })
                 }),
-                Err(e) => serde_json::json!({ "source": name, "status": "FAILED", "error": e }),
+                Err(e) => serde_json::json!({ "source": name, "status": error_status(e), "error": e }),
             };
             match serde_json::to_string_pretty(&document) {
                 Ok(text) => {
@@ -177,7 +200,11 @@ fn run_batch(dir: &Path, as_json: bool, out_dir: Option<PathBuf>) -> ExitCode {
             Ok(slip) => {
                 ok += 1;
                 if as_json {
-                    records.push(serde_json::to_value(&slip).unwrap_or_default());
+                    if relational {
+                        records.push(serde_json::to_value(payslip_parser::to_relational(&slip)).unwrap_or_default());
+                    } else {
+                        records.push(serde_json::to_value(&slip).unwrap_or_default());
+                    }
                 } else {
                     println!(
                         "{:<44} {:>5} {:>6} {:>4} {:>4} {:>14}  OK ({})",
@@ -196,9 +223,9 @@ fn run_batch(dir: &Path, as_json: bool, out_dir: Option<PathBuf>) -> ExitCode {
                 // Surfaced, never swallowed: a file that could not be read is
                 // reported by name with its reason and fails the run.
                 if as_json {
-                    records.push(serde_json::json!({ "source": name, "error": e }));
+                    records.push(serde_json::json!({ "source": name, "status": error_status(&e), "error": e }));
                 } else {
-                    println!("{:<44} {:>5} {:>6} {:>4} {:>4} {:>14}  FAILED: {}", short, "-", "-", "-", "-", "-", e);
+                    println!("{:<44} {:>5} {:>6} {:>4} {:>4} {:>14}  {}: {}", short, "-", "-", "-", "-", "-", error_status(&e), e);
                 }
             }
         }
@@ -215,4 +242,8 @@ fn run_batch(dir: &Path, as_json: bool, out_dir: Option<PathBuf>) -> ExitCode {
     }
 
     if failed == 0 { ExitCode::SUCCESS } else { ExitCode::FAILURE }
+}
+
+fn error_status(error: &str) -> &'static str {
+    if error.contains("No extractable text") { "SCAN_NO_TEXT" } else { "FAILED" }
 }

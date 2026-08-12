@@ -1238,6 +1238,7 @@ dependencies = [
  "payslip-layout",
  "regex",
  "serde",
+ "serde_json",
 ]
 
 [[package]]

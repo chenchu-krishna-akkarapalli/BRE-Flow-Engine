@@ -4,5 +4,7 @@
 pub mod fields;
 pub mod parser;
 pub mod patterns;
+pub mod relational;
 
 pub use parser::parse_payslip;
+pub use relational::to_relational;

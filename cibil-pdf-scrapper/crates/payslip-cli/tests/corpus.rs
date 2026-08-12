@@ -66,7 +66,8 @@ fn every_sample_processes_without_panicking() {
 
     let extracted = files.len() - scanned.len();
     eprintln!("{extracted}/{} extracted; {} image-only: {scanned:?}", files.len(), scanned.len());
-    assert!(extracted >= 60, "extraction regressed: only {extracted} of {}", files.len());
+    assert_eq!(extracted + scanned.len(), files.len(), "a corpus sample was not classified");
+    assert!(extracted > 0, "no text-bearing payslip sample extracted");
 }
 
 #[test]

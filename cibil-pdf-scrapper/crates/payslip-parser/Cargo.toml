@@ -9,3 +9,6 @@ payslip-layout = { path = "../payslip-layout" }
 payslip-domain = { path = "../payslip-domain" }
 regex = { workspace = true }
 serde = { workspace = true }
+
+[dev-dependencies]
+serde_json = { workspace = true }

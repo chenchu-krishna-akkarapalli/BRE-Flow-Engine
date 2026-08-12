@@ -219,14 +219,14 @@ fn split_line_items(lines: &[Line]) -> (Vec<Earning>, Vec<Deduction>) {
             continue;
         }
 
-        // Two amounts on one row in a side-by-side layout: left is the earning,
-        // right the deduction, and the row feeds both sides.
-        if two_column && amounts.len() >= 2 {
-            let labels: Vec<&String> = line
-                .segments
-                .iter()
-                .filter(|s| Money::parse(s).is_none() && s.trim().len() > 1)
-                .collect();
+        let labels: Vec<&String> = line
+            .segments
+            .iter()
+            .filter(|s| Money::parse(s).is_none() && s.trim().len() > 1)
+            .collect();
+
+        // Two labelled sides share a row; a single label with two figures is a current/YTD row.
+        if two_column && amounts.len() >= 2 && labels.len() >= 2 {
             let e_label = labels.first().map(|s| s.trim().to_string()).unwrap_or_else(|| label.clone());
             let d_label = labels.get(1).map(|s| s.trim().to_string()).unwrap_or_else(|| label.clone());
 
@@ -238,9 +238,10 @@ fn split_line_items(lines: &[Line]) -> (Vec<Earning>, Vec<Deduction>) {
                 });
             }
             if !patterns::is_annual_row(&d_label) {
+                let deduction_index = if amounts.len() >= 4 { 2 } else { 1 };
                 deductions.push(Deduction {
                     label: d_label,
-                    amount: Some(amounts[1].clone()),
+                    amount: Some(amounts[deduction_index].clone()),
                     raw_line: raw,
                 });
             }
@@ -251,7 +252,11 @@ fn split_line_items(lines: &[Line]) -> (Vec<Earning>, Vec<Deduction>) {
             continue;
         }
 
-        let amount = amounts.into_iter().next_back();
+        let amount = if two_column && amounts.len() >= 2 {
+            amounts.into_iter().next()
+        } else {
+            amounts.into_iter().next_back()
+        };
         match section {
             Section::Earnings => earnings.push(Earning { label, amount, raw_line: raw }),
             Section::Deductions => deductions.push(Deduction { label, amount, raw_line: raw }),
