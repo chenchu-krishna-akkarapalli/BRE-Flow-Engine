@@ -22,6 +22,7 @@ from app.api.schemas.onboarding import (
     OtpSendResponse,
     OtpVerifyRequest,
     OtpVerifyResponse,
+    PayslipExtractionResponse,
     RejectionReasonDetail,
 )
 from app.core.database import get_db
@@ -34,6 +35,7 @@ from app.services.bre_engine import bre_engine_service
 from app.services.cibil_service import CibilEngineError, extract_cibil_report
 from app.services.export_service import build_excel, build_pdf
 from app.services.ocr_service import extract_aadhaar_card, extract_pan_card, validate_upload
+from app.services.payslip_service import PayslipEngineError, extract_payslip_report
 from app.services.verification_service import send_otp, verify_otp
 
 router = APIRouter()
@@ -440,6 +442,37 @@ async def extract_cibil_report_document(
         filename=filename,
         size_bytes=len(content),
         status=extraction_status,
+        message=message,
+        extracted=extracted,
+    )
+
+
+@router.post("/documents/payslip/extract", response_model=PayslipExtractionResponse)
+async def extract_payslip_report_document(
+    file: UploadFile = File(..., description="Payslip report PDF, up to 5 MB."),
+    tenant_id: str = Depends(get_current_tenant),
+):
+    """Parse a Payslip report with the Rust engine and return Step-3 salary fields."""
+    content = await file.read()
+    filename = file.filename or "payslip-report.pdf"
+
+    if len(content) > 5 * 1024 * 1024:
+        raise HTTPException(
+            status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            "Upload exceeds 5 MB limit.",
+        )
+
+    try:
+        extracted, extraction_status, message = await extract_payslip_report(
+            content, file.content_type, filename
+        )
+    except PayslipEngineError as exc:
+        logger.error(f"Payslip engine unavailable for tenant '{tenant_id}': {exc}")
+        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, str(exc))
+
+    return PayslipExtractionResponse(
+        filename=filename,
+        extraction_status=extraction_status,
         message=message,
         extracted=extracted,
     )

@@ -6,6 +6,7 @@
 //   payslip-cli --batch <dir> --out <d> plus one JSON document per payslip
 
 use std::fs;
+use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
@@ -37,11 +38,30 @@ fn main() -> ExitCode {
 }
 
 fn run_single(path: &Path, raw_only: bool, pretty: bool) -> ExitCode {
-    let bytes = match fs::read(path) {
-        Ok(b) => b,
-        Err(e) => {
-            eprintln!("{}: {e}", path.display());
+    let (bytes, name) = if path == Path::new("-") {
+        let mut buf = Vec::new();
+        if let Err(e) = std::io::stdin().read_to_end(&mut buf) {
+            eprintln!("stdin error: {e}");
             return ExitCode::FAILURE;
+        }
+        if buf.len() < 8 {
+            (buf, "stdin.pdf".to_string())
+        } else {
+            let len = u64::from_le_bytes(buf[..8].try_into().unwrap()) as usize;
+            let end = 8usize.saturating_add(len);
+            if end <= buf.len() {
+                (buf[end..].to_vec(), "stdin.pdf".to_string())
+            } else {
+                (buf, "stdin.pdf".to_string())
+            }
+        }
+    } else {
+        match fs::read(path) {
+            Ok(b) => (b, path.display().to_string()),
+            Err(e) => {
+                eprintln!("{}: {e}", path.display());
+                return ExitCode::FAILURE;
+            }
         }
     };
 
@@ -49,7 +69,7 @@ fn run_single(path: &Path, raw_only: bool, pretty: bool) -> ExitCode {
     let runs = match source.extract_runs(&bytes) {
         Ok(r) => r,
         Err(e) => {
-            eprintln!("{}: {e}", path.display());
+            eprintln!("{name}: {e}");
             return ExitCode::FAILURE;
         }
     };
@@ -57,12 +77,12 @@ fn run_single(path: &Path, raw_only: bool, pretty: bool) -> ExitCode {
 
     let json = if raw_only {
         let lines = payslip_layout::group_lines(&runs);
-        serde_json::json!({ "source": path.display().to_string(), "pages": pages, "runs": runs, "lines": lines })
+        serde_json::json!({ "source": name, "pages": pages, "runs": runs, "lines": lines })
     } else {
-        match payslip_parser::parse_payslip(&path.display().to_string(), &runs, pages) {
+        match payslip_parser::parse_payslip(&name, &runs, pages) {
             Ok(p) => serde_json::to_value(&p).unwrap_or_else(|e| serde_json::json!({ "error": e.to_string() })),
             Err(e) => {
-                eprintln!("{}: {e}", path.display());
+                eprintln!("{name}: {e}");
                 return ExitCode::FAILURE;
             }
         }

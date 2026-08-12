@@ -58,7 +58,9 @@ SEVERE_DPD_DAYS = 90
 # Reported years that count as CURRENT delinquency for bureauDpd.
 DPD_RECENT_YEARS = 2
 
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 _ENGINE_DEFAULT_RELATIVE = Path("cibil-pdf-scrapper/target/release/cibil-cli.exe")
+_ENGINE_DEFAULT_ABSOLUTE = _PROJECT_ROOT / "cibil-pdf-scrapper" / "target" / "release" / "cibil-cli.exe"
 
 
 class CibilEngineError(RuntimeError):
@@ -83,7 +85,12 @@ def _binary_path() -> Optional[str]:
     if configured:
         return configured if Path(configured).exists() else None
 
-    for candidate in (_ENGINE_DEFAULT_RELATIVE, _ENGINE_DEFAULT_RELATIVE.with_suffix("")):
+    for candidate in (
+        _ENGINE_DEFAULT_ABSOLUTE,
+        _ENGINE_DEFAULT_ABSOLUTE.with_suffix(""),
+        _ENGINE_DEFAULT_RELATIVE,
+        _ENGINE_DEFAULT_RELATIVE.with_suffix(""),
+    ):
         if candidate.exists():
             return str(candidate)
     return shutil.which("cibil-cli")

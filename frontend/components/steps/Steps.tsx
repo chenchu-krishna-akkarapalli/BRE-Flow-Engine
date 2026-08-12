@@ -14,6 +14,7 @@ import {
 } from "@/lib/form-schema";
 import { CibilUpload } from "@/components/CibilUpload";
 import { DocumentUpload } from "@/components/DocumentUpload";
+import { PayslipUpload } from "@/components/PayslipUpload";
 import { VerifyField } from "@/components/VerifyField";
 import {
   CO_APPLICANT_ITR_THRESHOLD, LOAN_TENOR_YEARS, RENTAL_DOC_IN_BANK, RENTAL_DOC_WITH_ITR,
@@ -672,6 +673,8 @@ export function Step3Occupation() {
               )}
             </>
           )}
+
+          <PayslipUpload />
 
           <div className="grid gap-6 sm:grid-cols-2">
             <Field label="Gross Salary" htmlFor="grossSalary">

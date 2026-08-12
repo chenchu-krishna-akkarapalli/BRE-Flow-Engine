@@ -56,7 +56,7 @@ fn value_for(line: &Line, label: &str) -> Option<String> {
                     return Some(value.to_string());
                 }
             }
-            // Next non-empty segment across the column gap.
+            // Next non-empty segment across the column gap on same line.
             for candidate in line.segments.iter().skip(index + 1) {
                 let value = candidate.trim().trim_start_matches(':').trim();
                 if !value.is_empty() {
@@ -75,7 +75,17 @@ fn value_for(line: &Line, label: &str) -> Option<String> {
 /// the label's.
 fn value_below(lines: &[Line], index: usize, label: &str) -> Option<String> {
     let line = lines.get(index)?;
-    let next = lines.get(index + 1)?;
+    let mut next_idx = index + 1;
+
+    // If next line is a secondary label row (e.g. "Gender", "Days Worked"), skip to the value row beneath it
+    if let Some(candidate_line) = lines.get(next_idx) {
+        let text_upper = candidate_line.text().to_ascii_uppercase();
+        if text_upper.contains("GENDER") || text_upper.contains("DAYS WORKED") || text_upper.contains("DATE OF JOINING") || text_upper.contains("LOP DAYS") {
+            next_idx += 1;
+        }
+    }
+
+    let next = lines.get(next_idx)?;
     if next.page != line.page {
         return None;
     }
@@ -84,13 +94,87 @@ fn value_below(lines: &[Line], index: usize, label: &str) -> Option<String> {
         let trimmed = s.trim().trim_end_matches(':').trim().to_ascii_uppercase();
         trimmed == label
     })?;
-    let anchor = *line.segment_boxes.get(position)?;
 
+    // Index-based matching for two-tier header/value rows with matching segment counts
+    if line.segments.len() > 1 && line.segments.len() == next.segments.len() {
+        if let Some(val_seg) = next.segments.get(position) {
+            let trimmed_val = val_seg.trim().trim_start_matches(':').trim();
+            let upper_val = trimmed_val.to_ascii_uppercase();
+            if !trimmed_val.is_empty() && !EMPLOYEE_LABELS.iter().any(|(l, _)| upper_val == *l || upper_val.starts_with(l)) {
+                return Some(trimmed_val.to_string());
+            }
+        }
+    }
+
+    let anchor = *line.segment_boxes.get(position)?;
     next.segments
         .iter()
         .zip(next.segment_boxes.iter())
-        .find(|(text, bbox)| anchor.horizontally_overlaps(bbox) && !text.trim().is_empty())
-        .map(|(text, _)| text.trim().to_string())
+        .find(|(text, bbox)| {
+            let t_upper = text.trim().to_ascii_uppercase();
+            anchor.horizontally_overlaps(bbox)
+                && !text.trim().is_empty()
+                && !EMPLOYEE_LABELS.iter().any(|(l, _)| t_upper == *l || t_upper.starts_with(l))
+        })
+        .map(|(text, _)| text.trim().trim_start_matches(':').trim().to_string())
+}
+
+fn next_line_colon_value(lines: &[Line], index: usize, label: &str) -> Option<String> {
+    let line = lines.get(index)?;
+    let upper = line.text().to_ascii_uppercase();
+    let trimmed_upper = upper.trim();
+    if (trimmed_upper == label || trimmed_upper.starts_with(label)) && trimmed_upper != "BANK NAME" && trimmed_upper != "COMPANY NAME" {
+        if let Some(next_line) = lines.get(index + 1) {
+            let next_text = next_line.text().trim().to_string();
+            if next_text.starts_with(':') {
+                let val = next_text.trim_start_matches(':').trim();
+                if !val.is_empty() {
+                    return Some(val.to_string());
+                }
+            }
+        }
+    }
+    None
+}
+
+fn value_in_other_lines(lines: &[Line], label: &str) -> Option<String> {
+    for (line_idx, line) in lines.iter().enumerate() {
+        for (seg_idx, segment) in line.segments.iter().enumerate() {
+            let trimmed = segment.trim_end_matches(':').trim().to_ascii_uppercase();
+            if (trimmed == label || trimmed.starts_with(label)) && trimmed != "BANK NAME" && trimmed != "COMPANY NAME" {
+                for (other_idx, other_line) in lines.iter().enumerate() {
+                    if other_idx == line_idx {
+                        continue;
+                    }
+                    if let Some(candidate) = other_line.segments.get(seg_idx) {
+                        let candidate_trim = candidate.trim().trim_start_matches(':').trim();
+                        let candidate_upper = candidate_trim.to_ascii_uppercase();
+                        if !candidate_trim.is_empty()
+                            && candidate_trim.len() > 1
+                            && !candidate_trim.starts_with(':')
+                            && Money::parse(candidate_trim).is_none()
+                            && !EMPLOYEE_LABELS.iter().any(|(l, _)| candidate_upper == *l || candidate_upper.starts_with(l))
+                            && !candidate_upper.contains("BANK")
+                            && !candidate_upper.contains("A/C")
+                            && !candidate_upper.contains("NO.")
+                            && !candidate_upper.contains("DAYS")
+                            && candidate_upper != "MALE"
+                            && candidate_upper != "FEMALE"
+                            && candidate_upper != "GENDER"
+                            && candidate_upper != "DETAILS"
+                            && candidate_upper != "OTHER COMPONENTS"
+                            && candidate_upper != "TOTAL"
+                            && candidate_upper != "CURRENT MONTH"
+                            && candidate_upper != "YTD"
+                        {
+                            return Some(candidate_trim.to_string());
+                        }
+                    }
+                }
+            }
+        }
+    }
+    None
 }
 
 pub fn extract_employee(lines: &[Line]) -> EmployeeInfo {
@@ -102,10 +186,6 @@ pub fn extract_employee(lines: &[Line]) -> EmployeeInfo {
         labels.sort_by_key(|(label, _)| std::cmp::Reverse(label.len()));
 
         for (label, slot) in labels {
-            let Some(value) = value_for(line, label).or_else(|| value_below(lines, index, label))
-            else {
-                continue;
-            };
             let target = match *slot {
                 "name" => &mut info.name,
                 "employee_id" => &mut info.employee_id,
@@ -119,10 +199,19 @@ pub fn extract_employee(lines: &[Line]) -> EmployeeInfo {
                 "date_of_joining" => &mut info.date_of_joining,
                 _ => continue,
             };
-            // First hit wins: headers appear before any repetition in footers.
-            if target.is_none() {
-                *target = Some(value);
+            if target.is_some() {
+                continue;
             }
+
+            let Some(value) = value_for(line, label)
+                .or_else(|| next_line_colon_value(lines, index, label))
+                .or_else(|| value_below(lines, index, label))
+                .or_else(|| value_in_other_lines(lines, label))
+            else {
+                continue;
+            };
+
+            *target = Some(value);
         }
     }
 
@@ -233,8 +322,11 @@ pub fn extract_net_pay_words(lines: &[Line]) -> Option<String> {
 /// whichever label was searched for first. The amount that belongs to a label
 /// is the next one after it.
 pub fn labelled_amount(lines: &[Line], labels: &[&str]) -> Option<Money> {
-    for line in lines {
-        for label in labels {
+    for label in labels {
+        for (line_idx, line) in lines.iter().enumerate() {
+            if patterns::is_annual_row(&line.text()) {
+                continue;
+            }
             for (index, segment) in line.segments.iter().enumerate() {
                 let Some(at) = segment.to_ascii_uppercase().find(label) else { continue };
 
@@ -242,10 +334,26 @@ pub fn labelled_amount(lines: &[Line], labels: &[&str]) -> Option<Money> {
                 if let Some(money) = Money::find_first_from(segment, at + label.len()) {
                     return Some(money);
                 }
-                // Otherwise the first amount in a following cell.
+                // Otherwise the first amount in a following cell on the same line.
+                let mut found_on_line = None;
                 for next in line.segments.iter().skip(index + 1) {
                     if let Some(money) = Money::find_first(next) {
-                        return Some(money);
+                        found_on_line = Some(money);
+                        break;
+                    }
+                }
+                if found_on_line.is_some() {
+                    return found_on_line;
+                }
+
+                // If no amount on the same line, check the line immediately beneath.
+                if let Some(next_line) = lines.get(line_idx + 1) {
+                    if !patterns::is_annual_row(&next_line.text()) {
+                        for seg in &next_line.segments {
+                            if let Some(money) = Money::find_first(seg) {
+                                return Some(money);
+                            }
+                        }
                     }
                 }
             }
