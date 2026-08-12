@@ -1230,6 +1230,17 @@ class CibilExtractionResponse(BaseModel):
     extracted: Dict[str, Any] = Field(default_factory=dict)
 
 
+class PayslipExtractionResponse(BaseModel):
+    """Step-3 salary fields lifted off an uploaded Payslip PDF report."""
+
+    filename: str
+    extraction_status: str = Field(alias="extraction_status", default="SUCCESS")
+    message: str = ""
+    extracted: Dict[str, Any] = Field(default_factory=dict)
+
+    model_config = ConfigDict(populate_by_name=True)
+
+
 class OtpSendRequest(BaseModel):
     channel: Literal["email", "mobile"]
     target: str = Field(min_length=1, max_length=254, description="Email address or 10-digit mobile.")

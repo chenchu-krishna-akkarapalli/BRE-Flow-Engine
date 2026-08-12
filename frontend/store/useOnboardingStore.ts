@@ -613,12 +613,15 @@ interface OnboardingState {
   // Non-null once a CIBIL report has been parsed: the bureau inputs are locked
   // to what it says, and the badge names the file they came from.
   cibilVerified: { filename: string; evidence: Record<string, unknown> } | null;
+  payslipVerified: { filename: string; evidence: Record<string, unknown> } | null;
 
   setField: <K extends keyof Draft>(key: K, value: Draft[K]) => void;
   // Bureau fields read off an uploaded CIBIL report. Set together so the
   // verified badge and the locked inputs can never disagree about their source.
   applyCibilExtraction: (fields: Record<string, unknown>, filename: string) => void;
   clearCibilExtraction: () => void;
+  applyPayslipExtraction: (fields: Record<string, unknown>, filename: string) => void;
+  clearPayslipExtraction: () => void;
   goTo: (stepId: number) => void;
   next: () => void;
   prev: () => void;
@@ -633,6 +636,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   result: null,
   error: null,
   cibilVerified: null,
+  payslipVerified: null,
 
   setField: (key, value) =>
     set((state) => {
@@ -685,6 +689,37 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
     }),
 
   clearCibilExtraction: () => set({ cibilVerified: null }),
+
+  applyPayslipExtraction: (fields, filename) =>
+    set((state) => {
+      const draft = { ...state.draft };
+      const evaluated = (fields.evaluated as Record<string, unknown>) ?? {};
+      const gross = Number(evaluated.monthlyGrossSalary ?? fields.grossSalary ?? 0);
+      if (gross > 0) {
+        draft.grossSalary = gross;
+      }
+      const paymentMethod = String(evaluated.salaryPaymentMethod ?? fields.salaryPaymentMethod ?? "");
+      if (paymentMethod === "Bank Account") {
+        draft.salaryMode = "Salary payment mode- Bank Credit";
+      } else if (paymentMethod === "Cash") {
+        draft.salaryMode = "Salary payment mode-Cash";
+      }
+
+      const breakdown = (fields.transparentBreakdown as Record<string, unknown>) ?? {};
+      const metadata = (breakdown.employeeMetadata as Record<string, unknown>) ?? {};
+      const applicantName = String(metadata.applicantName ?? fields.applicantName ?? "");
+      const panNumber = String(metadata.panNumber ?? fields.panNumber ?? "");
+
+      if (applicantName && !draft.applicantName) {
+        draft.applicantName = applicantName;
+      }
+      if (panNumber && !draft.pan) {
+        draft.pan = panNumber;
+      }
+      return { draft, payslipVerified: { filename, evidence: fields }, error: null };
+    }),
+
+  clearPayslipExtraction: () => set({ payslipVerified: null }),
 
   goTo: (stepId) => set({ stepId }),
 

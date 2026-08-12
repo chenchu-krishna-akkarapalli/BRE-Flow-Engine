@@ -56,9 +56,10 @@ COPY cibil-pdf-scrapper/crates ./crates
 # mount inside this same RUN or it disappears with it.
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/engine/target \
-    cargo build --release --bin cibil-cli && \
-    strip target/release/cibil-cli && \
-    cp target/release/cibil-cli /usr/local/bin/cibil-cli
+    cargo build --release --bin cibil-cli --bin payslip-cli && \
+    strip target/release/cibil-cli target/release/payslip-cli && \
+    cp target/release/cibil-cli /usr/local/bin/cibil-cli && \
+    cp target/release/payslip-cli /usr/local/bin/payslip-cli
 
 # ==========================================
 # STAGE 3: Runner Stage
@@ -83,15 +84,17 @@ RUN groupadd -g 10001 appgroup && \
 # Copy installed packages from builder stage
 COPY --from=builder /root/.local /home/appuser/.local
 
-# The CIBIL engine binary — the only artefact taken from the Rust stage.
+# The CIBIL & Payslip engine binaries — taken from the Rust stage.
 COPY --from=engine /usr/local/bin/cibil-cli /usr/local/bin/cibil-cli
+COPY --from=engine /usr/local/bin/payslip-cli /usr/local/bin/payslip-cli
 
 # Ensure path includes user installed packages
 ENV PATH=/home/appuser/.local/bin:$PATH \
     PYTHONPATH=/app \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    CIBIL_ENGINE_BINARY=/usr/local/bin/cibil-cli
+    CIBIL_ENGINE_BINARY=/usr/local/bin/cibil-cli \
+    PAYSLIP_ENGINE_BINARY=/usr/local/bin/payslip-cli
 
 # Copy application source code
 COPY --chown=appuser:appgroup . .
