@@ -90,6 +90,25 @@ Modularize domain logic across `coi-*` crates. Keep `coi-parser` focused strictl
    stability is the actual deliverable — the parsing mechanics are allowed
    to be messy internally as long as the output contract never moves.
 
+## Extended COI sections
+
+Parse the following sections with normalised label anchors and table-state
+transitions. Preserve repeated rows in their printed order.
+
+1. **Business income adjustments:** match `Profit as per P&L`, `Depreciation
+   Debited in P&L A/c`, and `Depreciation as per Chart u/s 32` to populate P&L
+   profit, additions, deductions, and net business income.
+2. **Tax and self-assessment:** match `Interest u/s 234A`, `234B`, `234C`,
+   `Deposit u/s 140A`, and `T.C.S. (as per Annexure)`; calculate total 234
+   interest only from the stated component amounts.
+3. **CA verification:** match `Membership No.`, `Chartered Accountants`, firm
+   name, and `CA <name>` around certificate/signature blocks; never infer these
+   details from the assessee header.
+4. **Annexures:** enter a row-collection state at `GST Turnover Detail`,
+   `Details of Interest From Bank`, `Details of Interest on F.D.R.`, and
+   `Details of Dividend From Shares`. GST rows require a GSTIN plus turnover;
+   all interest/dividend rows preserve their particulars and amount.
+
 ## Workflow for adding a new document type
 
 1. Get 2-3 real (anonymized) samples of the document from *different*

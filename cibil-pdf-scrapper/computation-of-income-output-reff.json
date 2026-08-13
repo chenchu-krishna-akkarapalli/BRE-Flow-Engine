@@ -86,5 +86,41 @@
     "balance_with_banks": 0,
     "cash_in_hand": 28654,
     "total_assets": 28654
+  },
+  "business_income_adjustments": {
+    "profit_as_per_pnl": 1415039,
+    "additions": [{ "particulars": "Depreciation Debited in P&L A/c", "amount": 3138 }],
+    "deductions": [{ "particulars": "Depreciation as per Chart u/s 32", "amount": 3138 }],
+    "net_business_income": 1415039
+  },
+  "other_sources_breakdown": {
+    "savings_bank_interest": 350,
+    "fdr_interest": 780,
+    "total_other_sources": 1130
+  },
+  "tax_computation_extended": {
+    "total_tax_calculated": 123234,
+    "interest_234a": 0,
+    "interest_234b": 7672,
+    "interest_234c": 5533,
+    "total_interest_234": 13205,
+    "tcs_amount": 18544,
+    "deposit_140a_self_assessment": 122820,
+    "tax_payable": 0
+  },
+  "ca_verification": {
+    "firm_name": "Rohit Mangal & Co.",
+    "ca_name": "CA Rohit Gupta",
+    "membership_no": "450221"
+  },
+  "annexures": {
+    "gst_turnover_details": [{ "gstin": "09AKLPG1674M1ZO", "turnover": 562442 }],
+    "bank_interest_list": [
+      { "particulars": "POSTMASTER GENERAL CHENNAI CITY REGION", "amount": 376 },
+      { "particulars": "ICICI BANK LIMITED", "amount": 345 },
+      { "particulars": "PUNJAB NATIONAL BANK", "amount": 8 }
+    ],
+    "fdr_interest_list": [{ "particulars": "ICICI BANK LIMITED", "amount": 7251 }],
+    "dividend_list": [{ "particulars": "BHARAT HEAVY ELECTRIALS LIMITED", "amount": 2 }]
   }
 }

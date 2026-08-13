@@ -56,11 +56,17 @@ def bugs(data: dict) -> list[str]:
 
 
 def main() -> int:
+    # Resolve cibil-pdf-scrapper root directory
+    project_root = Path(__file__).resolve().parent.parent
+    default_samples = project_root / "computation-of-income-copies-test"
+    default_binary = project_root / "target" / "release" / "coi-cli.exe"
+    default_output_dir = project_root / "target" / "coi-output"
+
     parser = argparse.ArgumentParser(description="Evaluate the offline COI CLI against the sample corpus")
-    parser.add_argument("--samples", type=Path, default=Path("computation-of-income-copies-test"))
-    parser.add_argument("--binary", type=Path, default=Path("target/release/coi-cli.exe"))
+    parser.add_argument("--samples", type=Path, default=default_samples)
+    parser.add_argument("--binary", type=Path, default=default_binary)
     parser.add_argument("--report", type=Path)
-    parser.add_argument("--output-dir", type=Path, default=Path("target/coi-output"))
+    parser.add_argument("--output-dir", type=Path, default=default_output_dir)
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
     samples = sorted(path for path in args.samples.iterdir() if path.is_file() and path.suffix.lower() == ".pdf")

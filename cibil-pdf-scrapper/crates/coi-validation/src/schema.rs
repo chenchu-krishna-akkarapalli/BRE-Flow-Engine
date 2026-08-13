@@ -52,7 +52,7 @@ fn check(schema_json: &str, instance: &Value) -> Result<Vec<String>> {
 
 #[cfg(test)]
 mod tests {
-    use super::{count_aadhaar_like, schema, validate_against_schema};
+    use super::{count_aadhaar_like, schema, validate_against_schema, validate_contract};
     use serde_json::json;
 
     #[test]
@@ -66,6 +66,13 @@ mod tests {
         let value: serde_json::Value =
             serde_json::from_str(super::RELATIONAL_SCHEMA_JSON).expect("schema parses");
         assert!(jsonschema::validator_for(&value).is_ok());
+    }
+
+    #[test]
+    fn extended_contract_accepts_every_new_section() {
+        let document = coi_domain::CoiDocument::default();
+        let value = serde_json::to_value(document).expect("serialises");
+        assert_eq!(validate_contract(&value).expect("validator runs"), Vec::<String>::new());
     }
 
     #[test]

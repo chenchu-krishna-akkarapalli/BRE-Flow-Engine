@@ -13,9 +13,11 @@ pub use computation::{
     TaxComputation, TaxCredits,
 };
 pub use contract::{
-    AssesseeInfo, BankDetails, BusinessProfession, CoiDocument, ComputationOfTotalIncome,
-    ConfidenceBreakdown, FinancialParticulars, Meta, PresumptiveTier, ReturnDetails, TaxComputationContract,
-    TaxSlab, TdsItem,
+    AdjustmentItem, AnnexureDetails, AnnexureIncomeItem, AssesseeInfo, BankDetails,
+    BusinessIncomeAdjustments, BusinessProfession, CaVerification, CoiDocument,
+    ComputationOfTotalIncome, ConfidenceBreakdown, FinancialParticulars, GstTurnoverDetail,
+    Meta, OtherSourcesBreakdown, PartnershipFirmShare, PresumptiveTier, ReturnDetails, TaxComputationContract,
+    TaxComputationExtended, TaxSlab, TdsItem,
 };
 pub use relational::{
     BusinessDetail, CapitalGainsDetail, ChapterViA, Component, DeductionEntry, DocumentMetadata,
