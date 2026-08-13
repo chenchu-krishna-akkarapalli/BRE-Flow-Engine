@@ -14,10 +14,15 @@ pub use computation::{
 };
 pub use contract::{
     AdjustmentItem, AnnexureDetails, AnnexureIncomeItem, AssesseeInfo, BankDetails,
-    BusinessIncomeAdjustments, BusinessProfession, CaVerification, CoiDocument,
-    ComputationOfTotalIncome, ConfidenceBreakdown, FinancialParticulars, GstTurnoverDetail,
-    Meta, OtherSourcesBreakdown, PartnershipFirmShare, PresumptiveTier, ReturnDetails, TaxComputationContract,
-    TaxComputationExtended, TaxSlab, TdsItem,
+    BusinessIncomeAdjustments, BusinessIncomeDetails, BusinessIncomeSection, CapitalGainSection,
+    CaVerification, CoiDocument, ComputationOfTaxOnTotalIncome, ComputationOfTotalIncome,
+    ConfidenceBreakdown, DeductionsSection, FinancialParticulars, GstTurnoverDetail,
+    HealthAndEducationCess, IncomeDeclaredBusinessTurnover, LongTermCapitalGainDetails, Meta,
+    NormalIncomeTaxCalculation, OtherSourcesBreakdown, OtherSourcesDetails,
+    OtherSourcesSection, PartnershipFirmShare, PresumptiveTier,
+    ProfitsAndGainsBusinessProfession, RateAmount, RefundDetails, ReturnDetails,
+    SalariesLayout, ShortTermCapitalGainDetails, TaxCalculationDetails, TaxComputationContract,
+    TaxComputationExtended, TaxSlab, TaxSlabItem, TdsDeductedItem, TdsItem, TotalIncomeDetails,
 };
 pub use relational::{
     BusinessDetail, CapitalGainsDetail, ChapterViA, Component, DeductionEntry, DocumentMetadata,

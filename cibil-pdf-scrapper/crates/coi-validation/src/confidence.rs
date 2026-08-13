@@ -38,9 +38,9 @@ pub fn evaluate_document(document: &mut CoiDocument, ocr_used: bool, source: &st
     let computation = score(&[
         document.computation_of_total_income.gross_total_income.is_some(),
         document.computation_of_total_income.total_income.is_some(),
-        document.computation_of_total_income.total_income_rounded_288a.is_some(),
-        !document.computation_of_total_income.profits_and_gains_business_profession.tiers.is_empty(),
-        document.computation_of_total_income.profits_and_gains_business_profession.section_total.is_some(),
+        document.computation_of_total_income.income_from_business_or_profession.is_some(),
+        document.computation_of_total_income.tax_calculation.is_some(),
+        document.computation_of_total_income.normal_income_tax_calculation.is_some(),
     ]);
     let tax_computation = optional_score(&[
         !document.tax_computation.slabs.is_empty(),

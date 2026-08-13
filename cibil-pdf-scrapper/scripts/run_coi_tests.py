@@ -21,6 +21,8 @@ def run(binary: Path, sample: Path) -> dict:
         return {"source": sample.name, "status": "FAILED", "error": process.stderr.strip()}
     try:
         data = json.loads(process.stdout)
+        if "data" in data and isinstance(data["data"], dict):
+            data = data["data"]
     except json.JSONDecodeError as error:
         return {"source": sample.name, "status": "FAILED", "error": f"invalid JSON: {error}"}
     missing = sorted(CONTRACT_KEYS - set(data))
