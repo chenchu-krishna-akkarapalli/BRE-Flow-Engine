@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import type { JSX } from "react";
-import { ArrowLeft, ArrowRight, RefreshCw, ShieldCheck, Zap } from "lucide-react";
+import { ArrowLeft, ArrowRight, RefreshCw, Zap } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AuditCards } from "@/components/AuditCards";
 import { ReviewCard } from "@/components/ReviewCard";
 import { Stepper } from "@/components/Stepper";
@@ -12,6 +13,7 @@ import {
 } from "@/components/steps/Steps";
 import { STEP_PLAN } from "@/lib/form-schema";
 import { terminationReason, useOnboardingStore } from "@/store/useOnboardingStore";
+import type { Draft } from "@/store/useOnboardingStore";
 
 const OCCUPATION_STEP = 3;
 
@@ -23,7 +25,73 @@ const STEP_COMPONENTS: Record<number, () => JSX.Element> = {
   5: Step5CoApplicant,
 };
 
-export default function OnboardingWizard() {
+function isStepCompleted(stepNum: number, draft: Draft): boolean {
+  if (stepNum === 1) {
+    if (draft.entityType === "Individual") {
+      return !!(draft.applicantName && draft.dob && draft.gender && draft.pan && draft.phone && draft.email);
+    } else {
+      return !!(draft.companyName && draft.companyType && draft.companyPan && draft.contactPersonName && draft.companyMobile && draft.companyEmail);
+    }
+  }
+  if (stepNum === 2) {
+    if (draft.entityType === "Individual") {
+      return !!(draft.pincode && draft.cityName && draft.stateName && draft.residentDetails);
+    }
+    return true; // Skip step 2 for Company
+  }
+  if (stepNum === 3) {
+    if (draft.entityType === "Individual") {
+      if (draft.occupation === "Salaried") {
+        return !!(draft.employerType && draft.grossSalary && draft.salaryMode);
+      } else if (draft.occupation === "Self-Employed") {
+        if (draft.businessEntityType === "Agriculture") {
+          return !!(draft.agriculturalLandLocation && draft.annualAgriculturalIncome);
+        } else {
+          return !!(draft.businessEntityType && draft.currentITRAmount);
+        }
+      } else if (draft.occupation === "Rental Income") {
+        return !!(draft.rentalPropertyAddress && draft.rentalIncomeAmount);
+      }
+      return false;
+    } else { // Company
+      return !!(draft.companyEstablishmentDate && draft.companyCurrentITRAmount);
+    }
+  }
+  if (stepNum === 4) {
+    return !!draft.existingAccountBank;
+  }
+  if (stepNum === 5) {
+    return true; // Optional co-applicant
+  }
+  return false;
+}
+
+function isStepAccessible(
+  targetStep: number,
+  draft: Draft,
+  plan: number[],
+  result: any
+): boolean {
+  if (targetStep === 6) {
+    return !!result;
+  }
+  if (!plan.includes(targetStep)) {
+    return false;
+  }
+  if (targetStep === plan[0]) {
+    return true;
+  }
+  const targetIndex = plan.indexOf(targetStep);
+  for (let i = 0; i < targetIndex; i++) {
+    const prevStep = plan[i];
+    if (!isStepCompleted(prevStep, draft)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function OnboardingWizardContent() {
   const draft = useOnboardingStore((s) => s.draft);
   const stepId = useOnboardingStore((s) => s.stepId);
   const submitting = useOnboardingStore((s) => s.submitting);
@@ -38,10 +106,71 @@ export default function OnboardingWizard() {
   const [showSummary, setShowSummary] = useState(false);
   const [submittingApplication, setSubmittingApplication] = useState(false);
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const plan = STEP_PLAN[draft.entityType];
   const isFirst = plan.indexOf(stepId) === 0;
   const isLast = plan.indexOf(stepId) === plan.length - 1;
   const StepBody = STEP_COMPONENTS[stepId];
+
+  // Tracking direction of animations
+  const [direction, setDirection] = useState<"forward" | "backward">("forward");
+  const [lastStepId, setLastStepId] = useState(stepId);
+
+  if (stepId !== lastStepId) {
+    setDirection(stepId > lastStepId ? "forward" : "backward");
+    setLastStepId(stepId);
+  }
+
+  const animationClass = direction === "forward" ? "slide-in-right" : "slide-in-left";
+
+  const lastStepIdRef = useRef<number>(stepId);
+
+  // Synchronize URL query parameter with Zustand store stepId
+  useEffect(() => {
+    const urlStepStr = searchParams.get("step");
+    const urlStep = urlStepStr ? parseInt(urlStepStr, 10) : null;
+
+    if (urlStep === null) {
+      router.replace(`?step=${stepId}`);
+      lastStepIdRef.current = stepId;
+      return;
+    }
+
+    if (urlStep !== stepId) {
+      if (lastStepIdRef.current !== stepId) {
+        // Store changed (via next, prev, reset, etc.), update URL
+        router.push(`?step=${stepId}`);
+        lastStepIdRef.current = stepId;
+      } else {
+        // URL changed (via browser back/forward buttons, direct manual input)
+        const isValid = urlStep === 6 ? !!result : plan.includes(urlStep);
+        const isAccessible = isValid && isStepAccessible(urlStep, draft, plan, result);
+
+        if (isAccessible) {
+          goTo(urlStep);
+          lastStepIdRef.current = urlStep;
+        } else {
+          // Revert URL to last accessible step
+          let lastAccessible = plan[0];
+          for (const s of plan) {
+            if (isStepAccessible(s, draft, plan, result)) {
+              lastAccessible = s;
+            } else {
+              break;
+            }
+          }
+          const fallbackStep = result ? 6 : lastAccessible;
+          router.replace(`?step=${fallbackStep}`);
+          goTo(fallbackStep);
+          lastStepIdRef.current = fallbackStep;
+        }
+      }
+    } else {
+      lastStepIdRef.current = stepId;
+    }
+  }, [searchParams, stepId, draft, result, plan, goTo, router]);
 
   // add-on.md §5/§6: these end the application where they are answered, so the
   // applicant is told at step 3 rather than after four more steps of questions.
@@ -115,7 +244,7 @@ export default function OnboardingWizard() {
       <main className="mx-auto flex w-full max-w-[var(--shell-max)] flex-1 flex-col gap-8 px-6 pt-4 pb-8 lg:flex-row lg:items-start animate-fade-in">
         {stepId === 6 ? (
           /* Step 6 Content - Side-by-side layout on large screens */
-          <div className="flex w-full flex-col gap-8 lg:flex-row lg:items-start max-w-[var(--shell-max)] mx-auto animate-in fade-in duration-300">
+          <div className={`flex w-full flex-col gap-8 lg:flex-row lg:items-start max-w-[var(--shell-max)] mx-auto ${animationClass}`}>
             {/* Left Column: Full Audit Trail */}
             <div className="flex w-full flex-col gap-6 lg:max-w-[var(--form-col)]">
               {/* Stepper Progress Header */}
@@ -153,7 +282,7 @@ export default function OnboardingWizard() {
               {/* Form Step Body Container with Day Mode Glass Panel */}
               <section
                 key={stepId}
-                className="step-enter glass-panel rounded-2xl p-6 sm:p-8 shadow-sm border border-line bg-white"
+                className={`${animationClass} glass-panel rounded-2xl p-6 sm:p-8 shadow-sm border border-line bg-white overflow-hidden`}
               >
                 {StepBody && <StepBody />}
               </section>
@@ -246,3 +375,16 @@ export default function OnboardingWizard() {
     </div>
   );
 }
+
+export default function OnboardingWizard() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center bg-bg-deep text-ink">
+        <RefreshCw className="animate-spin text-brand-500" size={32} />
+      </div>
+    }>
+      <OnboardingWizardContent />
+    </Suspense>
+  );
+}
+
