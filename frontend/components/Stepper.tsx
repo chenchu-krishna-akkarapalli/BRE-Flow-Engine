@@ -1,161 +1,104 @@
 "use client";
 
-import { Check, ShieldCheck, Sparkles } from "lucide-react";
-import { STEP_PLAN, STEP_TITLES, progressFor } from "@/lib/form-schema";
+import { ShieldCheck, Sparkles } from "lucide-react";
+import { STEP_PLAN, STEP_TITLES } from "@/lib/form-schema";
 import { workflowFor } from "@/store/useOnboardingStore";
 import type { EntityType } from "@/lib/types";
 
-/**
- * Premium Stepper Component - Day Mode
- * Features:
- * - Animated Circular Gauge
- * - Sleek Horizontal Progress Bar
- * - Touch-friendly Step Pills with light mode state indicators
- */
-export function Stepper({
-  entityType,
-  stepId,
-  onJump,
-}: {
+interface StepperProps {
   entityType: EntityType;
   stepId: number;
   onJump: (id: number) => void;
-}) {
+}
+
+/**
+ * Redesigned Clutter-Free Stepper Component
+ * Features:
+ * - Single-row Ultra-Clean Header with active step title, step count, and engine badge
+ * - Segmented Linear Progress Track with interactive hover tooltips and seamless onJump navigation
+ * - Complete removal of circular SVG, redundant SLA text, and truncated button grids
+ */
+export function Stepper({ entityType, stepId, onJump }: StepperProps) {
   const plan = STEP_PLAN[entityType];
-  const percent = stepId === 6 ? 100 : progressFor(entityType, stepId);
-  const allSteps = [1, 2, 3, 4, 5, 6];
   const isCorporate = workflowFor(entityType) === "COMPANY";
+  const activePlanSteps = [...plan, 6];
 
-  // Circular progress SVG calculations (radius 18, circumference ~113.1)
-  const radius = 18;
-  const circumference = 2 * Math.PI * radius;
-  const dashOffset = circumference - (percent / 100) * circumference;
-
-  const totalStepsCount = isCorporate ? 4 : 6;
-  const currentStepNumber = stepId === 6 ? totalStepsCount : plan.indexOf(stepId) + 1;
+  const totalStepsCount = plan.length;
+  const currentStepNumber =
+    stepId === 6 ? totalStepsCount : plan.indexOf(stepId) + 1;
 
   return (
-    <nav aria-label="Onboarding wizard progress" className="flex flex-col gap-5 rounded-2xl border border-line bg-white p-6 shadow-sm">
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line pb-4">
-        <div className="flex items-center gap-4">
-          {/* Circular Progress Gauge */}
-          <div className="relative flex h-14 w-14 items-center justify-center shrink-0">
-            <svg className="h-full w-full -rotate-90 transform" viewBox="0 0 44 44">
-              <circle
-                cx="22"
-                cy="22"
-                r={radius}
-                className="stroke-line"
-                strokeWidth="4"
-                fill="transparent"
-              />
-              <circle
-                cx="22"
-                cy="22"
-                r={radius}
-                className="stroke-brand-500 transition-all duration-500 ease-out"
-                strokeWidth="4"
-                strokeDasharray={circumference}
-                strokeDashoffset={dashOffset}
-                strokeLinecap="round"
-                fill="transparent"
-              />
-            </svg>
-            <span className="numeric absolute text-[0.8125rem] font-bold tracking-tighter text-ink">
-              {percent}%
-            </span>
-          </div>
-
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs uppercase tracking-wider text-brand-600 font-bold flex items-center gap-1">
-                <Sparkles size={13} /> Step {currentStepNumber} of {totalStepsCount}
-              </span>
-              <span
-                className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[0.75rem] font-medium border ${
-                  isCorporate
-                    ? "border-info/30 bg-info-bg text-info"
-                    : "border-brand-500/30 bg-brand-500/10 text-brand-600"
-                }`}
-              >
-                <ShieldCheck size={12} />
-                {isCorporate ? "Corporate Engine" : "Individual Engine"}
-              </span>
-            </div>
-            <h1 className="text-xl font-bold tracking-tight text-ink mt-0.5">
-              {STEP_TITLES[stepId]}
-            </h1>
-          </div>
+    <nav
+      aria-label="Onboarding wizard progress"
+      className="flex flex-col gap-3.5 rounded-2xl border border-line bg-white p-4 sm:p-5 shadow-xs backdrop-blur-md"
+    >
+      {/* 1. Ultra-Clean Header Grid */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <span className="shrink-0 rounded-lg bg-brand-500/10 px-2.5 py-1 text-xs font-extrabold uppercase tracking-wider text-brand-600 border border-brand-500/20 flex items-center gap-1 font-mono">
+            <Sparkles size={13} className="text-brand-500" />
+            {stepId === 6 ? "Verdict" : `Step ${currentStepNumber} of ${totalStepsCount}`}
+          </span>
+          <h1 className="truncate text-base sm:text-lg font-extrabold tracking-tight text-ink font-display">
+            {STEP_TITLES[stepId]}
+          </h1>
         </div>
 
-        {/* Step Track Summary */}
-        <div className="text-right hidden sm:block">
-          <p className="text-xs text-ink-subtle">Target Evaluation SLA</p>
-          <p className="numeric text-sm font-bold text-brand-600">&lt; 30 ms Instant Verdict</p>
+        {/* Workflow Engine Badge */}
+        <div className="shrink-0">
+          <span
+            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold border ${
+              isCorporate
+                ? "border-indigo-500/30 bg-indigo-500/10 text-indigo-700"
+                : "border-brand-500/30 bg-brand-500/10 text-brand-600"
+            }`}
+          >
+            <ShieldCheck size={13} />
+            {isCorporate ? "Corporate Engine" : "Individual Engine"}
+          </span>
         </div>
       </div>
 
-      {/* Sleek Progress Track */}
+      {/* 2. Segmented Linear Progress Track */}
       <div
-        className="h-2 w-full overflow-hidden rounded-full bg-bg-raised p-0.5 border border-line"
+        className="flex items-center gap-1.5 w-full"
         role="progressbar"
-        aria-valuenow={percent}
-        aria-valuemin={0}
-        aria-valuemax={100}
+        aria-valuenow={currentStepNumber}
+        aria-valuemin={1}
+        aria-valuemax={totalStepsCount}
       >
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-brand-500 via-brand-indigo to-brand-violet transition-all duration-300 ease-out shadow-glow"
-          style={{ width: `${percent}%` }}
-        />
-      </div>
-
-      {/* Interactive Step Navigation Pills */}
-      <ol className="grid grid-cols-3 gap-2 sm:grid-cols-6">
-        {allSteps.map((id) => {
-          const active = id === stepId;
-          const included = plan.includes(id) || id === 6;
-          const done = included && (stepId === 6 ? id !== 6 : plan.indexOf(id) < plan.indexOf(stepId));
-
-          if (!included) {
-            return (
-              <li
-                key={id}
-                className="flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl border border-line bg-bg-raised px-3 py-2 text-center text-xs text-ink-subtle line-through cursor-not-allowed"
-                title="Not applicable for Corporate applicants"
-              >
-                <span>{id}.</span>
-                <span className="truncate">{STEP_TITLES[id]}</span>
-              </li>
-            );
-          }
+        {activePlanSteps.map((id, index) => {
+          const isStep6 = id === 6;
+          const isActive = id === stepId;
+          const isDone =
+            stepId === 6 ? id !== 6 : plan.indexOf(id) < plan.indexOf(stepId);
+          const stepNumber = isStep6 ? totalStepsCount + 1 : plan.indexOf(id) + 1;
+          const stepLabel = isStep6 ? "Results & Audit" : STEP_TITLES[id];
 
           return (
-            <li key={id}>
+            <div key={id} className="relative flex-1 group">
+              {/* Tooltip Overlay */}
+              <div className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 opacity-0 transition-all duration-200 group-hover:opacity-100 z-30 whitespace-nowrap rounded-lg bg-ink px-2.5 py-1 text-[0.6875rem] font-bold text-white shadow-lg after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-ink">
+                {isStep6 ? stepLabel : `Step ${stepNumber}: ${stepLabel}`}
+              </div>
+
+              {/* Segment Pill Button */}
               <button
                 type="button"
                 onClick={() => onJump(id)}
-                aria-current={active ? "step" : undefined}
-                className={`group flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-center text-xs font-semibold transition-all duration-200 ${
-                  active
-                    ? "border-brand-500 bg-brand-500/10 text-brand-600 shadow-sm ring-1 ring-brand-500/30"
-                    : done
-                    ? "border-success/40 bg-success-bg text-success hover:border-success"
-                    : "border-line bg-white text-ink-muted hover:border-line-strong hover:bg-bg-raised hover:text-ink"
+                aria-label={`Jump to ${stepLabel}`}
+                className={`h-2.5 w-full rounded-full transition-all duration-300 ${
+                  isDone
+                    ? "bg-gradient-to-r from-brand-500 via-brand-indigo to-brand-violet hover:opacity-90 shadow-xs"
+                    : isActive
+                    ? "bg-brand-500 ring-2 ring-brand-500/40 ring-offset-1 shadow-glow"
+                    : "bg-line hover:bg-line-strong"
                 }`}
-              >
-                {done ? (
-                  <Check size={14} className="shrink-0 text-success" />
-                ) : (
-                  <span className={`numeric font-bold ${active ? "text-brand-600" : "text-ink-subtle"}`}>
-                    0{id}
-                  </span>
-                )}
-                <span className="truncate">{STEP_TITLES[id]}</span>
-              </button>
-            </li>
+              />
+            </div>
           );
         })}
-      </ol>
+      </div>
     </nav>
   );
 }

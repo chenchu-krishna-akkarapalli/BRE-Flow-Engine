@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import type { JSX } from "react";
-import { ArrowLeft, ArrowRight, RefreshCw, Zap } from "lucide-react";
+import { ArrowLeft, ArrowRight, RefreshCw } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AuditCards } from "@/components/AuditCards";
 import { ReviewCard } from "@/components/ReviewCard";
@@ -208,40 +208,9 @@ function OnboardingWizardContent() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-bg-deep">
-      {/* Top Application Header - Day Mode */}
-      <header className="border-b border-line bg-white/90 backdrop-blur-xl sticky top-0 z-40 shadow-xs">
-        <div className="mx-auto flex max-w-[var(--shell-max)] items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-brand-500 via-brand-indigo to-brand-violet text-white shadow-glow font-bold">
-              <Zap size={22} fill="currentColor" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold tracking-tight text-lg text-ink font-display">
-                  Flow<span className="text-gradient">BRE</span>
-                </span>
-                <span className="rounded-full bg-brand-500/10 px-2.5 py-0.5 text-[0.6875rem] font-bold text-brand-600 border border-brand-500/20">
-                  Engine v2.4
-                </span>
-              </div>
-              <p className="text-xs text-ink-subtle font-medium hidden sm:block">
-                Instant Multi-Bank Onboarding &amp; Eligibility Wizard
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className="hidden md:flex items-center gap-1.5 rounded-full border border-success/30 bg-success-bg px-3 py-1 text-xs font-bold text-success">
-              <span className="h-2 w-2 rounded-full bg-success animate-pulse" />
-              8 Bank APIs Online
-            </span>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Wizard Shell */}
-      <main className="mx-auto flex w-full max-w-[var(--shell-max)] flex-1 flex-col gap-8 px-6 pt-4 pb-8 lg:flex-row lg:items-start animate-fade-in">
+    <div className="flex w-full flex-1 flex-col justify-between">
+      {/* Main Wizard Content Shell */}
+      <div className="mx-auto flex w-full max-w-[var(--shell-max)] flex-1 flex-col gap-8 px-4 sm:px-6 pt-6 pb-8 lg:flex-row lg:items-start animate-fade-in">
         {stepId === 6 ? (
           /* Step 6 Content - Side-by-side layout on large screens */
           <div className={`flex w-full flex-col gap-8 lg:flex-row lg:items-start max-w-[var(--shell-max)] mx-auto ${animationClass}`}>
@@ -267,7 +236,7 @@ function OnboardingWizardContent() {
             </div>
 
             {/* Right Column: BRE Telemetry Matrix */}
-            <aside className="w-full lg:sticky lg:top-24 lg:max-w-[var(--telemetry-col)]">
+            <aside className="w-full lg:sticky lg:top-20 lg:max-w-[var(--telemetry-col)]">
               <BankMatrix result={result} />
             </aside>
           </div>
@@ -341,13 +310,13 @@ function OnboardingWizardContent() {
             </div>
 
             {/* Right Telemetry Column */}
-            <aside className="w-full lg:sticky lg:top-24 lg:max-w-[var(--telemetry-col)]">
+            <aside className="w-full lg:sticky lg:top-20 lg:max-w-[var(--telemetry-col)]">
               {/* Telemetry Matrix shows PENDING (null) on Steps 1 to 5 */}
               <BankMatrix result={null} />
             </aside>
           </>
         )}
-      </main>
+      </div>
 
       {/* Application Summary Popup Modal */}
       {showSummary && (
@@ -369,7 +338,7 @@ function OnboardingWizardContent() {
       )}
 
       {/* Footer */}
-      <footer className="mt-auto border-t border-line bg-white/60 py-6 text-center text-xs font-medium text-ink-subtle backdrop-blur-xl">
+      <footer className="border-t border-line bg-white/60 py-6 text-center text-xs font-medium text-ink-subtle backdrop-blur-xl">
         <p>FlowBRE Engine &copy; {new Date().getFullYear()} — Multi-Bank Rule Evaluation System</p>
       </footer>
     </div>
@@ -387,4 +356,3 @@ export default function OnboardingWizard() {
     </Suspense>
   );
 }
-

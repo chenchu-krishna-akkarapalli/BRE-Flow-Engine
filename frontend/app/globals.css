@@ -47,8 +47,10 @@
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 
   --shell-max: 1280px;
-  --form-col: 720px;
-  --telemetry-col: 480px;
+  --form-col: 820px;
+  --telemetry-col: 320px;
+  --sidebar-width: 260px;
+  --header-height: 64px;
 }
 
 @theme {
