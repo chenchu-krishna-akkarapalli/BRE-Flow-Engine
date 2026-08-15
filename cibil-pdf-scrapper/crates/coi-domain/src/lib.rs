@@ -16,12 +16,12 @@ pub use contract::{
     AdjustmentItem, AnnexureDetails, AnnexureIncomeItem, AssesseeInfo, BankDetails,
     BusinessIncomeAdjustments, BusinessIncomeDetails, BusinessIncomeSection, CapitalGainSection,
     CaVerification, CoiDocument, ComputationOfTaxOnTotalIncome, ComputationOfTotalIncome,
-    ConfidenceBreakdown, DeductionsSection, FinancialParticulars, GstTurnoverDetail,
+    ConfidenceBreakdown, CreditEngineSummary, DeductionsSection, FinancialParticulars, GstTurnoverDetail,
     HealthAndEducationCess, IncomeDeclaredBusinessTurnover, LongTermCapitalGainDetails, Meta,
     NormalIncomeTaxCalculation, OtherSourcesBreakdown, OtherSourcesDetails,
     OtherSourcesSection, PartnershipFirmShare, PresumptiveTier,
     ProfitsAndGainsBusinessProfession, RateAmount, RefundDetails, ReturnDetails,
-    SalariesLayout, ShortTermCapitalGainDetails, TaxCalculationDetails, TaxComputationContract,
+    SalariesLayout, SelfAssessmentChallan, ShortTermCapitalGainDetails, TaxCalculationDetails, TaxComputationContract,
     TaxComputationExtended, TaxSlab, TaxSlabItem, TdsDeductedItem, TdsItem, TotalIncomeDetails,
 };
 pub use relational::{

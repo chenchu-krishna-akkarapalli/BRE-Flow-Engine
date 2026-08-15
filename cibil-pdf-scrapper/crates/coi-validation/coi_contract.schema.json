@@ -84,6 +84,9 @@
       },
       "additionalProperties": false
     },
+    "summary": {
+      "$ref": "#/$defs/credit_engine_summary"
+    },
     "assessee_info": {
       "$ref": "#/$defs/assessee_info"
     },
@@ -119,6 +122,87 @@
     }
   },
   "$defs": {
+    "credit_engine_summary": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "assessee_name": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "pan": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "assessment_year": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "financial_year": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "tax_regime": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "gross_total_income": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_income": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_income_rounded": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "business_turnover": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "taxable_business_profit": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "deemed_profit_44ad": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "declared_profit_44ad": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_salaries_gross": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "taxable_salary": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_other_sources": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_deductions_chapter_6a": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_tax_computed": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "rebate_87a": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_tds_tcs": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "self_assessment_tax_140a": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "refundable_amount": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "bank_account_no": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "ifsc_code": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "bank_name": {
+          "$ref": "#/$defs/string_or_null"
+        }
+      }
+    },
     "rate_amount": {
       "type": [
         "object",
@@ -505,6 +589,37 @@
         },
         "amount": {
           "$ref": "#/$defs/integer_or_null"
+        }
+      }
+    },
+    "self_assessment_challan": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "bank_name",
+        "bsr_code",
+        "challan_no",
+        "date",
+        "amount"
+      ],
+      "properties": {
+        "bank_name": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "bsr_code": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "challan_no": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "date": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "amount": {
+          "type": "integer"
         }
       }
     },

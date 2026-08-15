@@ -125,13 +125,33 @@ pub struct TaxSlabItem {
     pub tax_amount: i64,
 }
 
+// single concise context line
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct SelfAssessmentChallan {
+    pub bank_name: Option<String>,
+    pub bsr_code: Option<String>,
+    pub challan_no: Option<String>,
+    pub date: Option<String>,
+    pub amount: i64,
+}
+
+// single concise context line
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ComputationOfTaxOnTotalIncome {
     pub tax_slabs: Vec<TaxSlabItem>,
+    pub tax_on_total_income: Option<i64>,
+    pub tax_on_total_income_description: Option<String>,
+    pub agriculture_tax_rebate: Option<i64>,
+    pub agriculture_tax_rebate_description: Option<String>,
+    pub tax_after_agriculture_rebate: Option<i64>,
     pub total_tax: Option<i64>,
     #[serde(rename = "rebate_u_s_87a")]
     pub rebate_u_s_87a: Option<i64>,
     pub tax_after_rebate: Option<i64>,
+    pub fee_payable_u_s_234f: Option<i64>,
+    #[serde(rename = "self_assessment_tax_140a")]
+    pub self_assessment_tax_140a: Option<i64>,
+    pub self_assessment_tax_details: Option<SelfAssessmentChallan>,
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
@@ -394,10 +414,65 @@ pub struct AnnexureDetails {
     pub tsd_non_salary_total: i64,
 }
 
+// single concise context line
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct CreditEngineSummary {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub assessee_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pan: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub assessment_year: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub financial_year: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tax_regime: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub gross_total_income: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub total_income: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub total_income_rounded: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub business_turnover: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub taxable_business_profit: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub deemed_profit_44ad: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub declared_profit_44ad: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub total_salaries_gross: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub taxable_salary: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub total_other_sources: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub total_deductions_chapter_6a: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub total_tax_computed: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub rebate_87a: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub total_tds_tcs: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub self_assessment_tax_140a: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub refundable_amount: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub bank_account_no: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ifsc_code: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub bank_name: Option<String>,
+}
+
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct CoiDocument {
     #[serde(rename = "_meta")]
     pub meta: Meta,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub summary: Option<CreditEngineSummary>,
     pub assessee_info: AssesseeInfo,
     pub bank_details: BankDetails,
     pub return_details: ReturnDetails,
