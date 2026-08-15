@@ -3,12 +3,13 @@ use coi_domain::{
     AdjustmentItem, AnnexureDetails, AnnexureIncomeItem, AssesseeInfo, BankDetails,
     BusinessIncomeAdjustments, BusinessIncomeDetails, BusinessIncomeSection, CapitalGainSection,
     CaVerification, CoiDocument, ComputationOfTaxOnTotalIncome, ComputationOfTotalIncome,
-    DeductionsSection, FinancialParticulars, GstTurnoverDetail, HealthAndEducationCess,
-    IncomeDeclaredBusinessTurnover, LongTermCapitalGainDetails, NormalIncomeTaxCalculation,
-    OtherSourcesBreakdown, OtherSourcesDetails, OtherSourcesSection, PartnershipFirmShare,
-    PresumptiveTier, ProfitsAndGainsBusinessProfession, RateAmount, RefundDetails, ReturnDetails, SalariesLayout,
-    ShortTermCapitalGainDetails, TaxCalculationDetails, TaxComputationContract,
-    TaxComputationExtended, TaxSlab, TaxSlabItem, TdsDeductedItem, TdsItem, TotalIncomeDetails,
+    CreditEngineSummary, DeductionsSection, FinancialParticulars, GstTurnoverDetail,
+    HealthAndEducationCess, IncomeDeclaredBusinessTurnover, LongTermCapitalGainDetails,
+    NormalIncomeTaxCalculation, OtherSourcesBreakdown, OtherSourcesDetails, OtherSourcesSection,
+    PartnershipFirmShare, PresumptiveTier, ProfitsAndGainsBusinessProfession, RateAmount,
+    RefundDetails, ReturnDetails, SalariesLayout, SelfAssessmentChallan, ShortTermCapitalGainDetails,
+    TaxCalculationDetails, TaxComputationContract, TaxComputationExtended, TaxSlab, TaxSlabItem,
+    TdsDeductedItem, TdsItem, TotalIncomeDetails,
 };
 use coi_layout::{label_value_pairs, LabelValue, Line};
 use regex::Regex;
@@ -37,8 +38,19 @@ pub fn parse_document(
 
     let income_declared_business_turnover = computation_of_total_income.income_declared_business_turnover.clone();
 
+    let summary = Some(build_credit_summary(
+        &assessee_info,
+        &bank_details,
+        &computation_of_total_income,
+        &income_declared_business_turnover,
+        &tax_computation,
+        &other_sources_breakdown,
+        &tax_computation_extended,
+    ));
+
     Ok(CoiDocument {
         meta: Default::default(),
+        summary,
         assessee_info,
         bank_details,
         return_details,
@@ -52,6 +64,107 @@ pub fn parse_document(
         ca_verification,
         annexures,
     })
+}
+
+// single concise context line
+fn build_credit_summary(
+    assessee_info: &AssesseeInfo,
+    bank_details: &BankDetails,
+    comp_tot: &ComputationOfTotalIncome,
+    income_declared_business_turnover: &Option<IncomeDeclaredBusinessTurnover>,
+    tax_comp: &TaxComputationContract,
+    other_sources: &OtherSourcesBreakdown,
+    tax_ext: &TaxComputationExtended,
+) -> CreditEngineSummary {
+    let tax_regime = comp_tot.tax_regime.clone();
+    let assessment_year = assessee_info.assessment_year.clone();
+    let financial_year = assessee_info.financial_year.clone();
+    let assessee_name = assessee_info.name.clone();
+    let pan = assessee_info.pan.clone();
+
+    let gross_total_income = comp_tot.gross_total_income;
+    let total_income = comp_tot.total_income.as_ref().and_then(|t| t.amount).or(comp_tot.gross_total_income);
+    let total_income_rounded = comp_tot.total_income_rounded_288a.or(comp_tot.total_income_rounded_off_u_s_288a);
+
+    let business_turnover = income_declared_business_turnover
+        .as_ref()
+        .and_then(|t| t.gross_receipts_total.or(t.gross_receipts_turnover))
+        .or_else(|| comp_tot.profits_and_gains_business_profession.as_ref().and_then(|p| p.turnover_base_44ad));
+
+    let taxable_business_profit = comp_tot
+        .profits_and_gains_business_profession
+        .as_ref()
+        .and_then(|p| p.taxable_business_profit.or(p.section_total));
+
+    let deemed_profit_44ad = income_declared_business_turnover
+        .as_ref()
+        .and_then(|t| t.deemed_profit_digital_mode.as_ref().map(|p| p.amount).or_else(|| t.deemed_profit.as_ref().map(|p| p.amount)))
+        .or_else(|| comp_tot.profits_and_gains_business_profession.as_ref().and_then(|p| p.deemed_profit_44ad));
+
+    let declared_profit_44ad = income_declared_business_turnover
+        .as_ref()
+        .and_then(|t| t.net_profit_declared.as_ref().map(|p| p.amount))
+        .or_else(|| comp_tot.profits_and_gains_business_profession.as_ref().and_then(|p| p.declared_profit_44ad));
+
+    let total_salaries_gross = comp_tot.salaries.as_ref().and_then(|s| s.gross_salary);
+    let taxable_salary = comp_tot.salaries.as_ref().and_then(|s| s.taxable_salary);
+    let total_other_sources = other_sources.total_other_sources.or_else(|| comp_tot.income_from_other_sources.as_ref().and_then(|o| o.total));
+    let total_deductions_chapter_6a = comp_tot.deductions.as_ref().and_then(|d| d.total);
+
+    let total_tax_computed = comp_tot
+        .computation_of_tax_on_total_income
+        .as_ref()
+        .and_then(|c| c.total_tax)
+        .or_else(|| comp_tot.tax_calculation.as_ref().and_then(|t| t.total_tax))
+        .or(tax_ext.total_tax_calculated);
+
+    let rebate_87a = tax_comp.rebate_87a
+        .or_else(|| comp_tot.tax_calculation.as_ref().and_then(|t| t.rebate_u_s_87a))
+        .or_else(|| comp_tot.computation_of_tax_on_total_income.as_ref().and_then(|c| c.rebate_u_s_87a));
+
+    let total_tds_tcs = comp_tot.total_tds_tcs;
+    let self_assessment_tax_140a = comp_tot
+        .tax_calculation
+        .as_ref()
+        .and_then(|t| t.deposit_u_s_140a)
+        .or(tax_ext.deposit_140a_self_assessment);
+
+    let refundable_amount = comp_tot
+        .refund
+        .as_ref()
+        .and_then(|r| r.tax_refundable_rounded_off_u_s_288b.or(r.amount))
+        .or(tax_comp.refundable);
+
+    let bank_account_no = bank_details.account_no.clone();
+    let ifsc_code = bank_details.ifsc_code.clone();
+    let bank_name = bank_details.bank_name.clone();
+
+    CreditEngineSummary {
+        assessee_name,
+        pan,
+        assessment_year,
+        financial_year,
+        tax_regime,
+        gross_total_income,
+        total_income,
+        total_income_rounded,
+        business_turnover,
+        taxable_business_profit,
+        deemed_profit_44ad,
+        declared_profit_44ad,
+        total_salaries_gross,
+        taxable_salary,
+        total_other_sources,
+        total_deductions_chapter_6a,
+        total_tax_computed,
+        rebate_87a,
+        total_tds_tcs,
+        self_assessment_tax_140a,
+        refundable_amount,
+        bank_account_no,
+        ifsc_code,
+        bank_name,
+    }
 }
 
 // Extract partnership firm share and capital details
@@ -1126,10 +1239,26 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
 
     // single concise context line
     let slab_item_re = Regex::new(r"(?i)(TAX\s+ON\s+RS\.?\s*[\d,]+(?:\s*\([\d,]+\s*[-–]\s*[\d,]+\)\s*@\s*[\d\.]+%|\s*@\s*[\d\.]+%|\s+NIL)?)\s*[:=]?\s*([\d,]+)").unwrap();
+    let tax_on_tot_re = Regex::new(r"(?i)TAX\s+ON\s+TOTAL\s+INCOME\s+RS\.?\s*(\(?.+?\)?)\s+([\d,]+)$").unwrap();
+    let agri_reb_re = Regex::new(r"(?i)REBATE\s+OF\s+TAX\s+ON\s+AGRICULTURE\s+INCOME\s+RS\.?\s*(\(?.+?\)?)\s+([\d,]+)$").unwrap();
+    let tax_after_agri_re = Regex::new(r"(?i)TAX\s+ON\s+RS\.?\s*[\d,]+\s+([\d,]+)$").unwrap();
+    let challan_re = Regex::new(r"(?i)(.+?)\s*[-–]\s*(\d{5,7})\s*[-–]\s*(\d{4,8})\s*[-–]\s*([\d/-]+)\s+([\d,]+)").unwrap();
+
     let mut tax_slabs = Vec::new();
     let mut tot_tax_found = None;
-    for line in lines {
+    let mut tax_on_tot_amt = None;
+    let mut tax_on_tot_desc = None;
+    let mut agri_reb_amt = None;
+    let mut agri_reb_desc = None;
+    let mut tax_after_agri_amt = None;
+    let mut self_assess_140a_amt = None;
+    let mut self_assess_details = None;
+    let mut fee_234f_amt = None;
+
+    for (idx, line) in lines.iter().enumerate() {
         let t = line.text();
+        let u = line.upper();
+
         if let Some(caps) = slab_item_re.captures(&t) {
             if let Some(amt) = parse_rupees(&caps[2]) {
                 let slab_label = caps[1].trim();
@@ -1144,13 +1273,78 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
                 }
             }
         }
+
+        if let Some(caps) = tax_on_tot_re.captures(&t) {
+            if tax_on_tot_amt.is_none() {
+                tax_on_tot_amt = parse_rupees(&caps[2]);
+                tax_on_tot_desc = Some(format!("TAX ON TOTAL INCOME RS. {}", &caps[1]));
+            }
+        }
+
+        if let Some(caps) = agri_reb_re.captures(&t) {
+            if agri_reb_amt.is_none() {
+                agri_reb_amt = parse_rupees(&caps[2]);
+                let raw_desc = caps[1].trim();
+                let desc_str = if raw_desc.starts_with('(') && !raw_desc.ends_with(')') {
+                    format!("{raw_desc})")
+                } else {
+                    raw_desc.to_string()
+                };
+                agri_reb_desc = Some(format!("REBATE OF TAX ON AGRICULTURE INCOME RS. {desc_str}"));
+            }
+            for k in 1..=3 {
+                if let Some(next_line) = lines.get(idx + k) {
+                    if let Some(caps2) = tax_after_agri_re.captures(&next_line.text()) {
+                        if tax_after_agri_amt.is_none() {
+                            tax_after_agri_amt = parse_rupees(&caps2[1]);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if u.contains("234F") && fee_234f_amt.is_none() {
+            fee_234f_amt = line_amount(line);
+        }
+
+        if u.contains("140A") {
+            if let Some(caps) = challan_re.captures(&t) {
+                if self_assess_140a_amt.is_none() {
+                    let amt = parse_rupees(&caps[5]).unwrap_or(0);
+                    self_assess_140a_amt = Some(amt);
+                    self_assess_details = Some(SelfAssessmentChallan {
+                        bank_name: Some(caps[1].trim().to_string()),
+                        bsr_code: Some(caps[2].trim().to_string()),
+                        challan_no: Some(caps[3].trim().to_string()),
+                        date: Some(caps[4].trim().to_string()),
+                        amount: amt,
+                    });
+                }
+            } else if let Some(next_line) = lines.get(idx + 1) {
+                let nt = next_line.text();
+                if let Some(caps) = challan_re.captures(&nt) {
+                    if self_assess_140a_amt.is_none() {
+                        let amt = parse_rupees(&caps[5]).unwrap_or(0);
+                        self_assess_140a_amt = Some(amt);
+                        self_assess_details = Some(SelfAssessmentChallan {
+                            bank_name: Some(caps[1].trim().to_string()),
+                            bsr_code: Some(caps[2].trim().to_string()),
+                            challan_no: Some(caps[3].trim().to_string()),
+                            date: Some(caps[4].trim().to_string()),
+                            amount: amt,
+                        });
+                    }
+                }
+            }
+        }
     }
 
     if tot_tax.is_none() {
         tot_tax = tot_tax_found;
     }
 
-    let comp_tax_on_tot = if !tax_slabs.is_empty() || tot_tax.is_some() {
+    let comp_tax_on_tot = if !tax_slabs.is_empty() || tot_tax.is_some() || tax_on_tot_amt.is_some() {
         let final_tax_after_reb = tax_after_reb.or_else(|| {
             match (tot_tax, rebate_87a) {
                 (Some(t), Some(r)) => Some(t.saturating_sub(r)),
@@ -1160,9 +1354,17 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         });
         Some(ComputationOfTaxOnTotalIncome {
             tax_slabs,
+            tax_on_total_income: tax_on_tot_amt,
+            tax_on_total_income_description: tax_on_tot_desc,
+            agriculture_tax_rebate: agri_reb_amt,
+            agriculture_tax_rebate_description: agri_reb_desc,
+            tax_after_agriculture_rebate: tax_after_agri_amt,
             total_tax: tot_tax,
             rebate_u_s_87a: rebate_87a,
             tax_after_rebate: final_tax_after_reb,
+            fee_payable_u_s_234f: fee_234f_amt,
+            self_assessment_tax_140a: self_assess_140a_amt,
+            self_assessment_tax_details: self_assess_details,
         })
     } else {
         None
@@ -1499,6 +1701,9 @@ pub fn parse_amount(text: &str) -> Option<i64> {
     let mut trimmed = text.trim();
     if trimmed.is_empty() || trimmed.eq_ignore_ascii_case("NIL") || trimmed == "-" {
         return Some(0);
+    }
+    if trimmed.ends_with(|c: char| c.is_ascii_alphabetic()) {
+        return None;
     }
     if let Some(dot_idx) = trimmed.rfind('.') {
         if dot_idx > 0 && trimmed[dot_idx + 1..].chars().all(|c| c.is_ascii_digit()) {
