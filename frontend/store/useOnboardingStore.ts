@@ -614,6 +614,7 @@ interface OnboardingState {
   // to what it says, and the badge names the file they came from.
   cibilVerified: { filename: string; evidence: Record<string, unknown> } | null;
   payslipVerified: { filename: string; evidence: Record<string, unknown> } | null;
+  coiVerified: { filename: string; evidence: Record<string, unknown> } | null;
 
   setField: <K extends keyof Draft>(key: K, value: Draft[K]) => void;
   // Bureau fields read off an uploaded CIBIL report. Set together so the
@@ -622,6 +623,8 @@ interface OnboardingState {
   clearCibilExtraction: () => void;
   applyPayslipExtraction: (fields: Record<string, unknown>, filename: string) => void;
   clearPayslipExtraction: () => void;
+  applyCoiExtraction: (data: Record<string, unknown>, filename: string) => void;
+  clearCoiExtraction: () => void;
   goTo: (stepId: number) => void;
   next: () => void;
   prev: () => void;
@@ -637,6 +640,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   error: null,
   cibilVerified: null,
   payslipVerified: null,
+  coiVerified: null,
 
   setField: (key, value) =>
     set((state) => {
@@ -720,6 +724,27 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
     }),
 
   clearPayslipExtraction: () => set({ payslipVerified: null }),
+
+  applyCoiExtraction: (fields, filename) =>
+    set((state) => {
+      const draft = { ...state.draft };
+      const summary = (fields.summary as Record<string, unknown>) ?? {};
+      const assessee = (fields.assessee_info as Record<string, unknown>) ?? {};
+
+      const applicantName = String(summary.assessee_name ?? assessee.name ?? "");
+      const panNumber = String(summary.pan ?? assessee.pan ?? "");
+
+      if (applicantName && !draft.applicantName) {
+        draft.applicantName = applicantName;
+      }
+      if (panNumber && !draft.pan) {
+        draft.pan = panNumber;
+      }
+
+      return { draft, coiVerified: { filename, evidence: fields }, error: null };
+    }),
+
+  clearCoiExtraction: () => set({ coiVerified: null }),
 
   goTo: (stepId) => set({ stepId }),
 

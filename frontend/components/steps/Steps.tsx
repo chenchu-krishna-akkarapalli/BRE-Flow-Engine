@@ -13,6 +13,7 @@ import {
   SALARY_MODES, TENURE_BANDS, WRITE_OFF_FLAGS,
 } from "@/lib/form-schema";
 import { CibilUpload } from "@/components/CibilUpload";
+import { CoiUpload } from "@/components/CoiUpload";
 import { DocumentUpload } from "@/components/DocumentUpload";
 import { PayslipUpload } from "@/components/PayslipUpload";
 import { VerifyField } from "@/components/VerifyField";
@@ -781,6 +782,7 @@ export function Step3Occupation() {
           )}
 
           <PayslipUpload />
+          <CoiUpload />
 
           <div className="grid gap-6 sm:grid-cols-2">
             <Field label="Gross Salary" htmlFor="grossSalary">

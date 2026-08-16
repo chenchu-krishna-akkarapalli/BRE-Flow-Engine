@@ -1241,6 +1241,18 @@ class PayslipExtractionResponse(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
 
+# single concise context line
+class CoiExtractionResponse(BaseModel):
+    """Step-3 COI fields lifted off an uploaded Computation of Income PDF report."""
+
+    filename: str
+    extraction_status: str = Field(alias="extraction_status", default="SUCCESS")
+    message: str = ""
+    extracted: Dict[str, Any] = Field(default_factory=dict)
+
+    model_config = ConfigDict(populate_by_name=True)
+
+
 class OtpSendRequest(BaseModel):
     channel: Literal["email", "mobile"]
     target: str = Field(min_length=1, max_length=254, description="Email address or 10-digit mobile.")

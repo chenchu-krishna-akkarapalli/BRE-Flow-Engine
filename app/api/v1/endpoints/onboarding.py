@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.deps import get_current_tenant
 from app.api.schemas.onboarding import (
     CibilExtractionResponse,
+    CoiExtractionResponse,
     CompanyIdentity,
     DocumentExtractionResponse,
     HUFIdentity,
@@ -33,6 +34,7 @@ from app.db.models.rule_execution import RuleExecutionModel
 from app.db.rls import set_tenant_rls_context
 from app.services.bre_engine import bre_engine_service
 from app.services.cibil_service import CibilEngineError, extract_cibil_report
+from app.services.coi_service import CoiEngineError, extract_coi_report
 from app.services.export_service import build_excel, build_pdf
 from app.services.ocr_service import extract_aadhaar_card, extract_pan_card, validate_upload
 from app.services.payslip_service import PayslipEngineError, extract_payslip_report
@@ -471,6 +473,38 @@ async def extract_payslip_report_document(
         raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, str(exc))
 
     return PayslipExtractionResponse(
+        filename=filename,
+        extraction_status=extraction_status,
+        message=message,
+        extracted=extracted,
+    )
+
+
+# single concise context line
+@router.post("/documents/coi/extract", response_model=CoiExtractionResponse)
+async def extract_coi_report_document(
+    file: UploadFile = File(..., description="COI report PDF, up to 5 MB."),
+    tenant_id: str = Depends(get_current_tenant),
+):
+    """Parse a COI report with the Rust engine and return structured extraction payload."""
+    content = await file.read()
+    filename = file.filename or "coi-report.pdf"
+
+    if len(content) > 5 * 1024 * 1024:
+        raise HTTPException(
+            status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            "Upload exceeds 5 MB limit.",
+        )
+
+    try:
+        extracted, extraction_status, message = await extract_coi_report(
+            content, file.content_type, filename
+        )
+    except CoiEngineError as exc:
+        logger.error(f"COI engine unavailable for tenant '{tenant_id}': {exc}")
+        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, str(exc))
+
+    return CoiExtractionResponse(
         filename=filename,
         extraction_status=extraction_status,
         message=message,
