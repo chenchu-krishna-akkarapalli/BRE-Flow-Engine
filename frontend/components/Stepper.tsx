@@ -61,13 +61,13 @@ export function Stepper({ entityType, stepId, onJump }: StepperProps) {
 
       {/* 2. Segmented Linear Progress Track */}
       <div
-        className="flex items-center gap-1.5 w-full"
+        className="flex items-center gap-1.5 w-full pt-1 pb-0.5"
         role="progressbar"
         aria-valuenow={currentStepNumber}
         aria-valuemin={1}
         aria-valuemax={totalStepsCount}
       >
-        {activePlanSteps.map((id, index) => {
+        {activePlanSteps.map((id) => {
           const isStep6 = id === 6;
           const isActive = id === stepId;
           const isDone =
@@ -77,17 +77,18 @@ export function Stepper({ entityType, stepId, onJump }: StepperProps) {
 
           return (
             <div key={id} className="relative flex-1 group">
-              {/* Tooltip Overlay */}
-              <div className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 opacity-0 transition-all duration-200 group-hover:opacity-100 z-30 whitespace-nowrap rounded-lg bg-ink px-2.5 py-1 text-[0.6875rem] font-bold text-white shadow-lg after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-ink">
+              {/* Tooltip Overlay on Hover */}
+              <div className="pointer-events-none absolute bottom-full left-1/2 mb-2.5 -translate-x-1/2 opacity-0 transition-all duration-200 group-hover:opacity-100 z-30 whitespace-nowrap rounded-lg bg-ink px-2.5 py-1 text-[0.6875rem] font-bold text-white shadow-lg after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-ink">
                 {isStep6 ? stepLabel : `Step ${stepNumber}: ${stepLabel}`}
               </div>
 
-              {/* Segment Pill Button */}
+              {/* Segment Button */}
               <button
                 type="button"
                 onClick={() => onJump(id)}
-                aria-label={`Jump to ${stepLabel}`}
-                className={`h-2.5 w-full rounded-full transition-all duration-300 ${
+                aria-current={isActive ? "step" : undefined}
+                aria-label={`Jump to ${isStep6 ? stepLabel : `Step ${stepNumber}: ${stepLabel}`}`}
+                className={`h-2.5 sm:h-3 w-full rounded-full transition-all duration-300 cursor-pointer ${
                   isDone
                     ? "bg-gradient-to-r from-brand-500 via-brand-indigo to-brand-violet hover:opacity-90 shadow-xs"
                     : isActive

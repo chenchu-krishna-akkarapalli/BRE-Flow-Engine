@@ -4,21 +4,14 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Activity,
   BarChart3,
-  Building2,
-  Clock,
-  DollarSign,
   FileText,
-  Layers,
-  ShieldCheck,
+  LayoutDashboard,
   Sliders,
-  User,
-  UserCheck,
+  Users,
   X,
   Zap,
 } from "lucide-react";
-import { useOnboardingStore } from "@/store/useOnboardingStore";
 import { useSidebarStore } from "@/store/useSidebarStore";
 
 export interface NavItem {
@@ -36,8 +29,13 @@ export interface NavSection {
 
 export const NAVIGATION_SECTIONS: NavSection[] = [
   {
-    title: "Core Workflows",
+    title: "Portal Navigation",
     items: [
+      {
+        name: "Dashboard",
+        href: "/dashboard",
+        icon: LayoutDashboard,
+      },
       {
         name: "Onboarding Wizard",
         href: "/",
@@ -46,82 +44,19 @@ export const NAVIGATION_SECTIONS: NavSection[] = [
         badgeType: "brand",
       },
       {
-        name: "Case Pipeline",
-        href: "/pipeline",
-        icon: Layers,
-        badge: "Live",
-        badgeType: "neutral",
-      },
-      {
-        name: "Eligible Bank Matcher",
-        href: "/matcher",
-        icon: Zap,
-        badge: "CRE Console",
-        badgeType: "success",
-      },
-    ],
-  },
-  {
-    title: "Management & Approvals",
-    items: [
-      {
-        name: "Approval & Overrides",
-        href: "/approvals",
-        icon: ShieldCheck,
-        badge: "5 Pending",
-        badgeType: "warning",
-      },
-      {
-        name: "Agent Assignment",
+        name: "User Management",
         href: "/assignments",
-        icon: UserCheck,
-        badge: "Matrix",
-        badgeType: "neutral",
+        icon: Users,
       },
-    ],
-  },
-  {
-    title: "Business & Analytics",
-    items: [
       {
-        name: "Telemetry Dashboard",
+        name: "Analytics",
         href: "/telemetry",
         icon: BarChart3,
-        badge: "Analytics",
-        badgeType: "brand",
       },
       {
-        name: "Commission & Ledgers",
-        href: "/commissions",
-        icon: DollarSign,
-        badge: "₹ 4.82 Cr",
-        badgeType: "success",
-      },
-      {
-        name: "Regional Performance",
-        href: "/regional",
-        icon: Building2,
-        badge: "14 Branches",
-        badgeType: "neutral",
-      },
-    ],
-  },
-  {
-    title: "Rule & System Settings",
-    items: [
-      {
-        name: "CRE Rule Configurator",
+        name: "Settings",
         href: "/configurator",
         icon: Sliders,
-        badge: "v2.4",
-        badgeType: "brand",
-      },
-      {
-        name: "API Health Monitor",
-        href: "/health",
-        icon: Activity,
-        badge: "8/8 Online",
-        badgeType: "success",
       },
     ],
   },
@@ -151,98 +86,7 @@ function BadgePill({
   );
 }
 
-/**
- * Smart State Summary Widget (Miller's Law)
- * Compact collapsed summary card of the active applicant draft.
- */
-function SmartStateSummary() {
-  const draft = useOnboardingStore((s) => s.draft);
-  const stepId = useOnboardingStore((s) => s.stepId);
-  const result = useOnboardingStore((s) => s.result);
 
-  const applicantDisplayName =
-    draft.entityType === "Individual"
-      ? draft.applicantName || "New Applicant"
-      : draft.companyName || "New Company";
-
-  const applicantIdentifier =
-    draft.entityType === "Individual"
-      ? draft.pan ? `PAN: ${draft.pan}` : "Awaiting PAN"
-      : draft.companyPan ? `PAN: ${draft.companyPan}` : "Awaiting Co. PAN";
-
-  const cibilScore = draft.bureauCibilScore || 750;
-
-  return (
-    <div className="mx-3 my-2 rounded-xl border border-line bg-white/80 p-3 shadow-xs backdrop-blur-md">
-      <div className="flex items-center justify-between">
-        <span className="text-[0.625rem] font-extrabold uppercase tracking-wider text-ink-subtle">
-          Applicant Context
-        </span>
-        <span className="inline-flex items-center gap-1 text-[0.625rem] font-semibold text-brand-600">
-          <span className="h-1.5 w-1.5 rounded-full bg-brand-500 animate-pulse" />
-          Step {stepId}/6
-        </span>
-      </div>
-
-      <div className="mt-2">
-        <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-brand-500/10 text-brand-600 font-bold text-xs">
-            {draft.entityType === "Individual" ? <User size={14} /> : <Building2 size={14} />}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-xs font-bold text-ink" title={applicantDisplayName}>
-              {applicantDisplayName}
-            </p>
-            <p className="truncate text-[0.625rem] font-mono text-ink-subtle">
-              {draft.entityType} &bull; {applicantIdentifier}
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-2.5 grid grid-cols-2 gap-1.5 border-t border-line/60 pt-2 text-[0.625rem]">
-          <div className="rounded bg-bg-raised/70 px-2 py-1">
-            <span className="text-ink-subtle block text-[0.5625rem]">CIBIL Score</span>
-            <span className="font-mono font-bold text-ink">{cibilScore}</span>
-          </div>
-          <div className="rounded bg-bg-raised/70 px-2 py-1">
-            <span className="text-ink-subtle block text-[0.5625rem]">Status</span>
-            <span className="font-bold text-brand-600">
-              {result ? (result.overall_eligible ? "Eligible" : "Reviewed") : "Draft"}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/**
- * Real-time SLA Micro Ticker Widget
- */
-function RealtimeSlaTicker() {
-  return (
-    <div className="mx-3 my-2 rounded-xl border border-warning/30 bg-warning/5 p-3 backdrop-blur-md">
-      <div className="flex items-center justify-between">
-        <span className="flex items-center gap-1.5 text-[0.625rem] font-extrabold uppercase tracking-wider text-warning">
-          <Clock size={12} />
-          SLA Tracker
-        </span>
-        <span className="rounded-full bg-warning/20 px-1.5 py-0.2 text-[0.5625rem] font-bold text-warning">
-          24h SLA
-        </span>
-      </div>
-      <div className="mt-1.5 flex items-center justify-between">
-        <div>
-          <span className="font-mono text-sm font-extrabold text-ink">4 Cases</span>
-          <p className="text-[0.625rem] text-ink-muted">&lt; 3h deadline</p>
-        </div>
-        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-warning/10 text-warning font-mono text-[0.6875rem] font-bold">
-          !
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /**
  * Sidebar Navigation Content Body (Shared between fixed desktop and slide-out mobile drawer)
@@ -340,11 +184,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
           ))}
         </div>
 
-        {/* Dynamic Widgets */}
-        <div className="mt-4 border-t border-line/60 pt-3">
-          <SmartStateSummary />
-          <RealtimeSlaTicker />
-        </div>
+
       </div>
 
       {/* Footer System Status */}

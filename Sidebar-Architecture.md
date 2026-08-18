@@ -1,66 +1,21 @@
-# Sidebar Architecture: Role-Based Navigation & Components
+# Sidebar Architecture: Key Components & Onboarding Layout
 
-This document outlines the design and visibility rules for the navigation sidebar in the Multi-Bank Onboarding and Credit Rule Engine (CRE) portal. The sidebar dynamically adapts to the responsibilities of each logged-in role.
-
----
-
-## 1. Unified Sidebar Component Structure (Dynamic Blocks)
-
-The sidebar consists of **4 core sections**. Components inside these sections are conditionally rendered based on the user's authorization role:
-
-```mermaid
-graph TD
-    A[Sidebar Navigation] --> B[Section A: Core Workflows]
-    A --> C[Section B: Management & Approvals]
-    A --> D[Section C: Business & Analytics]
-    A --> E[Section D: Rule & System Settings]
-```
+This document outlines the design and visibility rules for the navigation sidebar in the Multi-Bank Onboarding and Credit Rule Engine (CRE) portal. The sidebar is structured around 5 core functional components.
 
 ---
 
-## 2. Sidebar Navigation Items by Section
+## 1. Unified Sidebar Component Structure
 
-### Section A: Core Workflows (The Workspace)
-*   **Onboarding Wizard:** Triggers a fresh 6-step onboarding wizard.
-*   **Case Pipeline:** A Kanban or list view of applications grouped by stages (Draft, Evaluating, Bank Selection, Underwriting, Disbursed, Terminated).
-*   **Eligible Bank Matcher (CRE Console):** Instant access to the CRE results panel to select/match alternative banks for active profiles.
+The sidebar displays a static list of **5 main components**:
 
-### Section B: Management & Approvals
-*   **Approval & Override Queue:** A queue of applications that triggered non-terminating rule deviations (e.g., CIBIL score slightly lower than threshold but high income) requiring manual sign-off.
-*   **Agent Assignment:** Allocation matrix to route incoming leads to specific Sales Managers or Transactional Users.
-
-### Section C: Business & Analytics
-*   **Telemetry Dashboard:** Analytics showing Rule Pass/Fail ratios, top reasons for rejection (e.g., EMP-301, BUR-401), and bank API response times.
-*   **Commission & Ledgers:** Financial tracking of disbursals, payout slabs, and bank-wise commissions.
-*   **Regional Performance:** Branch-by-branch comparison grids.
-
-### Section D: Rule & System Settings
-*   **Rule Engine Configurator:** Interface to adjust thresholds (e.g., minimum CIBIL, maximum DPD, debt-to-income limits) without modifying code.
-*   **API Health Monitor:** Live diagnostics of bank integrations (response codes, latency, uptime).
+1.  **Dashboard:** Main portal dashboard showing overview metrics, active evaluation counts, and status charts.
+2.  **Onboarding Wizard:** The core 6-step form wizard (as currently implemented) for inputting applicant profile details.
+3.  **User Management:** Administrative settings for configuring access controls, creating users, and assigning roles (e.g. Sales Managers, Agents).
+4.  **Analytics:** In-depth telemetry displaying rules evaluation pass rates, rejection distributions, and bank API response SLAs.
+5.  **Settings:** Global configurations for adjusting system variables and engine properties.
 
 ---
 
-## 3. Role-Based Sidebar Matrix
-
-The sidebar dynamically adjusts navigation items based on the active role:
-
-| Role | Primary Sidebar Focus | Navigation Components Visible in Sidebar |
-| :--- | :--- | :--- |
-| **`TRANSACTIONAL_USER`** *(Field Agent / Entry Staff)* | **Execution & Lead Tracking** | <ul><li>**New Onboarding** (Steps 1–5)</li><li>**My Submissions** (Status track of own cases)</li><li>**Offer Engine** (Bank selection for matched leads)</li></ul> |
-| **`SALES_MANAGER`** | **Pipeline & Local Conversion** | <ul><li>**Team Pipeline** (Monitor conversion)</li><li>**Offer Selector** (Co-signing bank selections)</li><li>**Lead Assignment** (Distribute to agents)</li><li>**Team Performance** (Local KPIs)</li></ul> |
-| **`TEAM_LEADER`** | **First-Level Approvals & SLA** | <ul><li>**Approval Queue** (Approve policy overrides)</li><li>**Active Case Escalations**</li><li>**TAT (Turnaround Time) Tracker**</li><li>**Team Leaderboard**</li></ul> |
-| **`AREA_MANAGER`** | **Territory Performance** | <ul><li>**Branch Performance** (Compare branches)</li><li>**Area Approval Desk** (Higher limit overrides)</li><li>**Bank Distribution Matrix** (Which banks get selected)</li></ul> |
-| **`ACCOUNTS_HEAD`** | **Financials & Disbursements** | <ul><li>**Disbursal Ledger** (Check disbursement statuses)</li><li>**Bank Commissions** (Accrued fees from partner banks)</li><li>**Payout Approvals**</li></ul> |
-| **`OPERATIONS_HEAD`** | **System Uptime & Policy Settings** | <ul><li>**API Integration Status** (8 bank connections)</li><li>**CRE Rule Configurator** (Modify bank policy matrices)</li><li>**System Logs & Error Telemetry**</li></ul> |
-| **`REGIONAL_DIRECTOR`** | **High-Level Strategy & Yield** | <ul><li>**Executive Insights Dashboard** (Total volume, approval rate)</li><li>**Bank Partner Yields** (Which bank is most profitable)</li><li>**Market Expansion Metrics**</li></ul> |
-
----
-
-## 4. Interactive Sidebar Widgets (Premium Additions)
-
-*   **Rule Engine Quick-Switch:** A drop-down in the Operations/Director sidebar allowing them to toggle between "Conservative", "Standard", and "Aggressive" rule configurations on the fly.
-*   **Real-time SLA Ticker:** A micro-counter showing how many cases in the region are nearing their 24-hour bank decision SLA limit.
-*   **API Status Badge:** A small dot displaying `Online` / `Degraded` status of the 8 connected partner bank API endpoints.
 
 ---
 
@@ -208,3 +163,28 @@ To optimize vertical space and improve usability, the **Stepper** component must
        - **Active Segment:** Highlighted with a bright teal border or subtle breathing glow.
        - **Upcoming Segments:** Muted gray background.
      - **Interactive Hover Tooltips:** Hovering over any segment reveals a tooltip with the step title (e.g., `Step 2: Where you live`). Clicking a segment triggers `onJump(id)` to allow seamless navigation without text clutter.
+
+---
+
+## 10. COI Upload Re-routing & Modal Integration (UI Space Saving)
+
+To save form area inside the onboarding steps, the **Computation of Income (COI)** PDF upload component (`CoiUpload`) is removed from its default inline rendering in Step 3 and re-routed to an overlay modal triggered by a button placed above the Bank Eligibility matrix.
+
+### Integration Directives
+
+1. **Wizard Step 3 Modification:**
+   - **File:** [Steps.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/components/steps/Steps.tsx)
+   - **Change:** Remove `<CoiUpload />` (around line 785) from the Salaried occupation rendering. Keep `<PayslipUpload />` inline.
+
+2. **Trigger Button Placement:**
+   - **File:** [page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/page.tsx)
+   - **Change:** In the sidebar/telemetry column (`<aside className="... lg:max-w-[var(--telemetry-col)]">`), add a high-density primary trigger button labeled `Upload COI` directly above `<BankMatrix result={null} />`.
+   - **Styling:** Style the button using the day-mode guidelines: rounded-xl, height of `38px` to `44px`, slate border, and clear icon (`Upload` or `FileText`), utilizing the whitespace above the telemetry card.
+
+3. **COI Extraction Modal:**
+   - **File:** [page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/page.tsx)
+   - **Change:** Introduce a local state `showCoiModal` (boolean). When the trigger button is clicked, set `showCoiModal = true`.
+   - **Rendering:** When `showCoiModal` is active, display a centered, backdrop-blurred glassmorphic modal overlay containing:
+     - The `<CoiUpload />` component.
+     - A close button (using Lucide `X` icon) that sets `showCoiModal = false`.
+   - **State Persistence:** Ensure the Zustand extraction logic (`coiVerified`, `clearCoiExtraction`, etc. in `useOnboardingStore`) continues to run exactly as it did before. The modal serves purely as a UX presentation wrapper.

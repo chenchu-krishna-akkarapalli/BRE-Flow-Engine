@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import type { JSX } from "react";
-import { ArrowLeft, ArrowRight, RefreshCw } from "lucide-react";
+import { ArrowLeft, ArrowRight, RefreshCw, Upload, X, FileText } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AuditCards } from "@/components/AuditCards";
 import { ReviewCard } from "@/components/ReviewCard";
 import { Stepper } from "@/components/Stepper";
 import { BankMatrix, DecisionPanel } from "@/components/Telemetry";
+import { CoiUpload } from "@/components/CoiUpload";
 import {
   Step1Identity, Step2Address, Step3Occupation, Step4Banking, Step5CoApplicant,
 } from "@/components/steps/Steps";
@@ -105,6 +106,7 @@ function OnboardingWizardContent() {
 
   const [showSummary, setShowSummary] = useState(false);
   const [submittingApplication, setSubmittingApplication] = useState(false);
+  const [showCoiModal, setShowCoiModal] = useState(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -310,7 +312,17 @@ function OnboardingWizardContent() {
             </div>
 
             {/* Right Telemetry Column */}
-            <aside className="w-full lg:sticky lg:top-20 lg:max-w-[var(--telemetry-col)]">
+            <aside className="w-full lg:sticky lg:top-20 lg:max-w-[var(--telemetry-col)] flex flex-col gap-4">
+              {/* COI Upload Trigger Button */}
+              <button
+                type="button"
+                onClick={() => setShowCoiModal(true)}
+                className="flex w-full min-h-[38px] sm:min-h-[44px] items-center justify-center gap-2 rounded-xl border border-line bg-white px-4 py-2.5 text-xs font-bold text-ink transition-all hover:border-line-strong hover:bg-bg-raised hover:scale-[1.01] active:scale-[0.99] shadow-xs"
+              >
+                <Upload size={14} className="text-ink-subtle" />
+                <span>Upload COI</span>
+              </button>
+
               {/* Telemetry Matrix shows PENDING (null) on Steps 1 to 5 */}
               <BankMatrix result={null} />
             </aside>
@@ -333,6 +345,39 @@ function OnboardingWizardContent() {
               onSubmitApplication={handleSubmitApplication}
               submittingApplication={submittingApplication}
             />
+          </div>
+        </div>
+      )}
+
+      {/* COI Upload Modal */}
+      {showCoiModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-md">
+          <div className="relative w-full max-w-lg rounded-2xl border border-line bg-white p-6 shadow-2xl backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200 flex flex-col gap-4">
+            <div className="flex items-center justify-between border-b border-line pb-3">
+              <div className="flex items-center gap-2">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500/10 text-brand-600">
+                  <FileText size={18} />
+                </span>
+                <div>
+                  <h3 className="text-sm font-bold text-ink">Upload Computation of Income</h3>
+                  <p className="text-[0.6875rem] text-ink-subtle">
+                    Auto-extract income details from your COI PDF
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowCoiModal(false)}
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-line text-ink-subtle transition-all hover:bg-bg-raised hover:text-ink"
+                aria-label="Close modal"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            
+            <div className="py-2">
+              <CoiUpload />
+            </div>
           </div>
         </div>
       )}
