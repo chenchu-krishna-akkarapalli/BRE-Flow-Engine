@@ -8,6 +8,7 @@ from app.db.models import (
     AuditLogModel,
     CommissionLedgerModel,
     DocumentRecordModel,
+    NavigationNodeModel,
     PermissionModel,
     PipelineLeadModel,
     RegionalBranchModel,
@@ -24,8 +25,7 @@ from app.db.models import (
     UserSessionModel,
 )
 
-
-# single concise context line
+# Verifies that all enterprise domain models are registered with SQLAlchemy metadata
 def test_all_enterprise_models_registered_in_metadata():
     table_names = set(Base.metadata.tables.keys())
     expected_tables = {
@@ -38,6 +38,7 @@ def test_all_enterprise_models_registered_in_metadata():
         "role_permission",
         "user_role",
         "user_role_assignment",
+        "navigation_node",
         "application",
         "rule_execution",
         "audit_log",
@@ -51,8 +52,7 @@ def test_all_enterprise_models_registered_in_metadata():
     }
     assert expected_tables.issubset(table_names), f"Missing tables: {expected_tables - table_names}"
 
-
-# single concise context line
+# Verifies tenant model instantiation
 def test_tenant_model_instantiation():
     tenant = TenantModel(
         name="Bank of India North DSA",
@@ -69,8 +69,7 @@ def test_tenant_model_instantiation():
     assert tenant.status == "active"
     assert tenant.cibil_overlay == 10
 
-
-# single concise context line
+# Verifies tenant status history model
 def test_tenant_status_history_instantiation():
     history = TenantStatusHistoryModel(
         tenant_id="tenant-123",
@@ -82,8 +81,7 @@ def test_tenant_status_history_instantiation():
     assert history.tenant_id == "tenant-123"
     assert history.new_status == "approved"
 
-
-# single concise context line
+# Verifies user and session model instantiation
 def test_user_and_session_instantiation():
     user = UserModel(
         tenant_id="tenant-123",
@@ -108,8 +106,7 @@ def test_user_and_session_instantiation():
     assert session.user_id == "user-123"
     assert session.is_revoked is False
 
-
-# single concise context line
+# Verifies role, permissions, and navigation node instantiation
 def test_role_and_rbac_instantiation():
     role = RoleModel(
         name="OPERATIONS_HEAD",
@@ -117,9 +114,22 @@ def test_role_and_rbac_instantiation():
         governance_level="PLATFORM",
         hierarchy_tier=2,
         is_system_role=True,
+        navigation_schema={"sections": []},
     )
     assert role.name == "OPERATIONS_HEAD"
     assert role.governance_level == "PLATFORM"
+    assert role.navigation_schema == {"sections": []}
+
+    nav_node = NavigationNodeModel(
+        role_name="CHANNEL_ADMIN",
+        section_title="Portal Navigation",
+        item_name="Dashboard",
+        path="dashboard",
+        icon="LayoutDashboard",
+        sort_order=1,
+    )
+    assert nav_node.role_name == "CHANNEL_ADMIN"
+    assert nav_node.icon == "LayoutDashboard"
 
     perm = PermissionModel(
         code="applications:evaluate",
@@ -154,8 +164,7 @@ def test_role_and_rbac_instantiation():
     )
     assert assignment.action == "ASSIGNED"
 
-
-# single concise context line
+# Verifies telemetry and SLA alert model instantiation
 def test_telemetry_and_sla_alert_instantiation():
     telemetry = TelemetryLogModel(
         trace_id="req-98f1c8b3",
@@ -185,8 +194,7 @@ def test_telemetry_and_sla_alert_instantiation():
     assert alert.latency_ms == 450.2
     assert alert.notified_super_admin is True
 
-
-# single concise context line
+# Verifies pipeline and underwriting approval queue models
 def test_pipeline_and_approval_instantiation():
     lead = PipelineLeadModel(
         tenant_id="tenant-123",
@@ -212,8 +220,7 @@ def test_pipeline_and_approval_instantiation():
     assert approval.decision == "CONDITIONAL_APPROVAL"
     assert approval.approved_amount == 1400000.0
 
-
-# single concise context line
+# Verifies commission ledger, regional hierarchy, and document records
 def test_commission_regional_document_instantiation():
     commission = CommissionLedgerModel(
         tenant_id="tenant-123",

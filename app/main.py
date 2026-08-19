@@ -27,6 +27,17 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"Redis initialization deferred: {e}")
 
+    # Bootstrap default UAS roles and seed accounts
+    try:
+        from app.core.database import AsyncSessionLocal
+        from app.services.uas_service import uas_service
+        async with AsyncSessionLocal() as db:
+            await uas_service.seed_default_users(db)
+            await db.commit()
+            logger.info("Default UAS governance roles and seed accounts initialized.")
+    except Exception as e:
+        logger.warning(f"UAS seed data check deferred: {e}")
+
     yield
 
     logger.info("Shutting down FlowBRE Enterprise Engine...")

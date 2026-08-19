@@ -9,6 +9,7 @@ from app.db.models.role import (
     RolePermissionModel,
     UserRoleModel,
     UserRoleAssignmentHistoryModel,
+    NavigationNodeModel,
 )
 from app.db.models.telemetry import TelemetryLogModel, SlaAlertModel
 from app.db.models.pipeline import PipelineLeadModel, ApprovalQueueModel
@@ -16,7 +17,7 @@ from app.db.models.commission import CommissionLedgerModel
 from app.db.models.regional import RegionalBranchModel
 from app.db.models.document_record import DocumentRecordModel
 
-# single concise context line
+# Exports all database entity models for metadata registration
 __all__ = [
     "TenantModel",
     "TenantStatusHistoryModel",
@@ -30,6 +31,7 @@ __all__ = [
     "RolePermissionModel",
     "UserRoleModel",
     "UserRoleAssignmentHistoryModel",
+    "NavigationNodeModel",
     "TelemetryLogModel",
     "SlaAlertModel",
     "PipelineLeadModel",

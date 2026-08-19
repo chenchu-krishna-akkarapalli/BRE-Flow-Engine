@@ -11,12 +11,14 @@ __pycache__
 env/
 venv/
 ENV/
+.venv/
 build/
 dist/
 *.egg-info/
 .idea/
 .vscode/
 node_modules/
+frontend/
 *.log
 postgres_data/
 redis_data/

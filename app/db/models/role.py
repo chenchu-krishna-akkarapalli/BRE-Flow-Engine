@@ -1,12 +1,11 @@
-from typing import Optional
+from typing import Any, Dict, Optional
 
-from sqlalchemy import Boolean, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import JSON, Boolean, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base_class import Base
 
-
-# single concise context line
+# Database model for RBAC governance roles with optional JSON navigation schema override
 class RoleModel(Base):
     __tablename__ = "role"
 
@@ -16,9 +15,9 @@ class RoleModel(Base):
     governance_level: Mapped[str] = mapped_column(String(32), default="TENANT", nullable=False)
     hierarchy_tier: Mapped[int] = mapped_column(Integer, default=6, nullable=False)
     is_system_role: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    navigation_schema: Mapped[Optional[Dict[str, Any]]] = mapped_column(JSON, nullable=True)
 
-
-# single concise context line
+# Database model for individual granular permissions
 class PermissionModel(Base):
     __tablename__ = "permission"
 
@@ -27,8 +26,7 @@ class PermissionModel(Base):
     module: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
-
-# single concise context line
+# Database relational join model mapping roles to granular permissions
 class RolePermissionModel(Base):
     __tablename__ = "role_permission"
     __table_args__ = (UniqueConstraint("role_id", "permission_id", name="uq_role_permission"),)
@@ -36,8 +34,7 @@ class RolePermissionModel(Base):
     role_id: Mapped[str] = mapped_column(String(64), ForeignKey("role.id"), nullable=False, index=True)
     permission_id: Mapped[str] = mapped_column(String(64), ForeignKey("permission.id"), nullable=False, index=True)
 
-
-# single concise context line
+# Database relational join model mapping users to roles
 class UserRoleModel(Base):
     __tablename__ = "user_role"
     __table_args__ = (UniqueConstraint("user_id", "role_id", name="uq_user_role"),)
@@ -48,8 +45,7 @@ class UserRoleModel(Base):
     is_primary: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     assigned_by: Mapped[Optional[str]] = mapped_column(String(128), nullable=True)
 
-
-# single concise context line
+# Database audit history model tracking role assignments
 class UserRoleAssignmentHistoryModel(Base):
     __tablename__ = "user_role_assignment"
 
@@ -59,3 +55,17 @@ class UserRoleAssignmentHistoryModel(Base):
     role_name: Mapped[str] = mapped_column(String(64), nullable=False)
     assigned_by_user_id: Mapped[Optional[str]] = mapped_column(String(64), ForeignKey("user_account.id"), nullable=True)
     reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+# Database model for persistent role-based navigation nodes
+class NavigationNodeModel(Base):
+    __tablename__ = "navigation_node"
+
+    role_name: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    section_title: Mapped[str] = mapped_column(String(128), nullable=False)
+    item_name: Mapped[str] = mapped_column(String(128), nullable=False)
+    path: Mapped[str] = mapped_column(String(256), nullable=False)
+    icon: Mapped[str] = mapped_column(String(64), nullable=False)
+    badge: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+    badge_type: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
+    is_global: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    sort_order: Mapped[int] = mapped_column(Integer, default=0, nullable=False)

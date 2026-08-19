@@ -1,4 +1,5 @@
 services:
+  # 1. PostgreSQL 16 with Row-Level Security
   postgres:
     image: postgres:16-alpine
     container_name: flowbre_postgres
@@ -17,6 +18,7 @@ services:
       retries: 5
     restart: always
 
+  # 2. Redis 7: Cache, Singleflight, Nonce Store & SSE PubSub
   redis:
     image: redis:7-alpine
     container_name: flowbre_redis
@@ -31,6 +33,7 @@ services:
       retries: 5
     restart: always
 
+  # 3. FastAPI Core Business Rules Engine (BRE) & UAS
   web:
     build:
       context: .
@@ -41,35 +44,112 @@ services:
     environment:
       - PROJECT_NAME=${PROJECT_NAME:-FlowBRE Onboarding BRE Engine}
       - API_V1_STR=${API_V1_STR:-/api/v1}
-      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - ENVIRONMENT=${ENVIRONMENT:-production}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
-      # Load-bearing: inside the network the app reaches Postgres by service
-      # name on its INTERNAL port, overriding the host-facing values in .env.
       - POSTGRES_SERVER=postgres
-      - POSTGRES_USER=${POSTGRES_USER:-bre_user} 
+      - POSTGRES_USER=${POSTGRES_USER:-bre_user}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-bre_password}
       - POSTGRES_DB=${POSTGRES_DB:-bre_db}
       - POSTGRES_PORT=5432
       - DB_POOL_SIZE=${DB_POOL_SIZE:-20}
       - DB_MAX_OVERFLOW=${DB_MAX_OVERFLOW:-10}
-      # Same for Redis: service name, internal port.
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_DB=0
+      - REDIS_PUBSUB_CHANNEL=alerts:super_admin:sla_breach
       - SECRET_KEY=${SECRET_KEY:-super-secret-jwt-key-flowbre-enterprise-2026}
       - ALGORITHM=${ALGORITHM:-HS256}
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-1440}
-      - CIBIL_ENGINE_BINARY=${CIBIL_ENGINE_BINARY:-/usr/local/bin/cibil-cli}
-      - PAYSLIP_ENGINE_BINARY=${PAYSLIP_ENGINE_BINARY:-/usr/local/bin/payslip-cli}
-      - COI_ENGINE_BINARY=${COI_ENGINE_BINARY:-/usr/local/bin/coi-cli}
-    volumes:
-      - ./app/zen_rules:/app/app/zen_rules:ro
+      - CIBIL_ENGINE_BINARY=/usr/local/bin/cibil-cli
+      - PAYSLIP_ENGINE_BINARY=/usr/local/bin/payslip-cli
+      - COI_ENGINE_BINARY=/usr/local/bin/coi-cli
+      - OCR_REQUIRE_REAL=${OCR_REQUIRE_REAL:-false}
+      - SLA_ALERT_THRESHOLD_MS=${SLA_ALERT_THRESHOLD_MS:-400.0}
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
     command: sh -c "alembic upgrade head && gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 --timeout 30"
+    restart: always
+
+  # 4. Celery Worker for Asynchronous OCR & Document Extraction
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flowbre_celery_worker
+    environment:
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_USER=${POSTGRES_USER:-bre_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-bre_password}
+      - POSTGRES_DB=${POSTGRES_DB:-bre_db}
+      - POSTGRES_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+      - CIBIL_ENGINE_BINARY=/usr/local/bin/cibil-cli
+      - PAYSLIP_ENGINE_BINARY=/usr/local/bin/payslip-cli
+      - COI_ENGINE_BINARY=/usr/local/bin/coi-cli
+      - OCR_REQUIRE_REAL=false
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: python -m celery -A app.worker.celery_app worker --loglevel=info --concurrency=4
+    healthcheck:
+      disable: true
+    restart: always
+
+  # 5. Flower: Real-Time Celery Task Dashboard
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flowbre_flower
+    ports:
+      - "127.0.0.1:9007:9007"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: python -m celery -A app.worker.celery_app flower --port=9007
+    healthcheck:
+      disable: true
+    restart: always
+
+  # 6. Next.js 16 Frontend Web Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    container_name: flowbre_frontend
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_BASE=http://web:8000
+    depends_on:
+      - web
+    restart: always
+
+  # 7. Nginx API & Edge Reverse Gateway
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: flowbre_nginx
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - web
+      - frontend
     restart: always
 
 volumes:

@@ -19,6 +19,7 @@ class UserModel(Base):
     password_hash: Mapped[Optional[str]] = mapped_column(String(256), nullable=True)
     salt: Mapped[Optional[str]] = mapped_column(String(128), nullable=True)
     role: Mapped[str] = mapped_column(String(64), default="TRANSACTIONAL_USER", nullable=False, index=True)
+    token_version: Mapped[int] = mapped_column(default=1, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     is_mfa_enabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     mfa_secret: Mapped[Optional[str]] = mapped_column(String(128), nullable=True)
