@@ -74,10 +74,22 @@ def validate_upload(content: bytes, content_type: Optional[str], filename: str) 
 
 
 def _to_rupees(amount_obj: Any) -> Optional[float]:
-    """Convert amount dict (paise / raw string) or number into rupee float."""
+    """Convert amount dict (value / paise / raw string) or number into rupee float."""
     if isinstance(amount_obj, dict):
+        if "value" in amount_obj and isinstance(amount_obj["value"], (int, float)):
+            return round(float(amount_obj["value"]), 2)
         if "paise" in amount_obj and isinstance(amount_obj["paise"], (int, float)):
             return round(float(amount_obj["paise"]) / 100.0, 2)
+        if "payable" in amount_obj and isinstance(amount_obj["payable"], dict):
+            return _to_rupees(amount_obj["payable"])
+        if "actual" in amount_obj and isinstance(amount_obj["actual"], dict):
+            return _to_rupees(amount_obj["actual"])
+        if "raw_value_string" in amount_obj and amount_obj["raw_value_string"]:
+            raw_str = str(amount_obj["raw_value_string"]).replace(",", "").strip()
+            try:
+                return float(raw_str)
+            except ValueError:
+                pass
         if "raw" in amount_obj and amount_obj["raw"]:
             raw_str = str(amount_obj["raw"]).replace(",", "").strip()
             try:
@@ -129,7 +141,7 @@ async def _run_engine(pdf_bytes: bytes, doc_id: str) -> Dict[str, Any]:
     try:
         return json.loads(stdout)
     except json.JSONDecodeError as exc:
-        raise PayslipEngineError("The payslip engine returned malformed JSON.") from exc
+        raise PayslipEngineError(f"'{doc_id}' output from payslip-cli was not valid JSON.") from exc
 
 
 def _detect_salary_payment_method(data: Dict[str, Any], employee_obj: Dict[str, Any]) -> str:
@@ -182,8 +194,12 @@ MAX_MONTHLY_LINE_ITEM = 10_000_000.0  # 1 Crore monthly item cap
 
 def map_to_payslip_fields(data: Dict[str, Any]) -> Dict[str, Any]:
     """Translate raw payslip engine JSON payload to structured Nested Relational format."""
-    gross_obj = data.get("gross_earnings") or {}
-    net_obj = data.get("net_pay") or {}
+    statements = data.get("statements") if isinstance(data.get("statements"), list) else []
+    first_stmt = statements[0] if statements and isinstance(statements[0], dict) else {}
+
+    summary_obj = first_stmt.get("summary") if isinstance(first_stmt.get("summary"), dict) else {}
+    gross_obj = summary_obj.get("gross_salary") or data.get("gross_earnings") or {}
+    net_obj = summary_obj.get("net_pay") or data.get("net_pay") or {}
     employee_obj = data.get("employee") if isinstance(data.get("employee"), dict) else {}
     employer_obj = data.get("employer") if isinstance(data.get("employer"), dict) else {}
 
@@ -193,10 +209,17 @@ def map_to_payslip_fields(data: Dict[str, Any]) -> Dict[str, Any]:
     # Parse earnings breakdown, excluding annual compensation / YTD tax figures
     earnings_breakdown: List[Dict[str, Any]] = []
     total_earnings_sum = 0.0
-    for item in data.get("earnings") or []:
+
+    raw_earnings = (
+        first_stmt.get("earnings", {}).get("items")
+        if isinstance(first_stmt.get("earnings"), dict)
+        else data.get("earnings")
+    ) or []
+
+    for item in raw_earnings:
         if isinstance(item, dict):
-            amt = _to_rupees(item.get("amount"))
-            lbl = item.get("label")
+            amt = _to_rupees(item.get("amount") or item.get("amount_payable"))
+            lbl = item.get("raw_label") or item.get("label")
             if lbl and not _is_annual_label(str(lbl)):
                 if amt is None or (amt > 0 and amt <= MAX_MONTHLY_LINE_ITEM):
                     earnings_breakdown.append({"label": str(lbl), "amount": amt})
@@ -219,21 +242,28 @@ def map_to_payslip_fields(data: Dict[str, Any]) -> Dict[str, Any]:
     pt_amount: Optional[float] = None
     it_amount: Optional[float] = None
 
-    for item in data.get("deductions") or []:
+    raw_deductions = (
+        first_stmt.get("deductions", {}).get("items")
+        if isinstance(first_stmt.get("deductions"), dict)
+        else data.get("deductions")
+    ) or []
+
+    for item in raw_deductions:
         if isinstance(item, dict):
-            amt = _to_rupees(item.get("amount"))
-            lbl = str(item.get("label") or "")
+            amt = _to_rupees(item.get("amount") or item.get("amount_payable"))
+            lbl = str(item.get("raw_label") or item.get("label") or "")
+            cat = str(item.get("canonical_category") or "")
             if lbl and not _is_annual_label(lbl):
                 deductions_breakdown.append({"label": lbl, "amount": amt})
                 if amt and amt > 0:
                     total_deductions_sum += amt
 
                 lbl_lower = lbl.lower()
-                if "provident fund" in lbl_lower or "pf" == lbl_lower:
+                if "provident_fund" in cat or "provident fund" in lbl_lower or "pf" == lbl_lower:
                     pf_amount = amt
-                elif "professional tax" in lbl_lower or "pt" == lbl_lower:
+                elif "professional_tax" in cat or "professional tax" in lbl_lower or "pt" == lbl_lower:
                     pt_amount = amt
-                elif "income tax" in lbl_lower or "tds" in lbl_lower or "tax" in lbl_lower:
+                elif "income_tax_tds" in cat or "income tax" in lbl_lower or "tds" in lbl_lower or "tax" in lbl_lower:
                     if it_amount is None:
                         it_amount = amt
 

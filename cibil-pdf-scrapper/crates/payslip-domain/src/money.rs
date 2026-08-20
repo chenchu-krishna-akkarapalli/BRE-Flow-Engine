@@ -38,6 +38,28 @@ impl Money {
             return None;
         }
 
+        // Filter out bare 4-digit year integers (e.g. 2024, 2025, 2026) without decimals or currency.
+        if raw.len() == 4 && raw.chars().all(|c| c.is_ascii_digit()) {
+            if let Ok(yr) = raw.parse::<u16>() {
+                if (1900..=2099).contains(&yr) {
+                    return None;
+                }
+            }
+        }
+
+        // Filter out unseparated 7+ digit raw integers (e.g. 10016060, 101122757942) which are employee IDs, UANs, or phone numbers.
+        if raw.len() >= 7 && raw.chars().all(|c| c.is_ascii_digit()) {
+            return None;
+        }
+
+        // Filter out merged multi-column strings (e.g. 1230349.00455,425.00 or 5,946,841.215,536,930.00)
+        if let Some(dot_idx) = raw.find('.') {
+            let after_dot = &raw[dot_idx + 1..];
+            if after_dot.contains('.') || after_dot.contains(',') {
+                return None;
+            }
+        }
+
         // Trailing CR/DR and parenthesised figures both mean a negative amount.
         let upper = raw.to_ascii_uppercase();
         let bracketed = raw.starts_with('(') && raw.ends_with(')');
@@ -112,7 +134,7 @@ impl Money {
             }
             let candidate: String = chars[start..end].iter().collect();
             let separated = candidate.contains(',') || candidate.contains('.');
-            if separated || candidate.len() >= 4 {
+            if separated || (candidate.len() >= 4 && candidate.len() < 7) {
                 if let Some(money) = Money::parse(&candidate) {
                     // Keep the caller's full line so the figure stays traceable.
                     return Some(Money::from_paise(money.paise, text.trim()));
@@ -151,7 +173,8 @@ impl Money {
                 end -= 1;
             }
             let candidate: String = chars[start..end].iter().collect();
-            if candidate.contains(',') || candidate.contains('.') || candidate.len() >= 4 {
+            let separated = candidate.contains(',') || candidate.contains('.');
+            if separated || (candidate.len() >= 4 && candidate.len() < 7) {
                 if let Some(money) = Money::parse(&candidate) {
                     return Some(Money::from_paise(money.paise, candidate));
                 }
@@ -163,6 +186,21 @@ impl Money {
 
     pub fn find_first(text: &str) -> Option<Money> {
         Money::find_first_from(text, 0)
+    }
+
+    pub fn find_all(text: &str) -> Vec<Money> {
+        let mut results = Vec::new();
+        let mut cursor = 0;
+        while cursor < text.len() {
+            if let Some(m) = Money::find_first_from(text, cursor) {
+                let m_raw_idx = text[cursor..].find(&m.raw).map(|i| cursor + i).unwrap_or(cursor);
+                cursor = m_raw_idx + m.raw.len().max(1);
+                results.push(m);
+            } else {
+                break;
+            }
+        }
+        results
     }
 }
 
