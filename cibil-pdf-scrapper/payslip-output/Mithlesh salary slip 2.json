@@ -1,0 +1,2455 @@
+{
+  "schema_version": "2.0",
+  "metadata": {
+    "source_file": "Mithlesh salary slip 2.pdf",
+    "page_count": 1,
+    "layout_signature": "generic-payslip",
+    "detected_locale": "IN",
+    "currency": "INR",
+    "extraction_confidence_overall": 0.95
+  },
+  "employer": {
+    "name": "Name of Establishment : VIVA CROP SCIENCE TECH",
+    "address": "Employee Name: Mithlesh Kumar",
+    "business_unit": null
+  },
+  "employee": {
+    "name": "VIVA CROP SCIENCE TECH",
+    "employee_id": null,
+    "designation": "Sales Officer",
+    "department": null,
+    "date_of_joining": "Aug-20",
+    "pan": null,
+    "uan": null,
+    "pf_number": null,
+    "esi_number": null,
+    "bank_account": null,
+    "bank_name": null,
+    "ifsc_or_routing_code": null
+  },
+  "statements": [
+    {
+      "period": {
+        "period_type": "monthly",
+        "month": "April",
+        "year": 2025,
+        "financial_year": null,
+        "from_date": null,
+        "to_date": null,
+        "days_in_month": null,
+        "working_days": null,
+        "paid_days": null,
+        "lop_days": null,
+        "arrear_days": null
+      },
+      "earnings": {
+        "items": [
+          {
+            "raw_label": "BASIC",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 16200.0,
+              "currency": "INR",
+              "raw_label": "BASIC",
+              "raw_value_string": "16200.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 16200.0,
+              "currency": "INR",
+              "raw_label": "BASIC",
+              "raw_value_string": "16200.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "H.R.A",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 8260.0,
+              "currency": "INR",
+              "raw_label": "H.R.A",
+              "raw_value_string": "8260.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 8260.0,
+              "currency": "INR",
+              "raw_label": "H.R.A",
+              "raw_value_string": "8260.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "CONVEY.",
+            "canonical_category": "conveyance_allowance",
+            "amount": {
+              "value": 2740.0,
+              "currency": "INR",
+              "raw_label": "CONVEY.",
+              "raw_value_string": "2740.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2740.0,
+              "currency": "INR",
+              "raw_label": "CONVEY.",
+              "raw_value_string": "2740.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "30.00 BASIC",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 16200.0,
+              "currency": "INR",
+              "raw_label": "30.00 BASIC",
+              "raw_value_string": "16,200",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 16200.0,
+              "currency": "INR",
+              "raw_label": "30.00 BASIC",
+              "raw_value_string": "16,200",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Holiday",
+            "canonical_category": "dearness_allowance",
+            "amount": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "Holiday",
+              "raw_value_string": "0.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "Holiday",
+              "raw_value_string": "0.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "E.L",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "E.L",
+              "raw_value_string": "0.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "E.L",
+              "raw_value_string": "0.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "C.L",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "C.L",
+              "raw_value_string": "0.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "C.L",
+              "raw_value_string": "0.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "S.L",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "S.L",
+              "raw_value_string": "0.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "S.L",
+              "raw_value_string": "0.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "C.H",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "C.H",
+              "raw_value_string": "0.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "C.H",
+              "raw_value_string": "0.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "deductions": {
+        "items": [
+          {
+            "raw_label": "0.00 E.P.F",
+            "canonical_category": "provident_fund",
+            "amount": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "0.00 E.P.F",
+              "raw_value_string": "1800",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "0.00 E.P.F",
+              "raw_value_string": "1800",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "H.R.A.",
+            "canonical_category": "other_deduction",
+            "amount": {
+              "value": 8260.0,
+              "currency": "INR",
+              "raw_label": "H.R.A.",
+              "raw_value_string": "8260",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 8260.0,
+              "currency": "INR",
+              "raw_label": "H.R.A.",
+              "raw_value_string": "8260",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "CONVEY.",
+            "canonical_category": "other_deduction",
+            "amount": {
+              "value": 2740.0,
+              "currency": "INR",
+              "raw_label": "CONVEY.",
+              "raw_value_string": "2740",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2740.0,
+              "currency": "INR",
+              "raw_label": "CONVEY.",
+              "raw_value_string": "2740",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "summary": {
+        "gross_salary": {
+          "value": 27200.0,
+          "currency": "INR",
+          "raw_label": "Total",
+          "raw_value_string": "27,200.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "net_pay": {
+          "value": 25400.0,
+          "currency": "INR",
+          "raw_label": "Net Payment",
+          "raw_value_string": "25400.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_deductions": {
+          "value": 1800.0,
+          "currency": "INR",
+          "raw_label": "E.P.F",
+          "raw_value_string": "1800",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
+        "total_allowances": {
+          "value": 11000.0,
+          "currency": "INR",
+          "raw_label": "total_allowances",
+          "raw_value_string": "11000.00",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
+        "total_incentives_and_bonus": null,
+        "amount_in_words": null
+      },
+      "reconciliation": {
+        "gross_minus_deductions_matches_net": true,
+        "delta_vs_stated_net": 0.0,
+        "sum_of_earning_items_matches_stated_gross": false,
+        "sum_of_deduction_items_matches_stated_total": false,
+        "flags": []
+      }
+    }
+  ],
+  "raw": {
+    "page_count": 1,
+    "lines": [
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.68000030517578,
+          "y": 58.55999755859375,
+          "width": 230.20700073242188,
+          "height": 9.0
+        },
+        "segments": [
+          "Name of Establishment",
+          ": VIVA CROP SCIENCE TECH"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.68000030517578,
+            "y": 58.55999755859375,
+            "width": 96.0839614868164,
+            "height": 9.0
+          },
+          {
+            "x": 158.85293579101562,
+            "y": 58.55999755859375,
+            "width": 124.0340576171875,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 74.0400161743164,
+          "width": 298.7313537597656,
+          "height": 11.040000915527344
+        },
+        "segments": [
+          "Address  G-1/118,Transport Nagar,Kanpur Road,Lucknow-226012"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 74.0400161743164,
+            "width": 298.7313537597656,
+            "height": 11.040000915527344
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 87.26001739501953,
+          "width": 160.74990844726562,
+          "height": 11.040000915527344
+        },
+        "segments": [
+          "Pay Slip for the month of April,2025"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 87.26001739501953,
+            "width": 160.74990844726562,
+            "height": 11.040000915527344
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 103.70001983642578,
+          "width": 152.16751098632812,
+          "height": 11.040000915527344
+        },
+        "segments": [
+          "Employee Name: Mithlesh Kumar"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 103.70001983642578,
+            "width": 152.16751098632812,
+            "height": 11.040000915527344
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 118.34000396728516,
+          "width": 558.6187133789062,
+          "height": 11.040000915527344
+        },
+        "segments": [
+          "Father's Name: Shyam Sundar",
+          "DOJ",
+          "Aug-20"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 118.34000396728516,
+            "width": 139.6891632080078,
+            "height": 11.040000915527344
+          },
+          {
+            "x": 465.54998779296875,
+            "y": 118.34000396728516,
+            "width": 18.072479248046875,
+            "height": 11.040000915527344
+          },
+          {
+            "x": 578.9500122070312,
+            "y": 118.34000396728516,
+            "width": 32.46868896484375,
+            "height": 11.040000915527344
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 132.86000061035156,
+          "width": 117.15646362304688,
+          "height": 11.039999961853027
+        },
+        "segments": [
+          "Designation: Sales Officer"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 132.86000061035156,
+            "width": 117.15646362304688,
+            "height": 11.039999961853027
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 147.26002502441406,
+          "width": 475.32464599609375,
+          "height": 11.159988403320312
+        },
+        "segments": [
+          "Mode of payment: Neft",
+          "Branch:",
+          "Moth (Jhansi)"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 147.26002502441406,
+            "width": 109.7801513671875,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 297.04998779296875,
+            "y": 147.38002014160156,
+            "width": 35.06298828125,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 465.54998779296875,
+            "y": 147.38002014160156,
+            "width": 62.57464599609375,
+            "height": 11.039999961853027
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 297.04998779296875,
+          "y": 161.66001892089844,
+          "width": 275.77978515625,
+          "height": 11.039993286132812
+        },
+        "segments": [
+          "Account Number:",
+          "110025050816"
+        ],
+        "segment_boxes": [
+          {
+            "x": 297.04998779296875,
+            "y": 161.66001892089844,
+            "width": 80.65817260742188,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 505.1499938964844,
+            "y": 161.66001892089844,
+            "width": 67.67977905273438,
+            "height": 11.039999961853027
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 177.13999938964844,
+          "width": 655.4176025390625,
+          "height": 11.160018920898438
+        },
+        "segments": [
+          "BASIC",
+          "H.R.A",
+          "CONVEY.",
+          "INCENTTIVE",
+          "SPL.ALL",
+          "MEDICAL",
+          "CCA",
+          "PERF.BO",
+          "Total"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 177.26002502441406,
+            "width": 31.044483184814453,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 132.6199951171875,
+            "y": 177.13999938964844,
+            "width": 29.741744995117188,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 184.22000122070312,
+            "y": 177.13999938964844,
+            "width": 40.08624267578125,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 297.04998779296875,
+            "y": 177.13999938964844,
+            "width": 53.367340087890625,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 393.7699890136719,
+            "y": 177.13999938964844,
+            "width": 33.892791748046875,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 465.54998779296875,
+            "y": 177.13999938964844,
+            "width": 41.344818115234375,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 551.7100219726562,
+            "y": 177.13999938964844,
+            "width": 18.1478271484375,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 615.3099975585938,
+            "y": 177.13999938964844,
+            "width": 38.2646484375,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 685.4199829101562,
+            "y": 177.13999938964844,
+            "width": 22.797607421875,
+            "height": 11.039999961853027
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 191.42002868652344,
+          "width": 675.0902099609375,
+          "height": 11.039993286132812
+        },
+        "segments": [
+          "16200.00",
+          "8260.00",
+          "2740.00",
+          "0",
+          "0.00",
+          "0.00",
+          "0.00",
+          "0.00",
+          "0.00",
+          "27200.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 191.42002868652344,
+            "width": 42.12864303588867,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 132.6199951171875,
+            "y": 191.42002868652344,
+            "width": 36.49824523925781,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 184.22000122070312,
+            "y": 191.42002868652344,
+            "width": 36.49824523925781,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 249.5,
+            "y": 191.42002868652344,
+            "width": 5.5972747802734375,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 297.04998779296875,
+            "y": 191.42002868652344,
+            "width": 19.6070556640625,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 393.7699890136719,
+            "y": 191.42002868652344,
+            "width": 19.6070556640625,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 465.54998779296875,
+            "y": 191.42002868652344,
+            "width": 19.6070556640625,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 551.7100219726562,
+            "y": 191.42002868652344,
+            "width": 19.6070556640625,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 615.3099975585938,
+            "y": 191.42002868652344,
+            "width": 19.6070556640625,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 685.4199829101562,
+            "y": 191.42002868652344,
+            "width": 42.47021484375,
+            "height": 11.039999961853027
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 626.739990234375,
+          "y": 207.0500030517578,
+          "width": 43.94964599609375,
+          "height": 11.039999961853027
+        },
+        "segments": [
+          "Employer"
+        ],
+        "segment_boxes": [
+          {
+            "x": 626.739990234375,
+            "y": 207.0500030517578,
+            "width": 43.94964599609375,
+            "height": 11.039999961853027
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 64.68000030517578,
+          "y": 213.77000427246094,
+          "width": 685.60791015625,
+          "height": 11.520004272460938
+        },
+        "segments": [
+          "Attendance",
+          "Earning",
+          "Deduction",
+          "Net Payment"
+        ],
+        "segment_boxes": [
+          {
+            "x": 64.68000030517578,
+            "y": 214.25001525878906,
+            "width": 53.606689453125,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 302.92999267578125,
+            "y": 213.77000427246094,
+            "width": 34.798919677734375,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 515.3499755859375,
+            "y": 213.77000427246094,
+            "width": 47.7017822265625,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 689.8599853515625,
+            "y": 214.25001525878906,
+            "width": 60.42791748046875,
+            "height": 11.039999961853027
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 624.9099731445312,
+          "y": 221.6900177001953,
+          "width": 47.7017822265625,
+          "height": 11.039999961853027
+        },
+        "segments": [
+          "Deduction"
+        ],
+        "segment_boxes": [
+          {
+            "x": 624.9099731445312,
+            "y": 221.6900177001953,
+            "width": 47.7017822265625,
+            "height": 11.039999961853027
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 235.9700164794922,
+          "width": 700.5302124023438,
+          "height": 11.159988403320312
+        },
+        "segments": [
+          "Working Day",
+          "30.00 BASIC",
+          "16,200 ARR-1",
+          "0.00 E.P.F",
+          "1800 E.P.S",
+          "550",
+          "25400.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 236.0900115966797,
+            "width": 60.66936111450195,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 155.05999755859375,
+            "y": 235.9700164794922,
+            "width": 55.42790222167969,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 259.70001220703125,
+            "y": 235.9700164794922,
+            "width": 64.66293334960938,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 442.010009765625,
+            "y": 235.9700164794922,
+            "width": 45.2998046875,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 588.9099731445312,
+            "y": 235.9700164794922,
+            "width": 48.15985107421875,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 662.1968383789062,
+            "y": 235.9700164794922,
+            "width": 16.858154296875,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 710.8599853515625,
+            "y": 235.9700164794922,
+            "width": 42.47021484375,
+            "height": 11.039999961853027
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 250.49000549316406,
+          "width": 626.8511962890625,
+          "height": 11.039993286132812
+        },
+        "segments": [
+          "Holiday",
+          "0.00 H.R.A.",
+          "8260 ARR-2",
+          "0.00 E.S.I.C",
+          "0 E.P.F",
+          "1250"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 250.49000549316406,
+            "width": 36.652164459228516,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 160.6999969482422,
+            "y": 250.49000549316406,
+            "width": 51.309967041015625,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 270.6199951171875,
+            "y": 250.49000549316406,
+            "width": 53.742950439453125,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 442.010009765625,
+            "y": 250.49000549316406,
+            "width": 53.425262451171875,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 605.8300170898438,
+            "y": 250.49000549316406,
+            "width": 31.23980712890625,
+            "height": 11.039999961853027
+          },
+          {
+            "x": 657.16259765625,
+            "y": 250.49000549316406,
+            "width": 22.48858642578125,
+            "height": 11.039999961853027
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 265.010009765625,
+          "width": 623.1527099609375,
+          "height": 11.040008544921875
+        },
+        "segments": [
+          "E.L",
+          "0.00 CONVEY.",
+          "2740 ARR-3",
+          "0.00 ADVAN.",
+          "0 E.S.I.C",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 265.010009765625,
+            "width": 12.806400299072266,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 160.6999969482422,
+            "y": 265.010009765625,
+            "width": 63.60624694824219,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 270.6199951171875,
+            "y": 265.010009765625,
+            "width": 53.742950439453125,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 442.010009765625,
+            "y": 265.010009765625,
+            "width": 59.19915771484375,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 605.8300170898438,
+            "y": 265.010009765625,
+            "width": 44.35528564453125,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 670.3554077148438,
+            "y": 265.010009765625,
+            "width": 5.5972900390625,
+            "height": 11.040008544921875
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 279.5299987792969,
+          "width": 624.2236328125,
+          "height": 11.040008544921875
+        },
+        "segments": [
+          "C.L",
+          "0.00 INCENTTIVE",
+          "0 ATT. ALL",
+          "0.00 LOAN",
+          "0 LWFER",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 279.5299987792969,
+            "width": 13.30319595336914,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 160.6999969482422,
+            "y": 279.5299987792969,
+            "width": 76.88737487792969,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 287.57000732421875,
+            "y": 279.5299987792969,
+            "width": 47.5679931640625,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 442.010009765625,
+            "y": 279.5299987792969,
+            "width": 49.042388916015625,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 605.8300170898438,
+            "y": 279.5299987792969,
+            "width": 45.4151611328125,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 671.4263305664062,
+            "y": 279.5299987792969,
+            "width": 5.5972900390625,
+            "height": 11.040008544921875
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 294.04998779296875,
+          "width": 558.6273193359375,
+          "height": 11.040008544921875
+        },
+        "segments": [
+          "S.L",
+          "0.00 SPL.ALL",
+          "0",
+          "I.TAX",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 294.04998779296875,
+            "width": 12.404041290283203,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 160.6999969482422,
+            "y": 294.04998779296875,
+            "width": 57.41279602050781,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 287.57000732421875,
+            "y": 294.04998779296875,
+            "width": 5.5972900390625,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 465.54998779296875,
+            "y": 294.04998779296875,
+            "width": 23.018402099609375,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 605.8300170898438,
+            "y": 294.04998779296875,
+            "width": 5.5972900390625,
+            "height": 11.040008544921875
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 308.57000732421875,
+          "width": 558.6273193359375,
+          "height": 11.040008544921875
+        },
+        "segments": [
+          "C.H",
+          "0.00 MEDICAL",
+          "0 OVERTIME",
+          "0.00 P.TAX",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 308.57000732421875,
+            "width": 15.544322967529297,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 160.6999969482422,
+            "y": 308.57000732421875,
+            "width": 64.86480712890625,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 287.57000732421875,
+            "y": 308.57000732421875,
+            "width": 57.437744140625,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 442.010009765625,
+            "y": 308.57000732421875,
+            "width": 49.572296142578125,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 605.8300170898438,
+            "y": 308.57000732421875,
+            "width": 5.5972900390625,
+            "height": 11.040008544921875
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 323.1099853515625,
+          "width": 558.6273193359375,
+          "height": 11.040008544921875
+        },
+        "segments": [
+          "W.P",
+          "0.00 CCA",
+          "0 Gross",
+          "70000.00 PF ESI",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 323.1099853515625,
+            "width": 18.315357208251953,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 160.6999969482422,
+            "y": 323.1099853515625,
+            "width": 41.6678466796875,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 287.57000732421875,
+            "y": 323.1099853515625,
+            "width": 35.214202880859375,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 419.2099914550781,
+            "y": 323.1099853515625,
+            "width": 72.89117431640625,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 605.8300170898438,
+            "y": 323.1099853515625,
+            "width": 5.5972900390625,
+            "height": 11.040008544921875
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 337.6300048828125,
+          "width": 558.6273193359375,
+          "height": 11.040008544921875
+        },
+        "segments": [
+          "P.D",
+          "30.00 PERF.BO",
+          "0 Total",
+          "LW FEE",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 337.6300048828125,
+            "width": 15.32352066040039,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 154.82000732421875,
+            "y": 337.6300048828125,
+            "width": 67.66464233398438,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 287.57000732421875,
+            "y": 337.6300048828125,
+            "width": 32.82958984375,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 465.54998779296875,
+            "y": 337.6300048828125,
+            "width": 32.8660888671875,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 605.8300170898438,
+            "y": 337.6300048828125,
+            "width": 5.5972900390625,
+            "height": 11.040008544921875
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 52.79999923706055,
+          "y": 352.1499938964844,
+          "width": 556.0704345703125,
+          "height": 11.040008544921875
+        },
+        "segments": [
+          "Leave Day",
+          "0.00",
+          "Gross",
+          "27,200"
+        ],
+        "segment_boxes": [
+          {
+            "x": 52.79999923706055,
+            "y": 352.1499938964844,
+            "width": 45.650394439697266,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 160.6999969482422,
+            "y": 352.1499938964844,
+            "width": 19.607040405273438,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 465.54998779296875,
+            "y": 352.1499938964844,
+            "width": 25.734222412109375,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 577.8699951171875,
+            "y": 352.1499938964844,
+            "width": 31.00042724609375,
+            "height": 11.040008544921875
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 465.54998779296875,
+          "y": 366.42999267578125,
+          "width": 47.31744384765625,
+          "height": 11.040008544921875
+        },
+        "segments": [
+          "Deduction"
+        ],
+        "segment_boxes": [
+          {
+            "x": 465.54998779296875,
+            "y": 366.42999267578125,
+            "width": 47.31744384765625,
+            "height": 11.040008544921875
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 230.4199981689453,
+          "y": 381.6700134277344,
+          "width": 346.00469970703125,
+          "height": 11.040008544921875
+        },
+        "segments": [
+          "Note: This is computer generated statement and does not require signature"
+        ],
+        "segment_boxes": [
+          {
+            "x": 230.4199981689453,
+            "y": 381.6700134277344,
+            "width": 346.00469970703125,
+            "height": 11.040008544921875
+          }
+        ]
+      }
+    ],
+    "table": {
+      "columns": [
+        [
+          52.68000030517578,
+          351.5313415527344
+        ],
+        [
+          64.68000030517578,
+          118.28668975830078
+        ],
+        [
+          132.6199951171875,
+          169.1182403564453
+        ],
+        [
+          154.82000732421875,
+          282.8869934082031
+        ],
+        [
+          184.22000122070312,
+          224.30624389648438
+        ],
+        [
+          230.4199981689453,
+          576.4246826171875
+        ],
+        [
+          249.5,
+          255.09727478027344
+        ],
+        [
+          259.70001220703125,
+          324.3629455566406
+        ],
+        [
+          270.6199951171875,
+          324.3629455566406
+        ],
+        [
+          287.57000732421875,
+          345.00775146484375
+        ],
+        [
+          297.04998779296875,
+          377.7081604003906
+        ],
+        [
+          393.7699890136719,
+          427.66278076171875
+        ],
+        [
+          419.2099914550781,
+          492.1011657714844
+        ],
+        [
+          442.010009765625,
+          501.20916748046875
+        ],
+        [
+          465.54998779296875,
+          528.1246337890625
+        ],
+        [
+          505.1499938964844,
+          572.8297729492188
+        ],
+        [
+          515.3499755859375,
+          563.0517578125
+        ],
+        [
+          551.7100219726562,
+          571.3170776367188
+        ],
+        [
+          577.8699951171875,
+          611.418701171875
+        ],
+        [
+          588.9099731445312,
+          637.06982421875
+        ],
+        [
+          605.8300170898438,
+          651.2451782226562
+        ],
+        [
+          615.3099975585938,
+          653.5746459960938
+        ],
+        [
+          624.9099731445312,
+          672.6117553710938
+        ],
+        [
+          657.16259765625,
+          679.6511840820312
+        ],
+        [
+          670.3554077148438,
+          677.0236206054688
+        ],
+        [
+          685.4199829101562,
+          750.2879028320312
+        ],
+        [
+          710.8599853515625,
+          753.3302001953125
+        ]
+      ],
+      "rows": [
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Name of Establishment",
+              "bbox": {
+                "x": 52.68000030517578,
+                "y": 58.55999755859375,
+                "width": 96.0839614868164,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": ": VIVA CROP SCIENCE TECH",
+              "bbox": {
+                "x": 158.85293579101562,
+                "y": 58.55999755859375,
+                "width": 124.0340576171875,
+                "height": 9.0
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Address  G-1/118,Transport Nagar,Kanpur Road,Lucknow-226012",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 74.0400161743164,
+                "width": 298.7313537597656,
+                "height": 11.040000915527344
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Pay Slip for the month of April,2025",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 87.26001739501953,
+                "width": 160.74990844726562,
+                "height": 11.040000915527344
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Employee Name: Mithlesh Kumar",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 103.70001983642578,
+                "width": 152.16751098632812,
+                "height": 11.040000915527344
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Father's Name: Shyam Sundar",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 118.34000396728516,
+                "width": 139.6891632080078,
+                "height": 11.040000915527344
+              },
+              "column": 0
+            },
+            {
+              "text": "DOJ",
+              "bbox": {
+                "x": 465.54998779296875,
+                "y": 118.34000396728516,
+                "width": 18.072479248046875,
+                "height": 11.040000915527344
+              },
+              "column": 14
+            },
+            {
+              "text": "Aug-20",
+              "bbox": {
+                "x": 578.9500122070312,
+                "y": 118.34000396728516,
+                "width": 32.46868896484375,
+                "height": 11.040000915527344
+              },
+              "column": 18
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Designation: Sales Officer",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 132.86000061035156,
+                "width": 117.15646362304688,
+                "height": 11.039999961853027
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Mode of payment: Neft",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 147.26002502441406,
+                "width": 109.7801513671875,
+                "height": 11.039999961853027
+              },
+              "column": 0
+            },
+            {
+              "text": "Branch:",
+              "bbox": {
+                "x": 297.04998779296875,
+                "y": 147.38002014160156,
+                "width": 35.06298828125,
+                "height": 11.039999961853027
+              },
+              "column": 10
+            },
+            {
+              "text": "Moth (Jhansi)",
+              "bbox": {
+                "x": 465.54998779296875,
+                "y": 147.38002014160156,
+                "width": 62.57464599609375,
+                "height": 11.039999961853027
+              },
+              "column": 14
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Account Number:",
+              "bbox": {
+                "x": 297.04998779296875,
+                "y": 161.66001892089844,
+                "width": 80.65817260742188,
+                "height": 11.039999961853027
+              },
+              "column": 10
+            },
+            {
+              "text": "110025050816",
+              "bbox": {
+                "x": 505.1499938964844,
+                "y": 161.66001892089844,
+                "width": 67.67977905273438,
+                "height": 11.039999961853027
+              },
+              "column": 15
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "BASIC",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 177.26002502441406,
+                "width": 31.044483184814453,
+                "height": 11.039999961853027
+              },
+              "column": 0
+            },
+            {
+              "text": "H.R.A",
+              "bbox": {
+                "x": 132.6199951171875,
+                "y": 177.13999938964844,
+                "width": 29.741744995117188,
+                "height": 11.039999961853027
+              },
+              "column": 2
+            },
+            {
+              "text": "CONVEY.",
+              "bbox": {
+                "x": 184.22000122070312,
+                "y": 177.13999938964844,
+                "width": 40.08624267578125,
+                "height": 11.039999961853027
+              },
+              "column": 4
+            },
+            {
+              "text": "INCENTTIVE",
+              "bbox": {
+                "x": 297.04998779296875,
+                "y": 177.13999938964844,
+                "width": 53.367340087890625,
+                "height": 11.039999961853027
+              },
+              "column": 10
+            },
+            {
+              "text": "SPL.ALL",
+              "bbox": {
+                "x": 393.7699890136719,
+                "y": 177.13999938964844,
+                "width": 33.892791748046875,
+                "height": 11.039999961853027
+              },
+              "column": 11
+            },
+            {
+              "text": "MEDICAL",
+              "bbox": {
+                "x": 465.54998779296875,
+                "y": 177.13999938964844,
+                "width": 41.344818115234375,
+                "height": 11.039999961853027
+              },
+              "column": 14
+            },
+            {
+              "text": "CCA",
+              "bbox": {
+                "x": 551.7100219726562,
+                "y": 177.13999938964844,
+                "width": 18.1478271484375,
+                "height": 11.039999961853027
+              },
+              "column": 17
+            },
+            {
+              "text": "PERF.BO",
+              "bbox": {
+                "x": 615.3099975585938,
+                "y": 177.13999938964844,
+                "width": 38.2646484375,
+                "height": 11.039999961853027
+              },
+              "column": 21
+            },
+            {
+              "text": "Total",
+              "bbox": {
+                "x": 685.4199829101562,
+                "y": 177.13999938964844,
+                "width": 22.797607421875,
+                "height": 11.039999961853027
+              },
+              "column": 25
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "16200.00",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 191.42002868652344,
+                "width": 42.12864303588867,
+                "height": 11.039999961853027
+              },
+              "column": 0
+            },
+            {
+              "text": "8260.00",
+              "bbox": {
+                "x": 132.6199951171875,
+                "y": 191.42002868652344,
+                "width": 36.49824523925781,
+                "height": 11.039999961853027
+              },
+              "column": 2
+            },
+            {
+              "text": "2740.00",
+              "bbox": {
+                "x": 184.22000122070312,
+                "y": 191.42002868652344,
+                "width": 36.49824523925781,
+                "height": 11.039999961853027
+              },
+              "column": 4
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 249.5,
+                "y": 191.42002868652344,
+                "width": 5.5972747802734375,
+                "height": 11.039999961853027
+              },
+              "column": 6
+            },
+            {
+              "text": "0.00",
+              "bbox": {
+                "x": 297.04998779296875,
+                "y": 191.42002868652344,
+                "width": 19.6070556640625,
+                "height": 11.039999961853027
+              },
+              "column": 10
+            },
+            {
+              "text": "0.00",
+              "bbox": {
+                "x": 393.7699890136719,
+                "y": 191.42002868652344,
+                "width": 19.6070556640625,
+                "height": 11.039999961853027
+              },
+              "column": 11
+            },
+            {
+              "text": "0.00",
+              "bbox": {
+                "x": 465.54998779296875,
+                "y": 191.42002868652344,
+                "width": 19.6070556640625,
+                "height": 11.039999961853027
+              },
+              "column": 14
+            },
+            {
+              "text": "0.00",
+              "bbox": {
+                "x": 551.7100219726562,
+                "y": 191.42002868652344,
+                "width": 19.6070556640625,
+                "height": 11.039999961853027
+              },
+              "column": 17
+            },
+            {
+              "text": "0.00",
+              "bbox": {
+                "x": 615.3099975585938,
+                "y": 191.42002868652344,
+                "width": 19.6070556640625,
+                "height": 11.039999961853027
+              },
+              "column": 21
+            },
+            {
+              "text": "27200.00",
+              "bbox": {
+                "x": 685.4199829101562,
+                "y": 191.42002868652344,
+                "width": 42.47021484375,
+                "height": 11.039999961853027
+              },
+              "column": 25
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Employer",
+              "bbox": {
+                "x": 626.739990234375,
+                "y": 207.0500030517578,
+                "width": 43.94964599609375,
+                "height": 11.039999961853027
+              },
+              "column": 22
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Attendance",
+              "bbox": {
+                "x": 64.68000030517578,
+                "y": 214.25001525878906,
+                "width": 53.606689453125,
+                "height": 11.039999961853027
+              },
+              "column": 1
+            },
+            {
+              "text": "Earning",
+              "bbox": {
+                "x": 302.92999267578125,
+                "y": 213.77000427246094,
+                "width": 34.798919677734375,
+                "height": 11.039999961853027
+              },
+              "column": 10
+            },
+            {
+              "text": "Deduction",
+              "bbox": {
+                "x": 515.3499755859375,
+                "y": 213.77000427246094,
+                "width": 47.7017822265625,
+                "height": 11.039999961853027
+              },
+              "column": 16
+            },
+            {
+              "text": "Net Payment",
+              "bbox": {
+                "x": 689.8599853515625,
+                "y": 214.25001525878906,
+                "width": 60.42791748046875,
+                "height": 11.039999961853027
+              },
+              "column": 25
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Deduction",
+              "bbox": {
+                "x": 624.9099731445312,
+                "y": 221.6900177001953,
+                "width": 47.7017822265625,
+                "height": 11.039999961853027
+              },
+              "column": 22
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Working Day",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 236.0900115966797,
+                "width": 60.66936111450195,
+                "height": 11.039999961853027
+              },
+              "column": 0
+            },
+            {
+              "text": "30.00 BASIC",
+              "bbox": {
+                "x": 155.05999755859375,
+                "y": 235.9700164794922,
+                "width": 55.42790222167969,
+                "height": 11.039999961853027
+              },
+              "column": 3
+            },
+            {
+              "text": "16,200 ARR-1",
+              "bbox": {
+                "x": 259.70001220703125,
+                "y": 235.9700164794922,
+                "width": 64.66293334960938,
+                "height": 11.039999961853027
+              },
+              "column": 7
+            },
+            {
+              "text": "0.00 E.P.F",
+              "bbox": {
+                "x": 442.010009765625,
+                "y": 235.9700164794922,
+                "width": 45.2998046875,
+                "height": 11.039999961853027
+              },
+              "column": 13
+            },
+            {
+              "text": "1800 E.P.S",
+              "bbox": {
+                "x": 588.9099731445312,
+                "y": 235.9700164794922,
+                "width": 48.15985107421875,
+                "height": 11.039999961853027
+              },
+              "column": 19
+            },
+            {
+              "text": "550",
+              "bbox": {
+                "x": 662.1968383789062,
+                "y": 235.9700164794922,
+                "width": 16.858154296875,
+                "height": 11.039999961853027
+              },
+              "column": 23
+            },
+            {
+              "text": "25400.00",
+              "bbox": {
+                "x": 710.8599853515625,
+                "y": 235.9700164794922,
+                "width": 42.47021484375,
+                "height": 11.039999961853027
+              },
+              "column": 26
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Holiday",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 250.49000549316406,
+                "width": 36.652164459228516,
+                "height": 11.039999961853027
+              },
+              "column": 0
+            },
+            {
+              "text": "0.00 H.R.A.",
+              "bbox": {
+                "x": 160.6999969482422,
+                "y": 250.49000549316406,
+                "width": 51.309967041015625,
+                "height": 11.039999961853027
+              },
+              "column": 3
+            },
+            {
+              "text": "8260 ARR-2",
+              "bbox": {
+                "x": 270.6199951171875,
+                "y": 250.49000549316406,
+                "width": 53.742950439453125,
+                "height": 11.039999961853027
+              },
+              "column": 8
+            },
+            {
+              "text": "0.00 E.S.I.C",
+              "bbox": {
+                "x": 442.010009765625,
+                "y": 250.49000549316406,
+                "width": 53.425262451171875,
+                "height": 11.039999961853027
+              },
+              "column": 13
+            },
+            {
+              "text": "0 E.P.F",
+              "bbox": {
+                "x": 605.8300170898438,
+                "y": 250.49000549316406,
+                "width": 31.23980712890625,
+                "height": 11.039999961853027
+              },
+              "column": 20
+            },
+            {
+              "text": "1250",
+              "bbox": {
+                "x": 657.16259765625,
+                "y": 250.49000549316406,
+                "width": 22.48858642578125,
+                "height": 11.039999961853027
+              },
+              "column": 23
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "E.L",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 265.010009765625,
+                "width": 12.806400299072266,
+                "height": 11.040008544921875
+              },
+              "column": 0
+            },
+            {
+              "text": "0.00 CONVEY.",
+              "bbox": {
+                "x": 160.6999969482422,
+                "y": 265.010009765625,
+                "width": 63.60624694824219,
+                "height": 11.040008544921875
+              },
+              "column": 3
+            },
+            {
+              "text": "2740 ARR-3",
+              "bbox": {
+                "x": 270.6199951171875,
+                "y": 265.010009765625,
+                "width": 53.742950439453125,
+                "height": 11.040008544921875
+              },
+              "column": 8
+            },
+            {
+              "text": "0.00 ADVAN.",
+              "bbox": {
+                "x": 442.010009765625,
+                "y": 265.010009765625,
+                "width": 59.19915771484375,
+                "height": 11.040008544921875
+              },
+              "column": 13
+            },
+            {
+              "text": "0 E.S.I.C",
+              "bbox": {
+                "x": 605.8300170898438,
+                "y": 265.010009765625,
+                "width": 44.35528564453125,
+                "height": 11.040008544921875
+              },
+              "column": 20
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 670.3554077148438,
+                "y": 265.010009765625,
+                "width": 5.5972900390625,
+                "height": 11.040008544921875
+              },
+              "column": 24
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "C.L",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 279.5299987792969,
+                "width": 13.30319595336914,
+                "height": 11.040008544921875
+              },
+              "column": 0
+            },
+            {
+              "text": "0.00 INCENTTIVE",
+              "bbox": {
+                "x": 160.6999969482422,
+                "y": 279.5299987792969,
+                "width": 76.88737487792969,
+                "height": 11.040008544921875
+              },
+              "column": 3
+            },
+            {
+              "text": "0 ATT. ALL",
+              "bbox": {
+                "x": 287.57000732421875,
+                "y": 279.5299987792969,
+                "width": 47.5679931640625,
+                "height": 11.040008544921875
+              },
+              "column": 9
+            },
+            {
+              "text": "0.00 LOAN",
+              "bbox": {
+                "x": 442.010009765625,
+                "y": 279.5299987792969,
+                "width": 49.042388916015625,
+                "height": 11.040008544921875
+              },
+              "column": 13
+            },
+            {
+              "text": "0 LWFER",
+              "bbox": {
+                "x": 605.8300170898438,
+                "y": 279.5299987792969,
+                "width": 45.4151611328125,
+                "height": 11.040008544921875
+              },
+              "column": 20
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 671.4263305664062,
+                "y": 279.5299987792969,
+                "width": 5.5972900390625,
+                "height": 11.040008544921875
+              },
+              "column": 24
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "S.L",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 294.04998779296875,
+                "width": 12.404041290283203,
+                "height": 11.040008544921875
+              },
+              "column": 0
+            },
+            {
+              "text": "0.00 SPL.ALL",
+              "bbox": {
+                "x": 160.6999969482422,
+                "y": 294.04998779296875,
+                "width": 57.41279602050781,
+                "height": 11.040008544921875
+              },
+              "column": 3
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 287.57000732421875,
+                "y": 294.04998779296875,
+                "width": 5.5972900390625,
+                "height": 11.040008544921875
+              },
+              "column": 9
+            },
+            {
+              "text": "I.TAX",
+              "bbox": {
+                "x": 465.54998779296875,
+                "y": 294.04998779296875,
+                "width": 23.018402099609375,
+                "height": 11.040008544921875
+              },
+              "column": 14
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 605.8300170898438,
+                "y": 294.04998779296875,
+                "width": 5.5972900390625,
+                "height": 11.040008544921875
+              },
+              "column": 20
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "C.H",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 308.57000732421875,
+                "width": 15.544322967529297,
+                "height": 11.040008544921875
+              },
+              "column": 0
+            },
+            {
+              "text": "0.00 MEDICAL",
+              "bbox": {
+                "x": 160.6999969482422,
+                "y": 308.57000732421875,
+                "width": 64.86480712890625,
+                "height": 11.040008544921875
+              },
+              "column": 3
+            },
+            {
+              "text": "0 OVERTIME",
+              "bbox": {
+                "x": 287.57000732421875,
+                "y": 308.57000732421875,
+                "width": 57.437744140625,
+                "height": 11.040008544921875
+              },
+              "column": 9
+            },
+            {
+              "text": "0.00 P.TAX",
+              "bbox": {
+                "x": 442.010009765625,
+                "y": 308.57000732421875,
+                "width": 49.572296142578125,
+                "height": 11.040008544921875
+              },
+              "column": 13
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 605.8300170898438,
+                "y": 308.57000732421875,
+                "width": 5.5972900390625,
+                "height": 11.040008544921875
+              },
+              "column": 20
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "W.P",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 323.1099853515625,
+                "width": 18.315357208251953,
+                "height": 11.040008544921875
+              },
+              "column": 0
+            },
+            {
+              "text": "0.00 CCA",
+              "bbox": {
+                "x": 160.6999969482422,
+                "y": 323.1099853515625,
+                "width": 41.6678466796875,
+                "height": 11.040008544921875
+              },
+              "column": 3
+            },
+            {
+              "text": "0 Gross",
+              "bbox": {
+                "x": 287.57000732421875,
+                "y": 323.1099853515625,
+                "width": 35.214202880859375,
+                "height": 11.040008544921875
+              },
+              "column": 9
+            },
+            {
+              "text": "70000.00 PF ESI",
+              "bbox": {
+                "x": 419.2099914550781,
+                "y": 323.1099853515625,
+                "width": 72.89117431640625,
+                "height": 11.040008544921875
+              },
+              "column": 12
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 605.8300170898438,
+                "y": 323.1099853515625,
+                "width": 5.5972900390625,
+                "height": 11.040008544921875
+              },
+              "column": 20
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "P.D",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 337.6300048828125,
+                "width": 15.32352066040039,
+                "height": 11.040008544921875
+              },
+              "column": 0
+            },
+            {
+              "text": "30.00 PERF.BO",
+              "bbox": {
+                "x": 154.82000732421875,
+                "y": 337.6300048828125,
+                "width": 67.66464233398438,
+                "height": 11.040008544921875
+              },
+              "column": 3
+            },
+            {
+              "text": "0 Total",
+              "bbox": {
+                "x": 287.57000732421875,
+                "y": 337.6300048828125,
+                "width": 32.82958984375,
+                "height": 11.040008544921875
+              },
+              "column": 9
+            },
+            {
+              "text": "LW FEE",
+              "bbox": {
+                "x": 465.54998779296875,
+                "y": 337.6300048828125,
+                "width": 32.8660888671875,
+                "height": 11.040008544921875
+              },
+              "column": 14
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 605.8300170898438,
+                "y": 337.6300048828125,
+                "width": 5.5972900390625,
+                "height": 11.040008544921875
+              },
+              "column": 20
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Leave Day",
+              "bbox": {
+                "x": 52.79999923706055,
+                "y": 352.1499938964844,
+                "width": 45.650394439697266,
+                "height": 11.040008544921875
+              },
+              "column": 0
+            },
+            {
+              "text": "0.00",
+              "bbox": {
+                "x": 160.6999969482422,
+                "y": 352.1499938964844,
+                "width": 19.607040405273438,
+                "height": 11.040008544921875
+              },
+              "column": 3
+            },
+            {
+              "text": "Gross",
+              "bbox": {
+                "x": 465.54998779296875,
+                "y": 352.1499938964844,
+                "width": 25.734222412109375,
+                "height": 11.040008544921875
+              },
+              "column": 14
+            },
+            {
+              "text": "27,200",
+              "bbox": {
+                "x": 577.8699951171875,
+                "y": 352.1499938964844,
+                "width": 31.00042724609375,
+                "height": 11.040008544921875
+              },
+              "column": 18
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Deduction",
+              "bbox": {
+                "x": 465.54998779296875,
+                "y": 366.42999267578125,
+                "width": 47.31744384765625,
+                "height": 11.040008544921875
+              },
+              "column": 14
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Note: This is computer generated statement and does not require signature",
+              "bbox": {
+                "x": 230.4199981689453,
+                "y": 381.6700134277344,
+                "width": 346.00469970703125,
+                "height": 11.040008544921875
+              },
+              "column": 5
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "schema_version": "2.0",
+  "metadata": {
+    "source_file": "2.pdf",
+    "page_count": 1,
+    "layout_signature": "generic-salary-slip",
+    "detected_locale": "IN",
+    "currency": "INR",
+    "extraction_confidence_overall": 0.95
+  },
+  "employer": {
+    "name": "Kutch Chemical Industries Limited",
+    "address": null,
+    "business_unit": null
+  },
+  "employee": {
+    "name": "KHUNTI DIVYESH",
+    "employee_id": "22305",
+    "designation": null,
+    "department": null,
+    "date_of_joining": null,
+    "pan": null,
+    "uan": "101122757942",
+    "pf_number": "GJRAJ00437760000013238",
+    "esi_number": null,
+    "bank_account": null,
+    "bank_name": null,
+    "ifsc_or_routing_code": null
+  },
+  "statements": [
+    {
+      "period": {
+        "period_type": "monthly",
+        "month": "May",
+        "year": 2026,
+        "financial_year": null,
+        "from_date": null,
+        "to_date": null,
+        "days_in_month": null,
+        "working_days": null,
+        "paid_days": 27,
+        "lop_days": 0.0,
+        "arrear_days": null
+      },
+      "earnings": {
+        "items": [
+          {
+            "raw_label": "Basic",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 50000.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "50000.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": {
+              "value": 50000.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "50000.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_payable": {
+              "value": 50000.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "50000.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "deductions": {
+        "items": [
+          {
+            "raw_label": "P.F.",
+            "canonical_category": "provident_fund",
+            "amount": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "P.F.",
+              "raw_value_string": "1800.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "P.F.",
+              "raw_value_string": "1800.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "summary": {
+        "gross_salary": {
+          "value": 50000.0,
+          "currency": "INR",
+          "raw_label": "Gross Income",
+          "raw_value_string": "50000.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "net_pay": {
+          "value": 48200.0,
+          "currency": "INR",
+          "raw_label": "Net Pay",
+          "raw_value_string": "48200.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_deductions": {
+          "value": 1800.0,
+          "currency": "INR",
+          "raw_label": "Total Ded.",
+          "raw_value_string": "1800.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_allowances": null,
+        "total_incentives_and_bonus": null,
+        "amount_in_words": "Rupees Forty Eight Thousand Two Hundred Only"
+      },
+      "reconciliation": {
+        "gross_minus_deductions_matches_net": true,
+        "delta_vs_stated_net": 0.0,
+        "sum_of_earning_items_matches_stated_gross": true,
+        "sum_of_deduction_items_matches_stated_total": true,
+        "flags": []
+      }
+    }
+  ],
+  "raw": {
+    "page_count": 1,
+    "lines": [],
+    "table": {
+      "columns": [],
+      "rows": []
+    }
+  }
+}
