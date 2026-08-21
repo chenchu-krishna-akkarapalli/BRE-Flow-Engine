@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "repo-graph": {
+      "type": "stdio",
+      "command": "C:/Program Files/Repo Graph/mcp_server.exe",
+      "args": [
+        "//?/C:/Projects/onboarding-bre-engine"
+      ],
+      "env": {
+        "REPOGRAPH_MCP_TOOLS": "explore,files,node,search,impact,callers,callees,status"
+      }
+    }
+  }
+}

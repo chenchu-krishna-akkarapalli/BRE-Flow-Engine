@@ -1,0 +1,808 @@
+{
+  "schema_version": "2.0",
+  "metadata": {
+    "source_file": "PeopleFirst_Attachment_2026_07_16T15_37_45.pdf",
+    "page_count": 1,
+    "layout_signature": "unknown",
+    "detected_locale": "IN",
+    "currency": "INR",
+    "extraction_confidence_overall": 0.95
+  },
+  "employer": {
+    "name": "TO WHOMSOEVER IT MAY CONCERN",
+    "address": null,
+    "business_unit": null
+  },
+  "employee": {
+    "name": null,
+    "employee_id": null,
+    "designation": null,
+    "department": null,
+    "date_of_joining": null,
+    "pan": null,
+    "uan": null,
+    "pf_number": null,
+    "esi_number": null,
+    "bank_account": null,
+    "bank_name": null,
+    "ifsc_or_routing_code": null
+  },
+  "statements": [
+    {
+      "period": {
+        "period_type": "monthly",
+        "month": null,
+        "year": null,
+        "financial_year": null,
+        "from_date": null,
+        "to_date": null,
+        "days_in_month": null,
+        "working_days": null,
+        "paid_days": null,
+        "lop_days": null,
+        "arrear_days": null
+      },
+      "earnings": {
+        "items": []
+      },
+      "deductions": {
+        "items": []
+      },
+      "summary": {
+        "gross_salary": null,
+        "net_pay": null,
+        "total_deductions": null,
+        "total_allowances": null,
+        "total_incentives_and_bonus": null,
+        "amount_in_words": null
+      },
+      "reconciliation": {
+        "gross_minus_deductions_matches_net": null,
+        "delta_vs_stated_net": null,
+        "sum_of_earning_items_matches_stated_gross": null,
+        "sum_of_deduction_items_matches_stated_total": null,
+        "flags": []
+      }
+    }
+  ],
+  "raw": {
+    "page_count": 1,
+    "lines": [
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.41699981689453,
+          "y": 142.42498779296875,
+          "width": 507.551025390625,
+          "height": 11.0101318359375
+        },
+        "segments": [
+          "Ref No : 000332053",
+          "Date : 16.07.2026"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.41699981689453,
+            "y": 142.42498779296875,
+            "width": 98.99999237060547,
+            "height": 11.0
+          },
+          {
+            "x": 460.4680480957031,
+            "y": 142.43511962890625,
+            "width": 93.49996948242188,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 197.3280029296875,
+          "y": 200.80902099609375,
+          "width": 174.0,
+          "height": 12.0
+        },
+        "segments": [
+          "TO WHOMSOEVER IT MAY CONCERN"
+        ],
+        "segment_boxes": [
+          {
+            "x": 197.3280029296875,
+            "y": 200.80902099609375,
+            "width": 174.0,
+            "height": 12.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.41699981689453,
+          "y": 295.9070129394531,
+          "width": 517.3740234375,
+          "height": 11.0
+        },
+        "segments": [
+          "This is to certify Mr. Nishedhsinh Chavda (EC - 10064841) is a bonafide employee of our company and"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.41699981689453,
+            "y": 295.9070129394531,
+            "width": 517.3740234375,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 308.9090270996094,
+          "width": 451.0,
+          "height": 11.0
+        },
+        "segments": [
+          "working with us since 06.08.2018. Currently he is designated as Senior Executive."
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 308.9090270996094,
+            "width": 451.0,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 334.9130554199219,
+          "width": 291.5,
+          "height": 11.0
+        },
+        "segments": [
+          "As per our records his addresses are as given below:"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 334.9130554199219,
+            "width": 291.5,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 359.9490661621094,
+          "width": 165.0,
+          "height": 11.0
+        },
+        "segments": [
+          "Present Residential Address:"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 359.9490661621094,
+            "width": 165.0,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 388.4610900878906,
+          "width": 104.5,
+          "height": 11.0
+        },
+        "segments": [
+          "J,Sector-XII /0021"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 388.4610900878906,
+            "width": 104.5,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 400.9790954589844,
+          "width": 82.5,
+          "height": 11.0
+        },
+        "segments": [
+          "Relince greens"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 400.9790954589844,
+            "width": 82.5,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 413.4971008300781,
+          "width": 66.0,
+          "height": 11.0
+        },
+        "segments": [
+          "Moti khavdi"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 413.4971008300781,
+            "width": 66.0,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 426.0151062011719,
+          "width": 88.0,
+          "height": 11.0
+        },
+        "segments": [
+          "jamnagar 361142"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 426.0151062011719,
+            "width": 88.0,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 463.5691223144531,
+          "width": 137.5,
+          "height": 11.0
+        },
+        "segments": [
+          "Present Office Address:"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 463.5691223144531,
+            "width": 137.5,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 492.56512451171875,
+          "width": 44.0,
+          "height": 11.0
+        },
+        "segments": [
+          "DTA,RCB"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 492.56512451171875,
+            "width": 44.0,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 505.0831298828125,
+          "width": 71.5,
+          "height": 11.0
+        },
+        "segments": [
+          "COKER  SO-3B"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 505.0831298828125,
+            "width": 71.5,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 517.6011352539062,
+          "width": 71.5,
+          "height": 11.0
+        },
+        "segments": [
+          "MOTI KHAVADI"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 517.6011352539062,
+            "width": 71.5,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 530.119140625,
+          "width": 88.0,
+          "height": 11.0
+        },
+        "segments": [
+          "JAMNAGAR 361140"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 530.119140625,
+            "width": 88.0,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 560.1271362304688,
+          "width": 368.5,
+          "height": 11.0
+        },
+        "segments": [
+          "This certificate is issued to him for the below mentioned purpose:"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 560.1271362304688,
+            "width": 368.5,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 575.131103515625,
+          "width": 55.0,
+          "height": 11.0
+        },
+        "segments": [
+          "\"car lone"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 575.131103515625,
+            "width": 55.0,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 590.1351318359375,
+          "width": 16.5,
+          "height": 11.0
+        },
+        "segments": [
+          "\"."
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 590.1351318359375,
+            "width": 16.5,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 615.171142578125,
+          "width": 181.5,
+          "height": 11.0
+        },
+        "segments": [
+          "For Reliance Industries Limited."
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 615.171142578125,
+            "width": 181.5,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.472015380859375,
+          "y": 702.797119140625,
+          "width": 115.5,
+          "height": 11.0
+        },
+        "segments": [
+          "Authorised Signatory"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.472015380859375,
+            "y": 702.797119140625,
+            "width": 115.5,
+            "height": 11.0
+          }
+        ]
+      }
+    ],
+    "table": {
+      "columns": [
+        [
+          46.41699981689453,
+          563.791015625
+        ],
+        [
+          197.3280029296875,
+          371.3280029296875
+        ],
+        [
+          460.4680480957031,
+          553.968017578125
+        ]
+      ],
+      "rows": [
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Ref No : 000332053",
+              "bbox": {
+                "x": 46.41699981689453,
+                "y": 142.42498779296875,
+                "width": 98.99999237060547,
+                "height": 11.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Date : 16.07.2026",
+              "bbox": {
+                "x": 460.4680480957031,
+                "y": 142.43511962890625,
+                "width": 93.49996948242188,
+                "height": 11.0
+              },
+              "column": 2
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "TO WHOMSOEVER IT MAY CONCERN",
+              "bbox": {
+                "x": 197.3280029296875,
+                "y": 200.80902099609375,
+                "width": 174.0,
+                "height": 12.0
+              },
+              "column": 1
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "This is to certify Mr. Nishedhsinh Chavda (EC - 10064841) is a bonafide employee of our company and",
+              "bbox": {
+                "x": 46.41699981689453,
+                "y": 295.9070129394531,
+                "width": 517.3740234375,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "working with us since 06.08.2018. Currently he is designated as Senior Executive.",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 308.9090270996094,
+                "width": 451.0,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "As per our records his addresses are as given below:",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 334.9130554199219,
+                "width": 291.5,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Present Residential Address:",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 359.9490661621094,
+                "width": 165.0,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "J,Sector-XII /0021",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 388.4610900878906,
+                "width": 104.5,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Relince greens",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 400.9790954589844,
+                "width": 82.5,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Moti khavdi",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 413.4971008300781,
+                "width": 66.0,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "jamnagar 361142",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 426.0151062011719,
+                "width": 88.0,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Present Office Address:",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 463.5691223144531,
+                "width": 137.5,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "DTA,RCB",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 492.56512451171875,
+                "width": 44.0,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "COKER  SO-3B",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 505.0831298828125,
+                "width": 71.5,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "MOTI KHAVADI",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 517.6011352539062,
+                "width": 71.5,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "JAMNAGAR 361140",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 530.119140625,
+                "width": 88.0,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "This certificate is issued to him for the below mentioned purpose:",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 560.1271362304688,
+                "width": 368.5,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "\"car lone",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 575.131103515625,
+                "width": 55.0,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "\".",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 590.1351318359375,
+                "width": 16.5,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "For Reliance Industries Limited.",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 615.171142578125,
+                "width": 181.5,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Authorised Signatory",
+              "bbox": {
+                "x": 46.472015380859375,
+                "y": 702.797119140625,
+                "width": 115.5,
+                "height": 11.0
+              },
+              "column": 0
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

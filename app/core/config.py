@@ -49,6 +49,14 @@ class Settings(BaseSettings):
     CIBIL_ENGINE_BINARY: str = ""
     CIBIL_ENGINE_TIMEOUT_S: float = 25.0
 
+    # Payslip report parsing. Empty resolves to the workspace release build, then PATH.
+    PAYSLIP_ENGINE_BINARY: str = ""
+    PAYSLIP_ENGINE_TIMEOUT_S: float = 25.0
+
+    # COI report parsing. Empty resolves to the workspace release build, then PATH.
+    COI_ENGINE_BINARY: str = ""
+    COI_ENGINE_TIMEOUT_S: float = 25.0
+
     # Latency SLA Targets (ms)
     SLA_GET_LOOKUP_MS: float = 30.0
     SLA_CRUD_EVAL_MS: float = 80.0

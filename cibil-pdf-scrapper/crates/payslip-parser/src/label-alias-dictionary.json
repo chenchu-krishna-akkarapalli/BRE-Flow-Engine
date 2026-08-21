@@ -1,0 +1,44 @@
+{
+  "employee": {
+    "name": ["employee name", "emp name", "name", "employee_name", "staff name"],
+    "employee_id": ["emp id", "employee id", "emp.id", "emp_no", "employee no", "code", "card no"],
+    "designation": ["designation", "desg", "role", "title", "job title"],
+    "department": ["department", "dept", "cost center", "unit"],
+    "date_of_joining": ["date of joining", "doj", "joining date", "d.o.j"],
+    "pan": ["pan", "pan no", "pan number", "income tax pan"],
+    "uan": ["uan", "uan no", "uan number", "universal account number"],
+    "pf_number": ["pf no", "pf number", "pf account number", "provident fund no", "p.f. no."],
+    "esi_number": ["esi no", "esi number", "esi. no.", "esic no"],
+    "bank_account": ["bank account", "bank acc no", "account no", "bank a/c", "a/c no"],
+    "bank_name": ["bank name", "bank"],
+    "ifsc_or_routing_code": ["ifsc", "ifsc code", "routing code"]
+  },
+  "earnings": {
+    "basic_pay": ["basic", "basic salary", "earned basic", "basic pay", "basic_pay", "base pay"],
+    "dearness_allowance": ["da", "dearness allowance", "d.a.", "dearness_allowance"],
+    "house_rent_allowance": ["hra", "house rent allowance", "h.r.a.", "house_rent_allowance", "rent allowance"],
+    "conveyance_allowance": ["conveyance", "conveyance allowance", "transport allowance", "travel allowance"],
+    "medical_allowance": ["medical", "medical allowance", "med allowance", "med.all"],
+    "special_allowance": ["special allowance", "spl allowance", "spl.all", "special_allowance"],
+    "washing_allowance": ["washing allowance", "washing.all", "wash.all"],
+    "milk_allowance": ["milk allowance", "milk.all"],
+    "bonus_incentive": ["bonus", "incentive", "incen", "prod.bon", "production bonus", "performance bonus", "variable pay", "performance incentive", "perf incentive"],
+    "overtime": ["overtime", "ot", "ot amount", "ot pay"],
+    "arrears": ["arrears", "salary arrears", "arrear amount"]
+  },
+  "deductions": {
+    "provident_fund": ["pf", "provident fund", "p.f.", "epf", "epf contribution", "p.f. deduction"],
+    "professional_tax": ["pt", "professional tax", "p.t.", "prof tax", "prof. tax"],
+    "income_tax_tds": ["tds", "income tax", "it", "tax deducted at source", "i.tax"],
+    "esi": ["esi", "esic", "e.s.i.", "esi deduction"],
+    "labour_welfare_fund": ["lwf", "l.w.f", "labour welfare fund", "welfare fund"],
+    "advance_loan": ["advance", "salary advance", "loan", "loan recovery", "advance recovery"],
+    "canteen_deduction": ["canteen", "mess charges", "food", "food charges"],
+    "mobile_deduction": ["mob. bill", "mobile charges", "telephone deduction"]
+  },
+  "summary": {
+    "gross_salary": ["gross salary", "gross earnings", "gross income", "gross pay", "gross", "total earnings", "gross income 45365 67207", "x4lffa6&b"],
+    "total_deductions": ["total deductions", "total deduction", "gross deductions", "gross deduction", "gross ded.", "total ded", "total", "x4lffaovoiyvsl/"],
+    "net_pay": ["net pay", "net salary", "net amount", "take home pay", "net pay rs", "net payable", "net take home pay", "net take home"]
+  }
+}

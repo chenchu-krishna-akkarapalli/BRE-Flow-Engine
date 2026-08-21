@@ -1,10 +1,12 @@
-// Payslip data primitives. Every parsed field keeps the raw text it came from,
-// so a wrong interpretation can always be traced back to what was on the page.
+// Payslip data primitives for Schema v2.0.
 
 pub mod money;
 pub mod payslip;
+pub mod relational;
 
 pub use money::Money;
 pub use payslip::{
-    Deduction, Earning, EmployeeInfo, EmployerDetails, PayPeriod, Payslip, RawContent,
+    AmountField, EmployeeInfo, EmployerDetails, ItemsGroup, LineItem, Period, Payslip,
+    PayslipMetadata, RawContent, Reconciliation, Statement, Summary,
 };
+pub use relational::{RelationalPayslip, SCHEMA_VERSION};

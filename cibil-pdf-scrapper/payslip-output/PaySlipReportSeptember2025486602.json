@@ -1,0 +1,5 @@
+{
+  "source": "PaySlipReportSeptember2025486602.pdf",
+  "status": "FAILED",
+  "error": "PDF container could not be read: PDF parsing failed: Failed to load PDF bytes: failed parsing cross reference table: invalid start value"
+}

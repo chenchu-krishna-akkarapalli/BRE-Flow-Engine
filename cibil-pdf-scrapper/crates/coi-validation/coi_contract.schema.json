@@ -1,0 +1,996 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "_meta",
+    "assessee_info",
+    "bank_details",
+    "return_details",
+    "computation_of_total_income",
+    "tax_computation",
+    "financial_particulars",
+    "business_income_adjustments",
+    "other_sources_breakdown",
+    "tax_computation_extended",
+    "ca_verification",
+    "annexures"
+  ],
+  "properties": {
+    "_meta": {
+      "type": "object",
+      "required": [
+        "ocr_used",
+        "source",
+        "confidence_score",
+        "confidence_breakdown",
+        "low_confidence_fields"
+      ],
+      "properties": {
+        "ocr_used": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": "string"
+        },
+        "confidence_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "confidence_breakdown": {
+          "type": "object",
+          "required": [
+            "assessee_info",
+            "bank_details",
+            "return_details",
+            "computation",
+            "tax_computation"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "assessee_info": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "bank_details": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "return_details": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "computation": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "tax_computation": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "low_confidence_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "summary": {
+      "$ref": "#/$defs/credit_engine_summary"
+    },
+    "assessee_info": {
+      "$ref": "#/$defs/assessee_info"
+    },
+    "bank_details": {
+      "$ref": "#/$defs/bank_details"
+    },
+    "return_details": {
+      "$ref": "#/$defs/return_details"
+    },
+    "computation_of_total_income": {
+      "$ref": "#/$defs/computation"
+    },
+    "tax_computation": {
+      "$ref": "#/$defs/tax_computation"
+    },
+    "financial_particulars": {
+      "$ref": "#/$defs/financial_particulars"
+    },
+    "business_income_adjustments": {
+      "$ref": "#/$defs/business_income_adjustments"
+    },
+    "other_sources_breakdown": {
+      "$ref": "#/$defs/other_sources_breakdown"
+    },
+    "tax_computation_extended": {
+      "$ref": "#/$defs/tax_computation_extended"
+    },
+    "ca_verification": {
+      "$ref": "#/$defs/ca_verification"
+    },
+    "annexures": {
+      "$ref": "#/$defs/annexures"
+    }
+  },
+  "$defs": {
+    "credit_engine_summary": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "assessee_name": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "pan": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "assessment_year": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "financial_year": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "tax_regime": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "gross_total_income": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_income": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_income_rounded": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "business_turnover": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "taxable_business_profit": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "deemed_profit_44ad": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "declared_profit_44ad": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_salaries_gross": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "taxable_salary": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_other_sources": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_deductions_chapter_6a": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_tax_computed": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "rebate_87a": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_tds_tcs": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "self_assessment_tax_140a": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "refundable_amount": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "bank_account_no": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "ifsc_code": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "bank_name": {
+          "$ref": "#/$defs/string_or_null"
+        }
+      }
+    },
+    "rate_amount": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "amount",
+        "rate_pct"
+      ],
+      "properties": {
+        "amount": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "rate_pct": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    },
+    "income_declared_business_turnover": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "due_date_for_filing_return",
+        "due_date_extended_to",
+        "section",
+        "gross_receipts_other_than_digital",
+        "gross_receipts_digital_mode",
+        "gross_receipts_cash",
+        "gross_receipts_total",
+        "book_profit",
+        "deemed_profit_other_than_digital",
+        "deemed_profit_digital_mode",
+        "net_profit_declared",
+        "gross_receipts_turnover",
+        "deemed_profit"
+      ],
+      "properties": {
+        "due_date_for_filing_return": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "due_date_extended_to": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "section": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "gross_receipts_other_than_digital": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "gross_receipts_digital_mode": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "gross_receipts_cash": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "gross_receipts_total": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "book_profit": {
+          "$ref": "#/$defs/rate_amount"
+        },
+        "deemed_profit_other_than_digital": {
+          "$ref": "#/$defs/rate_amount"
+        },
+        "deemed_profit_digital_mode": {
+          "$ref": "#/$defs/rate_amount"
+        },
+        "net_profit_declared": {
+          "$ref": "#/$defs/rate_amount"
+        },
+        "gross_receipts_turnover": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "deemed_profit": {
+          "$ref": "#/$defs/rate_amount"
+        }
+      }
+    },
+    "string_or_null": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "integer_or_null": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "assessee_info": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "pan",
+        "father_name",
+        "residential_address",
+        "status",
+        "assessment_year",
+        "ward_no",
+        "financial_year",
+        "gender",
+        "date_of_birth",
+        "email",
+        "residential_status"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "pan": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "father_name": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "residential_address": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "status": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "assessment_year": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "ward_no": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "financial_year": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "gender": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "date_of_birth": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "email": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "residential_status": {
+          "$ref": "#/$defs/string_or_null"
+        }
+      }
+    },
+    "bank_details": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bank_name",
+        "ifsc_code",
+        "account_no",
+        "branch_address"
+      ],
+      "properties": {
+        "bank_name": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "ifsc_code": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "account_no": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "branch_address": {
+          "$ref": "#/$defs/string_or_null"
+        }
+      }
+    },
+    "return_details": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tax_regime",
+        "form_type",
+        "filing_status",
+        "filing_date",
+        "acknowledgement_no"
+      ],
+      "properties": {
+        "tax_regime": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "form_type": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "filing_status": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "filing_date": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "acknowledgement_no": {
+          "$ref": "#/$defs/string_or_null"
+        }
+      }
+    },
+    "tier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "presumptive_rate_pct",
+        "deemed_base_turnover",
+        "deemed_profit",
+        "declared_profit",
+        "profit_taken_higher_of_declared_or_deemed"
+      ],
+      "properties": {
+        "presumptive_rate_pct": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "deemed_base_turnover": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "deemed_profit": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "declared_profit": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "profit_taken_higher_of_declared_or_deemed": {
+          "$ref": "#/$defs/integer_or_null"
+        }
+      }
+    },
+    "computation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profits_and_gains_business_profession",
+        "exempt_income_sec_10",
+        "gross_total_income",
+        "total_income",
+        "total_income_rounded_288a"
+      ],
+      "properties": {
+        "income_declared_business_turnover": {
+          "$ref": "#/$defs/income_declared_business_turnover"
+        },
+        "profits_and_gains_business_profession": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "exempt_income_sec_10": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "gross_total_income": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_income": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "total_income_rounded_288a": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "salaries": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "total_income_rounded_off_u_s_288a": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "computation_of_tax_on_total_income": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "tax_deducted_at_source_list": {
+          "type": "array"
+        },
+        "total_tds_tcs": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "refund": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "income_from_business_or_profession": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "income_from_capital_gain": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "income_from_other_sources": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "deductions": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "tax_calculation": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "normal_income_tax_calculation": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "tax_regime": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "assessment_year": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "special_rate_income_note": {
+          "$ref": "#/$defs/string_or_null"
+        }
+      }
+    },
+    "tax_slab": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "category",
+        "description",
+        "slab_upper_limit_or_amount",
+        "tax"
+      ],
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "description": {
+          "type": "string"
+        },
+        "slab_upper_limit_or_amount": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "tax": {
+          "type": "integer"
+        }
+      }
+    },
+    "tds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "section",
+        "description",
+        "amount"
+      ],
+      "properties": {
+        "section": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "description": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "amount": {
+          "$ref": "#/$defs/integer_or_null"
+        }
+      }
+    },
+    "self_assessment_challan": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "bank_name",
+        "bsr_code",
+        "challan_no",
+        "date",
+        "amount"
+      ],
+      "properties": {
+        "bank_name": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "bsr_code": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "challan_no": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "date": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "amount": {
+          "type": "integer"
+        }
+      }
+    },
+    "tax_computation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slabs",
+        "rebate_of_tax_on_agriculture_income",
+        "rebate_87a",
+        "fee_payable_u_s_234f",
+        "tds",
+        "refundable"
+      ],
+      "properties": {
+        "slabs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/tax_slab"
+          }
+        },
+        "rebate_of_tax_on_agriculture_income": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "rebate_87a": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "fee_payable_u_s_234f": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "tds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/tds"
+          }
+        },
+        "refundable": {
+          "$ref": "#/$defs/integer_or_null"
+        }
+      }
+    },
+    "financial_particulars": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sundry_creditors",
+        "total_capital_and_liabilities",
+        "inventories",
+        "sundry_debtors",
+        "balance_with_banks",
+        "cash_in_hand",
+        "total_assets"
+      ],
+      "properties": {
+        "sundry_creditors": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_capital_and_liabilities": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "inventories": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "sundry_debtors": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "balance_with_banks": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "cash_in_hand": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_assets": {
+          "$ref": "#/$defs/integer_or_null"
+        }
+      }
+    },
+    "adjustment_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "particulars",
+        "amount"
+      ],
+      "properties": {
+        "particulars": {
+          "type": "string"
+        },
+        "amount": {
+          "$ref": "#/$defs/integer_or_null"
+        }
+      }
+    },
+    "partnership_firm_share": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "firm_name",
+        "firm_pan",
+        "share_pct",
+        "remuneration",
+        "interest",
+        "exempt_profit_10_2a",
+        "capital_balance"
+      ],
+      "properties": {
+        "firm_name": {
+          "type": "string"
+        },
+        "firm_pan": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "share_pct": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "remuneration": {
+          "type": "integer"
+        },
+        "interest": {
+          "type": "integer"
+        },
+        "exempt_profit_10_2a": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "capital_balance": {
+          "$ref": "#/$defs/integer_or_null"
+        }
+      }
+    },
+    "business_income_adjustments": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "partnership_shares",
+        "income_44ad",
+        "profit_as_per_pnl",
+        "additions_salary_non_allowable",
+        "total_business_income",
+        "additions",
+        "deductions",
+        "net_business_income"
+      ],
+      "properties": {
+        "partnership_shares": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/partnership_firm_share"
+          }
+        },
+        "income_44ad": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "profit_as_per_pnl": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "additions_salary_non_allowable": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_business_income": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "additions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/adjustment_item"
+          }
+        },
+        "deductions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/adjustment_item"
+          }
+        },
+        "net_business_income": {
+          "$ref": "#/$defs/integer_or_null"
+        }
+      }
+    },
+    "other_sources_breakdown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "savings_bank_interest",
+        "fdr_interest",
+        "commission_interest",
+        "total_other_sources"
+      ],
+      "properties": {
+        "savings_bank_interest": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "fdr_interest": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "commission_interest": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_other_sources": {
+          "$ref": "#/$defs/integer_or_null"
+        }
+      }
+    },
+    "tax_computation_extended": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_tax_calculated",
+        "interest_234a",
+        "interest_234b",
+        "interest_234c",
+        "total_interest_234",
+        "tcs_amount",
+        "deposit_140a_self_assessment",
+        "tax_payable"
+      ],
+      "properties": {
+        "total_tax_calculated": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "interest_234a": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "interest_234b": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "interest_234c": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "total_interest_234": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "tcs_amount": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "deposit_140a_self_assessment": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "tax_payable": {
+          "$ref": "#/$defs/integer_or_null"
+        }
+      }
+    },
+    "ca_verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "firm_name",
+        "ca_name",
+        "membership_no"
+      ],
+      "properties": {
+        "firm_name": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "ca_name": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "membership_no": {
+          "$ref": "#/$defs/string_or_null"
+        }
+      }
+    },
+    "gst_turnover": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gstin",
+        "turnover"
+      ],
+      "properties": {
+        "gstin": {
+          "$ref": "#/$defs/string_or_null"
+        },
+        "turnover": {
+          "$ref": "#/$defs/integer_or_null"
+        }
+      }
+    },
+    "annexure_income": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "particulars",
+        "amount"
+      ],
+      "properties": {
+        "particulars": {
+          "type": "string"
+        },
+        "amount": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "serial_no": {
+          "$ref": "#/$defs/integer_or_null"
+        }
+      }
+    },
+    "annexures": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gst_turnover_details",
+        "bank_interest_list",
+        "fdr_interest_list",
+        "dividend_list"
+      ],
+      "properties": {
+        "gst_turnover_details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/gst_turnover"
+          }
+        },
+        "bank_interest_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/annexure_income"
+          }
+        },
+        "fdr_interest_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/annexure_income"
+          }
+        },
+        "dividend_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/annexure_income"
+          }
+        },
+        "gst_turnover_total": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "bank_interest_total": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "fdr_interest_total": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "dividend_total": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "tsd_non_salary_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/annexure_income"
+          }
+        },
+        "tsd_non_salary_total": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

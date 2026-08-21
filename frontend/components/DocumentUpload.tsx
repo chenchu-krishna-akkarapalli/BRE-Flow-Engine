@@ -8,7 +8,7 @@ import { ACCEPTED_UPLOAD_TYPES, MAX_UPLOAD_BYTES, extractDocument } from "@/lib/
 // The preview is a local object URL, so Review costs no round trip and the file
 // only leaves the browser when the applicant asks for Extract.
 export function DocumentUpload({
-  id, documentType, label, helper, onExtracted,
+  id, documentType, label, helper, onExtracted, onAttached,
 }: {
   id: string;
   // Omit to collect the file without reading it — an electricity bill or a
@@ -18,6 +18,9 @@ export function DocumentUpload({
   helper?: string;
   // Called with the OCR fields; the caller decides which to write into the form.
   onExtracted?: (fields: Record<string, string | null>) => void;
+  // Fired once a valid file is attached, for the fields whose presence the API
+  // scores rather than their contents (add-on.md §7 bank statement).
+  onAttached?: (attached: boolean) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -57,6 +60,7 @@ export function DocumentUpload({
       return;
     }
     setFile(selected);
+    onAttached?.(true);
     setReviewing(false);
     setOpen(true);
   }
