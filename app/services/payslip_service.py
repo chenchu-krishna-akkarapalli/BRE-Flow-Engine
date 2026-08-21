@@ -206,6 +206,11 @@ def map_to_payslip_fields(data: Dict[str, Any]) -> Dict[str, Any]:
     parsed_gross = _to_rupees(gross_obj)
     parsed_net = _to_rupees(net_obj)
 
+    # Extract total_deductions, total_allowances, and total_incentives_and_bonus from summary_obj
+    summary_deductions_val = _to_rupees(summary_obj.get("total_deductions"))
+    total_allowances_val = _to_rupees(summary_obj.get("total_allowances"))
+    total_incentives_val = _to_rupees(summary_obj.get("total_incentives_and_bonus"))
+
     # Parse earnings breakdown, excluding annual compensation / YTD tax figures
     earnings_breakdown: List[Dict[str, Any]] = []
     total_earnings_sum = 0.0
@@ -267,7 +272,11 @@ def map_to_payslip_fields(data: Dict[str, Any]) -> Dict[str, Any]:
                     if it_amount is None:
                         it_amount = amt
 
-    total_deductions = round(total_deductions_sum, 2)
+    if summary_deductions_val is not None and summary_deductions_val >= 0:
+        total_deductions = round(summary_deductions_val, 2)
+    else:
+        total_deductions = round(total_deductions_sum, 2)
+
     if parsed_net and 0 < parsed_net <= monthly_gross_salary:
         monthly_net_salary = round(parsed_net, 2)
     else:
@@ -301,6 +310,8 @@ def map_to_payslip_fields(data: Dict[str, Any]) -> Dict[str, Any]:
         "monthlyNetSalary": monthly_net_salary,
         "totalEarnings": total_earnings,
         "totalDeductions": total_deductions,
+        "totalAllowances": total_allowances_val,
+        "totalIncentivesAndBonus": total_incentives_val,
         "earningsBreakdown": earnings_breakdown,
         "deductionsBreakdown": deductions_breakdown,
         "employeeMetadata": {k: v for k, v in employee_metadata.items() if v is not None},
@@ -310,6 +321,8 @@ def map_to_payslip_fields(data: Dict[str, Any]) -> Dict[str, Any]:
         # Flat convenience keys for backward compatibility and store draft mapping
         "grossSalary": monthly_gross_salary,
         "netSalary": monthly_net_salary,
+        "totalAllowances": total_allowances_val,
+        "totalIncentivesAndBonus": total_incentives_val,
         "employerName": employer_name,
         "applicantName": applicant_name,
         "panNumber": pan_number,
