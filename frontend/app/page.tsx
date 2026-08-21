@@ -1,22 +1,17 @@
 "use client";
 
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState } from "react";
 import type { JSX } from "react";
-import { ArrowLeft, ArrowRight, RefreshCw, Upload, X, FileText } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { ArrowLeft, ArrowRight, RefreshCw, ShieldCheck, Zap } from "lucide-react";
 import { AuditCards } from "@/components/AuditCards";
 import { ReviewCard } from "@/components/ReviewCard";
 import { Stepper } from "@/components/Stepper";
 import { BankMatrix, DecisionPanel } from "@/components/Telemetry";
-import { CoiUpload } from "@/components/CoiUpload";
 import {
   Step1Identity, Step2Address, Step3Occupation, Step4Banking, Step5CoApplicant,
 } from "@/components/steps/Steps";
 import { STEP_PLAN } from "@/lib/form-schema";
-import { terminationReason, useOnboardingStore } from "@/store/useOnboardingStore";
-import type { Draft } from "@/store/useOnboardingStore";
-
-const OCCUPATION_STEP = 3;
+import { useOnboardingStore } from "@/store/useOnboardingStore";
 
 const STEP_COMPONENTS: Record<number, () => JSX.Element> = {
   1: Step1Identity,
@@ -26,73 +21,7 @@ const STEP_COMPONENTS: Record<number, () => JSX.Element> = {
   5: Step5CoApplicant,
 };
 
-function isStepCompleted(stepNum: number, draft: Draft): boolean {
-  if (stepNum === 1) {
-    if (draft.entityType === "Individual") {
-      return !!(draft.applicantName && draft.dob && draft.gender && draft.pan && draft.phone && draft.email);
-    } else {
-      return !!(draft.companyName && draft.companyType && draft.companyPan && draft.contactPersonName && draft.companyMobile && draft.companyEmail);
-    }
-  }
-  if (stepNum === 2) {
-    if (draft.entityType === "Individual") {
-      return !!(draft.pincode && draft.cityName && draft.stateName && draft.residentDetails);
-    }
-    return true; // Skip step 2 for Company
-  }
-  if (stepNum === 3) {
-    if (draft.entityType === "Individual") {
-      if (draft.occupation === "Salaried") {
-        return !!(draft.employerType && draft.grossSalary && draft.salaryMode);
-      } else if (draft.occupation === "Self-Employed") {
-        if (draft.businessEntityType === "Agriculture") {
-          return !!(draft.agriculturalLandLocation && draft.annualAgriculturalIncome);
-        } else {
-          return !!(draft.businessEntityType && draft.currentITRAmount);
-        }
-      } else if (draft.occupation === "Rental Income") {
-        return !!(draft.rentalPropertyAddress && draft.rentalIncomeAmount);
-      }
-      return false;
-    } else { // Company
-      return !!(draft.companyEstablishmentDate && draft.companyCurrentITRAmount);
-    }
-  }
-  if (stepNum === 4) {
-    return !!draft.existingAccountBank;
-  }
-  if (stepNum === 5) {
-    return true; // Optional co-applicant
-  }
-  return false;
-}
-
-function isStepAccessible(
-  targetStep: number,
-  draft: Draft,
-  plan: number[],
-  result: any
-): boolean {
-  if (targetStep === 6) {
-    return !!result;
-  }
-  if (!plan.includes(targetStep)) {
-    return false;
-  }
-  if (targetStep === plan[0]) {
-    return true;
-  }
-  const targetIndex = plan.indexOf(targetStep);
-  for (let i = 0; i < targetIndex; i++) {
-    const prevStep = plan[i];
-    if (!isStepCompleted(prevStep, draft)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-function OnboardingWizardContent() {
+export default function OnboardingWizard() {
   const draft = useOnboardingStore((s) => s.draft);
   const stepId = useOnboardingStore((s) => s.stepId);
   const submitting = useOnboardingStore((s) => s.submitting);
@@ -106,77 +35,11 @@ function OnboardingWizardContent() {
 
   const [showSummary, setShowSummary] = useState(false);
   const [submittingApplication, setSubmittingApplication] = useState(false);
-  const [showCoiModal, setShowCoiModal] = useState(false);
-
-  const router = useRouter();
-  const searchParams = useSearchParams();
 
   const plan = STEP_PLAN[draft.entityType];
   const isFirst = plan.indexOf(stepId) === 0;
   const isLast = plan.indexOf(stepId) === plan.length - 1;
   const StepBody = STEP_COMPONENTS[stepId];
-
-  // Tracking direction of animations
-  const [direction, setDirection] = useState<"forward" | "backward">("forward");
-  const [lastStepId, setLastStepId] = useState(stepId);
-
-  if (stepId !== lastStepId) {
-    setDirection(stepId > lastStepId ? "forward" : "backward");
-    setLastStepId(stepId);
-  }
-
-  const animationClass = direction === "forward" ? "slide-in-right" : "slide-in-left";
-
-  const lastStepIdRef = useRef<number>(stepId);
-
-  // Synchronize URL query parameter with Zustand store stepId
-  useEffect(() => {
-    const urlStepStr = searchParams.get("step");
-    const urlStep = urlStepStr ? parseInt(urlStepStr, 10) : null;
-
-    if (urlStep === null) {
-      router.replace(`?step=${stepId}`);
-      lastStepIdRef.current = stepId;
-      return;
-    }
-
-    if (urlStep !== stepId) {
-      if (lastStepIdRef.current !== stepId) {
-        // Store changed (via next, prev, reset, etc.), update URL
-        router.push(`?step=${stepId}`);
-        lastStepIdRef.current = stepId;
-      } else {
-        // URL changed (via browser back/forward buttons, direct manual input)
-        const isValid = urlStep === 6 ? !!result : plan.includes(urlStep);
-        const isAccessible = isValid && isStepAccessible(urlStep, draft, plan, result);
-
-        if (isAccessible) {
-          goTo(urlStep);
-          lastStepIdRef.current = urlStep;
-        } else {
-          // Revert URL to last accessible step
-          let lastAccessible = plan[0];
-          for (const s of plan) {
-            if (isStepAccessible(s, draft, plan, result)) {
-              lastAccessible = s;
-            } else {
-              break;
-            }
-          }
-          const fallbackStep = result ? 6 : lastAccessible;
-          router.replace(`?step=${fallbackStep}`);
-          goTo(fallbackStep);
-          lastStepIdRef.current = fallbackStep;
-        }
-      }
-    } else {
-      lastStepIdRef.current = stepId;
-    }
-  }, [searchParams, stepId, draft, result, plan, goTo, router]);
-
-  // add-on.md §5/§6: these end the application where they are answered, so the
-  // applicant is told at step 3 rather than after four more steps of questions.
-  const termination = stepId === OCCUPATION_STEP ? terminationReason(draft) : null;
 
   const handleEvaluate = async () => {
     await submit();
@@ -210,12 +73,43 @@ function OnboardingWizardContent() {
   };
 
   return (
-    <div className="flex w-full flex-1 flex-col justify-between">
-      {/* Main Wizard Content Shell */}
-      <div className="mx-auto flex w-full max-w-[var(--shell-max)] flex-1 flex-col gap-8 px-4 sm:px-6 pt-6 pb-8 lg:flex-row lg:items-start animate-fade-in">
+    <div className="flex min-h-screen flex-col bg-bg-deep">
+      {/* Top Application Header - Day Mode */}
+      <header className="border-b border-line bg-white/90 backdrop-blur-xl sticky top-0 z-40 shadow-xs">
+        <div className="mx-auto flex max-w-[var(--shell-max)] items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-brand-500 via-brand-indigo to-brand-violet text-white shadow-glow font-bold">
+              <Zap size={22} fill="currentColor" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-extrabold tracking-tight text-lg text-ink font-display">
+                  Flow<span className="text-gradient">BRE</span>
+                </span>
+                <span className="rounded-full bg-brand-500/10 px-2.5 py-0.5 text-[0.6875rem] font-bold text-brand-600 border border-brand-500/20">
+                  Engine v2.4
+                </span>
+              </div>
+              <p className="text-xs text-ink-subtle font-medium hidden sm:block">
+                Instant Multi-Bank Onboarding &amp; Eligibility Wizard
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="hidden md:flex items-center gap-1.5 rounded-full border border-success/30 bg-success-bg px-3 py-1 text-xs font-bold text-success">
+              <span className="h-2 w-2 rounded-full bg-success animate-pulse" />
+              8 Bank APIs Online
+            </span>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Wizard Shell */}
+      <main className="mx-auto flex w-full max-w-[var(--shell-max)] flex-1 flex-col gap-8 px-6 pt-4 pb-8 lg:flex-row lg:items-start animate-fade-in">
         {stepId === 6 ? (
           /* Step 6 Content - Side-by-side layout on large screens */
-          <div className={`flex w-full flex-col gap-8 lg:flex-row lg:items-start max-w-[var(--shell-max)] mx-auto ${animationClass}`}>
+          <div className="flex w-full flex-col gap-8 lg:flex-row lg:items-start max-w-[var(--shell-max)] mx-auto animate-in fade-in duration-300">
             {/* Left Column: Full Audit Trail */}
             <div className="flex w-full flex-col gap-6 lg:max-w-[var(--form-col)]">
               {/* Stepper Progress Header */}
@@ -238,7 +132,7 @@ function OnboardingWizardContent() {
             </div>
 
             {/* Right Column: BRE Telemetry Matrix */}
-            <aside className="w-full lg:sticky lg:top-20 lg:max-w-[var(--telemetry-col)]">
+            <aside className="w-full lg:sticky lg:top-24 lg:max-w-[var(--telemetry-col)]">
               <BankMatrix result={result} />
             </aside>
           </div>
@@ -253,19 +147,10 @@ function OnboardingWizardContent() {
               {/* Form Step Body Container with Day Mode Glass Panel */}
               <section
                 key={stepId}
-                className={`${animationClass} glass-panel rounded-2xl p-6 sm:p-8 shadow-sm border border-line bg-white overflow-hidden`}
+                className="step-enter glass-panel rounded-2xl p-6 sm:p-8 shadow-sm border border-line bg-white"
               >
                 {StepBody && <StepBody />}
               </section>
-
-              {/* Terminating condition — the application stops here. */}
-              {termination && (
-                <div className="validation-slot">
-                  <div role="alert" className="rounded-2xl border border-danger/30 bg-danger-bg p-5 text-sm font-bold text-danger backdrop-blur-xl shadow-xs">
-                    {termination}
-                  </div>
-                </div>
-              )}
 
               {/* Validation & Error Slot */}
               {error && (
@@ -301,8 +186,7 @@ function OnboardingWizardContent() {
                   <button
                     type="button"
                     onClick={next}
-                    disabled={termination !== null}
-                    className="group flex min-h-[48px] items-center gap-2 rounded-xl bg-gradient-to-r from-brand-500 to-brand-indigo px-8 py-3 text-sm font-extrabold text-white shadow-glow transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_4px_20px_rgba(13,148,136,0.3)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100 disabled:shadow-none"
+                    className="group flex min-h-[48px] items-center gap-2 rounded-xl bg-gradient-to-r from-brand-500 to-brand-indigo px-8 py-3 text-sm font-extrabold text-white shadow-glow transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_4px_20px_rgba(13,148,136,0.3)] active:scale-[0.98]"
                   >
                     <span>Next question</span>
                     <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
@@ -312,23 +196,13 @@ function OnboardingWizardContent() {
             </div>
 
             {/* Right Telemetry Column */}
-            <aside className="w-full lg:sticky lg:top-20 lg:max-w-[var(--telemetry-col)] flex flex-col gap-4">
-              {/* COI Upload Trigger Button */}
-              <button
-                type="button"
-                onClick={() => setShowCoiModal(true)}
-                className="flex w-full min-h-[38px] sm:min-h-[44px] items-center justify-center gap-2 rounded-xl border border-line bg-white px-4 py-2.5 text-xs font-bold text-ink transition-all hover:border-line-strong hover:bg-bg-raised hover:scale-[1.01] active:scale-[0.99] shadow-xs"
-              >
-                <Upload size={14} className="text-ink-subtle" />
-                <span>Upload COI</span>
-              </button>
-
+            <aside className="w-full lg:sticky lg:top-24 lg:max-w-[var(--telemetry-col)]">
               {/* Telemetry Matrix shows PENDING (null) on Steps 1 to 5 */}
               <BankMatrix result={null} />
             </aside>
           </>
         )}
-      </div>
+      </main>
 
       {/* Application Summary Popup Modal */}
       {showSummary && (
@@ -349,55 +223,10 @@ function OnboardingWizardContent() {
         </div>
       )}
 
-      {/* COI Upload Modal */}
-      {showCoiModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-md">
-          <div className="relative w-full max-w-lg rounded-2xl border border-line bg-white p-6 shadow-2xl backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200 flex flex-col gap-4">
-            <div className="flex items-center justify-between border-b border-line pb-3">
-              <div className="flex items-center gap-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500/10 text-brand-600">
-                  <FileText size={18} />
-                </span>
-                <div>
-                  <h3 className="text-sm font-bold text-ink">Upload Computation of Income</h3>
-                  <p className="text-[0.6875rem] text-ink-subtle">
-                    Auto-extract income details from your COI PDF
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowCoiModal(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-line text-ink-subtle transition-all hover:bg-bg-raised hover:text-ink"
-                aria-label="Close modal"
-              >
-                <X size={18} />
-              </button>
-            </div>
-            
-            <div className="py-2">
-              <CoiUpload />
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Footer */}
-      <footer className="border-t border-line bg-white/60 py-6 text-center text-xs font-medium text-ink-subtle backdrop-blur-xl">
+      <footer className="mt-auto border-t border-line bg-white/60 py-6 text-center text-xs font-medium text-ink-subtle backdrop-blur-xl">
         <p>FlowBRE Engine &copy; {new Date().getFullYear()} — Multi-Bank Rule Evaluation System</p>
       </footer>
     </div>
-  );
-}
-
-export default function OnboardingWizard() {
-  return (
-    <Suspense fallback={
-      <div className="flex min-h-screen items-center justify-center bg-bg-deep text-ink">
-        <RefreshCw className="animate-spin text-brand-500" size={32} />
-      </div>
-    }>
-      <OnboardingWizardContent />
-    </Suspense>
   );
 }

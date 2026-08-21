@@ -6,7 +6,7 @@ import { downloadApplicationExport } from "@/lib/api";
 import { redactDob, redactPan } from "@/lib/redact";
 import { STEP_PLAN, BANK_LABELS } from "@/lib/form-schema";
 import type { Draft } from "@/store/useOnboardingStore";
-import { clubbedCurrentItr, clubbedPreviousItr, isAgriculture, profileTypeFor } from "@/store/useOnboardingStore";
+import { profileTypeFor } from "@/store/useOnboardingStore";
 import type { EvaluationResponse } from "@/lib/types";
 
 function missedPaymentSummary(draft: Draft): string {
@@ -95,26 +95,6 @@ export function ReviewCard({
               ["GST / Udyam ID", draft.companyGstin || "—"],
               ["Declared ITR", `₹${Number(draft.companyCurrentITRAmount || 0).toLocaleString("en-IN")}`],
             ]
-          : profile === "Rental Income"
-          ? [
-              ["Profile Type", "Rental Income"],
-              ["Let Property", draft.rentalPropertyAddress || "—"],
-              ["Documentation", draft.rentalIncomeType],
-            ]
-          : isAgriculture(draft)
-          ? ([
-              ["Profile Type", "Agriculture / Farming"],
-              ["Registered Business?", draft.isRegisteredBusiness ? "Yes" : "No"],
-              ["Land", `${draft.ownsAgriculturalLand ? "Owned" : "Not owned"} — ${draft.agriculturalLandLocation || "—"}`],
-              ["Annual Agricultural Income", `₹${Number(draft.annualAgriculturalIncome || 0).toLocaleString("en-IN")}`],
-              ...(draft.isRegisteredBusiness
-                ? [
-                    ["Business Inception", draft.businessEstablishmentDate || "—"],
-                    ["Business Proof", draft.businessProof || "—"],
-                    ["Declared ITR", `₹${Number(draft.currentITRAmount || 0).toLocaleString("en-IN")}`],
-                  ]
-                : []),
-            ] as [string, string][])
           : [
               ["Profile Type", "Self-Employed Entity"],
               ["Business Inception", draft.businessEstablishmentDate || "—"],
@@ -140,14 +120,6 @@ export function ReviewCard({
           rows: [
             ["Age Extension Pooling", draft.coAppAgeRelation],
             ["Income Aggregation", draft.coAppIncomeRelation],
-            // The figure the banks actually score once income is pooled.
-            ...(draft.coAppIncomeRelation !== "None"
-              ? ([[
-                  "Clubbed Income (Current / Previous)",
-                  `₹${clubbedCurrentItr(draft).toLocaleString("en-IN")} / `
-                    + `₹${clubbedPreviousItr(draft).toLocaleString("en-IN")}`,
-                ]] as [string, string][])
-              : []),
           ] as [string, string][],
         }]),
     ...(result

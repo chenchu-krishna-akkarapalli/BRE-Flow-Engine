@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { evaluateOnboardingForm, FormValidationError } from "@/lib/api";
-import { GOVERNMENT_SECTOR, STEP_PLAN } from "@/lib/form-schema";
+import { STEP_PLAN } from "@/lib/form-schema";
 import type {
   BankingStep,
   CoApplicantStep,
@@ -52,7 +52,7 @@ export interface Draft {
   aadhaarNumber: string;
 
   // Step 3 — occupation
-  occupation: "Salaried" | "Self-Employed" | "Rental Income";
+  occupation: "Salaried" | "Self-Employed";
   employerType: string;
   tenureBand: string;
   prevCompanyName: string;
@@ -66,14 +66,9 @@ export interface Draft {
   // Collected instead of Form-16 years when the proof offered is an ITR.
   salariedCurrentYearItr: number | "";
   salariedPreviousYearItr: number | "";
-  // add-on.md §7: rent is its own occupation now, so these describe the
-  // Rental Income branch rather than a rider on another one.
-  rentalPropertyAddress: string;
+  // Yes/no gate in front of the rental-income category dropdown.
+  hasRentalIncome: boolean;
   rentalIncomeType: string;
-  rentalIncomeAmount: number | "";
-  rentalBankStatementProvided: boolean;
-  rentalCurrentYearItr: number | "";
-  rentalPreviousYearItr: number | "";
   officeAddressType: string;
   officeAddress: string;
   officePremisesStatus: string;
@@ -85,14 +80,6 @@ export interface Draft {
   currentITRAmount: number | "";
   prevITRAmount: number | "";
   businessItrYears: number | "";
-  // add-on.md §3: the farming branch, shown instead of the trade fields.
-  isRegisteredBusiness: boolean;
-  ownsAgriculturalLand: boolean;
-  agriculturalLandLocation: string;
-  annualAgriculturalIncome: number | "";
-  agricultureItrFiled: boolean;
-  agriculturalIncomeProof: string;
-  agriculturalIncomeProofVerified: boolean;
   companyEstablishmentDate: string;
   companyGstin: string;
   companyCurrentITRAmount: number | "";
@@ -128,9 +115,6 @@ export interface Draft {
   coApplicantName: string;
   coApplicantDob: string;
   coApplicantOccupation: string;
-  // add-on.md §8: clubbed with the applicant's before the ITR floors score.
-  coApplicantCurrentItr: number | "";
-  coApplicantPreviousItr: number | "";
 }
 
 const INITIAL_DRAFT: Draft = {
@@ -146,24 +130,16 @@ const INITIAL_DRAFT: Draft = {
   addressProofType: "", aadhaarNumber: "",
 
   occupation: "Salaried",
-  employerType: "Private Sector", tenureBand: "2y+", prevCompanyName: "", prevCompanyJoining: "",
+  employerType: "", tenureBand: "2y+", prevCompanyName: "", prevCompanyJoining: "",
   grossSalary: "", salaryMode: "Salary payment mode- Bank Credit",
   form16Status: "Form 16", form16Years: 2, salariedCurrentYearItr: "",
-  salariedPreviousYearItr: "",
-  rentalPropertyAddress: "",
+  salariedPreviousYearItr: "", hasRentalIncome: false,
   rentalIncomeType: "Rental Income-with Agreement -Not filed ITR-Not reflecting in Bank",
-  rentalIncomeAmount: "", rentalBankStatementProvided: false,
-  rentalCurrentYearItr: "", rentalPreviousYearItr: "",
   officeAddressType: "Same", officeAddress: "", officePremisesStatus: "",
   guarantorStatus: "", businessEntityType: "Propreitorship", businessProof: "",
   businessProofVerified: false,
   businessEstablishmentDate: "", currentITRAmount: "", prevITRAmount: "",
-  businessItrYears: "",
-  isRegisteredBusiness: false,
-  ownsAgriculturalLand: true, agriculturalLandLocation: "",
-  annualAgriculturalIncome: "", agricultureItrFiled: true, agriculturalIncomeProof: "",
-  agriculturalIncomeProofVerified: false,
-  companyEstablishmentDate: "", companyGstin: "",
+  businessItrYears: "", companyEstablishmentDate: "", companyGstin: "",
   companyCurrentITRAmount: "", companyPrevITRAmount: "", businessItrYearsCompany: "",
 
   existingAccountBank: "BOI", existingCarLoanBank: "None", loanType: "Auto Loan",
@@ -177,7 +153,6 @@ const INITIAL_DRAFT: Draft = {
 
   coAppAgeRelation: "None", coAppIncomeRelation: "None",
   coApplicantName: "", coApplicantDob: "", coApplicantOccupation: "",
-  coApplicantCurrentItr: "", coApplicantPreviousItr: "",
 };
 
 // Empty string -> undefined so JSON.stringify drops the key; the API forbids inapplicable fields, not absent ones.
@@ -251,119 +226,10 @@ export function needsCoApplicant(draft: Draft): boolean {
   return age !== null && age > CO_APPLICANT_AGE_THRESHOLD;
 }
 
-// add-on.md §8: the income question has its own trigger, independent of age.
-export const CO_APPLICANT_ITR_THRESHOLD = 100000;
-
-// The applicant's own filed returns, whichever branch of step 3 collected them.
-export function applicantItrs(draft: Draft): { current: number; previous: number } | null {
-  const profile = profileTypeFor(draft);
-  const pair = (c: number | "", p: number | "") =>
-    c === "" || p === "" ? null : { current: Number(c), previous: Number(p) };
-
-  if (profile === "Salaried") {
-    // Only the ITR proof carries amounts; a Form-16 applicant declares none.
-    return draft.form16Status === "ITR"
-      ? pair(draft.salariedCurrentYearItr, draft.salariedPreviousYearItr)
-      : null;
-  }
-  if (profile === "Rental Income") {
-    return draft.rentalIncomeType === RENTAL_DOC_WITH_ITR
-      ? pair(draft.rentalCurrentYearItr, draft.rentalPreviousYearItr)
-      : null;
-  }
-  if (profile === "Self-Employed") {
-    if (isAgriculture(draft) && !draft.isRegisteredBusiness && !draft.agricultureItrFiled) return null;
-    return pair(draft.currentITRAmount, draft.prevITRAmount);
-  }
-  return null;
-}
-
-// One rule, asked on whichever screen owns the applicant's ITR amounts.
-//
-// EITHER year falling short triggers it (add-on.md bug 9). The stricter "both
-// years" reading in bug 8 hid the question from the applicants who most need
-// it: someone at 95,000 current and 400,000 previous has a weak year the
-// clubbing exists to cover, and would never have been offered a co-applicant.
-// Undeclared income does not trigger it — there is no figure to judge as low.
-function incomeIsShort(draft: Draft): boolean {
-  const itrs = applicantItrs(draft);
-  if (itrs === null) return false;
-  return itrs.current < CO_APPLICANT_ITR_THRESHOLD
-    || itrs.previous < CO_APPLICANT_ITR_THRESHOLD;
-}
-
-// Step 3 asks the self-employed flow, the moment the two ITR amounts are on
-// screen. Step 5 asks everyone else.
-export function needsIncomeCoApplicantInStep3(draft: Draft): boolean {
-  return profileTypeFor(draft) === "Self-Employed" && incomeIsShort(draft);
-}
-
-// Self-employed is excluded because step 3 already asked. There is one answer
-// in the draft, so asking twice could only produce two views of it that
-// disagree — whichever screen the applicant edited last would silently win.
-export function needsIncomeCoApplicant(draft: Draft): boolean {
-  return profileTypeFor(draft) !== "Self-Employed" && incomeIsShort(draft);
-}
-
-function pooledItr(draft: Draft, key: "coApplicantCurrentItr" | "coApplicantPreviousItr"): number {
-  const value = draft[key];
-  return draft.coAppIncomeRelation !== "None" && value !== "" ? Number(value) : 0;
-}
-
-// The figures the banks actually score once a co-applicant pools their income.
-export function clubbedCurrentItr(draft: Draft): number {
-  return (applicantItrs(draft)?.current ?? 0) + pooledItr(draft, "coApplicantCurrentItr");
-}
-
-export function clubbedPreviousItr(draft: Draft): number {
-  return (applicantItrs(draft)?.previous ?? 0) + pooledItr(draft, "coApplicantPreviousItr");
-}
-
-// add-on.md §2: the NRI questions live in step 3 and are asked only of salaried
-// applicants. Everyone else submits as resident, whatever step 1 once held.
-export function isNriApplicant(draft: Draft): boolean {
-  return profileTypeFor(draft) === "Salaried" && draft.citizenshipStatus === "NRI/PIO";
-}
-
-// add-on.md §4: government service skips both experience floors, so the wizard
-// stops asking for a previous employer and the payload stops carrying one.
-export function isGovernmentEmployee(draft: Draft): boolean {
-  return draft.employerType === GOVERNMENT_SECTOR;
-}
-
-// add-on.md §6: below this the application stops at step 3 rather than being
-// collected in full and rejected at the end.
-export const MIN_SALARIED_MONTHLY_SALARY = 25000;
-
-// add-on.md §5 / §6: conditions that end onboarding where they are answered.
-// Returns the reason to show, or null when the applicant may continue.
-export function terminationReason(draft: Draft): string | null {
-  const profile = profileTypeFor(draft);
-
-  if (profile === "Salaried") {
-    const salary = draft.grossSalary;
-    if (salary !== "" && Number(salary) < MIN_SALARIED_MONTHLY_SALARY) {
-      return `A monthly salary below ₹${MIN_SALARIED_MONTHLY_SALARY.toLocaleString("en-IN")} `
-        + "does not meet the minimum for any of our partner banks, so this application "
-        + "cannot go further.";
-    }
-  }
-
-  // Farming is evidenced by land and either a return or an income proof, so it
-  // is never asked for a registration number and is not stopped for lacking one.
-  if (profile === "Self-Employed" && (!isAgriculture(draft) || draft.isRegisteredBusiness) && draft.businessProof.trim() === "") {
-    return "Business proof is mandatory for self-employed applicants. Add your "
-      + "business registration or GST number to continue.";
-  }
-
-  return null;
-}
-
 // Office in a RENTED residence — the only configuration that asks the guarantor question.
 export function isResiCumOfficeRented(draft: Draft): boolean {
   return (
     profileTypeFor(draft) === "Self-Employed" &&
-    (!isAgriculture(draft) || draft.isRegisteredBusiness) &&
     draft.residentDetails === "Rented House" &&
     draft.officeAddressType === "Same"
   );
@@ -385,10 +251,7 @@ function buildIdentity(d: Draft): Identity {
       companyEmployees: d.companyEmployees ? Number(d.companyEmployees) : undefined,
     };
   }
-  // add-on.md §2: only a salaried applicant is asked about residency, so only
-  // a salaried applicant can be scored as one — anyone else is resident by
-  // construction rather than by a value left behind from an earlier answer.
-  const isNri = isNriApplicant(d);
+  const isNri = d.citizenshipStatus === "NRI/PIO";
   return {
     entityType: "Individual",
     applicantName: d.applicantName,
@@ -396,7 +259,7 @@ function buildIdentity(d: Draft): Identity {
     gender: opt(d.gender) as never,
     pan: d.pan.toUpperCase(),
     maritalStatus: opt(d.maritalStatus) as never,
-    citizenshipStatus: (isNri ? "NRI/PIO" : "Resident Indian") as never,
+    citizenshipStatus: d.citizenshipStatus as never,
     // Only collected — and only accepted — for NRI/PIO applicants.
     nriStayPeriod: isNri ? Number(d.nriStayPeriod) : undefined,
     phone: d.phone,
@@ -404,85 +267,13 @@ function buildIdentity(d: Draft): Identity {
   };
 }
 
-// add-on.md §7: the two documentation options that pull extra evidence.
-export const RENTAL_DOC_WITH_ITR = "Rental Income-with Agreement filed ITR- Not reflecting in Bank";
-export const RENTAL_DOC_IN_BANK = "Rental Income-with Agreement -Not filed ITR-reflecting in Bank";
-
-// add-on.md §3: farming is a businessEntityType, not a separate profileType —
-// "How is your business set up?" is still what selects it.
-export const AGRICULTURE = "Agriculture";
-
-export function isAgriculture(draft: Draft): boolean {
-  return (
-    profileTypeFor(draft) === "Self-Employed" && draft.businessEntityType === AGRICULTURE
-  );
-}
-
-function buildRentalIncome(d: Draft): Occupation {
-  const withItr = d.rentalIncomeType === RENTAL_DOC_WITH_ITR;
-  const inBank = d.rentalIncomeType === RENTAL_DOC_IN_BANK;
-  return {
-    profileType: "Rental Income",
-    rentalPropertyAddress: d.rentalPropertyAddress,
-    rentalIncomeDocumentation: d.rentalIncomeType,
-    // Each documentation option carries only its own evidence; the API
-    // rejects the other option's fields outright.
-    currentYearItr: withItr ? Number(d.rentalCurrentYearItr) : undefined,
-    previousYearItr: withItr ? Number(d.rentalPreviousYearItr) : undefined,
-    rentalBankStatementProvided: inBank ? d.rentalBankStatementProvided : undefined,
-    rentalIncomeAmount: inBank ? Number(d.rentalIncomeAmount) : undefined,
-  };
-}
-
-function buildAgriculture(d: Draft): Occupation {
-  const filed = d.agricultureItrFiled;
-  const isReg = d.isRegisteredBusiness;
-  if (!isReg) {
-    return {
-      profileType: "Self-Employed",
-      businessEntityType: AGRICULTURE,
-      isRegisteredBusiness: false,
-      ownsAgriculturalLand: d.ownsAgriculturalLand,
-      agriculturalLandLocation: d.agriculturalLandLocation,
-      annualAgriculturalIncome: Number(d.annualAgriculturalIncome),
-      agricultureItrFiled: filed,
-      // Filed returns replace the income proof, and vice versa.
-      currentITRAmount: filed ? Number(d.currentITRAmount) : undefined,
-      prevITRAmount: filed ? Number(d.prevITRAmount) : undefined,
-      businessItrAmount: filed ? Number(d.businessItrYears) : undefined,
-      agriculturalIncomeProof: filed ? undefined : opt(d.agriculturalIncomeProof),
-    };
-  } else {
-    const separate = d.officeAddressType === "Separate";
-    return {
-      profileType: "Self-Employed",
-      businessEntityType: AGRICULTURE,
-      isRegisteredBusiness: true,
-      ownsAgriculturalLand: d.ownsAgriculturalLand,
-      agriculturalLandLocation: d.agriculturalLandLocation,
-      annualAgriculturalIncome: Number(d.annualAgriculturalIncome),
-      officeAddressType: d.officeAddressType as "Same" | "Separate",
-      officeAddress: separate ? d.officeAddress : undefined,
-      officePremisesStatus: separate
-        ? (d.officePremisesStatus as "Owned" | "Rented")
-        : undefined,
-      guarantorStatus: isResiCumOfficeRented(d)
-        ? (d.guarantorStatus as "Without a Gaurantor" | "With a Gaurantor")
-        : undefined,
-      businessProof: opt(d.businessProof),
-      businessEstablishmentDate: d.businessEstablishmentDate,
-      currentITRAmount: Number(d.currentITRAmount),
-      prevITRAmount: Number(d.prevITRAmount),
-      businessItrAmount: Number(d.businessItrYears),
-    };
-  }
+// "No" to the rental radio is what sets the None category; the dropdown never carries it.
+function rentalIncomeFor(d: Draft): string {
+  return d.hasRentalIncome ? d.rentalIncomeType : "None";
 }
 
 function buildOccupation(d: Draft): Occupation {
   const profile = profileTypeFor(d);
-
-  if (profile === "Rental Income") return buildRentalIncome(d);
-  if (isAgriculture(d)) return buildAgriculture(d);
 
   if (profile === "Company") {
     return {
@@ -515,19 +306,18 @@ function buildOccupation(d: Draft): Occupation {
       currentITRAmount: Number(d.currentITRAmount),
       prevITRAmount: Number(d.prevITRAmount),
       businessItrAmount: Number(d.businessItrYears),
+      rentalIncomeTypeSelfEmployed: rentalIncomeFor(d),
     };
   }
 
-  // add-on.md §4: government service is exempt from the tenure floors, so the
-  // API rejects a prior employer sent alongside it.
-  const collectsPrevEmployer = !isGovernmentEmployee(d) && d.tenureBand !== "2y+";
+  const shortTenure = d.tenureBand !== "2y+";
   return {
     profileType: "Salaried",
     employerType: opt(d.employerType),
     tenureBand: d.tenureBand as never,
     // Prior employment is required below 2 years and rejected at 2y+.
-    prevCompanyName: collectsPrevEmployer ? d.prevCompanyName : undefined,
-    prevCompanyJoining: collectsPrevEmployer ? d.prevCompanyJoining : undefined,
+    prevCompanyName: shortTenure ? d.prevCompanyName : undefined,
+    prevCompanyJoining: shortTenure ? d.prevCompanyJoining : undefined,
     grossSalary: Number(d.grossSalary),
     salaryMode: d.salaryMode as never,
     form16Status: d.form16Status as never,
@@ -536,6 +326,7 @@ function buildOccupation(d: Draft): Occupation {
     // ...and these only when the proof offered is an ITR.
     currentYearItr: d.form16Status === "ITR" ? Number(d.salariedCurrentYearItr) : undefined,
     previousYearItr: d.form16Status === "ITR" ? Number(d.salariedPreviousYearItr) : undefined,
+    rentalIncomeTypeSalaried: rentalIncomeFor(d),
   };
 }
 
@@ -564,23 +355,15 @@ function buildBanking(d: Draft): BankingStep {
 }
 
 function buildCoApplicant(d: Draft): CoApplicantStep {
-  // Income is pooled only while the question is actually being asked. Editing
-  // the ITR amounts back above the threshold retracts the pooling rather than
-  // leaving a co-applicant's income clubbed into a total nobody is still shown.
-  const asked = needsIncomeCoApplicantInStep3(d) || needsIncomeCoApplicant(d);
-  const pooling = asked && d.coAppIncomeRelation !== "None";
+  const pooling = d.coAppIncomeRelation !== "None";
   return {
     coAppAgeRelation: d.coAppAgeRelation as never,
-    coAppIncomeRelation: (pooling ? d.coAppIncomeRelation : "None") as never,
+    coAppIncomeRelation: d.coAppIncomeRelation as never,
     coApplicantName: pooling ? d.coApplicantName : undefined,
     coApplicantDob: pooling ? d.coApplicantDob : undefined,
-    // add-on.md §8 no longer asks for it, so it is usually absent. Sent through
-    // `opt` because an empty string is not a valid occupation and would 422.
     coApplicantOccupation: pooling
-      ? (opt(d.coApplicantOccupation) as "Salaried" | "Self-Employed" | undefined)
+      ? (d.coApplicantOccupation as "Salaried" | "Self-Employed")
       : undefined,
-    coApplicantCurrentItr: pooling ? Number(d.coApplicantCurrentItr) : undefined,
-    coApplicantPreviousItr: pooling ? Number(d.coApplicantPreviousItr) : undefined,
   };
 }
 
@@ -613,18 +396,12 @@ interface OnboardingState {
   // Non-null once a CIBIL report has been parsed: the bureau inputs are locked
   // to what it says, and the badge names the file they came from.
   cibilVerified: { filename: string; evidence: Record<string, unknown> } | null;
-  payslipVerified: { filename: string; evidence: Record<string, unknown> } | null;
-  coiVerified: { filename: string; evidence: Record<string, unknown> } | null;
 
   setField: <K extends keyof Draft>(key: K, value: Draft[K]) => void;
   // Bureau fields read off an uploaded CIBIL report. Set together so the
   // verified badge and the locked inputs can never disagree about their source.
   applyCibilExtraction: (fields: Record<string, unknown>, filename: string) => void;
   clearCibilExtraction: () => void;
-  applyPayslipExtraction: (fields: Record<string, unknown>, filename: string) => void;
-  clearPayslipExtraction: () => void;
-  applyCoiExtraction: (data: Record<string, unknown>, filename: string) => void;
-  clearCoiExtraction: () => void;
   goTo: (stepId: number) => void;
   next: () => void;
   prev: () => void;
@@ -639,8 +416,6 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   result: null,
   error: null,
   cibilVerified: null,
-  payslipVerified: null,
-  coiVerified: null,
 
   setField: (key, value) =>
     set((state) => {
@@ -693,58 +468,6 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
     }),
 
   clearCibilExtraction: () => set({ cibilVerified: null }),
-
-  applyPayslipExtraction: (fields, filename) =>
-    set((state) => {
-      const draft = { ...state.draft };
-      const evaluated = (fields.evaluated as Record<string, unknown>) ?? {};
-      const gross = Number(evaluated.monthlyGrossSalary ?? fields.grossSalary ?? 0);
-      if (gross > 0) {
-        draft.grossSalary = gross;
-      }
-      const paymentMethod = String(evaluated.salaryPaymentMethod ?? fields.salaryPaymentMethod ?? "");
-      if (paymentMethod === "Bank Account") {
-        draft.salaryMode = "Salary payment mode- Bank Credit";
-      } else if (paymentMethod === "Cash") {
-        draft.salaryMode = "Salary payment mode-Cash";
-      }
-
-      const breakdown = (fields.transparentBreakdown as Record<string, unknown>) ?? {};
-      const metadata = (breakdown.employeeMetadata as Record<string, unknown>) ?? {};
-      const applicantName = String(metadata.applicantName ?? fields.applicantName ?? "");
-      const panNumber = String(metadata.panNumber ?? fields.panNumber ?? "");
-
-      if (applicantName && !draft.applicantName) {
-        draft.applicantName = applicantName;
-      }
-      if (panNumber && !draft.pan) {
-        draft.pan = panNumber;
-      }
-      return { draft, payslipVerified: { filename, evidence: fields }, error: null };
-    }),
-
-  clearPayslipExtraction: () => set({ payslipVerified: null }),
-
-  applyCoiExtraction: (fields, filename) =>
-    set((state) => {
-      const draft = { ...state.draft };
-      const summary = (fields.summary as Record<string, unknown>) ?? {};
-      const assessee = (fields.assessee_info as Record<string, unknown>) ?? {};
-
-      const applicantName = String(summary.assessee_name ?? assessee.name ?? "");
-      const panNumber = String(summary.pan ?? assessee.pan ?? "");
-
-      if (applicantName && !draft.applicantName) {
-        draft.applicantName = applicantName;
-      }
-      if (panNumber && !draft.pan) {
-        draft.pan = panNumber;
-      }
-
-      return { draft, coiVerified: { filename, evidence: fields }, error: null };
-    }),
-
-  clearCoiExtraction: () => set({ coiVerified: null }),
 
   goTo: (stepId) => set({ stepId }),
 

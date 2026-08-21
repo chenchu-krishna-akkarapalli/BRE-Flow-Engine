@@ -73,12 +73,13 @@ INDIVIDUAL_SALARIED: Dict[str, Any] = {
     },
     "occupation": {
         "profileType": "Salaried",
-        "employerType": "Private Sector",
+        "employerType": "Employment-Pvt Ltd",
         "tenureBand": "2y+",
         "grossSalary": 50000.0,
         "salaryMode": "Salary payment mode- Bank Credit",
         "form16Status": "Form 16",
         "form16Years": 2,
+        "rentalIncomeTypeSalaried": "None",
     },
     "banking": {
         "existingAccountBank": "BOI",
@@ -266,7 +267,7 @@ def test_resi_cum_office_rented_requires_guarantor_decision():
     self_employed["occupation"] = {
         k: v for k, v in self_employed["occupation"].items()
         if k not in ("employerType", "tenureBand", "grossSalary", "salaryMode",
-                     "form16Status", "form16Years")
+                     "form16Status", "form16Years", "rentalIncomeTypeSalaried")
     }
 
     with pytest.raises(ValidationError, match="guarantorStatus is required"):

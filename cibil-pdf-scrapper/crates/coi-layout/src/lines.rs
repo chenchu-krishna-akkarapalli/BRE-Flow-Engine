@@ -57,71 +57,28 @@ pub fn group_lines(runs: &[TextRun<'_>]) -> Vec<Line> {
             current.push(run);
         } else {
             if !current.is_empty() {
-                lines.extend(flush(&current));
+                lines.push(flush(&current));
             }
             current = vec![run];
         }
     }
     if !current.is_empty() {
-        lines.extend(flush(&current));
+        lines.push(flush(&current));
     }
     lines
 }
 
-// Split horizontal run group if multi-column table gap follows an amount
-fn flush(group: &[&TextRun<'_>]) -> Vec<Line> {
+fn flush(group: &[&TextRun<'_>]) -> Line {
     let mut sorted: Vec<&&TextRun<'_>> = group.iter().collect();
     sorted.sort_by(|a, b| a.bbox.x.partial_cmp(&b.bbox.x).unwrap_or(std::cmp::Ordering::Equal));
 
-    if sorted.is_empty() {
-        return Vec::new();
-    }
+    let bbox = sorted.iter().skip(1).fold(sorted[0].bbox, |acc, run| acc.union(&run.bbox));
 
-    let mut sub_groups: Vec<Vec<&&TextRun<'_>>> = Vec::new();
-    let mut current_sub: Vec<&&TextRun<'_>> = vec![sorted[0]];
-
-    for i in 0..sorted.len() - 1 {
-        let curr_run = sorted[i];
-        let next_run = sorted[i + 1];
-        let gap = next_run.bbox.x - curr_run.bbox.right();
-        let curr_text = curr_run.as_str().trim();
-
-        let is_curr_amount = is_numeric_amount(curr_text);
-
-        if gap >= 15.0 && is_curr_amount {
-            sub_groups.push(current_sub);
-            current_sub = vec![next_run];
-        } else {
-            current_sub.push(next_run);
-        }
-    }
-    sub_groups.push(current_sub);
-
-    sub_groups.into_iter().map(|sub| flush_single(&sub)).collect()
-}
-
-// Check if string represents a numeric amount or currency cell
-fn is_numeric_amount(text: &str) -> bool {
-    let t = text.trim();
-    if t.is_empty() {
-        return false;
-    }
-    if t.eq_ignore_ascii_case("NIL") || t == "-" || t.eq_ignore_ascii_case("Amount") {
-        return true;
-    }
-    let digits_count = t.chars().filter(|c| c.is_ascii_digit()).count();
-    let is_valid_chars = t.chars().all(|c| c.is_ascii_digit() || matches!(c, ',' | '.' | '(' | ')' | '-'));
-    digits_count > 0 && is_valid_chars
-}
-
-// Build a single Line from sorted text runs
-fn flush_single(group: &[&&TextRun<'_>]) -> Line {
-    let bbox = group.iter().skip(1).fold(group[0].bbox, |acc, run| acc.union(&run.bbox));
     Line {
-        page: group[0].page,
+        page: sorted[0].page,
         bbox,
-        segments: group.iter().map(|r| r.as_str().trim().to_string()).collect(),
-        segment_boxes: group.iter().map(|r| r.bbox).collect(),
+        segments: sorted.iter().map(|r| r.as_str().trim().to_string()).collect(),
+        segment_boxes: sorted.iter().map(|r| r.bbox).collect(),
     }
 }
 

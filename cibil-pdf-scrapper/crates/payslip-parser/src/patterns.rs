@@ -31,26 +31,6 @@ pub const DEDUCTIONS_HEADERS: &[&str] = &[
     "DEDUCTIONS", "DEDUCTION", "RECOVERIES", "TAXES & DEDUCTIONS",
 ];
 
-/// Labels that represent annual compensation or YTD tax figures, not monthly items.
-pub const ANNUAL_LABELS: &[&str] = &[
-    "COMPENSATION", "ANNUAL", "YTD", "PROJECTED", "CTC",
-    "TAXABLE INCOME", "RETAINER", "REPORTED BY THE EMPLOYEE",
-    "TAX PAYABLE", "TAX DEDUCTED SO FAR", "TAX DEDUCTED SO-FAR", "TAX PAYABLE/REFUNDABLE",
-    "CHAPTER VI-A", "CHAPTER - VIA", "EXEMPTION UNDER SECTION", "ADD ANY OTHER INCOME",
-    "OTHER SECTIONS UNDER", "TOTAL INCOME", "SEC 10 EXEMPTION",
-    "FORM 16", "FORM-16", "ANNUAL SUMMARY", "INCM UNDER SALARY HEAD",
-    "GROSS TOTAL INCOME", "TAX ON TOTAL INCOME", "TAX PAYABLE AND SURCHARG",
-    "TAX BREAKUP FOR THE FINANCIAL YEAR", "TAX BREAKUP", "FINANCIAL YEAR",
-    "ANNUAL GROSS INCOME", "TOTAL DEDUCTION FOR THE FINANCIAL YEAR", "NET TAX FOR THE FINANCIAL YEAR",
-    "TAX TO BE DEDUCTED", "INVESTMENT DETAILS", "ANNUAL INCOME", "FY 20", "FY20", "FY 2", "ANNUAL CTC",
-    "ANNUAL INCOME TAX", "TAX REGIME", "TAX UNDER NEW", "TAX UNDER OLD",
-];
-
-pub fn is_annual_row(label: &str) -> bool {
-    let upper = label.to_ascii_uppercase();
-    ANNUAL_LABELS.iter().any(|a| upper.contains(a))
-}
-
 /// Rows that are totals, not line items. Matched before line-item parsing so a
 /// "Total Earnings" row is never mistaken for another allowance.
 pub const TOTAL_LABELS: &[&str] = &[

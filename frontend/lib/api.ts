@@ -162,53 +162,6 @@ export async function extractCibilReport(file: File): Promise<CibilExtraction> {
   return (await response.json()) as CibilExtraction;
 }
 
-export interface PayslipExtraction {
-  filename: string;
-  extraction_status: string;
-  message: string;
-  extracted: Record<string, string | number | boolean | null>;
-}
-
-export async function extractPayslipReport(file: File): Promise<PayslipExtraction> {
-  const form = new FormData();
-  form.append("file", file);
-
-  const response = await fetch(`${API_BASE}/api/v1/onboarding/documents/payslip/extract`, {
-    method: "POST",
-    headers: { "X-Tenant-ID": TENANT_ID },
-    body: form,
-  });
-  if (!response.ok) {
-    const body = await response.json().catch(() => null);
-    throw new ApiError(response.status, body?.detail ?? `Payslip parsing failed (${response.status}).`);
-  }
-  return (await response.json()) as PayslipExtraction;
-}
-
-export interface CoiExtraction {
-  filename: string;
-  extraction_status: string;
-  message: string;
-  extracted: Record<string, unknown>;
-}
-
-// single concise context line
-export async function extractCoiReport(file: File): Promise<CoiExtraction> {
-  const form = new FormData();
-  form.append("file", file);
-
-  const response = await fetch(`${API_BASE}/api/v1/onboarding/documents/coi/extract`, {
-    method: "POST",
-    headers: { "X-Tenant-ID": TENANT_ID },
-    body: form,
-  });
-  if (!response.ok) {
-    const body = await response.json().catch(() => null);
-    throw new ApiError(response.status, body?.detail ?? `COI parsing failed (${response.status}).`);
-  }
-  return (await response.json()) as CoiExtraction;
-}
-
 export interface OtpChallenge {
   challenge_id: string;
   channel: "email" | "mobile";

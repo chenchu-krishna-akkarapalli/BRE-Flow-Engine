@@ -10,9 +10,6 @@ class EntityType(str, Enum):
 class OccupationType(str, Enum):
     SALARIED = "Salaried"
     SELF_EMPLOYED = "Self-Employed"
-    # add-on §7: a top-level category, not a secondary income question. A
-    # rentier has neither employment nor a business, so neither rule set binds.
-    RENTAL_INCOME = "Rental Income"
 
 
 class BusinessEntityType(str, Enum):
@@ -98,15 +95,11 @@ class ResidentDetails(str, Enum):
 
 
 class EmployerType(str, Enum):
-    """add-on §4: the five constitution options collapse to a sector split.
-
-    The distinction that changes underwriting is public vs private employment,
-    not the employer's legal form — a PSU and a government department are
-    scored alike, and a Pvt Ltd and a partnership firm are too.
-    """
-
-    PRIVATE_SECTOR = "Private Sector"
-    GOVERNMENT_SECTOR = "Government Sector"
+    PVT_LTD = "Employment-Pvt Ltd"
+    PUBLIC_LTD = "Employment-Public Ltd"
+    GOVT = "Employment-Govt"
+    PSU = "Employment-PSU"
+    FIRM = "Employment-Firm"
 
 
 class TenureBand(str, Enum):
@@ -139,16 +132,6 @@ class RentalIncomeType(str, Enum):
     AGREEMENT_NO_ITR_NOT_IN_BANK = "Rental Income-with Agreement -Not filed ITR-Not reflecting in Bank"
     AGREEMENT_ITR_NOT_IN_BANK = "Rental Income-with Agreement filed ITR- Not reflecting in Bank"
     AGREEMENT_NO_ITR_IN_BANK = "Rental Income-with Agreement -Not filed ITR-reflecting in Bank"
-
-    @property
-    def requires_itr(self) -> bool:
-        """The documentation option that is evidenced by filed returns."""
-        return self is RentalIncomeType.AGREEMENT_ITR_NOT_IN_BANK
-
-    @property
-    def requires_bank_statement(self) -> bool:
-        """The option evidenced by rent landing in the applicant's account."""
-        return self is RentalIncomeType.AGREEMENT_NO_ITR_IN_BANK
 
 
 class OfficeAddressType(str, Enum):
