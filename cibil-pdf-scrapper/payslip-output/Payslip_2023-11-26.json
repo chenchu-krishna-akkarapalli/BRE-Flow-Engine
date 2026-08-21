@@ -1,0 +1,1347 @@
+{
+  "deductions": [],
+  "earnings": [
+    {
+      "amount": null,
+      "label": "Basic Salary                            81,206.81   Income Tax                           41,338.00",
+      "raw_line": "Basic Salary                            81,206.81   Income Tax                           41,338.00"
+    },
+    {
+      "amount": null,
+      "label": "Special Allowance                      113,161.79   Ee PF contribution                    9,745.00",
+      "raw_line": "Special Allowance                      113,161.79   Ee PF contribution                    9,745.00"
+    },
+    {
+      "amount": null,
+      "label": "House Rent Allowance                    24,000.00   Prof Tax - Full period                  200.00",
+      "raw_line": "House Rent Allowance                    24,000.00   Prof Tax - Full period                  200.00"
+    },
+    {
+      "amount": null,
+      "label": "Rounding off adjustment                  -0.40",
+      "raw_line": "Rounding off adjustment                  -0.40"
+    },
+    {
+      "amount": null,
+      "label": "(*) denotes back pay adjustment.",
+      "raw_line": "(*) denotes back pay adjustment."
+    },
+    {
+      "amount": null,
+      "label": "ONE LAKH SIXTY SEVEN THOUSAND EIGHTY SIX RUPEES",
+      "raw_line": "ONE LAKH SIXTY SEVEN THOUSAND EIGHTY SIX RUPEES"
+    },
+    {
+      "amount": null,
+      "label": "Bank Name - HDFC BANK                                Bank account - 04861610082423",
+      "raw_line": "Bank Name - HDFC BANK                                Bank account - 04861610082423"
+    },
+    {
+      "amount": null,
+      "label": "CTC Details",
+      "raw_line": "CTC Details"
+    },
+    {
+      "amount": null,
+      "label": "Basic                                  974,481.74  on 1800-572-5675 or raise a ticket using the",
+      "raw_line": "Basic                                  974,481.74  on 1800-572-5675 or raise a ticket using the"
+    },
+    {
+      "amount": null,
+      "label": "Provident Fund                         116,937.81  'Service Portal' icon on the myView page.",
+      "raw_line": "Provident Fund                         116,937.81  'Service Portal' icon on the myView page."
+    },
+    {
+      "amount": null,
+      "label": "Gratuity                                46,872.57  Refer to Workday -> View All Apps -> Time ->",
+      "raw_line": "Gratuity                                46,872.57  Refer to Workday -> View All Apps -> Time ->"
+    },
+    {
+      "amount": null,
+      "label": "Flexible Allowance                   1,645,941.44  View -> with regards to Shift/On call Allowance",
+      "raw_line": "Flexible Allowance                   1,645,941.44  View -> with regards to Shift/On call Allowance"
+    },
+    {
+      "amount": null,
+      "label": "(if approved before 10th of payroll month)",
+      "raw_line": "(if approved before 10th of payroll month)"
+    },
+    {
+      "amount": null,
+      "label": "For further queries on workday Time & Absence",
+      "raw_line": "For further queries on workday Time & Absence"
+    },
+    {
+      "amount": null,
+      "label": "please raise a ticket at",
+      "raw_line": "please raise a ticket at"
+    },
+    {
+      "amount": null,
+      "label": "https://wellsfargoprod.servicenowservices.com/hrss",
+      "raw_line": "https://wellsfargoprod.servicenowservices.com/hrss"
+    },
+    {
+      "amount": null,
+      "label": "To claim On Call / Shift Allowance or for Approval Status",
+      "raw_line": "To claim On Call / Shift Allowance or for Approval Status"
+    },
+    {
+      "amount": null,
+      "label": "Log into workday",
+      "raw_line": "Log into workday"
+    },
+    {
+      "amount": null,
+      "label": "**This is system generated payslip and does not require signature and stamp.",
+      "raw_line": "**This is system generated payslip and does not require signature and stamp."
+    }
+  ],
+  "employee": {
+    "bank_account": null,
+    "date_of_joining": null,
+    "department": null,
+    "designation": "102081                              Date of Joining : 06.07.2020",
+    "employee_id": "00001938865",
+    "esi_number": null,
+    "name": "Amit Handoo",
+    "pan": "AEMPH0514G                          LOP Reversal    :",
+    "pf_number": null,
+    "uan": "100691662566                        Service Date    : 06.07.2020"
+  },
+  "employer": {
+    "address": null,
+    "name": "Wells Fargo International Solutions Private Limited"
+  },
+  "format": "generic-payslip",
+  "gross_earnings": {
+    "paise": 21836860,
+    "raw": "218,368.60"
+  },
+  "net_pay": {
+    "paise": 16708600,
+    "raw": "167,086.00"
+  },
+  "net_pay_words": null,
+  "period": {
+    "lop_days": null,
+    "month": "November",
+    "paid_days": "30",
+    "raw": "Payslip for the month of November 2023",
+    "year": 2023
+  },
+  "raw": {
+    "lines": [
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 331.2001037597656,
+          "x": 28.350000381469727,
+          "y": 70.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 331.2001037597656,
+            "x": 28.350000381469727,
+            "y": 70.5
+          }
+        ],
+        "segments": [
+          "Wells Fargo International Solutions Private Limited"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 268.80010986328125,
+          "x": 28.350000381469727,
+          "y": 88.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 268.80010986328125,
+            "x": 28.350000381469727,
+            "y": 88.5
+          }
+        ],
+        "segments": [
+          "Payslip for the month of November 2023"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 139.20004272460938,
+          "x": 28.350000381469727,
+          "y": 115.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 139.20004272460938,
+            "x": 28.350000381469727,
+            "y": 115.5
+          }
+        ],
+        "segments": [
+          "Employee Name : Amit Handoo"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 139.20004272460938,
+          "x": 28.350000381469727,
+          "y": 124.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 139.20004272460938,
+            "x": 28.350000381469727,
+            "y": 124.5
+          }
+        ],
+        "segments": [
+          "Employee ID   : 00001938865"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 393.60015869140625,
+          "x": 28.350000381469727,
+          "y": 133.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 393.60015869140625,
+            "x": 28.350000381469727,
+            "y": 133.5
+          }
+        ],
+        "segments": [
+          "Grade         : 102081                              Date of Joining : 06.07.2020"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 244.80010986328125,
+          "x": 28.350000381469727,
+          "y": 142.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 244.80010986328125,
+            "x": 28.350000381469727,
+            "y": 142.5
+          }
+        ],
+        "segments": [
+          "Designation   : Lead Information Security Analyst"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 110.4000244140625,
+          "x": 273.1501159667969,
+          "y": 151.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 110.4000244140625,
+            "x": 273.1501159667969,
+            "y": 151.5
+          }
+        ],
+        "segments": [
+          "Paid Days       : 30"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 340.8001403808594,
+          "x": 28.350000381469727,
+          "y": 160.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 340.8001403808594,
+            "x": 28.350000381469727,
+            "y": 160.5
+          }
+        ],
+        "segments": [
+          "Location      : Karnataka                           LOP Current     :"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 340.8001403808594,
+          "x": 28.350000381469727,
+          "y": 169.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 340.8001403808594,
+            "x": 28.350000381469727,
+            "y": 169.5
+          }
+        ],
+        "segments": [
+          "Cost center   : 154851                              LOP Arrear      :"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 340.8001403808594,
+          "x": 28.350000381469727,
+          "y": 178.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 340.8001403808594,
+            "x": 28.350000381469727,
+            "y": 178.5
+          }
+        ],
+        "segments": [
+          "PAN Number    : AEMPH0514G                          LOP Reversal    :"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 393.60015869140625,
+          "x": 28.350000381469727,
+          "y": 187.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 393.60015869140625,
+            "x": 28.350000381469727,
+            "y": 187.5
+          }
+        ],
+        "segments": [
+          "UAN Number    : 100691662566                        Service Date    : 06.07.2020"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 480.0002136230469,
+          "x": 28.350000381469727,
+          "y": 214.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 480.0002136230469,
+            "x": 28.350000381469727,
+            "y": 214.5
+          }
+        ],
+        "segments": [
+          "Earnings & Allowances                      Amount   Deductions                              Amount"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 484.8002014160156,
+          "x": 28.350000381469727,
+          "y": 232.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 484.8002014160156,
+            "x": 28.350000381469727,
+            "y": 232.5
+          }
+        ],
+        "segments": [
+          "Basic Salary                            81,206.81   Income Tax                           41,338.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 484.8002014160156,
+          "x": 28.350000381469727,
+          "y": 241.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 484.8002014160156,
+            "x": 28.350000381469727,
+            "y": 241.5
+          }
+        ],
+        "segments": [
+          "Special Allowance                      113,161.79   Ee PF contribution                    9,745.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 484.8002014160156,
+          "x": 28.350000381469727,
+          "y": 250.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 484.8002014160156,
+            "x": 28.350000381469727,
+            "y": 250.5
+          }
+        ],
+        "segments": [
+          "House Rent Allowance                    24,000.00   Prof Tax - Full period                  200.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 240.00009155273438,
+          "x": 273.1501159667969,
+          "y": 259.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 240.00009155273438,
+            "x": 273.1501159667969,
+            "y": 259.5
+          }
+        ],
+        "segments": [
+          "Rounding off adjustment                  -0.40"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 163.20005798339844,
+          "x": 28.350000381469727,
+          "y": 367.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 163.20005798339844,
+            "x": 28.350000381469727,
+            "y": 367.5
+          }
+        ],
+        "segments": [
+          "(*) denotes back pay adjustment."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 484.8002014160156,
+          "x": 28.350000381469727,
+          "y": 385.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 484.8002014160156,
+            "x": 28.350000381469727,
+            "y": 385.5
+          }
+        ],
+        "segments": [
+          "Gross Earnings                          218,368.60   Gross Deductions                     51,282.60"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 240.00009155273438,
+          "x": 273.1501159667969,
+          "y": 403.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 240.00009155273438,
+            "x": 273.1501159667969,
+            "y": 403.5
+          }
+        ],
+        "segments": [
+          "Net pay                             167,086.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 235.20010375976562,
+          "x": 28.350000381469727,
+          "y": 421.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 235.20010375976562,
+            "x": 28.350000381469727,
+            "y": 421.5
+          }
+        ],
+        "segments": [
+          "ONE LAKH SIXTY SEVEN THOUSAND EIGHTY SIX RUPEES"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 403.2001647949219,
+          "x": 28.350000381469727,
+          "y": 430.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 403.2001647949219,
+            "x": 28.350000381469727,
+            "y": 430.5
+          }
+        ],
+        "segments": [
+          "Bank Name - HDFC BANK                                Bank account - 04861610082423"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 148.800048828125,
+          "x": 28.350000381469727,
+          "y": 466.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 148.800048828125,
+            "x": 28.350000381469727,
+            "y": 466.5
+          }
+        ],
+        "segments": [
+          "CTC Details"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 484.8002014160156,
+          "x": 28.350000381469727,
+          "y": 484.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 484.8002014160156,
+            "x": 28.350000381469727,
+            "y": 484.5
+          }
+        ],
+        "segments": [
+          "Total Base Pay                       2,784,233.56  For payroll queries please contact ADP helpdesk"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 470.40020751953125,
+          "x": 28.350000381469727,
+          "y": 493.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 470.40020751953125,
+            "x": 28.350000381469727,
+            "y": 493.5
+          }
+        ],
+        "segments": [
+          "Basic                                  974,481.74  on 1800-572-5675 or raise a ticket using the"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 456.0002136230469,
+          "x": 28.350000381469727,
+          "y": 502.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 456.0002136230469,
+            "x": 28.350000381469727,
+            "y": 502.5
+          }
+        ],
+        "segments": [
+          "Provident Fund                         116,937.81  'Service Portal' icon on the myView page."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 470.40020751953125,
+          "x": 28.350000381469727,
+          "y": 511.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 470.40020751953125,
+            "x": 28.350000381469727,
+            "y": 511.5
+          }
+        ],
+        "segments": [
+          "Gratuity                                46,872.57  Refer to Workday -> View All Apps -> Time ->"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 484.8002014160156,
+          "x": 28.350000381469727,
+          "y": 520.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 484.8002014160156,
+            "x": 28.350000381469727,
+            "y": 520.5
+          }
+        ],
+        "segments": [
+          "Flexible Allowance                   1,645,941.44  View -> with regards to Shift/On call Allowance"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 216.00009155273438,
+          "x": 273.1501159667969,
+          "y": 529.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 216.00009155273438,
+            "x": 273.1501159667969,
+            "y": 529.5
+          }
+        ],
+        "segments": [
+          "(if approved before 10th of payroll month)"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 230.40011596679688,
+          "x": 273.1501159667969,
+          "y": 556.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 230.40011596679688,
+            "x": 273.1501159667969,
+            "y": 556.5
+          }
+        ],
+        "segments": [
+          "For further queries on workday Time & Absence"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 129.60003662109375,
+          "x": 273.1501159667969,
+          "y": 565.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 129.60003662109375,
+            "x": 273.1501159667969,
+            "y": 565.5
+          }
+        ],
+        "segments": [
+          "please raise a ticket at"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 254.40005493164062,
+          "x": 273.1501159667969,
+          "y": 574.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 254.40005493164062,
+            "x": 273.1501159667969,
+            "y": 574.5
+          }
+        ],
+        "segments": [
+          "https://wellsfargoprod.servicenowservices.com/hrss"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 288.0000915527344,
+          "x": 273.1501159667969,
+          "y": 583.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 288.0000915527344,
+            "x": 273.1501159667969,
+            "y": 583.5
+          }
+        ],
+        "segments": [
+          "To claim On Call / Shift Allowance or for Approval Status"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 91.20001220703125,
+          "x": 273.1501159667969,
+          "y": 592.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 91.20001220703125,
+            "x": 273.1501159667969,
+            "y": 592.5
+          }
+        ],
+        "segments": [
+          "Log into workday"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 374.400146484375,
+          "x": 28.350000381469727,
+          "y": 646.5
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 374.400146484375,
+            "x": 28.350000381469727,
+            "y": 646.5
+          }
+        ],
+        "segments": [
+          "**This is system generated payslip and does not require signature and stamp."
+        ]
+      }
+    ],
+    "page_count": 1,
+    "table": {
+      "columns": [
+        [
+          28.350000381469727,
+          513.1502075195312
+        ],
+        [
+          273.1501159667969,
+          561.1502075195312
+        ]
+      ],
+      "rows": [
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 331.2001037597656,
+                "x": 28.350000381469727,
+                "y": 70.5
+              },
+              "column": 0,
+              "text": "Wells Fargo International Solutions Private Limited"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 268.80010986328125,
+                "x": 28.350000381469727,
+                "y": 88.5
+              },
+              "column": 0,
+              "text": "Payslip for the month of November 2023"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 139.20004272460938,
+                "x": 28.350000381469727,
+                "y": 115.5
+              },
+              "column": 0,
+              "text": "Employee Name : Amit Handoo"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 139.20004272460938,
+                "x": 28.350000381469727,
+                "y": 124.5
+              },
+              "column": 0,
+              "text": "Employee ID   : 00001938865"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 393.60015869140625,
+                "x": 28.350000381469727,
+                "y": 133.5
+              },
+              "column": 0,
+              "text": "Grade         : 102081                              Date of Joining : 06.07.2020"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 244.80010986328125,
+                "x": 28.350000381469727,
+                "y": 142.5
+              },
+              "column": 0,
+              "text": "Designation   : Lead Information Security Analyst"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 110.4000244140625,
+                "x": 273.1501159667969,
+                "y": 151.5
+              },
+              "column": 1,
+              "text": "Paid Days       : 30"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 340.8001403808594,
+                "x": 28.350000381469727,
+                "y": 160.5
+              },
+              "column": 0,
+              "text": "Location      : Karnataka                           LOP Current     :"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 340.8001403808594,
+                "x": 28.350000381469727,
+                "y": 169.5
+              },
+              "column": 0,
+              "text": "Cost center   : 154851                              LOP Arrear      :"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 340.8001403808594,
+                "x": 28.350000381469727,
+                "y": 178.5
+              },
+              "column": 0,
+              "text": "PAN Number    : AEMPH0514G                          LOP Reversal    :"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 393.60015869140625,
+                "x": 28.350000381469727,
+                "y": 187.5
+              },
+              "column": 0,
+              "text": "UAN Number    : 100691662566                        Service Date    : 06.07.2020"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 480.0002136230469,
+                "x": 28.350000381469727,
+                "y": 214.5
+              },
+              "column": 0,
+              "text": "Earnings & Allowances                      Amount   Deductions                              Amount"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 484.8002014160156,
+                "x": 28.350000381469727,
+                "y": 232.5
+              },
+              "column": 0,
+              "text": "Basic Salary                            81,206.81   Income Tax                           41,338.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 484.8002014160156,
+                "x": 28.350000381469727,
+                "y": 241.5
+              },
+              "column": 0,
+              "text": "Special Allowance                      113,161.79   Ee PF contribution                    9,745.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 484.8002014160156,
+                "x": 28.350000381469727,
+                "y": 250.5
+              },
+              "column": 0,
+              "text": "House Rent Allowance                    24,000.00   Prof Tax - Full period                  200.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 240.00009155273438,
+                "x": 273.1501159667969,
+                "y": 259.5
+              },
+              "column": 1,
+              "text": "Rounding off adjustment                  -0.40"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 163.20005798339844,
+                "x": 28.350000381469727,
+                "y": 367.5
+              },
+              "column": 0,
+              "text": "(*) denotes back pay adjustment."
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 484.8002014160156,
+                "x": 28.350000381469727,
+                "y": 385.5
+              },
+              "column": 0,
+              "text": "Gross Earnings                          218,368.60   Gross Deductions                     51,282.60"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 240.00009155273438,
+                "x": 273.1501159667969,
+                "y": 403.5
+              },
+              "column": 1,
+              "text": "Net pay                             167,086.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 235.20010375976562,
+                "x": 28.350000381469727,
+                "y": 421.5
+              },
+              "column": 0,
+              "text": "ONE LAKH SIXTY SEVEN THOUSAND EIGHTY SIX RUPEES"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 403.2001647949219,
+                "x": 28.350000381469727,
+                "y": 430.5
+              },
+              "column": 0,
+              "text": "Bank Name - HDFC BANK                                Bank account - 04861610082423"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 148.800048828125,
+                "x": 28.350000381469727,
+                "y": 466.5
+              },
+              "column": 0,
+              "text": "CTC Details"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 484.8002014160156,
+                "x": 28.350000381469727,
+                "y": 484.5
+              },
+              "column": 0,
+              "text": "Total Base Pay                       2,784,233.56  For payroll queries please contact ADP helpdesk"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 470.40020751953125,
+                "x": 28.350000381469727,
+                "y": 493.5
+              },
+              "column": 0,
+              "text": "Basic                                  974,481.74  on 1800-572-5675 or raise a ticket using the"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 456.0002136230469,
+                "x": 28.350000381469727,
+                "y": 502.5
+              },
+              "column": 0,
+              "text": "Provident Fund                         116,937.81  'Service Portal' icon on the myView page."
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 470.40020751953125,
+                "x": 28.350000381469727,
+                "y": 511.5
+              },
+              "column": 0,
+              "text": "Gratuity                                46,872.57  Refer to Workday -> View All Apps -> Time ->"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 484.8002014160156,
+                "x": 28.350000381469727,
+                "y": 520.5
+              },
+              "column": 0,
+              "text": "Flexible Allowance                   1,645,941.44  View -> with regards to Shift/On call Allowance"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 216.00009155273438,
+                "x": 273.1501159667969,
+                "y": 529.5
+              },
+              "column": 1,
+              "text": "(if approved before 10th of payroll month)"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 230.40011596679688,
+                "x": 273.1501159667969,
+                "y": 556.5
+              },
+              "column": 1,
+              "text": "For further queries on workday Time & Absence"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 129.60003662109375,
+                "x": 273.1501159667969,
+                "y": 565.5
+              },
+              "column": 1,
+              "text": "please raise a ticket at"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 254.40005493164062,
+                "x": 273.1501159667969,
+                "y": 574.5
+              },
+              "column": 1,
+              "text": "https://wellsfargoprod.servicenowservices.com/hrss"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 288.0000915527344,
+                "x": 273.1501159667969,
+                "y": 583.5
+              },
+              "column": 1,
+              "text": "To claim On Call / Shift Allowance or for Approval Status"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 91.20001220703125,
+                "x": 273.1501159667969,
+                "y": 592.5
+              },
+              "column": 1,
+              "text": "Log into workday"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 374.400146484375,
+                "x": 28.350000381469727,
+                "y": 646.5
+              },
+              "column": 0,
+              "text": "**This is system generated payslip and does not require signature and stamp."
+            }
+          ],
+          "page": 1
+        }
+      ]
+    }
+  },
+  "source": "Payslip_2023-11-26.pdf",
+  "total_deductions": {
+    "paise": 5128260,
+    "raw": "51,282.60"
+  }
+}

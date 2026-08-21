@@ -1,0 +1,7928 @@
+{
+  "deductions": [
+    {
+      "amount": {
+        "paise": 5008300,
+        "raw": "50,083.00"
+      },
+      "label": "Uber Credit Deduction",
+      "raw_line": "Basic 50,083.00 50,083.00 Uber Credit Deduction 4,770.00 4,770.00"
+    },
+    {
+      "amount": {
+        "paise": 2003300,
+        "raw": "20,033.00"
+      },
+      "label": "Provident Fund",
+      "raw_line": "House Rent Allowance 20,033.00 20,033.00 Provident Fund 6,010.00 6,010.00"
+    },
+    {
+      "amount": {
+        "paise": 20000,
+        "raw": "200.00"
+      },
+      "label": "Professional Tax",
+      "raw_line": "Children Education Allowance 200.00 200.00 Professional Tax 200.00 200.00"
+    },
+    {
+      "amount": {
+        "paise": 300000,
+        "raw": "3,000.00"
+      },
+      "label": "ESPP B",
+      "raw_line": "Home Telephone / Internet Allowance 3,000.00 3,000.00 ESPP B 15,025.00 15,025.00"
+    },
+    {
+      "amount": {
+        "paise": 2685000,
+        "raw": "26,850.00"
+      },
+      "label": "Special Allowance",
+      "raw_line": "Special Allowance 26,850.00 26,850.00"
+    },
+    {
+      "amount": {
+        "paise": 421700,
+        "raw": "4,217.00"
+      },
+      "label": "Cell Phone Allowance",
+      "raw_line": "Cell Phone Allowance 4,217.00 4,217.00"
+    },
+    {
+      "amount": {
+        "paise": 477000,
+        "raw": "4,770.00"
+      },
+      "label": "Uber Credit",
+      "raw_line": "Uber Credit 4,770.00 4,770.00"
+    },
+    {
+      "amount": {
+        "paise": 5020400,
+        "raw": "50204"
+      },
+      "label": "Cost Center",
+      "raw_line": "Department 9008900150204 Cost Center 50204 PF No. THTHA13315390000014846"
+    },
+    {
+      "amount": {
+        "paise": 10016600,
+        "raw": "100,166.00"
+      },
+      "label": "Uber Credit Deduction",
+      "raw_line": "Basic 50,083.00 100,166.00 Uber Credit Deduction 4,187.00 8,957.00"
+    },
+    {
+      "amount": {
+        "paise": 4006600,
+        "raw": "40,066.00"
+      },
+      "label": "Provident Fund",
+      "raw_line": "House Rent Allowance 20,033.00 40,066.00 Provident Fund 6,010.00 12,020.00"
+    },
+    {
+      "amount": {
+        "paise": 40000,
+        "raw": "400.00"
+      },
+      "label": "Professional Tax",
+      "raw_line": "Children Education Allowance 200.00 400.00 Professional Tax 200.00 400.00"
+    },
+    {
+      "amount": {
+        "paise": 600000,
+        "raw": "6,000.00"
+      },
+      "label": "ESPP B",
+      "raw_line": "Home Telephone / Internet Allowance 3,000.00 6,000.00 ESPP B 0.00 15,025.00"
+    },
+    {
+      "amount": {
+        "paise": 5370000,
+        "raw": "53,700.00"
+      },
+      "label": "ESPP A",
+      "raw_line": "Special Allowance 26,850.00 53,700.00 ESPP A 15,025.00 15,025.00"
+    },
+    {
+      "amount": {
+        "paise": 843400,
+        "raw": "8,434.00"
+      },
+      "label": "Cell Phone Allowance",
+      "raw_line": "Cell Phone Allowance 4,217.00 8,434.00"
+    },
+    {
+      "amount": {
+        "paise": 895700,
+        "raw": "8,957.00"
+      },
+      "label": "Uber Credit",
+      "raw_line": "Uber Credit 4,187.00 8,957.00"
+    },
+    {
+      "amount": {
+        "paise": 5020400,
+        "raw": "50204"
+      },
+      "label": "Cost Center",
+      "raw_line": "Department 9008900150204 Cost Center 50204 PF No. THTHA13315390000014846"
+    },
+    {
+      "amount": {
+        "paise": 15024900,
+        "raw": "150,249.00"
+      },
+      "label": "Uber Credit Deduction",
+      "raw_line": "Basic 50,083.00 150,249.00 Uber Credit Deduction 4,140.00 13,097.00"
+    },
+    {
+      "amount": {
+        "paise": 6009900,
+        "raw": "60,099.00"
+      },
+      "label": "Provident Fund",
+      "raw_line": "House Rent Allowance 20,033.00 60,099.00 Provident Fund 6,010.00 18,030.00"
+    },
+    {
+      "amount": {
+        "paise": 60000,
+        "raw": "600.00"
+      },
+      "label": "Professional Tax",
+      "raw_line": "Children Education Allowance 200.00 600.00 Professional Tax 200.00 600.00"
+    },
+    {
+      "amount": {
+        "paise": 900000,
+        "raw": "9,000.00"
+      },
+      "label": "ESPP B",
+      "raw_line": "Home Telephone / Internet Allowance 3,000.00 9,000.00 ESPP B 0.00 15,025.00"
+    },
+    {
+      "amount": {
+        "paise": 8055000,
+        "raw": "80,550.00"
+      },
+      "label": "ESPP A",
+      "raw_line": "Special Allowance 26,850.00 80,550.00 ESPP A 15,025.00 30,050.00"
+    },
+    {
+      "amount": {
+        "paise": 1265100,
+        "raw": "12,651.00"
+      },
+      "label": "Income Tax",
+      "raw_line": "Cell Phone Allowance 4,217.00 12,651.00 Income Tax 19,030.00 19,030.00"
+    },
+    {
+      "amount": {
+        "paise": 1249700,
+        "raw": "12,497.00"
+      },
+      "label": "Well-being Allowance",
+      "raw_line": "Well-being Allowance 12,497.00 12,497.00"
+    },
+    {
+      "amount": {
+        "paise": 1309700,
+        "raw": "13,097.00"
+      },
+      "label": "Uber Credit",
+      "raw_line": "Uber Credit 4,140.00 13,097.00"
+    },
+    {
+      "amount": {
+        "paise": 441000,
+        "raw": "4,410.00"
+      },
+      "label": "ESPP B Refund",
+      "raw_line": "ESPP B Refund 4,410.00 4,410.00"
+    },
+    {
+      "amount": {
+        "paise": 6694200,
+        "raw": "66942"
+      },
+      "label": "ESPP Gain",
+      "raw_line": "ESPP Gain 66942 66942"
+    }
+  ],
+  "earnings": [
+    {
+      "amount": {
+        "paise": 5008300,
+        "raw": "50,083.00"
+      },
+      "label": "Basic",
+      "raw_line": "Basic 50,083.00 50,083.00 Uber Credit Deduction 4,770.00 4,770.00"
+    },
+    {
+      "amount": {
+        "paise": 2003300,
+        "raw": "20,033.00"
+      },
+      "label": "House Rent Allowance",
+      "raw_line": "House Rent Allowance 20,033.00 20,033.00 Provident Fund 6,010.00 6,010.00"
+    },
+    {
+      "amount": {
+        "paise": 20000,
+        "raw": "200.00"
+      },
+      "label": "Children Education Allowance",
+      "raw_line": "Children Education Allowance 200.00 200.00 Professional Tax 200.00 200.00"
+    },
+    {
+      "amount": {
+        "paise": 300000,
+        "raw": "3,000.00"
+      },
+      "label": "Home Telephone / Internet Allowance",
+      "raw_line": "Home Telephone / Internet Allowance 3,000.00 3,000.00 ESPP B 15,025.00 15,025.00"
+    },
+    {
+      "amount": {
+        "paise": 2685000,
+        "raw": "26,850.00"
+      },
+      "label": "Special Allowance",
+      "raw_line": "Special Allowance 26,850.00 26,850.00"
+    },
+    {
+      "amount": {
+        "paise": 421700,
+        "raw": "4,217.00"
+      },
+      "label": "Cell Phone Allowance",
+      "raw_line": "Cell Phone Allowance 4,217.00 4,217.00"
+    },
+    {
+      "amount": {
+        "paise": 477000,
+        "raw": "4,770.00"
+      },
+      "label": "Uber Credit",
+      "raw_line": "Uber Credit 4,770.00 4,770.00"
+    },
+    {
+      "amount": null,
+      "label": "In Words    Rupees Eighty Three Thousand One Hundred and Forty Eight Only.",
+      "raw_line": "In Words    Rupees Eighty Three Thousand One Hundred and Forty Eight Only."
+    },
+    {
+      "amount": null,
+      "label": "Perquisites",
+      "raw_line": "Perquisites Amount YTD"
+    },
+    {
+      "amount": null,
+      "label": "Days In Month (A)",
+      "raw_line": "Days In Month (A) Arrear Days (B) LOPR Days(C) LOP Days (D) Net Days Worked"
+    },
+    {
+      "amount": null,
+      "label": "(E = A + B + C - D)",
+      "raw_line": "(E = A + B + C - D)"
+    },
+    {
+      "amount": null,
+      "label": "This document contains confidential information. If you are not the intended recipient you are not authorized to use or disclose it in any form.",
+      "raw_line": "This document contains confidential information. If you are not the intended recipient you are not authorized to use or disclose it in any form."
+    },
+    {
+      "amount": null,
+      "label": "If you received this in error please destroy it along with any copies and notify the sender immediately.",
+      "raw_line": "If you received this in error please destroy it along with any copies and notify the sender immediately."
+    },
+    {
+      "amount": null,
+      "label": "UBER INDIA SYSTEMS PRIVATE LIMITED",
+      "raw_line": "UBER INDIA SYSTEMS PRIVATE LIMITED"
+    },
+    {
+      "amount": null,
+      "label": "LEVEL 13 REGUS PLATINUM, BUSINESS CENTRE PVT LTD",
+      "raw_line": "LEVEL 13 REGUS PLATINUM, BUSINESS CENTRE PVT LTD"
+    },
+    {
+      "amount": null,
+      "label": "PLOT NO 17/18 SECTOR 30",
+      "raw_line": "PLOT NO 17/18 SECTOR 30"
+    },
+    {
+      "amount": null,
+      "label": "AB PLATINUM TECHNO PARK, NAVI MUMBAI",
+      "raw_line": "AB PLATINUM TECHNO PARK, NAVI MUMBAI"
+    },
+    {
+      "amount": null,
+      "label": "PAYSLIP FOR THE MONTH OF MAY  2025",
+      "raw_line": "PAYSLIP FOR THE MONTH OF MAY  2025"
+    },
+    {
+      "amount": {
+        "paise": 15221000,
+        "raw": "152210"
+      },
+      "label": "Emp Code",
+      "raw_line": "Emp Code 152210 Emp Name Harish H S"
+    },
+    {
+      "amount": {
+        "paise": 900890015020400,
+        "raw": "9008900150204"
+      },
+      "label": "Department",
+      "raw_line": "Department 9008900150204 Cost Center 50204 PF No. THTHA13315390000014846"
+    },
+    {
+      "amount": null,
+      "label": "Location",
+      "raw_line": "Location Bangalore 3006 Designation Payroll Specialist ESI No."
+    },
+    {
+      "amount": {
+        "paise": 14200151443000,
+        "raw": "142001514430"
+      },
+      "label": "Date of Birth",
+      "raw_line": "Date of Birth 25-JUN-1990 Bank A/c No 142001514430 Pan No. AJWPH4128H"
+    },
+    {
+      "amount": null,
+      "label": "Date of Joining",
+      "raw_line": "Date of Joining 01-DEC-2023 Gender M EPS No."
+    },
+    {
+      "amount": {
+        "paise": 10060235134700,
+        "raw": "100602351347"
+      },
+      "label": "UAN",
+      "raw_line": "UAN 100602351347 Global Date of Joining 14-09-2020"
+    },
+    {
+      "amount": null,
+      "label": "Regime Type",
+      "raw_line": "Regime Type New Regime PAN Aadhaar Linking Status Linked"
+    },
+    {
+      "amount": {
+        "paise": 5008300,
+        "raw": "50,083.00"
+      },
+      "label": "Basic",
+      "raw_line": "Basic 50,083.00 100,166.00 Uber Credit Deduction 4,187.00 8,957.00"
+    },
+    {
+      "amount": {
+        "paise": 2003300,
+        "raw": "20,033.00"
+      },
+      "label": "House Rent Allowance",
+      "raw_line": "House Rent Allowance 20,033.00 40,066.00 Provident Fund 6,010.00 12,020.00"
+    },
+    {
+      "amount": {
+        "paise": 20000,
+        "raw": "200.00"
+      },
+      "label": "Children Education Allowance",
+      "raw_line": "Children Education Allowance 200.00 400.00 Professional Tax 200.00 400.00"
+    },
+    {
+      "amount": {
+        "paise": 300000,
+        "raw": "3,000.00"
+      },
+      "label": "Home Telephone / Internet Allowance",
+      "raw_line": "Home Telephone / Internet Allowance 3,000.00 6,000.00 ESPP B 0.00 15,025.00"
+    },
+    {
+      "amount": {
+        "paise": 2685000,
+        "raw": "26,850.00"
+      },
+      "label": "Special Allowance",
+      "raw_line": "Special Allowance 26,850.00 53,700.00 ESPP A 15,025.00 15,025.00"
+    },
+    {
+      "amount": {
+        "paise": 421700,
+        "raw": "4,217.00"
+      },
+      "label": "Cell Phone Allowance",
+      "raw_line": "Cell Phone Allowance 4,217.00 8,434.00"
+    },
+    {
+      "amount": {
+        "paise": 418700,
+        "raw": "4,187.00"
+      },
+      "label": "Uber Credit",
+      "raw_line": "Uber Credit 4,187.00 8,957.00"
+    },
+    {
+      "amount": null,
+      "label": "In Words    Rupees Eighty Three Thousand One Hundred and Forty Eight Only.",
+      "raw_line": "In Words    Rupees Eighty Three Thousand One Hundred and Forty Eight Only."
+    },
+    {
+      "amount": null,
+      "label": "Perquisites",
+      "raw_line": "Perquisites Amount YTD"
+    },
+    {
+      "amount": null,
+      "label": "Days In Month (A)",
+      "raw_line": "Days In Month (A) Arrear Days (B) LOPR Days(C) LOP Days (D) Net Days Worked"
+    },
+    {
+      "amount": null,
+      "label": "(E = A + B + C - D)",
+      "raw_line": "(E = A + B + C - D)"
+    },
+    {
+      "amount": null,
+      "label": "This document contains confidential information. If you are not the intended recipient you are not authorized to use or disclose it in any form.",
+      "raw_line": "This document contains confidential information. If you are not the intended recipient you are not authorized to use or disclose it in any form."
+    },
+    {
+      "amount": null,
+      "label": "If you received this in error please destroy it along with any copies and notify the sender immediately.",
+      "raw_line": "If you received this in error please destroy it along with any copies and notify the sender immediately."
+    },
+    {
+      "amount": null,
+      "label": "UBER INDIA SYSTEMS PRIVATE LIMITED",
+      "raw_line": "UBER INDIA SYSTEMS PRIVATE LIMITED"
+    },
+    {
+      "amount": null,
+      "label": "LEVEL 13 REGUS PLATINUM, BUSINESS CENTRE PVT LTD",
+      "raw_line": "LEVEL 13 REGUS PLATINUM, BUSINESS CENTRE PVT LTD"
+    },
+    {
+      "amount": null,
+      "label": "PLOT NO 17/18 SECTOR 30",
+      "raw_line": "PLOT NO 17/18 SECTOR 30"
+    },
+    {
+      "amount": null,
+      "label": "AB PLATINUM TECHNO PARK, NAVI MUMBAI",
+      "raw_line": "AB PLATINUM TECHNO PARK, NAVI MUMBAI"
+    },
+    {
+      "amount": null,
+      "label": "PAYSLIP FOR THE MONTH OF JUNE  2025",
+      "raw_line": "PAYSLIP FOR THE MONTH OF JUNE  2025"
+    },
+    {
+      "amount": {
+        "paise": 15221000,
+        "raw": "152210"
+      },
+      "label": "Emp Code",
+      "raw_line": "Emp Code 152210 Emp Name Harish H S"
+    },
+    {
+      "amount": {
+        "paise": 900890015020400,
+        "raw": "9008900150204"
+      },
+      "label": "Department",
+      "raw_line": "Department 9008900150204 Cost Center 50204 PF No. THTHA13315390000014846"
+    },
+    {
+      "amount": null,
+      "label": "Location",
+      "raw_line": "Location Bangalore 3006 Designation Payroll Specialist ESI No."
+    },
+    {
+      "amount": {
+        "paise": 14200151443000,
+        "raw": "142001514430"
+      },
+      "label": "Date of Birth",
+      "raw_line": "Date of Birth 25-JUN-1990 Bank A/c No 142001514430 Pan No. AJWPH4128H"
+    },
+    {
+      "amount": null,
+      "label": "Date of Joining",
+      "raw_line": "Date of Joining 01-DEC-2023 Gender M EPS No."
+    },
+    {
+      "amount": {
+        "paise": 10060235134700,
+        "raw": "100602351347"
+      },
+      "label": "UAN",
+      "raw_line": "UAN 100602351347 Global Date of Joining 14-09-2020"
+    },
+    {
+      "amount": null,
+      "label": "Regime Type",
+      "raw_line": "Regime Type New Regime PAN Aadhaar Linking Status Linked"
+    },
+    {
+      "amount": {
+        "paise": 5008300,
+        "raw": "50,083.00"
+      },
+      "label": "Basic",
+      "raw_line": "Basic 50,083.00 150,249.00 Uber Credit Deduction 4,140.00 13,097.00"
+    },
+    {
+      "amount": {
+        "paise": 2003300,
+        "raw": "20,033.00"
+      },
+      "label": "House Rent Allowance",
+      "raw_line": "House Rent Allowance 20,033.00 60,099.00 Provident Fund 6,010.00 18,030.00"
+    },
+    {
+      "amount": {
+        "paise": 20000,
+        "raw": "200.00"
+      },
+      "label": "Children Education Allowance",
+      "raw_line": "Children Education Allowance 200.00 600.00 Professional Tax 200.00 600.00"
+    },
+    {
+      "amount": {
+        "paise": 300000,
+        "raw": "3,000.00"
+      },
+      "label": "Home Telephone / Internet Allowance",
+      "raw_line": "Home Telephone / Internet Allowance 3,000.00 9,000.00 ESPP B 0.00 15,025.00"
+    },
+    {
+      "amount": {
+        "paise": 2685000,
+        "raw": "26,850.00"
+      },
+      "label": "Special Allowance",
+      "raw_line": "Special Allowance 26,850.00 80,550.00 ESPP A 15,025.00 30,050.00"
+    },
+    {
+      "amount": {
+        "paise": 421700,
+        "raw": "4,217.00"
+      },
+      "label": "Cell Phone Allowance",
+      "raw_line": "Cell Phone Allowance 4,217.00 12,651.00 Income Tax 19,030.00 19,030.00"
+    },
+    {
+      "amount": {
+        "paise": 1249700,
+        "raw": "12,497.00"
+      },
+      "label": "Well-being Allowance",
+      "raw_line": "Well-being Allowance 12,497.00 12,497.00"
+    },
+    {
+      "amount": {
+        "paise": 414000,
+        "raw": "4,140.00"
+      },
+      "label": "Uber Credit",
+      "raw_line": "Uber Credit 4,140.00 13,097.00"
+    },
+    {
+      "amount": {
+        "paise": 441000,
+        "raw": "4,410.00"
+      },
+      "label": "ESPP B Refund",
+      "raw_line": "ESPP B Refund 4,410.00 4,410.00"
+    },
+    {
+      "amount": null,
+      "label": "In Words    Rupees Eighty One Thousand and Twenty Five Only.",
+      "raw_line": "In Words    Rupees Eighty One Thousand and Twenty Five Only."
+    },
+    {
+      "amount": null,
+      "label": "Perquisites",
+      "raw_line": "Perquisites Amount YTD"
+    },
+    {
+      "amount": {
+        "paise": 6694200,
+        "raw": "66942"
+      },
+      "label": "ESPP Gain",
+      "raw_line": "ESPP Gain 66942 66942"
+    },
+    {
+      "amount": null,
+      "label": "Days In Month (A)",
+      "raw_line": "Days In Month (A) Arrear Days (B) LOPR Days(C) LOP Days (D) Net Days Worked"
+    },
+    {
+      "amount": null,
+      "label": "(E = A + B + C - D)",
+      "raw_line": "(E = A + B + C - D)"
+    },
+    {
+      "amount": null,
+      "label": "This document contains confidential information. If you are not the intended recipient you are not authorized to use or disclose it in any form.",
+      "raw_line": "This document contains confidential information. If you are not the intended recipient you are not authorized to use or disclose it in any form."
+    },
+    {
+      "amount": null,
+      "label": "If you received this in error please destroy it along with any copies and notify the sender immediately.",
+      "raw_line": "If you received this in error please destroy it along with any copies and notify the sender immediately."
+    }
+  ],
+  "employee": {
+    "bank_account": null,
+    "date_of_joining": "01-DEC-2023",
+    "department": "9008900150204",
+    "designation": "Payroll Specialist",
+    "employee_id": "152210",
+    "esi_number": null,
+    "name": "Harish H S",
+    "pan": "AJWPH4128H",
+    "pf_number": "THTHA13315390000014846",
+    "uan": "100602351347"
+  },
+  "employer": {
+    "address": "AB PLATINUM TECHNO PARK, NAVI MUMBAI",
+    "name": "UBER INDIA SYSTEMS PRIVATE LIMITED"
+  },
+  "format": "generic-payslip",
+  "gross_earnings": {
+    "paise": 10915300,
+    "raw": "109,153.00"
+  },
+  "net_pay": {
+    "paise": 8314800,
+    "raw": "83,148.00"
+  },
+  "net_pay_words": "In Words    Rupees Eighty Three Thousand One Hundred and Forty Eight Only.",
+  "period": {
+    "lop_days": "LOP Days (D)",
+    "month": "APRIL",
+    "paid_days": null,
+    "raw": "PAYSLIP FOR THE MONTH OF APRIL  2025",
+    "year": 2025
+  },
+  "raw": {
+    "lines": [
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 136.0,
+          "x": 191.39999389648438,
+          "y": 61.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 136.0,
+            "x": 191.39999389648438,
+            "y": 61.0
+          }
+        ],
+        "segments": [
+          "UBER INDIA SYSTEMS PRIVATE LIMITED"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 192.0,
+          "x": 191.39999389648438,
+          "y": 73.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 192.0,
+            "x": 191.39999389648438,
+            "y": 73.0
+          }
+        ],
+        "segments": [
+          "LEVEL 13 REGUS PLATINUM, BUSINESS CENTRE PVT LTD"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 92.0,
+          "x": 191.39999389648438,
+          "y": 85.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 92.0,
+            "x": 191.39999389648438,
+            "y": 85.0
+          }
+        ],
+        "segments": [
+          "PLOT NO 17/18 SECTOR 30"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 144.0,
+          "x": 191.39999389648438,
+          "y": 97.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 144.0,
+            "x": 191.39999389648438,
+            "y": 97.0
+          }
+        ],
+        "segments": [
+          "AB PLATINUM TECHNO PARK, NAVI MUMBAI"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 144.0,
+          "x": 191.39999389648438,
+          "y": 121.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 144.0,
+            "x": 191.39999389648438,
+            "y": 121.0
+          }
+        ],
+        "segments": [
+          "PAYSLIP FOR THE MONTH OF APRIL  2025"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 311.32000732421875,
+          "x": 20.0,
+          "y": 137.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 20.0,
+            "y": 137.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 90.25,
+            "y": 137.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 216.6999969482422,
+            "y": 137.0
+          },
+          {
+            "height": 7.0,
+            "width": 35.0,
+            "x": 296.32000732421875,
+            "y": 137.0
+          }
+        ],
+        "segments": [
+          "Emp Code",
+          "152210",
+          "Emp Name",
+          "Harish H S"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 545.3299560546875,
+          "x": 20.0,
+          "y": 148.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 35.0,
+            "x": 20.0,
+            "y": 148.0
+          },
+          {
+            "height": 7.0,
+            "width": 45.5,
+            "x": 90.25,
+            "y": 148.0
+          },
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 216.6999969482422,
+            "y": 148.0
+          },
+          {
+            "height": 7.0,
+            "width": 17.5,
+            "x": 296.32000732421875,
+            "y": 148.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 436.82000732421875,
+            "y": 148.0
+          },
+          {
+            "height": 7.0,
+            "width": 76.99996948242188,
+            "x": 488.3299865722656,
+            "y": 148.0
+          }
+        ],
+        "segments": [
+          "Department",
+          "9008900150204",
+          "Cost Center",
+          "50204",
+          "PF No.",
+          "THTHA13315390000014846"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 441.32000732421875,
+          "x": 20.0,
+          "y": 159.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 20.0,
+            "y": 159.0
+          },
+          {
+            "height": 7.0,
+            "width": 49.0,
+            "x": 90.25,
+            "y": 159.0
+          },
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 216.6999969482422,
+            "y": 159.0
+          },
+          {
+            "height": 7.0,
+            "width": 63.0,
+            "x": 296.32000732421875,
+            "y": 159.0
+          },
+          {
+            "height": 7.0,
+            "width": 24.5,
+            "x": 436.82000732421875,
+            "y": 159.0
+          }
+        ],
+        "segments": [
+          "Location",
+          "Bangalore 3006",
+          "Designation",
+          "Payroll Specialist",
+          "ESI No."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 503.3299560546875,
+          "x": 20.0,
+          "y": 170.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 45.5,
+            "x": 20.0,
+            "y": 170.0
+          },
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 90.25,
+            "y": 170.0
+          },
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 216.6999969482422,
+            "y": 170.0
+          },
+          {
+            "height": 7.0,
+            "width": 42.0,
+            "x": 296.32000732421875,
+            "y": 170.0
+          },
+          {
+            "height": 7.0,
+            "width": 24.5,
+            "x": 436.82000732421875,
+            "y": 170.0
+          },
+          {
+            "height": 7.0,
+            "width": 34.999969482421875,
+            "x": 488.3299865722656,
+            "y": 170.0
+          }
+        ],
+        "segments": [
+          "Date of Birth",
+          "25-JUN-1990",
+          "Bank A/c No",
+          "142001514430",
+          "Pan No.",
+          "AJWPH4128H"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 441.32000732421875,
+          "x": 20.0,
+          "y": 181.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 52.5,
+            "x": 20.0,
+            "y": 181.0
+          },
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 90.25,
+            "y": 181.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 216.6999969482422,
+            "y": 181.0
+          },
+          {
+            "height": 7.0,
+            "width": 3.5,
+            "x": 296.32000732421875,
+            "y": 181.0
+          },
+          {
+            "height": 7.0,
+            "width": 24.5,
+            "x": 436.82000732421875,
+            "y": 181.0
+          }
+        ],
+        "segments": [
+          "Date of Joining",
+          "01-DEC-2023",
+          "Gender",
+          "M",
+          "EPS No."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 311.32000732421875,
+          "x": 20.0,
+          "y": 192.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 10.5,
+            "x": 20.0,
+            "y": 192.0
+          },
+          {
+            "height": 7.0,
+            "width": 42.0,
+            "x": 90.25,
+            "y": 192.0
+          },
+          {
+            "height": 7.0,
+            "width": 114.62001037597656,
+            "x": 216.6999969482422,
+            "y": 192.0
+          }
+        ],
+        "segments": [
+          "UAN",
+          "100602351347",
+          "Global Date of Joining 14-09-2020"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 347.32000732421875,
+          "x": 20.0,
+          "y": 219.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 20.0,
+            "y": 219.0
+          },
+          {
+            "height": 7.0,
+            "width": 34.99999237060547,
+            "x": 110.6500015258789,
+            "y": 219.0
+          },
+          {
+            "height": 7.0,
+            "width": 91.00001525878906,
+            "x": 233.02000427246094,
+            "y": 219.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 346.32000732421875,
+            "y": 219.0
+          }
+        ],
+        "segments": [
+          "Regime Type",
+          "New Regime",
+          "PAN Aadhaar Linking Status",
+          "Linked"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 528.8800048828125,
+          "x": 20.0,
+          "y": 246.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 32.0,
+            "x": 20.0,
+            "y": 246.0
+          },
+          {
+            "height": 8.0,
+            "width": 24.0,
+            "x": 178.52000427246094,
+            "y": 246.0
+          },
+          {
+            "height": 8.0,
+            "width": 12.0,
+            "x": 255.8800048828125,
+            "y": 246.0
+          },
+          {
+            "height": 8.0,
+            "width": 40.0,
+            "x": 301.0,
+            "y": 246.0
+          },
+          {
+            "height": 8.0,
+            "width": 24.0,
+            "x": 459.5199890136719,
+            "y": 246.0
+          },
+          {
+            "height": 8.0,
+            "width": 12.0,
+            "x": 536.8800048828125,
+            "y": 246.0
+          }
+        ],
+        "segments": [
+          "Earnings",
+          "Amount",
+          "YTD",
+          "Deductions",
+          "Amount",
+          "YTD"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 554.760009765625,
+          "x": 22.0,
+          "y": 260.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 17.5,
+            "x": 22.0,
+            "y": 260.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 193.61000061035156,
+            "y": 260.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 263.8599853515625,
+            "y": 260.0
+          },
+          {
+            "height": 7.0,
+            "width": 73.5,
+            "x": 303.0,
+            "y": 260.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 478.510009765625,
+            "y": 260.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 548.760009765625,
+            "y": 260.0
+          }
+        ],
+        "segments": [
+          "Basic",
+          "50,083.00",
+          "50,083.00",
+          "Uber Credit Deduction",
+          "4,770.00",
+          "4,770.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 554.760009765625,
+          "x": 22.0,
+          "y": 271.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 70.0,
+            "x": 22.0,
+            "y": 271.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 193.61000061035156,
+            "y": 271.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 263.8599853515625,
+            "y": 271.0
+          },
+          {
+            "height": 7.0,
+            "width": 49.0,
+            "x": 303.0,
+            "y": 271.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 478.510009765625,
+            "y": 271.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 548.760009765625,
+            "y": 271.0
+          }
+        ],
+        "segments": [
+          "House Rent Allowance",
+          "20,033.00",
+          "20,033.00",
+          "Provident Fund",
+          "6,010.00",
+          "6,010.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 553.5900268554688,
+          "x": 22.0,
+          "y": 282.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 98.0,
+            "x": 22.0,
+            "y": 282.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 203.33999633789062,
+            "y": 282.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 273.5899963378906,
+            "y": 282.0
+          },
+          {
+            "height": 7.0,
+            "width": 56.0,
+            "x": 303.0,
+            "y": 282.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 484.3399963378906,
+            "y": 282.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 554.5900268554688,
+            "y": 282.0
+          }
+        ],
+        "segments": [
+          "Children Education Allowance",
+          "200.00",
+          "200.00",
+          "Professional Tax",
+          "200.00",
+          "200.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 554.3599853515625,
+          "x": 22.0,
+          "y": 293.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 122.5,
+            "x": 22.0,
+            "y": 293.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 197.50999450683594,
+            "y": 293.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 267.760009765625,
+            "y": 293.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 303.0,
+            "y": 293.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 474.6099853515625,
+            "y": 293.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 544.8599853515625,
+            "y": 293.0
+          }
+        ],
+        "segments": [
+          "Home Telephone / Internet Allowance",
+          "3,000.00",
+          "3,000.00",
+          "ESPP B",
+          "15,025.00",
+          "15,025.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 273.3599853515625,
+          "x": 22.0,
+          "y": 304.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 59.5,
+            "x": 22.0,
+            "y": 304.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 193.61000061035156,
+            "y": 304.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 263.8599853515625,
+            "y": 304.0
+          }
+        ],
+        "segments": [
+          "Special Allowance",
+          "26,850.00",
+          "26,850.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 273.760009765625,
+          "x": 22.0,
+          "y": 315.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 70.0,
+            "x": 22.0,
+            "y": 315.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 197.50999450683594,
+            "y": 315.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 267.760009765625,
+            "y": 315.0
+          }
+        ],
+        "segments": [
+          "Cell Phone Allowance",
+          "4,217.00",
+          "4,217.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 273.760009765625,
+          "x": 22.0,
+          "y": 326.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 22.0,
+            "y": 326.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 197.50999450683594,
+            "y": 326.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 267.760009765625,
+            "y": 326.0
+          }
+        ],
+        "segments": [
+          "Uber Credit",
+          "4,770.00",
+          "4,770.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 9.0,
+          "width": 556.3599853515625,
+          "x": 20.0,
+          "y": 339.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 56.0,
+            "x": 20.0,
+            "y": 339.0
+          },
+          {
+            "height": 7.0,
+            "width": 35.0,
+            "x": 189.72000122070312,
+            "y": 341.0
+          },
+          {
+            "height": 8.0,
+            "width": 106.97000122070312,
+            "x": 258.0299987792969,
+            "y": 339.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 474.6099853515625,
+            "y": 341.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 544.8599853515625,
+            "y": 341.0
+          }
+        ],
+        "segments": [
+          "Total Earnings",
+          "109,153.00",
+          "109,153.00 Total Deductions",
+          "26,005.00",
+          "26,005.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 120.0,
+          "x": 20.0,
+          "y": 370.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 120.0,
+            "x": 20.0,
+            "y": 370.0
+          }
+        ],
+        "segments": [
+          "Net Pay      Rs. 83,148.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 312.0,
+          "x": 20.0,
+          "y": 382.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 312.0,
+            "x": 20.0,
+            "y": 382.0
+          }
+        ],
+        "segments": [
+          "In Words    Rupees Eighty Three Thousand One Hundred and Forty Eight Only."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 386.6700134277344,
+          "x": 20.0,
+          "y": 435.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 44.0,
+            "x": 20.0,
+            "y": 435.0
+          },
+          {
+            "height": 8.0,
+            "width": 24.0,
+            "x": 207.3300018310547,
+            "y": 435.0
+          },
+          {
+            "height": 8.0,
+            "width": 12.0,
+            "x": 394.6700134277344,
+            "y": 435.0
+          }
+        ],
+        "segments": [
+          "Perquisites",
+          "Amount",
+          "YTD"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 503.07000732421875,
+          "x": 44.45000076293945,
+          "y": 472.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 59.499996185302734,
+            "x": 44.45000076293945,
+            "y": 472.0
+          },
+          {
+            "height": 7.0,
+            "width": 52.5,
+            "x": 160.92999267578125,
+            "y": 472.0
+          },
+          {
+            "height": 7.0,
+            "width": 42.0,
+            "x": 275.0799865722656,
+            "y": 472.0
+          },
+          {
+            "height": 7.0,
+            "width": 42.0,
+            "x": 389.0400085449219,
+            "y": 472.0
+          },
+          {
+            "height": 7.0,
+            "width": 52.500030517578125,
+            "x": 495.0199890136719,
+            "y": 472.0
+          }
+        ],
+        "segments": [
+          "Days In Month (A)",
+          "Arrear Days (B)",
+          "LOPR Days(C)",
+          "LOP Days (D)",
+          "Net Days Worked"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 69.99996948242188,
+          "x": 492.9700012207031,
+          "y": 479.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 69.99996948242188,
+            "x": 492.9700012207031,
+            "y": 479.0
+          }
+        ],
+        "segments": [
+          "(E = A + B + C - D)"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 463.6000061035156,
+          "x": 114.77999877929688,
+          "y": 490.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 14.0,
+            "x": 114.77999877929688,
+            "y": 490.0
+          },
+          {
+            "height": 7.0,
+            "width": 10.5,
+            "x": 231.07000732421875,
+            "y": 490.0
+          },
+          {
+            "height": 7.0,
+            "width": 10.5,
+            "x": 343.4700012207031,
+            "y": 490.0
+          },
+          {
+            "height": 7.0,
+            "width": 10.5,
+            "x": 455.8699951171875,
+            "y": 490.0
+          },
+          {
+            "height": 7.0,
+            "width": 14.0,
+            "x": 564.3800048828125,
+            "y": 490.0
+          }
+        ],
+        "segments": [
+          "30.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "30.0"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 576.0,
+          "x": 20.0,
+          "y": 774.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 576.0,
+            "x": 20.0,
+            "y": 774.0
+          }
+        ],
+        "segments": [
+          "This document contains confidential information. If you are not the intended recipient you are not authorized to use or disclose it in any form."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 416.0,
+          "x": 20.0,
+          "y": 786.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 416.0,
+            "x": 20.0,
+            "y": 786.0
+          }
+        ],
+        "segments": [
+          "If you received this in error please destroy it along with any copies and notify the sender immediately."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 40.0,
+          "x": 20.0,
+          "y": 798.0
+        },
+        "page": 1,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 40.0,
+            "x": 20.0,
+            "y": 798.0
+          }
+        ],
+        "segments": [
+          "25/06/2025"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 136.0,
+          "x": 191.39999389648438,
+          "y": 61.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 136.0,
+            "x": 191.39999389648438,
+            "y": 61.0
+          }
+        ],
+        "segments": [
+          "UBER INDIA SYSTEMS PRIVATE LIMITED"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 192.0,
+          "x": 191.39999389648438,
+          "y": 73.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 192.0,
+            "x": 191.39999389648438,
+            "y": 73.0
+          }
+        ],
+        "segments": [
+          "LEVEL 13 REGUS PLATINUM, BUSINESS CENTRE PVT LTD"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 92.0,
+          "x": 191.39999389648438,
+          "y": 85.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 92.0,
+            "x": 191.39999389648438,
+            "y": 85.0
+          }
+        ],
+        "segments": [
+          "PLOT NO 17/18 SECTOR 30"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 144.0,
+          "x": 191.39999389648438,
+          "y": 97.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 144.0,
+            "x": 191.39999389648438,
+            "y": 97.0
+          }
+        ],
+        "segments": [
+          "AB PLATINUM TECHNO PARK, NAVI MUMBAI"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 136.0,
+          "x": 191.39999389648438,
+          "y": 121.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 136.0,
+            "x": 191.39999389648438,
+            "y": 121.0
+          }
+        ],
+        "segments": [
+          "PAYSLIP FOR THE MONTH OF MAY  2025"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 311.32000732421875,
+          "x": 20.0,
+          "y": 137.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 20.0,
+            "y": 137.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 90.25,
+            "y": 137.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 216.6999969482422,
+            "y": 137.0
+          },
+          {
+            "height": 7.0,
+            "width": 35.0,
+            "x": 296.32000732421875,
+            "y": 137.0
+          }
+        ],
+        "segments": [
+          "Emp Code",
+          "152210",
+          "Emp Name",
+          "Harish H S"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 545.3299560546875,
+          "x": 20.0,
+          "y": 148.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 35.0,
+            "x": 20.0,
+            "y": 148.0
+          },
+          {
+            "height": 7.0,
+            "width": 45.5,
+            "x": 90.25,
+            "y": 148.0
+          },
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 216.6999969482422,
+            "y": 148.0
+          },
+          {
+            "height": 7.0,
+            "width": 17.5,
+            "x": 296.32000732421875,
+            "y": 148.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 436.82000732421875,
+            "y": 148.0
+          },
+          {
+            "height": 7.0,
+            "width": 76.99996948242188,
+            "x": 488.3299865722656,
+            "y": 148.0
+          }
+        ],
+        "segments": [
+          "Department",
+          "9008900150204",
+          "Cost Center",
+          "50204",
+          "PF No.",
+          "THTHA13315390000014846"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 441.32000732421875,
+          "x": 20.0,
+          "y": 159.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 20.0,
+            "y": 159.0
+          },
+          {
+            "height": 7.0,
+            "width": 49.0,
+            "x": 90.25,
+            "y": 159.0
+          },
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 216.6999969482422,
+            "y": 159.0
+          },
+          {
+            "height": 7.0,
+            "width": 63.0,
+            "x": 296.32000732421875,
+            "y": 159.0
+          },
+          {
+            "height": 7.0,
+            "width": 24.5,
+            "x": 436.82000732421875,
+            "y": 159.0
+          }
+        ],
+        "segments": [
+          "Location",
+          "Bangalore 3006",
+          "Designation",
+          "Payroll Specialist",
+          "ESI No."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 503.3299560546875,
+          "x": 20.0,
+          "y": 170.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 45.5,
+            "x": 20.0,
+            "y": 170.0
+          },
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 90.25,
+            "y": 170.0
+          },
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 216.6999969482422,
+            "y": 170.0
+          },
+          {
+            "height": 7.0,
+            "width": 42.0,
+            "x": 296.32000732421875,
+            "y": 170.0
+          },
+          {
+            "height": 7.0,
+            "width": 24.5,
+            "x": 436.82000732421875,
+            "y": 170.0
+          },
+          {
+            "height": 7.0,
+            "width": 34.999969482421875,
+            "x": 488.3299865722656,
+            "y": 170.0
+          }
+        ],
+        "segments": [
+          "Date of Birth",
+          "25-JUN-1990",
+          "Bank A/c No",
+          "142001514430",
+          "Pan No.",
+          "AJWPH4128H"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 441.32000732421875,
+          "x": 20.0,
+          "y": 181.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 52.5,
+            "x": 20.0,
+            "y": 181.0
+          },
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 90.25,
+            "y": 181.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 216.6999969482422,
+            "y": 181.0
+          },
+          {
+            "height": 7.0,
+            "width": 3.5,
+            "x": 296.32000732421875,
+            "y": 181.0
+          },
+          {
+            "height": 7.0,
+            "width": 24.5,
+            "x": 436.82000732421875,
+            "y": 181.0
+          }
+        ],
+        "segments": [
+          "Date of Joining",
+          "01-DEC-2023",
+          "Gender",
+          "M",
+          "EPS No."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 311.32000732421875,
+          "x": 20.0,
+          "y": 192.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 10.5,
+            "x": 20.0,
+            "y": 192.0
+          },
+          {
+            "height": 7.0,
+            "width": 42.0,
+            "x": 90.25,
+            "y": 192.0
+          },
+          {
+            "height": 7.0,
+            "width": 114.62001037597656,
+            "x": 216.6999969482422,
+            "y": 192.0
+          }
+        ],
+        "segments": [
+          "UAN",
+          "100602351347",
+          "Global Date of Joining 14-09-2020"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 347.32000732421875,
+          "x": 20.0,
+          "y": 219.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 20.0,
+            "y": 219.0
+          },
+          {
+            "height": 7.0,
+            "width": 34.99999237060547,
+            "x": 110.6500015258789,
+            "y": 219.0
+          },
+          {
+            "height": 7.0,
+            "width": 91.00001525878906,
+            "x": 233.02000427246094,
+            "y": 219.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 346.32000732421875,
+            "y": 219.0
+          }
+        ],
+        "segments": [
+          "Regime Type",
+          "New Regime",
+          "PAN Aadhaar Linking Status",
+          "Linked"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 528.8800048828125,
+          "x": 20.0,
+          "y": 246.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 32.0,
+            "x": 20.0,
+            "y": 246.0
+          },
+          {
+            "height": 8.0,
+            "width": 24.0,
+            "x": 178.52000427246094,
+            "y": 246.0
+          },
+          {
+            "height": 8.0,
+            "width": 12.0,
+            "x": 255.8800048828125,
+            "y": 246.0
+          },
+          {
+            "height": 8.0,
+            "width": 40.0,
+            "x": 301.0,
+            "y": 246.0
+          },
+          {
+            "height": 8.0,
+            "width": 24.0,
+            "x": 459.5199890136719,
+            "y": 246.0
+          },
+          {
+            "height": 8.0,
+            "width": 12.0,
+            "x": 536.8800048828125,
+            "y": 246.0
+          }
+        ],
+        "segments": [
+          "Earnings",
+          "Amount",
+          "YTD",
+          "Deductions",
+          "Amount",
+          "YTD"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 554.760009765625,
+          "x": 22.0,
+          "y": 260.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 17.5,
+            "x": 22.0,
+            "y": 260.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 193.61000061035156,
+            "y": 260.0
+          },
+          {
+            "height": 7.0,
+            "width": 35.0,
+            "x": 259.9700012207031,
+            "y": 260.0
+          },
+          {
+            "height": 7.0,
+            "width": 73.5,
+            "x": 303.0,
+            "y": 260.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 478.510009765625,
+            "y": 260.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 548.760009765625,
+            "y": 260.0
+          }
+        ],
+        "segments": [
+          "Basic",
+          "50,083.00",
+          "100,166.00",
+          "Uber Credit Deduction",
+          "4,187.00",
+          "8,957.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 554.3599853515625,
+          "x": 22.0,
+          "y": 271.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 70.0,
+            "x": 22.0,
+            "y": 271.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 193.61000061035156,
+            "y": 271.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 263.8599853515625,
+            "y": 271.0
+          },
+          {
+            "height": 7.0,
+            "width": 49.0,
+            "x": 303.0,
+            "y": 271.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 478.510009765625,
+            "y": 271.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 544.8599853515625,
+            "y": 271.0
+          }
+        ],
+        "segments": [
+          "House Rent Allowance",
+          "20,033.00",
+          "40,066.00",
+          "Provident Fund",
+          "6,010.00",
+          "12,020.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 553.5900268554688,
+          "x": 22.0,
+          "y": 282.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 98.0,
+            "x": 22.0,
+            "y": 282.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 203.33999633789062,
+            "y": 282.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 273.5899963378906,
+            "y": 282.0
+          },
+          {
+            "height": 7.0,
+            "width": 56.0,
+            "x": 303.0,
+            "y": 282.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 484.3399963378906,
+            "y": 282.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 554.5900268554688,
+            "y": 282.0
+          }
+        ],
+        "segments": [
+          "Children Education Allowance",
+          "200.00",
+          "400.00",
+          "Professional Tax",
+          "200.00",
+          "400.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 554.3599853515625,
+          "x": 22.0,
+          "y": 293.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 122.5,
+            "x": 22.0,
+            "y": 293.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 197.50999450683594,
+            "y": 293.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 267.760009765625,
+            "y": 293.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 303.0,
+            "y": 293.0
+          },
+          {
+            "height": 7.0,
+            "width": 14.0,
+            "x": 492.1300048828125,
+            "y": 293.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 544.8599853515625,
+            "y": 293.0
+          }
+        ],
+        "segments": [
+          "Home Telephone / Internet Allowance",
+          "3,000.00",
+          "6,000.00",
+          "ESPP B",
+          "0.00",
+          "15,025.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 554.3599853515625,
+          "x": 22.0,
+          "y": 304.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 59.5,
+            "x": 22.0,
+            "y": 304.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 193.61000061035156,
+            "y": 304.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 263.8599853515625,
+            "y": 304.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 303.0,
+            "y": 304.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 474.6099853515625,
+            "y": 304.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 544.8599853515625,
+            "y": 304.0
+          }
+        ],
+        "segments": [
+          "Special Allowance",
+          "26,850.00",
+          "53,700.00",
+          "ESPP A",
+          "15,025.00",
+          "15,025.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 273.760009765625,
+          "x": 22.0,
+          "y": 315.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 70.0,
+            "x": 22.0,
+            "y": 315.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 197.50999450683594,
+            "y": 315.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 267.760009765625,
+            "y": 315.0
+          }
+        ],
+        "segments": [
+          "Cell Phone Allowance",
+          "4,217.00",
+          "8,434.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 273.760009765625,
+          "x": 22.0,
+          "y": 326.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 22.0,
+            "y": 326.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 197.50999450683594,
+            "y": 326.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 267.760009765625,
+            "y": 326.0
+          }
+        ],
+        "segments": [
+          "Uber Credit",
+          "4,187.00",
+          "8,957.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 9.0,
+          "width": 556.3599853515625,
+          "x": 20.0,
+          "y": 339.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 56.0,
+            "x": 20.0,
+            "y": 339.0
+          },
+          {
+            "height": 7.0,
+            "width": 35.0,
+            "x": 189.72000122070312,
+            "y": 341.0
+          },
+          {
+            "height": 8.0,
+            "width": 106.97000122070312,
+            "x": 258.0299987792969,
+            "y": 339.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 474.6099853515625,
+            "y": 341.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 544.8599853515625,
+            "y": 341.0
+          }
+        ],
+        "segments": [
+          "Total Earnings",
+          "108,570.00",
+          "217,723.00 Total Deductions",
+          "25,422.00",
+          "51,427.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 120.0,
+          "x": 20.0,
+          "y": 370.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 120.0,
+            "x": 20.0,
+            "y": 370.0
+          }
+        ],
+        "segments": [
+          "Net Pay      Rs. 83,148.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 312.0,
+          "x": 20.0,
+          "y": 382.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 312.0,
+            "x": 20.0,
+            "y": 382.0
+          }
+        ],
+        "segments": [
+          "In Words    Rupees Eighty Three Thousand One Hundred and Forty Eight Only."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 386.6700134277344,
+          "x": 20.0,
+          "y": 435.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 44.0,
+            "x": 20.0,
+            "y": 435.0
+          },
+          {
+            "height": 8.0,
+            "width": 24.0,
+            "x": 207.3300018310547,
+            "y": 435.0
+          },
+          {
+            "height": 8.0,
+            "width": 12.0,
+            "x": 394.6700134277344,
+            "y": 435.0
+          }
+        ],
+        "segments": [
+          "Perquisites",
+          "Amount",
+          "YTD"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 503.07000732421875,
+          "x": 44.45000076293945,
+          "y": 472.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 59.499996185302734,
+            "x": 44.45000076293945,
+            "y": 472.0
+          },
+          {
+            "height": 7.0,
+            "width": 52.5,
+            "x": 160.92999267578125,
+            "y": 472.0
+          },
+          {
+            "height": 7.0,
+            "width": 42.0,
+            "x": 275.0799865722656,
+            "y": 472.0
+          },
+          {
+            "height": 7.0,
+            "width": 42.0,
+            "x": 389.0400085449219,
+            "y": 472.0
+          },
+          {
+            "height": 7.0,
+            "width": 52.500030517578125,
+            "x": 495.0199890136719,
+            "y": 472.0
+          }
+        ],
+        "segments": [
+          "Days In Month (A)",
+          "Arrear Days (B)",
+          "LOPR Days(C)",
+          "LOP Days (D)",
+          "Net Days Worked"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 69.99996948242188,
+          "x": 492.9700012207031,
+          "y": 479.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 69.99996948242188,
+            "x": 492.9700012207031,
+            "y": 479.0
+          }
+        ],
+        "segments": [
+          "(E = A + B + C - D)"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 463.6000061035156,
+          "x": 114.77999877929688,
+          "y": 490.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 14.0,
+            "x": 114.77999877929688,
+            "y": 490.0
+          },
+          {
+            "height": 7.0,
+            "width": 10.5,
+            "x": 231.07000732421875,
+            "y": 490.0
+          },
+          {
+            "height": 7.0,
+            "width": 10.5,
+            "x": 343.4700012207031,
+            "y": 490.0
+          },
+          {
+            "height": 7.0,
+            "width": 10.5,
+            "x": 455.8699951171875,
+            "y": 490.0
+          },
+          {
+            "height": 7.0,
+            "width": 14.0,
+            "x": 564.3800048828125,
+            "y": 490.0
+          }
+        ],
+        "segments": [
+          "31.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "31.0"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 576.0,
+          "x": 20.0,
+          "y": 774.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 576.0,
+            "x": 20.0,
+            "y": 774.0
+          }
+        ],
+        "segments": [
+          "This document contains confidential information. If you are not the intended recipient you are not authorized to use or disclose it in any form."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 416.0,
+          "x": 20.0,
+          "y": 786.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 416.0,
+            "x": 20.0,
+            "y": 786.0
+          }
+        ],
+        "segments": [
+          "If you received this in error please destroy it along with any copies and notify the sender immediately."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 40.0,
+          "x": 20.0,
+          "y": 798.0
+        },
+        "page": 2,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 40.0,
+            "x": 20.0,
+            "y": 798.0
+          }
+        ],
+        "segments": [
+          "25/06/2025"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 136.0,
+          "x": 191.39999389648438,
+          "y": 61.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 136.0,
+            "x": 191.39999389648438,
+            "y": 61.0
+          }
+        ],
+        "segments": [
+          "UBER INDIA SYSTEMS PRIVATE LIMITED"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 192.0,
+          "x": 191.39999389648438,
+          "y": 73.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 192.0,
+            "x": 191.39999389648438,
+            "y": 73.0
+          }
+        ],
+        "segments": [
+          "LEVEL 13 REGUS PLATINUM, BUSINESS CENTRE PVT LTD"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 92.0,
+          "x": 191.39999389648438,
+          "y": 85.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 92.0,
+            "x": 191.39999389648438,
+            "y": 85.0
+          }
+        ],
+        "segments": [
+          "PLOT NO 17/18 SECTOR 30"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 144.0,
+          "x": 191.39999389648438,
+          "y": 97.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 144.0,
+            "x": 191.39999389648438,
+            "y": 97.0
+          }
+        ],
+        "segments": [
+          "AB PLATINUM TECHNO PARK, NAVI MUMBAI"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 140.0,
+          "x": 191.39999389648438,
+          "y": 121.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 140.0,
+            "x": 191.39999389648438,
+            "y": 121.0
+          }
+        ],
+        "segments": [
+          "PAYSLIP FOR THE MONTH OF JUNE  2025"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 311.32000732421875,
+          "x": 20.0,
+          "y": 137.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 20.0,
+            "y": 137.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 90.25,
+            "y": 137.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 216.6999969482422,
+            "y": 137.0
+          },
+          {
+            "height": 7.0,
+            "width": 35.0,
+            "x": 296.32000732421875,
+            "y": 137.0
+          }
+        ],
+        "segments": [
+          "Emp Code",
+          "152210",
+          "Emp Name",
+          "Harish H S"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 545.3299560546875,
+          "x": 20.0,
+          "y": 148.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 35.0,
+            "x": 20.0,
+            "y": 148.0
+          },
+          {
+            "height": 7.0,
+            "width": 45.5,
+            "x": 90.25,
+            "y": 148.0
+          },
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 216.6999969482422,
+            "y": 148.0
+          },
+          {
+            "height": 7.0,
+            "width": 17.5,
+            "x": 296.32000732421875,
+            "y": 148.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 436.82000732421875,
+            "y": 148.0
+          },
+          {
+            "height": 7.0,
+            "width": 76.99996948242188,
+            "x": 488.3299865722656,
+            "y": 148.0
+          }
+        ],
+        "segments": [
+          "Department",
+          "9008900150204",
+          "Cost Center",
+          "50204",
+          "PF No.",
+          "THTHA13315390000014846"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 441.32000732421875,
+          "x": 20.0,
+          "y": 159.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 20.0,
+            "y": 159.0
+          },
+          {
+            "height": 7.0,
+            "width": 49.0,
+            "x": 90.25,
+            "y": 159.0
+          },
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 216.6999969482422,
+            "y": 159.0
+          },
+          {
+            "height": 7.0,
+            "width": 63.0,
+            "x": 296.32000732421875,
+            "y": 159.0
+          },
+          {
+            "height": 7.0,
+            "width": 24.5,
+            "x": 436.82000732421875,
+            "y": 159.0
+          }
+        ],
+        "segments": [
+          "Location",
+          "Bangalore 3006",
+          "Designation",
+          "Payroll Specialist",
+          "ESI No."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 503.3299560546875,
+          "x": 20.0,
+          "y": 170.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 45.5,
+            "x": 20.0,
+            "y": 170.0
+          },
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 90.25,
+            "y": 170.0
+          },
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 216.6999969482422,
+            "y": 170.0
+          },
+          {
+            "height": 7.0,
+            "width": 42.0,
+            "x": 296.32000732421875,
+            "y": 170.0
+          },
+          {
+            "height": 7.0,
+            "width": 24.5,
+            "x": 436.82000732421875,
+            "y": 170.0
+          },
+          {
+            "height": 7.0,
+            "width": 34.999969482421875,
+            "x": 488.3299865722656,
+            "y": 170.0
+          }
+        ],
+        "segments": [
+          "Date of Birth",
+          "25-JUN-1990",
+          "Bank A/c No",
+          "142001514430",
+          "Pan No.",
+          "AJWPH4128H"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 441.32000732421875,
+          "x": 20.0,
+          "y": 181.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 52.5,
+            "x": 20.0,
+            "y": 181.0
+          },
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 90.25,
+            "y": 181.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 216.6999969482422,
+            "y": 181.0
+          },
+          {
+            "height": 7.0,
+            "width": 3.5,
+            "x": 296.32000732421875,
+            "y": 181.0
+          },
+          {
+            "height": 7.0,
+            "width": 24.5,
+            "x": 436.82000732421875,
+            "y": 181.0
+          }
+        ],
+        "segments": [
+          "Date of Joining",
+          "01-DEC-2023",
+          "Gender",
+          "M",
+          "EPS No."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 311.32000732421875,
+          "x": 20.0,
+          "y": 192.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 10.5,
+            "x": 20.0,
+            "y": 192.0
+          },
+          {
+            "height": 7.0,
+            "width": 42.0,
+            "x": 90.25,
+            "y": 192.0
+          },
+          {
+            "height": 7.0,
+            "width": 114.62001037597656,
+            "x": 216.6999969482422,
+            "y": 192.0
+          }
+        ],
+        "segments": [
+          "UAN",
+          "100602351347",
+          "Global Date of Joining 14-09-2020"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 347.32000732421875,
+          "x": 20.0,
+          "y": 219.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 20.0,
+            "y": 219.0
+          },
+          {
+            "height": 7.0,
+            "width": 34.99999237060547,
+            "x": 110.6500015258789,
+            "y": 219.0
+          },
+          {
+            "height": 7.0,
+            "width": 91.00001525878906,
+            "x": 233.02000427246094,
+            "y": 219.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 346.32000732421875,
+            "y": 219.0
+          }
+        ],
+        "segments": [
+          "Regime Type",
+          "New Regime",
+          "PAN Aadhaar Linking Status",
+          "Linked"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 528.8800048828125,
+          "x": 20.0,
+          "y": 246.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 32.0,
+            "x": 20.0,
+            "y": 246.0
+          },
+          {
+            "height": 8.0,
+            "width": 24.0,
+            "x": 178.52000427246094,
+            "y": 246.0
+          },
+          {
+            "height": 8.0,
+            "width": 12.0,
+            "x": 255.8800048828125,
+            "y": 246.0
+          },
+          {
+            "height": 8.0,
+            "width": 40.0,
+            "x": 301.0,
+            "y": 246.0
+          },
+          {
+            "height": 8.0,
+            "width": 24.0,
+            "x": 459.5199890136719,
+            "y": 246.0
+          },
+          {
+            "height": 8.0,
+            "width": 12.0,
+            "x": 536.8800048828125,
+            "y": 246.0
+          }
+        ],
+        "segments": [
+          "Earnings",
+          "Amount",
+          "YTD",
+          "Deductions",
+          "Amount",
+          "YTD"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 554.3599853515625,
+          "x": 22.0,
+          "y": 260.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 17.5,
+            "x": 22.0,
+            "y": 260.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 193.61000061035156,
+            "y": 260.0
+          },
+          {
+            "height": 7.0,
+            "width": 35.0,
+            "x": 259.9700012207031,
+            "y": 260.0
+          },
+          {
+            "height": 7.0,
+            "width": 73.5,
+            "x": 303.0,
+            "y": 260.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 478.510009765625,
+            "y": 260.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 544.8599853515625,
+            "y": 260.0
+          }
+        ],
+        "segments": [
+          "Basic",
+          "50,083.00",
+          "150,249.00",
+          "Uber Credit Deduction",
+          "4,140.00",
+          "13,097.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 554.3599853515625,
+          "x": 22.0,
+          "y": 271.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 70.0,
+            "x": 22.0,
+            "y": 271.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 193.61000061035156,
+            "y": 271.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 263.8599853515625,
+            "y": 271.0
+          },
+          {
+            "height": 7.0,
+            "width": 49.0,
+            "x": 303.0,
+            "y": 271.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 478.510009765625,
+            "y": 271.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 544.8599853515625,
+            "y": 271.0
+          }
+        ],
+        "segments": [
+          "House Rent Allowance",
+          "20,033.00",
+          "60,099.00",
+          "Provident Fund",
+          "6,010.00",
+          "18,030.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 553.5900268554688,
+          "x": 22.0,
+          "y": 282.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 98.0,
+            "x": 22.0,
+            "y": 282.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 203.33999633789062,
+            "y": 282.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 273.5899963378906,
+            "y": 282.0
+          },
+          {
+            "height": 7.0,
+            "width": 56.0,
+            "x": 303.0,
+            "y": 282.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 484.3399963378906,
+            "y": 282.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 554.5900268554688,
+            "y": 282.0
+          }
+        ],
+        "segments": [
+          "Children Education Allowance",
+          "200.00",
+          "600.00",
+          "Professional Tax",
+          "200.00",
+          "600.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 554.3599853515625,
+          "x": 22.0,
+          "y": 293.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 122.5,
+            "x": 22.0,
+            "y": 293.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 197.50999450683594,
+            "y": 293.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 267.760009765625,
+            "y": 293.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 303.0,
+            "y": 293.0
+          },
+          {
+            "height": 7.0,
+            "width": 14.0,
+            "x": 492.1300048828125,
+            "y": 293.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 544.8599853515625,
+            "y": 293.0
+          }
+        ],
+        "segments": [
+          "Home Telephone / Internet Allowance",
+          "3,000.00",
+          "9,000.00",
+          "ESPP B",
+          "0.00",
+          "15,025.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 554.3599853515625,
+          "x": 22.0,
+          "y": 304.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 59.5,
+            "x": 22.0,
+            "y": 304.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 193.61000061035156,
+            "y": 304.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 263.8599853515625,
+            "y": 304.0
+          },
+          {
+            "height": 7.0,
+            "width": 21.0,
+            "x": 303.0,
+            "y": 304.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 474.6099853515625,
+            "y": 304.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 544.8599853515625,
+            "y": 304.0
+          }
+        ],
+        "segments": [
+          "Special Allowance",
+          "26,850.00",
+          "80,550.00",
+          "ESPP A",
+          "15,025.00",
+          "30,050.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 554.3599853515625,
+          "x": 22.0,
+          "y": 315.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 70.0,
+            "x": 22.0,
+            "y": 315.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 197.50999450683594,
+            "y": 315.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 263.8599853515625,
+            "y": 315.0
+          },
+          {
+            "height": 7.0,
+            "width": 35.0,
+            "x": 303.0,
+            "y": 315.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 474.6099853515625,
+            "y": 315.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 544.8599853515625,
+            "y": 315.0
+          }
+        ],
+        "segments": [
+          "Cell Phone Allowance",
+          "4,217.00",
+          "12,651.00",
+          "Income Tax",
+          "19,030.00",
+          "19,030.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 273.3599853515625,
+          "x": 22.0,
+          "y": 326.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 70.0,
+            "x": 22.0,
+            "y": 326.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 193.61000061035156,
+            "y": 326.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 263.8599853515625,
+            "y": 326.0
+          }
+        ],
+        "segments": [
+          "Well-being Allowance",
+          "12,497.00",
+          "12,497.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 273.3599853515625,
+          "x": 22.0,
+          "y": 337.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 38.5,
+            "x": 22.0,
+            "y": 337.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 197.50999450683594,
+            "y": 337.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 263.8599853515625,
+            "y": 337.0
+          }
+        ],
+        "segments": [
+          "Uber Credit",
+          "4,140.00",
+          "13,097.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 273.760009765625,
+          "x": 22.0,
+          "y": 348.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 45.5,
+            "x": 22.0,
+            "y": 348.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 197.50999450683594,
+            "y": 348.0
+          },
+          {
+            "height": 7.0,
+            "width": 28.0,
+            "x": 267.760009765625,
+            "y": 348.0
+          }
+        ],
+        "segments": [
+          "ESPP B Refund",
+          "4,410.00",
+          "4,410.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 9.0,
+          "width": 556.3599853515625,
+          "x": 20.0,
+          "y": 361.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 56.0,
+            "x": 20.0,
+            "y": 361.0
+          },
+          {
+            "height": 7.0,
+            "width": 35.0,
+            "x": 189.72000122070312,
+            "y": 363.0
+          },
+          {
+            "height": 8.0,
+            "width": 106.97000122070312,
+            "x": 258.0299987792969,
+            "y": 361.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 474.6099853515625,
+            "y": 363.0
+          },
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 544.8599853515625,
+            "y": 363.0
+          }
+        ],
+        "segments": [
+          "Total Earnings",
+          "125,430.00",
+          "343,153.00 Total Deductions",
+          "44,405.00",
+          "95,832.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 120.0,
+          "x": 20.0,
+          "y": 392.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 120.0,
+            "x": 20.0,
+            "y": 392.0
+          }
+        ],
+        "segments": [
+          "Net Pay      Rs. 81,025.00"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 256.0,
+          "x": 20.0,
+          "y": 404.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 256.0,
+            "x": 20.0,
+            "y": 404.0
+          }
+        ],
+        "segments": [
+          "In Words    Rupees Eighty One Thousand and Twenty Five Only."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 386.6700134277344,
+          "x": 20.0,
+          "y": 457.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 44.0,
+            "x": 20.0,
+            "y": 457.0
+          },
+          {
+            "height": 8.0,
+            "width": 24.0,
+            "x": 207.3300018310547,
+            "y": 457.0
+          },
+          {
+            "height": 8.0,
+            "width": 12.0,
+            "x": 394.6700134277344,
+            "y": 457.0
+          }
+        ],
+        "segments": [
+          "Perquisites",
+          "Amount",
+          "YTD"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 392.1700134277344,
+          "x": 20.0,
+          "y": 469.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 31.5,
+            "x": 20.0,
+            "y": 469.0
+          },
+          {
+            "height": 7.0,
+            "width": 17.5,
+            "x": 207.3300018310547,
+            "y": 469.0
+          },
+          {
+            "height": 7.0,
+            "width": 17.5,
+            "x": 394.6700134277344,
+            "y": 469.0
+          }
+        ],
+        "segments": [
+          "ESPP Gain",
+          "66942",
+          "66942"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 503.07000732421875,
+          "x": 44.45000076293945,
+          "y": 505.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 59.499996185302734,
+            "x": 44.45000076293945,
+            "y": 505.0
+          },
+          {
+            "height": 7.0,
+            "width": 52.5,
+            "x": 160.92999267578125,
+            "y": 505.0
+          },
+          {
+            "height": 7.0,
+            "width": 42.0,
+            "x": 275.0799865722656,
+            "y": 505.0
+          },
+          {
+            "height": 7.0,
+            "width": 42.0,
+            "x": 389.0400085449219,
+            "y": 505.0
+          },
+          {
+            "height": 7.0,
+            "width": 52.500030517578125,
+            "x": 495.0199890136719,
+            "y": 505.0
+          }
+        ],
+        "segments": [
+          "Days In Month (A)",
+          "Arrear Days (B)",
+          "LOPR Days(C)",
+          "LOP Days (D)",
+          "Net Days Worked"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 69.99996948242188,
+          "x": 492.9700012207031,
+          "y": 512.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 69.99996948242188,
+            "x": 492.9700012207031,
+            "y": 512.0
+          }
+        ],
+        "segments": [
+          "(E = A + B + C - D)"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 7.0,
+          "width": 463.6000061035156,
+          "x": 114.77999877929688,
+          "y": 523.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 7.0,
+            "width": 14.0,
+            "x": 114.77999877929688,
+            "y": 523.0
+          },
+          {
+            "height": 7.0,
+            "width": 10.5,
+            "x": 231.07000732421875,
+            "y": 523.0
+          },
+          {
+            "height": 7.0,
+            "width": 10.5,
+            "x": 343.4700012207031,
+            "y": 523.0
+          },
+          {
+            "height": 7.0,
+            "width": 10.5,
+            "x": 455.8699951171875,
+            "y": 523.0
+          },
+          {
+            "height": 7.0,
+            "width": 14.0,
+            "x": 564.3800048828125,
+            "y": 523.0
+          }
+        ],
+        "segments": [
+          "30.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "30.0"
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 576.0,
+          "x": 20.0,
+          "y": 774.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 576.0,
+            "x": 20.0,
+            "y": 774.0
+          }
+        ],
+        "segments": [
+          "This document contains confidential information. If you are not the intended recipient you are not authorized to use or disclose it in any form."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 416.0,
+          "x": 20.0,
+          "y": 786.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 416.0,
+            "x": 20.0,
+            "y": 786.0
+          }
+        ],
+        "segments": [
+          "If you received this in error please destroy it along with any copies and notify the sender immediately."
+        ]
+      },
+      {
+        "bbox": {
+          "height": 8.0,
+          "width": 40.0,
+          "x": 20.0,
+          "y": 798.0
+        },
+        "page": 3,
+        "segment_boxes": [
+          {
+            "height": 8.0,
+            "width": 40.0,
+            "x": 20.0,
+            "y": 798.0
+          }
+        ],
+        "segments": [
+          "25/06/2025"
+        ]
+      }
+    ],
+    "page_count": 3,
+    "table": {
+      "columns": [
+        [
+          20.0,
+          596.0
+        ],
+        [
+          44.45000076293945,
+          103.94999694824219
+        ],
+        [
+          90.25,
+          139.25
+        ],
+        [
+          110.6500015258789,
+          145.64999389648438
+        ],
+        [
+          160.92999267578125,
+          213.42999267578125
+        ],
+        [
+          178.52000427246094,
+          202.52000427246094
+        ],
+        [
+          189.72000122070312,
+          383.3999938964844
+        ],
+        [
+          197.50999450683594,
+          225.50999450683594
+        ],
+        [
+          207.3300018310547,
+          231.3300018310547
+        ],
+        [
+          216.6999969482422,
+          331.32000732421875
+        ],
+        [
+          231.07000732421875,
+          324.02001953125
+        ],
+        [
+          255.8800048828125,
+          365.0
+        ],
+        [
+          263.8599853515625,
+          295.760009765625
+        ],
+        [
+          273.5899963378906,
+          317.0799865722656
+        ],
+        [
+          296.32000732421875,
+          359.32000732421875
+        ],
+        [
+          303.0,
+          376.5
+        ],
+        [
+          343.4700012207031,
+          367.32000732421875
+        ],
+        [
+          389.0400085449219,
+          431.0400085449219
+        ],
+        [
+          436.82000732421875,
+          461.32000732421875
+        ],
+        [
+          455.8699951171875,
+          483.5199890136719
+        ],
+        [
+          474.6099853515625,
+          506.510009765625
+        ],
+        [
+          484.3399963378906,
+          565.3299560546875
+        ],
+        [
+          492.1300048828125,
+          562.969970703125
+        ],
+        [
+          536.8800048828125,
+          548.8800048828125
+        ],
+        [
+          544.8599853515625,
+          576.760009765625
+        ],
+        [
+          554.5900268554688,
+          575.5900268554688
+        ],
+        [
+          564.3800048828125,
+          578.3800048828125
+        ]
+      ],
+      "rows": [
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 136.0,
+                "x": 191.39999389648438,
+                "y": 61.0
+              },
+              "column": 6,
+              "text": "UBER INDIA SYSTEMS PRIVATE LIMITED"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 192.0,
+                "x": 191.39999389648438,
+                "y": 73.0
+              },
+              "column": 6,
+              "text": "LEVEL 13 REGUS PLATINUM, BUSINESS CENTRE PVT LTD"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 92.0,
+                "x": 191.39999389648438,
+                "y": 85.0
+              },
+              "column": 6,
+              "text": "PLOT NO 17/18 SECTOR 30"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 144.0,
+                "x": 191.39999389648438,
+                "y": 97.0
+              },
+              "column": 6,
+              "text": "AB PLATINUM TECHNO PARK, NAVI MUMBAI"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 144.0,
+                "x": 191.39999389648438,
+                "y": 121.0
+              },
+              "column": 6,
+              "text": "PAYSLIP FOR THE MONTH OF APRIL  2025"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 20.0,
+                "y": 137.0
+              },
+              "column": 0,
+              "text": "Emp Code"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 90.25,
+                "y": 137.0
+              },
+              "column": 2,
+              "text": "152210"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 216.6999969482422,
+                "y": 137.0
+              },
+              "column": 9,
+              "text": "Emp Name"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 35.0,
+                "x": 296.32000732421875,
+                "y": 137.0
+              },
+              "column": 14,
+              "text": "Harish H S"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 35.0,
+                "x": 20.0,
+                "y": 148.0
+              },
+              "column": 0,
+              "text": "Department"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 45.5,
+                "x": 90.25,
+                "y": 148.0
+              },
+              "column": 2,
+              "text": "9008900150204"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 216.6999969482422,
+                "y": 148.0
+              },
+              "column": 9,
+              "text": "Cost Center"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 17.5,
+                "x": 296.32000732421875,
+                "y": 148.0
+              },
+              "column": 14,
+              "text": "50204"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 436.82000732421875,
+                "y": 148.0
+              },
+              "column": 18,
+              "text": "PF No."
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 76.99996948242188,
+                "x": 488.3299865722656,
+                "y": 148.0
+              },
+              "column": 22,
+              "text": "THTHA13315390000014846"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 20.0,
+                "y": 159.0
+              },
+              "column": 0,
+              "text": "Location"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 49.0,
+                "x": 90.25,
+                "y": 159.0
+              },
+              "column": 2,
+              "text": "Bangalore 3006"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 216.6999969482422,
+                "y": 159.0
+              },
+              "column": 9,
+              "text": "Designation"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 63.0,
+                "x": 296.32000732421875,
+                "y": 159.0
+              },
+              "column": 14,
+              "text": "Payroll Specialist"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 24.5,
+                "x": 436.82000732421875,
+                "y": 159.0
+              },
+              "column": 18,
+              "text": "ESI No."
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 45.5,
+                "x": 20.0,
+                "y": 170.0
+              },
+              "column": 0,
+              "text": "Date of Birth"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 90.25,
+                "y": 170.0
+              },
+              "column": 2,
+              "text": "25-JUN-1990"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 216.6999969482422,
+                "y": 170.0
+              },
+              "column": 9,
+              "text": "Bank A/c No"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 42.0,
+                "x": 296.32000732421875,
+                "y": 170.0
+              },
+              "column": 14,
+              "text": "142001514430"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 24.5,
+                "x": 436.82000732421875,
+                "y": 170.0
+              },
+              "column": 18,
+              "text": "Pan No."
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 34.999969482421875,
+                "x": 488.3299865722656,
+                "y": 170.0
+              },
+              "column": 22,
+              "text": "AJWPH4128H"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 52.5,
+                "x": 20.0,
+                "y": 181.0
+              },
+              "column": 0,
+              "text": "Date of Joining"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 90.25,
+                "y": 181.0
+              },
+              "column": 2,
+              "text": "01-DEC-2023"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 216.6999969482422,
+                "y": 181.0
+              },
+              "column": 9,
+              "text": "Gender"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 3.5,
+                "x": 296.32000732421875,
+                "y": 181.0
+              },
+              "column": 14,
+              "text": "M"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 24.5,
+                "x": 436.82000732421875,
+                "y": 181.0
+              },
+              "column": 18,
+              "text": "EPS No."
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 10.5,
+                "x": 20.0,
+                "y": 192.0
+              },
+              "column": 0,
+              "text": "UAN"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 42.0,
+                "x": 90.25,
+                "y": 192.0
+              },
+              "column": 2,
+              "text": "100602351347"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 114.62001037597656,
+                "x": 216.6999969482422,
+                "y": 192.0
+              },
+              "column": 9,
+              "text": "Global Date of Joining 14-09-2020"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 20.0,
+                "y": 219.0
+              },
+              "column": 0,
+              "text": "Regime Type"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 34.99999237060547,
+                "x": 110.6500015258789,
+                "y": 219.0
+              },
+              "column": 3,
+              "text": "New Regime"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 91.00001525878906,
+                "x": 233.02000427246094,
+                "y": 219.0
+              },
+              "column": 10,
+              "text": "PAN Aadhaar Linking Status"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 346.32000732421875,
+                "y": 219.0
+              },
+              "column": 16,
+              "text": "Linked"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 32.0,
+                "x": 20.0,
+                "y": 246.0
+              },
+              "column": 0,
+              "text": "Earnings"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 24.0,
+                "x": 178.52000427246094,
+                "y": 246.0
+              },
+              "column": 5,
+              "text": "Amount"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 12.0,
+                "x": 255.8800048828125,
+                "y": 246.0
+              },
+              "column": 11,
+              "text": "YTD"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 40.0,
+                "x": 301.0,
+                "y": 246.0
+              },
+              "column": 15,
+              "text": "Deductions"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 24.0,
+                "x": 459.5199890136719,
+                "y": 246.0
+              },
+              "column": 19,
+              "text": "Amount"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 12.0,
+                "x": 536.8800048828125,
+                "y": 246.0
+              },
+              "column": 23,
+              "text": "YTD"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 17.5,
+                "x": 22.0,
+                "y": 260.0
+              },
+              "column": 0,
+              "text": "Basic"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 193.61000061035156,
+                "y": 260.0
+              },
+              "column": 6,
+              "text": "50,083.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 263.8599853515625,
+                "y": 260.0
+              },
+              "column": 12,
+              "text": "50,083.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 73.5,
+                "x": 303.0,
+                "y": 260.0
+              },
+              "column": 15,
+              "text": "Uber Credit Deduction"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 478.510009765625,
+                "y": 260.0
+              },
+              "column": 20,
+              "text": "4,770.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 548.760009765625,
+                "y": 260.0
+              },
+              "column": 24,
+              "text": "4,770.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 70.0,
+                "x": 22.0,
+                "y": 271.0
+              },
+              "column": 0,
+              "text": "House Rent Allowance"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 193.61000061035156,
+                "y": 271.0
+              },
+              "column": 6,
+              "text": "20,033.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 263.8599853515625,
+                "y": 271.0
+              },
+              "column": 12,
+              "text": "20,033.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 49.0,
+                "x": 303.0,
+                "y": 271.0
+              },
+              "column": 15,
+              "text": "Provident Fund"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 478.510009765625,
+                "y": 271.0
+              },
+              "column": 20,
+              "text": "6,010.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 548.760009765625,
+                "y": 271.0
+              },
+              "column": 24,
+              "text": "6,010.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 98.0,
+                "x": 22.0,
+                "y": 282.0
+              },
+              "column": 0,
+              "text": "Children Education Allowance"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 203.33999633789062,
+                "y": 282.0
+              },
+              "column": 8,
+              "text": "200.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 273.5899963378906,
+                "y": 282.0
+              },
+              "column": 13,
+              "text": "200.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 56.0,
+                "x": 303.0,
+                "y": 282.0
+              },
+              "column": 15,
+              "text": "Professional Tax"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 484.3399963378906,
+                "y": 282.0
+              },
+              "column": 21,
+              "text": "200.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 554.5900268554688,
+                "y": 282.0
+              },
+              "column": 25,
+              "text": "200.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 122.5,
+                "x": 22.0,
+                "y": 293.0
+              },
+              "column": 0,
+              "text": "Home Telephone / Internet Allowance"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 197.50999450683594,
+                "y": 293.0
+              },
+              "column": 7,
+              "text": "3,000.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 267.760009765625,
+                "y": 293.0
+              },
+              "column": 12,
+              "text": "3,000.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 303.0,
+                "y": 293.0
+              },
+              "column": 15,
+              "text": "ESPP B"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 474.6099853515625,
+                "y": 293.0
+              },
+              "column": 20,
+              "text": "15,025.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 544.8599853515625,
+                "y": 293.0
+              },
+              "column": 24,
+              "text": "15,025.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 59.5,
+                "x": 22.0,
+                "y": 304.0
+              },
+              "column": 0,
+              "text": "Special Allowance"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 193.61000061035156,
+                "y": 304.0
+              },
+              "column": 6,
+              "text": "26,850.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 263.8599853515625,
+                "y": 304.0
+              },
+              "column": 12,
+              "text": "26,850.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 70.0,
+                "x": 22.0,
+                "y": 315.0
+              },
+              "column": 0,
+              "text": "Cell Phone Allowance"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 197.50999450683594,
+                "y": 315.0
+              },
+              "column": 7,
+              "text": "4,217.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 267.760009765625,
+                "y": 315.0
+              },
+              "column": 12,
+              "text": "4,217.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 22.0,
+                "y": 326.0
+              },
+              "column": 0,
+              "text": "Uber Credit"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 197.50999450683594,
+                "y": 326.0
+              },
+              "column": 7,
+              "text": "4,770.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 267.760009765625,
+                "y": 326.0
+              },
+              "column": 12,
+              "text": "4,770.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 56.0,
+                "x": 20.0,
+                "y": 339.0
+              },
+              "column": 0,
+              "text": "Total Earnings"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 35.0,
+                "x": 189.72000122070312,
+                "y": 341.0
+              },
+              "column": 6,
+              "text": "109,153.00"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 106.97000122070312,
+                "x": 258.0299987792969,
+                "y": 339.0
+              },
+              "column": 11,
+              "text": "109,153.00 Total Deductions"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 474.6099853515625,
+                "y": 341.0
+              },
+              "column": 20,
+              "text": "26,005.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 544.8599853515625,
+                "y": 341.0
+              },
+              "column": 24,
+              "text": "26,005.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 120.0,
+                "x": 20.0,
+                "y": 370.0
+              },
+              "column": 0,
+              "text": "Net Pay      Rs. 83,148.00"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 312.0,
+                "x": 20.0,
+                "y": 382.0
+              },
+              "column": 0,
+              "text": "In Words    Rupees Eighty Three Thousand One Hundred and Forty Eight Only."
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 44.0,
+                "x": 20.0,
+                "y": 435.0
+              },
+              "column": 0,
+              "text": "Perquisites"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 24.0,
+                "x": 207.3300018310547,
+                "y": 435.0
+              },
+              "column": 8,
+              "text": "Amount"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 12.0,
+                "x": 394.6700134277344,
+                "y": 435.0
+              },
+              "column": 17,
+              "text": "YTD"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 59.499996185302734,
+                "x": 44.45000076293945,
+                "y": 472.0
+              },
+              "column": 1,
+              "text": "Days In Month (A)"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 52.5,
+                "x": 160.92999267578125,
+                "y": 472.0
+              },
+              "column": 4,
+              "text": "Arrear Days (B)"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 42.0,
+                "x": 275.0799865722656,
+                "y": 472.0
+              },
+              "column": 13,
+              "text": "LOPR Days(C)"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 42.0,
+                "x": 389.0400085449219,
+                "y": 472.0
+              },
+              "column": 17,
+              "text": "LOP Days (D)"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 52.500030517578125,
+                "x": 495.0199890136719,
+                "y": 472.0
+              },
+              "column": 22,
+              "text": "Net Days Worked"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 69.99996948242188,
+                "x": 492.9700012207031,
+                "y": 479.0
+              },
+              "column": 22,
+              "text": "(E = A + B + C - D)"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 14.0,
+                "x": 114.77999877929688,
+                "y": 490.0
+              },
+              "column": 3,
+              "text": "30.0"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 10.5,
+                "x": 231.07000732421875,
+                "y": 490.0
+              },
+              "column": 10,
+              "text": "0.0"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 10.5,
+                "x": 343.4700012207031,
+                "y": 490.0
+              },
+              "column": 16,
+              "text": "0.0"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 10.5,
+                "x": 455.8699951171875,
+                "y": 490.0
+              },
+              "column": 19,
+              "text": "0.0"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 14.0,
+                "x": 564.3800048828125,
+                "y": 490.0
+              },
+              "column": 26,
+              "text": "30.0"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 576.0,
+                "x": 20.0,
+                "y": 774.0
+              },
+              "column": 0,
+              "text": "This document contains confidential information. If you are not the intended recipient you are not authorized to use or disclose it in any form."
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 416.0,
+                "x": 20.0,
+                "y": 786.0
+              },
+              "column": 0,
+              "text": "If you received this in error please destroy it along with any copies and notify the sender immediately."
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 40.0,
+                "x": 20.0,
+                "y": 798.0
+              },
+              "column": 0,
+              "text": "25/06/2025"
+            }
+          ],
+          "page": 1
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 136.0,
+                "x": 191.39999389648438,
+                "y": 61.0
+              },
+              "column": 6,
+              "text": "UBER INDIA SYSTEMS PRIVATE LIMITED"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 192.0,
+                "x": 191.39999389648438,
+                "y": 73.0
+              },
+              "column": 6,
+              "text": "LEVEL 13 REGUS PLATINUM, BUSINESS CENTRE PVT LTD"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 92.0,
+                "x": 191.39999389648438,
+                "y": 85.0
+              },
+              "column": 6,
+              "text": "PLOT NO 17/18 SECTOR 30"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 144.0,
+                "x": 191.39999389648438,
+                "y": 97.0
+              },
+              "column": 6,
+              "text": "AB PLATINUM TECHNO PARK, NAVI MUMBAI"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 136.0,
+                "x": 191.39999389648438,
+                "y": 121.0
+              },
+              "column": 6,
+              "text": "PAYSLIP FOR THE MONTH OF MAY  2025"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 20.0,
+                "y": 137.0
+              },
+              "column": 0,
+              "text": "Emp Code"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 90.25,
+                "y": 137.0
+              },
+              "column": 2,
+              "text": "152210"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 216.6999969482422,
+                "y": 137.0
+              },
+              "column": 9,
+              "text": "Emp Name"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 35.0,
+                "x": 296.32000732421875,
+                "y": 137.0
+              },
+              "column": 14,
+              "text": "Harish H S"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 35.0,
+                "x": 20.0,
+                "y": 148.0
+              },
+              "column": 0,
+              "text": "Department"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 45.5,
+                "x": 90.25,
+                "y": 148.0
+              },
+              "column": 2,
+              "text": "9008900150204"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 216.6999969482422,
+                "y": 148.0
+              },
+              "column": 9,
+              "text": "Cost Center"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 17.5,
+                "x": 296.32000732421875,
+                "y": 148.0
+              },
+              "column": 14,
+              "text": "50204"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 436.82000732421875,
+                "y": 148.0
+              },
+              "column": 18,
+              "text": "PF No."
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 76.99996948242188,
+                "x": 488.3299865722656,
+                "y": 148.0
+              },
+              "column": 22,
+              "text": "THTHA13315390000014846"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 20.0,
+                "y": 159.0
+              },
+              "column": 0,
+              "text": "Location"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 49.0,
+                "x": 90.25,
+                "y": 159.0
+              },
+              "column": 2,
+              "text": "Bangalore 3006"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 216.6999969482422,
+                "y": 159.0
+              },
+              "column": 9,
+              "text": "Designation"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 63.0,
+                "x": 296.32000732421875,
+                "y": 159.0
+              },
+              "column": 14,
+              "text": "Payroll Specialist"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 24.5,
+                "x": 436.82000732421875,
+                "y": 159.0
+              },
+              "column": 18,
+              "text": "ESI No."
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 45.5,
+                "x": 20.0,
+                "y": 170.0
+              },
+              "column": 0,
+              "text": "Date of Birth"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 90.25,
+                "y": 170.0
+              },
+              "column": 2,
+              "text": "25-JUN-1990"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 216.6999969482422,
+                "y": 170.0
+              },
+              "column": 9,
+              "text": "Bank A/c No"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 42.0,
+                "x": 296.32000732421875,
+                "y": 170.0
+              },
+              "column": 14,
+              "text": "142001514430"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 24.5,
+                "x": 436.82000732421875,
+                "y": 170.0
+              },
+              "column": 18,
+              "text": "Pan No."
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 34.999969482421875,
+                "x": 488.3299865722656,
+                "y": 170.0
+              },
+              "column": 22,
+              "text": "AJWPH4128H"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 52.5,
+                "x": 20.0,
+                "y": 181.0
+              },
+              "column": 0,
+              "text": "Date of Joining"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 90.25,
+                "y": 181.0
+              },
+              "column": 2,
+              "text": "01-DEC-2023"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 216.6999969482422,
+                "y": 181.0
+              },
+              "column": 9,
+              "text": "Gender"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 3.5,
+                "x": 296.32000732421875,
+                "y": 181.0
+              },
+              "column": 14,
+              "text": "M"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 24.5,
+                "x": 436.82000732421875,
+                "y": 181.0
+              },
+              "column": 18,
+              "text": "EPS No."
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 10.5,
+                "x": 20.0,
+                "y": 192.0
+              },
+              "column": 0,
+              "text": "UAN"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 42.0,
+                "x": 90.25,
+                "y": 192.0
+              },
+              "column": 2,
+              "text": "100602351347"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 114.62001037597656,
+                "x": 216.6999969482422,
+                "y": 192.0
+              },
+              "column": 9,
+              "text": "Global Date of Joining 14-09-2020"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 20.0,
+                "y": 219.0
+              },
+              "column": 0,
+              "text": "Regime Type"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 34.99999237060547,
+                "x": 110.6500015258789,
+                "y": 219.0
+              },
+              "column": 3,
+              "text": "New Regime"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 91.00001525878906,
+                "x": 233.02000427246094,
+                "y": 219.0
+              },
+              "column": 10,
+              "text": "PAN Aadhaar Linking Status"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 346.32000732421875,
+                "y": 219.0
+              },
+              "column": 16,
+              "text": "Linked"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 32.0,
+                "x": 20.0,
+                "y": 246.0
+              },
+              "column": 0,
+              "text": "Earnings"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 24.0,
+                "x": 178.52000427246094,
+                "y": 246.0
+              },
+              "column": 5,
+              "text": "Amount"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 12.0,
+                "x": 255.8800048828125,
+                "y": 246.0
+              },
+              "column": 11,
+              "text": "YTD"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 40.0,
+                "x": 301.0,
+                "y": 246.0
+              },
+              "column": 15,
+              "text": "Deductions"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 24.0,
+                "x": 459.5199890136719,
+                "y": 246.0
+              },
+              "column": 19,
+              "text": "Amount"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 12.0,
+                "x": 536.8800048828125,
+                "y": 246.0
+              },
+              "column": 23,
+              "text": "YTD"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 17.5,
+                "x": 22.0,
+                "y": 260.0
+              },
+              "column": 0,
+              "text": "Basic"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 193.61000061035156,
+                "y": 260.0
+              },
+              "column": 6,
+              "text": "50,083.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 35.0,
+                "x": 259.9700012207031,
+                "y": 260.0
+              },
+              "column": 12,
+              "text": "100,166.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 73.5,
+                "x": 303.0,
+                "y": 260.0
+              },
+              "column": 15,
+              "text": "Uber Credit Deduction"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 478.510009765625,
+                "y": 260.0
+              },
+              "column": 20,
+              "text": "4,187.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 548.760009765625,
+                "y": 260.0
+              },
+              "column": 24,
+              "text": "8,957.00"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 70.0,
+                "x": 22.0,
+                "y": 271.0
+              },
+              "column": 0,
+              "text": "House Rent Allowance"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 193.61000061035156,
+                "y": 271.0
+              },
+              "column": 6,
+              "text": "20,033.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 263.8599853515625,
+                "y": 271.0
+              },
+              "column": 12,
+              "text": "40,066.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 49.0,
+                "x": 303.0,
+                "y": 271.0
+              },
+              "column": 15,
+              "text": "Provident Fund"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 478.510009765625,
+                "y": 271.0
+              },
+              "column": 20,
+              "text": "6,010.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 544.8599853515625,
+                "y": 271.0
+              },
+              "column": 24,
+              "text": "12,020.00"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 98.0,
+                "x": 22.0,
+                "y": 282.0
+              },
+              "column": 0,
+              "text": "Children Education Allowance"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 203.33999633789062,
+                "y": 282.0
+              },
+              "column": 8,
+              "text": "200.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 273.5899963378906,
+                "y": 282.0
+              },
+              "column": 13,
+              "text": "400.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 56.0,
+                "x": 303.0,
+                "y": 282.0
+              },
+              "column": 15,
+              "text": "Professional Tax"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 484.3399963378906,
+                "y": 282.0
+              },
+              "column": 21,
+              "text": "200.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 554.5900268554688,
+                "y": 282.0
+              },
+              "column": 25,
+              "text": "400.00"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 122.5,
+                "x": 22.0,
+                "y": 293.0
+              },
+              "column": 0,
+              "text": "Home Telephone / Internet Allowance"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 197.50999450683594,
+                "y": 293.0
+              },
+              "column": 7,
+              "text": "3,000.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 267.760009765625,
+                "y": 293.0
+              },
+              "column": 12,
+              "text": "6,000.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 303.0,
+                "y": 293.0
+              },
+              "column": 15,
+              "text": "ESPP B"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 14.0,
+                "x": 492.1300048828125,
+                "y": 293.0
+              },
+              "column": 22,
+              "text": "0.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 544.8599853515625,
+                "y": 293.0
+              },
+              "column": 24,
+              "text": "15,025.00"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 59.5,
+                "x": 22.0,
+                "y": 304.0
+              },
+              "column": 0,
+              "text": "Special Allowance"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 193.61000061035156,
+                "y": 304.0
+              },
+              "column": 6,
+              "text": "26,850.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 263.8599853515625,
+                "y": 304.0
+              },
+              "column": 12,
+              "text": "53,700.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 303.0,
+                "y": 304.0
+              },
+              "column": 15,
+              "text": "ESPP A"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 474.6099853515625,
+                "y": 304.0
+              },
+              "column": 20,
+              "text": "15,025.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 544.8599853515625,
+                "y": 304.0
+              },
+              "column": 24,
+              "text": "15,025.00"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 70.0,
+                "x": 22.0,
+                "y": 315.0
+              },
+              "column": 0,
+              "text": "Cell Phone Allowance"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 197.50999450683594,
+                "y": 315.0
+              },
+              "column": 7,
+              "text": "4,217.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 267.760009765625,
+                "y": 315.0
+              },
+              "column": 12,
+              "text": "8,434.00"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 22.0,
+                "y": 326.0
+              },
+              "column": 0,
+              "text": "Uber Credit"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 197.50999450683594,
+                "y": 326.0
+              },
+              "column": 7,
+              "text": "4,187.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 267.760009765625,
+                "y": 326.0
+              },
+              "column": 12,
+              "text": "8,957.00"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 56.0,
+                "x": 20.0,
+                "y": 339.0
+              },
+              "column": 0,
+              "text": "Total Earnings"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 35.0,
+                "x": 189.72000122070312,
+                "y": 341.0
+              },
+              "column": 6,
+              "text": "108,570.00"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 106.97000122070312,
+                "x": 258.0299987792969,
+                "y": 339.0
+              },
+              "column": 11,
+              "text": "217,723.00 Total Deductions"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 474.6099853515625,
+                "y": 341.0
+              },
+              "column": 20,
+              "text": "25,422.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 544.8599853515625,
+                "y": 341.0
+              },
+              "column": 24,
+              "text": "51,427.00"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 120.0,
+                "x": 20.0,
+                "y": 370.0
+              },
+              "column": 0,
+              "text": "Net Pay      Rs. 83,148.00"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 312.0,
+                "x": 20.0,
+                "y": 382.0
+              },
+              "column": 0,
+              "text": "In Words    Rupees Eighty Three Thousand One Hundred and Forty Eight Only."
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 44.0,
+                "x": 20.0,
+                "y": 435.0
+              },
+              "column": 0,
+              "text": "Perquisites"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 24.0,
+                "x": 207.3300018310547,
+                "y": 435.0
+              },
+              "column": 8,
+              "text": "Amount"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 12.0,
+                "x": 394.6700134277344,
+                "y": 435.0
+              },
+              "column": 17,
+              "text": "YTD"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 59.499996185302734,
+                "x": 44.45000076293945,
+                "y": 472.0
+              },
+              "column": 1,
+              "text": "Days In Month (A)"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 52.5,
+                "x": 160.92999267578125,
+                "y": 472.0
+              },
+              "column": 4,
+              "text": "Arrear Days (B)"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 42.0,
+                "x": 275.0799865722656,
+                "y": 472.0
+              },
+              "column": 13,
+              "text": "LOPR Days(C)"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 42.0,
+                "x": 389.0400085449219,
+                "y": 472.0
+              },
+              "column": 17,
+              "text": "LOP Days (D)"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 52.500030517578125,
+                "x": 495.0199890136719,
+                "y": 472.0
+              },
+              "column": 22,
+              "text": "Net Days Worked"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 69.99996948242188,
+                "x": 492.9700012207031,
+                "y": 479.0
+              },
+              "column": 22,
+              "text": "(E = A + B + C - D)"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 14.0,
+                "x": 114.77999877929688,
+                "y": 490.0
+              },
+              "column": 3,
+              "text": "31.0"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 10.5,
+                "x": 231.07000732421875,
+                "y": 490.0
+              },
+              "column": 10,
+              "text": "0.0"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 10.5,
+                "x": 343.4700012207031,
+                "y": 490.0
+              },
+              "column": 16,
+              "text": "0.0"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 10.5,
+                "x": 455.8699951171875,
+                "y": 490.0
+              },
+              "column": 19,
+              "text": "0.0"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 14.0,
+                "x": 564.3800048828125,
+                "y": 490.0
+              },
+              "column": 26,
+              "text": "31.0"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 576.0,
+                "x": 20.0,
+                "y": 774.0
+              },
+              "column": 0,
+              "text": "This document contains confidential information. If you are not the intended recipient you are not authorized to use or disclose it in any form."
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 416.0,
+                "x": 20.0,
+                "y": 786.0
+              },
+              "column": 0,
+              "text": "If you received this in error please destroy it along with any copies and notify the sender immediately."
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 40.0,
+                "x": 20.0,
+                "y": 798.0
+              },
+              "column": 0,
+              "text": "25/06/2025"
+            }
+          ],
+          "page": 2
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 136.0,
+                "x": 191.39999389648438,
+                "y": 61.0
+              },
+              "column": 6,
+              "text": "UBER INDIA SYSTEMS PRIVATE LIMITED"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 192.0,
+                "x": 191.39999389648438,
+                "y": 73.0
+              },
+              "column": 6,
+              "text": "LEVEL 13 REGUS PLATINUM, BUSINESS CENTRE PVT LTD"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 92.0,
+                "x": 191.39999389648438,
+                "y": 85.0
+              },
+              "column": 6,
+              "text": "PLOT NO 17/18 SECTOR 30"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 144.0,
+                "x": 191.39999389648438,
+                "y": 97.0
+              },
+              "column": 6,
+              "text": "AB PLATINUM TECHNO PARK, NAVI MUMBAI"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 140.0,
+                "x": 191.39999389648438,
+                "y": 121.0
+              },
+              "column": 6,
+              "text": "PAYSLIP FOR THE MONTH OF JUNE  2025"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 20.0,
+                "y": 137.0
+              },
+              "column": 0,
+              "text": "Emp Code"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 90.25,
+                "y": 137.0
+              },
+              "column": 2,
+              "text": "152210"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 216.6999969482422,
+                "y": 137.0
+              },
+              "column": 9,
+              "text": "Emp Name"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 35.0,
+                "x": 296.32000732421875,
+                "y": 137.0
+              },
+              "column": 14,
+              "text": "Harish H S"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 35.0,
+                "x": 20.0,
+                "y": 148.0
+              },
+              "column": 0,
+              "text": "Department"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 45.5,
+                "x": 90.25,
+                "y": 148.0
+              },
+              "column": 2,
+              "text": "9008900150204"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 216.6999969482422,
+                "y": 148.0
+              },
+              "column": 9,
+              "text": "Cost Center"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 17.5,
+                "x": 296.32000732421875,
+                "y": 148.0
+              },
+              "column": 14,
+              "text": "50204"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 436.82000732421875,
+                "y": 148.0
+              },
+              "column": 18,
+              "text": "PF No."
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 76.99996948242188,
+                "x": 488.3299865722656,
+                "y": 148.0
+              },
+              "column": 22,
+              "text": "THTHA13315390000014846"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 20.0,
+                "y": 159.0
+              },
+              "column": 0,
+              "text": "Location"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 49.0,
+                "x": 90.25,
+                "y": 159.0
+              },
+              "column": 2,
+              "text": "Bangalore 3006"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 216.6999969482422,
+                "y": 159.0
+              },
+              "column": 9,
+              "text": "Designation"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 63.0,
+                "x": 296.32000732421875,
+                "y": 159.0
+              },
+              "column": 14,
+              "text": "Payroll Specialist"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 24.5,
+                "x": 436.82000732421875,
+                "y": 159.0
+              },
+              "column": 18,
+              "text": "ESI No."
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 45.5,
+                "x": 20.0,
+                "y": 170.0
+              },
+              "column": 0,
+              "text": "Date of Birth"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 90.25,
+                "y": 170.0
+              },
+              "column": 2,
+              "text": "25-JUN-1990"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 216.6999969482422,
+                "y": 170.0
+              },
+              "column": 9,
+              "text": "Bank A/c No"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 42.0,
+                "x": 296.32000732421875,
+                "y": 170.0
+              },
+              "column": 14,
+              "text": "142001514430"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 24.5,
+                "x": 436.82000732421875,
+                "y": 170.0
+              },
+              "column": 18,
+              "text": "Pan No."
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 34.999969482421875,
+                "x": 488.3299865722656,
+                "y": 170.0
+              },
+              "column": 22,
+              "text": "AJWPH4128H"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 52.5,
+                "x": 20.0,
+                "y": 181.0
+              },
+              "column": 0,
+              "text": "Date of Joining"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 90.25,
+                "y": 181.0
+              },
+              "column": 2,
+              "text": "01-DEC-2023"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 216.6999969482422,
+                "y": 181.0
+              },
+              "column": 9,
+              "text": "Gender"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 3.5,
+                "x": 296.32000732421875,
+                "y": 181.0
+              },
+              "column": 14,
+              "text": "M"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 24.5,
+                "x": 436.82000732421875,
+                "y": 181.0
+              },
+              "column": 18,
+              "text": "EPS No."
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 10.5,
+                "x": 20.0,
+                "y": 192.0
+              },
+              "column": 0,
+              "text": "UAN"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 42.0,
+                "x": 90.25,
+                "y": 192.0
+              },
+              "column": 2,
+              "text": "100602351347"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 114.62001037597656,
+                "x": 216.6999969482422,
+                "y": 192.0
+              },
+              "column": 9,
+              "text": "Global Date of Joining 14-09-2020"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 20.0,
+                "y": 219.0
+              },
+              "column": 0,
+              "text": "Regime Type"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 34.99999237060547,
+                "x": 110.6500015258789,
+                "y": 219.0
+              },
+              "column": 3,
+              "text": "New Regime"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 91.00001525878906,
+                "x": 233.02000427246094,
+                "y": 219.0
+              },
+              "column": 10,
+              "text": "PAN Aadhaar Linking Status"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 346.32000732421875,
+                "y": 219.0
+              },
+              "column": 16,
+              "text": "Linked"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 32.0,
+                "x": 20.0,
+                "y": 246.0
+              },
+              "column": 0,
+              "text": "Earnings"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 24.0,
+                "x": 178.52000427246094,
+                "y": 246.0
+              },
+              "column": 5,
+              "text": "Amount"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 12.0,
+                "x": 255.8800048828125,
+                "y": 246.0
+              },
+              "column": 11,
+              "text": "YTD"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 40.0,
+                "x": 301.0,
+                "y": 246.0
+              },
+              "column": 15,
+              "text": "Deductions"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 24.0,
+                "x": 459.5199890136719,
+                "y": 246.0
+              },
+              "column": 19,
+              "text": "Amount"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 12.0,
+                "x": 536.8800048828125,
+                "y": 246.0
+              },
+              "column": 23,
+              "text": "YTD"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 17.5,
+                "x": 22.0,
+                "y": 260.0
+              },
+              "column": 0,
+              "text": "Basic"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 193.61000061035156,
+                "y": 260.0
+              },
+              "column": 6,
+              "text": "50,083.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 35.0,
+                "x": 259.9700012207031,
+                "y": 260.0
+              },
+              "column": 12,
+              "text": "150,249.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 73.5,
+                "x": 303.0,
+                "y": 260.0
+              },
+              "column": 15,
+              "text": "Uber Credit Deduction"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 478.510009765625,
+                "y": 260.0
+              },
+              "column": 20,
+              "text": "4,140.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 544.8599853515625,
+                "y": 260.0
+              },
+              "column": 24,
+              "text": "13,097.00"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 70.0,
+                "x": 22.0,
+                "y": 271.0
+              },
+              "column": 0,
+              "text": "House Rent Allowance"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 193.61000061035156,
+                "y": 271.0
+              },
+              "column": 6,
+              "text": "20,033.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 263.8599853515625,
+                "y": 271.0
+              },
+              "column": 12,
+              "text": "60,099.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 49.0,
+                "x": 303.0,
+                "y": 271.0
+              },
+              "column": 15,
+              "text": "Provident Fund"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 478.510009765625,
+                "y": 271.0
+              },
+              "column": 20,
+              "text": "6,010.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 544.8599853515625,
+                "y": 271.0
+              },
+              "column": 24,
+              "text": "18,030.00"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 98.0,
+                "x": 22.0,
+                "y": 282.0
+              },
+              "column": 0,
+              "text": "Children Education Allowance"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 203.33999633789062,
+                "y": 282.0
+              },
+              "column": 8,
+              "text": "200.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 273.5899963378906,
+                "y": 282.0
+              },
+              "column": 13,
+              "text": "600.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 56.0,
+                "x": 303.0,
+                "y": 282.0
+              },
+              "column": 15,
+              "text": "Professional Tax"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 484.3399963378906,
+                "y": 282.0
+              },
+              "column": 21,
+              "text": "200.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 554.5900268554688,
+                "y": 282.0
+              },
+              "column": 25,
+              "text": "600.00"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 122.5,
+                "x": 22.0,
+                "y": 293.0
+              },
+              "column": 0,
+              "text": "Home Telephone / Internet Allowance"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 197.50999450683594,
+                "y": 293.0
+              },
+              "column": 7,
+              "text": "3,000.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 267.760009765625,
+                "y": 293.0
+              },
+              "column": 12,
+              "text": "9,000.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 303.0,
+                "y": 293.0
+              },
+              "column": 15,
+              "text": "ESPP B"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 14.0,
+                "x": 492.1300048828125,
+                "y": 293.0
+              },
+              "column": 22,
+              "text": "0.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 544.8599853515625,
+                "y": 293.0
+              },
+              "column": 24,
+              "text": "15,025.00"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 59.5,
+                "x": 22.0,
+                "y": 304.0
+              },
+              "column": 0,
+              "text": "Special Allowance"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 193.61000061035156,
+                "y": 304.0
+              },
+              "column": 6,
+              "text": "26,850.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 263.8599853515625,
+                "y": 304.0
+              },
+              "column": 12,
+              "text": "80,550.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 21.0,
+                "x": 303.0,
+                "y": 304.0
+              },
+              "column": 15,
+              "text": "ESPP A"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 474.6099853515625,
+                "y": 304.0
+              },
+              "column": 20,
+              "text": "15,025.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 544.8599853515625,
+                "y": 304.0
+              },
+              "column": 24,
+              "text": "30,050.00"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 70.0,
+                "x": 22.0,
+                "y": 315.0
+              },
+              "column": 0,
+              "text": "Cell Phone Allowance"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 197.50999450683594,
+                "y": 315.0
+              },
+              "column": 7,
+              "text": "4,217.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 263.8599853515625,
+                "y": 315.0
+              },
+              "column": 12,
+              "text": "12,651.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 35.0,
+                "x": 303.0,
+                "y": 315.0
+              },
+              "column": 15,
+              "text": "Income Tax"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 474.6099853515625,
+                "y": 315.0
+              },
+              "column": 20,
+              "text": "19,030.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 544.8599853515625,
+                "y": 315.0
+              },
+              "column": 24,
+              "text": "19,030.00"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 70.0,
+                "x": 22.0,
+                "y": 326.0
+              },
+              "column": 0,
+              "text": "Well-being Allowance"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 193.61000061035156,
+                "y": 326.0
+              },
+              "column": 6,
+              "text": "12,497.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 263.8599853515625,
+                "y": 326.0
+              },
+              "column": 12,
+              "text": "12,497.00"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 38.5,
+                "x": 22.0,
+                "y": 337.0
+              },
+              "column": 0,
+              "text": "Uber Credit"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 197.50999450683594,
+                "y": 337.0
+              },
+              "column": 7,
+              "text": "4,140.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 263.8599853515625,
+                "y": 337.0
+              },
+              "column": 12,
+              "text": "13,097.00"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 45.5,
+                "x": 22.0,
+                "y": 348.0
+              },
+              "column": 0,
+              "text": "ESPP B Refund"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 197.50999450683594,
+                "y": 348.0
+              },
+              "column": 7,
+              "text": "4,410.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 28.0,
+                "x": 267.760009765625,
+                "y": 348.0
+              },
+              "column": 12,
+              "text": "4,410.00"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 56.0,
+                "x": 20.0,
+                "y": 361.0
+              },
+              "column": 0,
+              "text": "Total Earnings"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 35.0,
+                "x": 189.72000122070312,
+                "y": 363.0
+              },
+              "column": 6,
+              "text": "125,430.00"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 106.97000122070312,
+                "x": 258.0299987792969,
+                "y": 361.0
+              },
+              "column": 11,
+              "text": "343,153.00 Total Deductions"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 474.6099853515625,
+                "y": 363.0
+              },
+              "column": 20,
+              "text": "44,405.00"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 544.8599853515625,
+                "y": 363.0
+              },
+              "column": 24,
+              "text": "95,832.00"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 120.0,
+                "x": 20.0,
+                "y": 392.0
+              },
+              "column": 0,
+              "text": "Net Pay      Rs. 81,025.00"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 256.0,
+                "x": 20.0,
+                "y": 404.0
+              },
+              "column": 0,
+              "text": "In Words    Rupees Eighty One Thousand and Twenty Five Only."
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 44.0,
+                "x": 20.0,
+                "y": 457.0
+              },
+              "column": 0,
+              "text": "Perquisites"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 24.0,
+                "x": 207.3300018310547,
+                "y": 457.0
+              },
+              "column": 8,
+              "text": "Amount"
+            },
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 12.0,
+                "x": 394.6700134277344,
+                "y": 457.0
+              },
+              "column": 17,
+              "text": "YTD"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 31.5,
+                "x": 20.0,
+                "y": 469.0
+              },
+              "column": 0,
+              "text": "ESPP Gain"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 17.5,
+                "x": 207.3300018310547,
+                "y": 469.0
+              },
+              "column": 8,
+              "text": "66942"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 17.5,
+                "x": 394.6700134277344,
+                "y": 469.0
+              },
+              "column": 17,
+              "text": "66942"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 59.499996185302734,
+                "x": 44.45000076293945,
+                "y": 505.0
+              },
+              "column": 1,
+              "text": "Days In Month (A)"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 52.5,
+                "x": 160.92999267578125,
+                "y": 505.0
+              },
+              "column": 4,
+              "text": "Arrear Days (B)"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 42.0,
+                "x": 275.0799865722656,
+                "y": 505.0
+              },
+              "column": 13,
+              "text": "LOPR Days(C)"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 42.0,
+                "x": 389.0400085449219,
+                "y": 505.0
+              },
+              "column": 17,
+              "text": "LOP Days (D)"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 52.500030517578125,
+                "x": 495.0199890136719,
+                "y": 505.0
+              },
+              "column": 22,
+              "text": "Net Days Worked"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 69.99996948242188,
+                "x": 492.9700012207031,
+                "y": 512.0
+              },
+              "column": 22,
+              "text": "(E = A + B + C - D)"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 14.0,
+                "x": 114.77999877929688,
+                "y": 523.0
+              },
+              "column": 3,
+              "text": "30.0"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 10.5,
+                "x": 231.07000732421875,
+                "y": 523.0
+              },
+              "column": 10,
+              "text": "0.0"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 10.5,
+                "x": 343.4700012207031,
+                "y": 523.0
+              },
+              "column": 16,
+              "text": "0.0"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 10.5,
+                "x": 455.8699951171875,
+                "y": 523.0
+              },
+              "column": 19,
+              "text": "0.0"
+            },
+            {
+              "bbox": {
+                "height": 7.0,
+                "width": 14.0,
+                "x": 564.3800048828125,
+                "y": 523.0
+              },
+              "column": 26,
+              "text": "30.0"
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 576.0,
+                "x": 20.0,
+                "y": 774.0
+              },
+              "column": 0,
+              "text": "This document contains confidential information. If you are not the intended recipient you are not authorized to use or disclose it in any form."
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 416.0,
+                "x": 20.0,
+                "y": 786.0
+              },
+              "column": 0,
+              "text": "If you received this in error please destroy it along with any copies and notify the sender immediately."
+            }
+          ],
+          "page": 3
+        },
+        {
+          "cells": [
+            {
+              "bbox": {
+                "height": 8.0,
+                "width": 40.0,
+                "x": 20.0,
+                "y": 798.0
+              },
+              "column": 0,
+              "text": "25/06/2025"
+            }
+          ],
+          "page": 3
+        }
+      ]
+    }
+  },
+  "source": "Pay Slip_Apr-2025-Jun 2025_Harish H S.pdf",
+  "total_deductions": {
+    "paise": 2600500,
+    "raw": "26,005.00"
+  }
+}

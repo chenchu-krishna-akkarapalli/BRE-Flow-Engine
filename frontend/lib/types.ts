@@ -5,7 +5,7 @@
 // HUF is not offered by this wizard. The API still models it; the frontend
 // simply never constructs that branch.
 export type EntityType = "Individual" | "Company";
-export type ProfileType = "Salaried" | "Self-Employed" | "Rental Income" | "Company";
+export type ProfileType = "Salaried" | "Self-Employed" | "Company";
 
 export const BANK_CODES = [
   "BOI", "INDIAN_BANK", "IOB", "BOB", "BOM", "HDFC", "AXIS", "KOTAK",
@@ -63,39 +63,22 @@ export interface SalariedOccupation {
   // Required instead of form16Years when the proof offered is an ITR.
   currentYearItr?: number;
   previousYearItr?: number;
+  rentalIncomeTypeSalaried: string;
 }
 
 export interface SelfEmployedOccupation {
   profileType: "Self-Employed";
-  officeAddressType?: "Same" | "Separate";
+  officeAddressType: "Same" | "Separate";
   officeAddress?: string;
   officePremisesStatus?: "Owned" | "Rented";
   guarantorStatus?: "Without a Gaurantor" | "With a Gaurantor";
   businessEntityType: string;
   businessProof?: string;
-  isRegisteredBusiness?: boolean;
-  businessEstablishmentDate?: string;
-  currentITRAmount?: number;
-  prevITRAmount?: number;
-  businessItrAmount?: number;
-  // add-on.md §3: the farming branch's own field set. Sent only when
-  // businessEntityType is Agriculture; the API rejects them otherwise.
-  ownsAgriculturalLand?: boolean;
-  agriculturalLandLocation?: string;
-  annualAgriculturalIncome?: number;
-  agricultureItrFiled?: boolean;
-  agriculturalIncomeProof?: string;
-}
-
-// add-on.md §7: rent as a top-level category rather than a rider question.
-export interface RentalIncomeOccupation {
-  profileType: "Rental Income";
-  rentalPropertyAddress: string;
-  rentalIncomeDocumentation: string;
-  currentYearItr?: number;
-  previousYearItr?: number;
-  rentalBankStatementProvided?: boolean;
-  rentalIncomeAmount?: number;
+  businessEstablishmentDate: string;
+  currentITRAmount: number;
+  prevITRAmount: number;
+  businessItrAmount: number;
+  rentalIncomeTypeSelfEmployed: string;
 }
 
 export interface CompanyBusiness {
@@ -110,7 +93,6 @@ export interface CompanyBusiness {
 export type Occupation =
   | SalariedOccupation
   | SelfEmployedOccupation
-  | RentalIncomeOccupation
   | CompanyBusiness;
 
 export interface BankingStep {
@@ -141,8 +123,6 @@ export interface CoApplicantStep {
   coApplicantName?: string;
   coApplicantDob?: string;
   coApplicantOccupation?: "Salaried" | "Self-Employed";
-  coApplicantCurrentItr?: number;
-  coApplicantPreviousItr?: number;
 }
 
 export interface OnboardingFormRequest {

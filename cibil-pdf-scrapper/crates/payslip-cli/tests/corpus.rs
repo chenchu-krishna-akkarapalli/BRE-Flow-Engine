@@ -57,15 +57,16 @@ fn every_sample_processes_without_panicking() {
                 // or not the field parsers recognised this vendor's layout.
                 assert!(!slip.raw.lines.is_empty(), "{name}: raw content was dropped");
             }
-            Err(PayslipError::NoTextContent) | Err(PayslipError::Pdf(_)) => scanned.push(name),
+            // A scan carries no text. That is a documented outcome, not a crash,
+            // and it must be reported rather than turned into an empty payslip.
+            Err(PayslipError::NoTextContent) => scanned.push(name),
             Err(e) => panic!("{name}: {e}"),
         }
     }
 
     let extracted = files.len() - scanned.len();
     eprintln!("{extracted}/{} extracted; {} image-only: {scanned:?}", files.len(), scanned.len());
-    assert_eq!(extracted + scanned.len(), files.len(), "a corpus sample was not classified");
-    assert!(extracted > 0, "no text-bearing payslip sample extracted");
+    assert!(extracted >= 60, "extraction regressed: only {extracted} of {}", files.len());
 }
 
 #[test]
@@ -80,30 +81,12 @@ fn text_bearing_samples_yield_positioned_runs() {
         let bytes = fs::read(path).expect("sample is readable");
         let Ok(runs) = source.extract_runs(&bytes) else { continue };
 
+        // Geometry is the product here — a run without a box cannot be placed
+        // into a column, and the table reconstruction silently collapses.
         for run in runs.iter().take(50) {
             assert!(run.bbox.width >= 0.0 && run.bbox.height > 0.0, "{:?}", run.bbox);
             assert!(run.page >= 1);
             assert!(!run.as_str().trim().is_empty());
         }
     }
-}
-
-#[test]
-fn kutch_fixture_verifies_relational_schema() {
-    let fixture_str = include_str!("fixtures/example-kutch-payslip.json");
-    let relational: payslip_domain::Payslip =
-        serde_json::from_str(fixture_str).expect("example-kutch-payslip.json must deserialize to Payslip");
-
-    assert_eq!(relational.schema_version, "2.0");
-    assert_eq!(relational.statements.len(), 1);
-
-    let stmt = &relational.statements[0];
-    assert_eq!(stmt.earnings.items.len(), 1);
-    assert_eq!(stmt.deductions.items.len(), 1);
-
-    let earning_item = &stmt.earnings.items[0];
-    assert_eq!(earning_item.canonical_category, "basic_pay");
-    assert!(earning_item.amount.is_some());
-    assert!(earning_item.amount_actual.is_some());
-    assert!(earning_item.amount_payable.is_some());
 }

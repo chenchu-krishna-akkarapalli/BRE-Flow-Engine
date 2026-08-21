@@ -47,10 +47,8 @@
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 
   --shell-max: 1280px;
-  --form-col: 820px;
-  --telemetry-col: 320px;
-  --sidebar-width: 260px;
-  --header-height: 64px;
+  --form-col: 720px;
+  --telemetry-col: 480px;
 }
 
 @theme {
@@ -175,37 +173,6 @@ h1, h2, h3, h4, h5, h6 {
 .step-enter {
   animation: step-in var(--dur-normal) var(--ease-out) forwards;
 }
-
-@keyframes slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(32px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slide-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(-32px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.slide-in-right {
-  animation: slide-in-right var(--dur-normal) var(--ease-out) forwards;
-}
-
-.slide-in-left {
-  animation: slide-in-left var(--dur-normal) var(--ease-out) forwards;
-}
-
 
 @keyframes pulse-glow {
   0%, 100% {

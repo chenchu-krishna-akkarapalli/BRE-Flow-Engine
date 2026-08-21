@@ -7,7 +7,6 @@ pub const SCHEMA_JSON: &str = include_str!("../coi_output.schema.json");
 
 /// The nested relational contract, separate from the flat one above.
 pub const RELATIONAL_SCHEMA_JSON: &str = include_str!("../coi_relational_output.schema.json");
-pub const CONTRACT_SCHEMA_JSON: &str = include_str!("../coi_contract.schema.json");
 
 /// Count Aadhaar-shaped values in arbitrary text.
 ///
@@ -34,10 +33,6 @@ pub fn validate_relational_schema(instance: &Value) -> Result<Vec<String>> {
     check(RELATIONAL_SCHEMA_JSON, instance)
 }
 
-pub fn validate_contract(instance: &Value) -> Result<Vec<String>> {
-    check(CONTRACT_SCHEMA_JSON, instance)
-}
-
 fn check(schema_json: &str, instance: &Value) -> Result<Vec<String>> {
     let schema: Value = serde_json::from_str(schema_json)
         .map_err(|e| CoiError::Schema(format!("schema is invalid: {e}")))?;
@@ -52,7 +47,7 @@ fn check(schema_json: &str, instance: &Value) -> Result<Vec<String>> {
 
 #[cfg(test)]
 mod tests {
-    use super::{count_aadhaar_like, schema, validate_against_schema, validate_contract};
+    use super::{count_aadhaar_like, schema, validate_against_schema};
     use serde_json::json;
 
     #[test]
@@ -66,13 +61,6 @@ mod tests {
         let value: serde_json::Value =
             serde_json::from_str(super::RELATIONAL_SCHEMA_JSON).expect("schema parses");
         assert!(jsonschema::validator_for(&value).is_ok());
-    }
-
-    #[test]
-    fn extended_contract_accepts_every_new_section() {
-        let document = coi_domain::CoiDocument::default();
-        let value = serde_json::to_value(document).expect("serialises");
-        assert_eq!(validate_contract(&value).expect("validator runs"), Vec::<String>::new());
     }
 
     #[test]

@@ -1,12 +1,11 @@
 // payslip-cli — decode one payslip or a whole directory.
 //
-//   payslip-cli <file.pdf>              parsed payslip as JSON (Schema v2.0)
+//   payslip-cli <file.pdf>              parsed payslip as JSON
 //   payslip-cli <file.pdf> --raw        raw runs + lines only, no interpretation
-//   payslip-cli --batch <dir>           one summary row per file, writes target/payslip-output
+//   payslip-cli --batch <dir>           one summary row per file, exit 1 on any failure
 //   payslip-cli --batch <dir> --out <d> plus one JSON document per payslip
 
 use std::fs;
-use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
@@ -20,7 +19,7 @@ fn main() -> ExitCode {
 
     if positional.is_empty() {
         eprintln!(
-            "Usage: payslip-cli <file.pdf> [--raw] [--pretty]\n       payslip-cli --batch <dir> [--out <out_dir>] [--json]"
+            "Usage: payslip-cli <file.pdf> [--raw] [--pretty]\n       payslip-cli --batch <dir> [--json]"
         );
         return ExitCode::from(2);
     }
@@ -31,41 +30,18 @@ fn main() -> ExitCode {
             .position(|a| a == "--out")
             .and_then(|i| args.get(i + 1))
             .map(PathBuf::from);
-        run_batch(
-            Path::new(positional[0]),
-            flag("--json"),
-            out_dir.or_else(|| Some(PathBuf::from("payslip-output"))),
-        )
+        run_batch(Path::new(positional[0]), flag("--json"), out_dir)
     } else {
         run_single(Path::new(positional[0]), flag("--raw"), flag("--pretty"))
     }
 }
 
 fn run_single(path: &Path, raw_only: bool, pretty: bool) -> ExitCode {
-    let (bytes, name) = if path == Path::new("-") {
-        let mut buf = Vec::new();
-        if let Err(e) = std::io::stdin().read_to_end(&mut buf) {
-            eprintln!("stdin error: {e}");
+    let bytes = match fs::read(path) {
+        Ok(b) => b,
+        Err(e) => {
+            eprintln!("{}: {e}", path.display());
             return ExitCode::FAILURE;
-        }
-        if buf.len() < 8 {
-            (buf, "stdin.pdf".to_string())
-        } else {
-            let len = u64::from_le_bytes(buf[..8].try_into().unwrap()) as usize;
-            let end = 8usize.saturating_add(len);
-            if end <= buf.len() {
-                (buf[end..].to_vec(), "stdin.pdf".to_string())
-            } else {
-                (buf, "stdin.pdf".to_string())
-            }
-        }
-    } else {
-        match fs::read(path) {
-            Ok(b) => (b, path.display().to_string()),
-            Err(e) => {
-                eprintln!("{}: {e}", path.display());
-                return ExitCode::FAILURE;
-            }
         }
     };
 
@@ -73,7 +49,7 @@ fn run_single(path: &Path, raw_only: bool, pretty: bool) -> ExitCode {
     let runs = match source.extract_runs(&bytes) {
         Ok(r) => r,
         Err(e) => {
-            eprintln!("{name}: {e}");
+            eprintln!("{}: {e}", path.display());
             return ExitCode::FAILURE;
         }
     };
@@ -81,12 +57,12 @@ fn run_single(path: &Path, raw_only: bool, pretty: bool) -> ExitCode {
 
     let json = if raw_only {
         let lines = payslip_layout::group_lines(&runs);
-        serde_json::json!({ "source": name, "pages": pages, "runs": runs, "lines": lines })
+        serde_json::json!({ "source": path.display().to_string(), "pages": pages, "runs": runs, "lines": lines })
     } else {
-        match payslip_parser::parse_payslip(&name, &runs, pages) {
+        match payslip_parser::parse_payslip(&path.display().to_string(), &runs, pages) {
             Ok(p) => serde_json::to_value(&p).unwrap_or_else(|e| serde_json::json!({ "error": e.to_string() })),
             Err(e) => {
-                eprintln!("{name}: {e}");
+                eprintln!("{}: {e}", path.display());
                 return ExitCode::FAILURE;
             }
         }
@@ -156,13 +132,16 @@ fn run_batch(dir: &Path, as_json: bool, out_dir: Option<PathBuf>) -> ExitCode {
                     })
             });
 
+        // A per-document file is written for successes AND failures: a payslip
+        // missing from the output directory would otherwise be indistinguishable
+        // from one that was never submitted.
         if let Some(out) = &out_dir {
             let target = out.join(format!("{}.json", path.file_stem().unwrap_or_default().to_string_lossy()));
             let document = match &outcome {
                 Ok(slip) => serde_json::to_value(slip).unwrap_or_else(|e| {
                     serde_json::json!({ "source": name, "error": e.to_string() })
                 }),
-                Err(e) => serde_json::json!({ "source": name, "status": error_status(e), "error": e }),
+                Err(e) => serde_json::json!({ "source": name, "status": "FAILED", "error": e }),
             };
             match serde_json::to_string_pretty(&document) {
                 Ok(text) => {
@@ -180,32 +159,26 @@ fn run_batch(dir: &Path, as_json: bool, out_dir: Option<PathBuf>) -> ExitCode {
                 if as_json {
                     records.push(serde_json::to_value(&slip).unwrap_or_default());
                 } else {
-                    let stmt = slip.statements.first();
-                    let ern_count = stmt.map(|s| s.earnings.items.len()).unwrap_or(0);
-                    let ded_count = stmt.map(|s| s.deductions.items.len()).unwrap_or(0);
-                    let net_raw = stmt
-                        .and_then(|s| s.summary.net_pay.as_ref())
-                        .and_then(|a| a.raw_value_string.clone())
-                        .unwrap_or_else(|| "-".into());
-
                     println!(
                         "{:<44} {:>5} {:>6} {:>4} {:>4} {:>14}  OK ({})",
                         short,
                         slip.raw.page_count,
                         slip.raw.lines.len(),
-                        ern_count,
-                        ded_count,
-                        net_raw,
-                        slip.metadata.layout_signature,
+                        slip.earnings.len(),
+                        slip.deductions.len(),
+                        slip.net_pay.as_ref().map(|m| m.raw.clone()).unwrap_or_else(|| "-".into()),
+                        slip.format,
                     );
                 }
             }
             Err(e) => {
                 failed += 1;
+                // Surfaced, never swallowed: a file that could not be read is
+                // reported by name with its reason and fails the run.
                 if as_json {
-                    records.push(serde_json::json!({ "source": name, "status": error_status(&e), "error": e }));
+                    records.push(serde_json::json!({ "source": name, "error": e }));
                 } else {
-                    println!("{:<44} {:>5} {:>6} {:>4} {:>4} {:>14}  {}: {}", short, "-", "-", "-", "-", "-", error_status(&e), e);
+                    println!("{:<44} {:>5} {:>6} {:>4} {:>4} {:>14}  FAILED: {}", short, "-", "-", "-", "-", "-", e);
                 }
             }
         }
@@ -222,8 +195,4 @@ fn run_batch(dir: &Path, as_json: bool, out_dir: Option<PathBuf>) -> ExitCode {
     }
 
     if failed == 0 { ExitCode::SUCCESS } else { ExitCode::FAILURE }
-}
-
-fn error_status(error: &str) -> &'static str {
-    if error.contains("No extractable text") { "SCAN_NO_TEXT" } else { "FAILED" }
 }

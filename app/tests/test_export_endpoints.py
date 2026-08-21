@@ -123,10 +123,7 @@ def test_report_rows_carry_value_and_limit() -> None:
     cibil = next(r for r in failed if r["rule_id"] == "BUR-405")
     assert cibil["parameter_name"] == "CIBIL Score"
     assert cibil["status"] == "FAIL"
-    # BOI publishes a personal-loan floor as well, so its limit names both and
-    # the value stays the bare score while no PL score was supplied (add-on §1).
-    assert cibil["user_value"] == "650"
-    assert cibil["limit_value"] == ">= 701 or PL >= 701"
+    assert cibil["user_value"] == "650" and cibil["limit_value"] == ">= 701"
     assert cibil["description"]
 
 
