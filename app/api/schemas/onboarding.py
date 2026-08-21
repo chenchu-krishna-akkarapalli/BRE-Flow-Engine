@@ -1230,6 +1230,41 @@ class CibilExtractionResponse(BaseModel):
     extracted: Dict[str, Any] = Field(default_factory=dict)
 
 
+class PayslipTransparentBreakdown(BaseModel):
+    """Transparent itemized breakdown of monthly earnings, deductions, allowances, and bonuses."""
+
+    monthlyNetSalary: Optional[float] = None
+    totalEarnings: Optional[float] = None
+    totalDeductions: Optional[float] = None
+    totalAllowances: Optional[float] = None
+    totalIncentivesAndBonus: Optional[float] = None
+    earningsBreakdown: List[Dict[str, Any]] = Field(default_factory=list)
+    deductionsBreakdown: List[Dict[str, Any]] = Field(default_factory=list)
+    employeeMetadata: Dict[str, Any] = Field(default_factory=dict)
+
+    model_config = ConfigDict(populate_by_name=True)
+
+
+class PayslipExtractedFields(BaseModel):
+    """Structured step-3 payslip extracted payload."""
+
+    grossSalary: Optional[float] = None
+    netSalary: Optional[float] = None
+    totalAllowances: Optional[float] = None
+    totalIncentivesAndBonus: Optional[float] = None
+    employerName: Optional[str] = None
+    applicantName: Optional[str] = None
+    panNumber: Optional[str] = None
+    providentFund: Optional[float] = None
+    professionalTax: Optional[float] = None
+    incomeTax: Optional[float] = None
+    salaryPaymentMethod: Optional[str] = None
+    evaluated: Dict[str, Any] = Field(default_factory=dict)
+    transparentBreakdown: Optional[PayslipTransparentBreakdown] = None
+
+    model_config = ConfigDict(populate_by_name=True)
+
+
 class PayslipExtractionResponse(BaseModel):
     """Step-3 salary fields lifted off an uploaded Payslip PDF report."""
 
