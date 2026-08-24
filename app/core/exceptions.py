@@ -57,6 +57,33 @@ class UnauthorizedError(FlowBREException):
         )
 
 
+class ForbiddenError(FlowBREException):
+    def __init__(self, message: str = "Access forbidden."):
+        super().__init__(
+            message=message,
+            error_code=ErrorCode.FORBIDDEN if hasattr(ErrorCode, "FORBIDDEN") else ErrorCode.UNAUTHORIZED,
+            status_code=status.HTTP_403_FORBIDDEN,
+        )
+
+
+class BadRequestError(FlowBREException):
+    def __init__(self, message: str = "Bad request."):
+        super().__init__(
+            message=message,
+            error_code=ErrorCode.VALIDATION_ERROR,
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+
+
+class NotFoundError(FlowBREException):
+    def __init__(self, message: str = "Resource not found."):
+        super().__init__(
+            message=message,
+            error_code=ErrorCode.NOT_FOUND if hasattr(ErrorCode, "NOT_FOUND") else ErrorCode.TENANT_NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
+        )
+
+
 class RuleEvaluationError(FlowBREException):
     def __init__(self, detail: str):
         super().__init__(

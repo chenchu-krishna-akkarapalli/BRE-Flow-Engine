@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   experimental: {
     // lucide-react is a barrel file; without this every icon import pulls the
     // whole set into the module graph, inflating both bundle size and the

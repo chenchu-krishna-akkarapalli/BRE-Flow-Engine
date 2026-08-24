@@ -18,8 +18,8 @@ pytest_out.txt
 dist/
 build/
 eggs/
-lib/
-lib64/
+/lib/
+/lib64/
 *.egg-info/
 
 # Rust (Cargo) build artifacts
