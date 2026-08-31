@@ -213,19 +213,19 @@
             "raw_label": "PF",
             "canonical_category": "provident_fund",
             "amount": {
-              "value": 22000.0,
+              "value": 2640.0,
               "currency": "INR",
               "raw_label": "PF",
-              "raw_value_string": "22000.00",
+              "raw_value_string": "2640.00",
               "match_method": "exact_alias",
               "confidence": 1.0
             },
             "amount_actual": null,
             "amount_payable": {
-              "value": 22000.0,
+              "value": 2640.0,
               "currency": "INR",
               "raw_label": "PF",
-              "raw_value_string": "22000.00",
+              "raw_value_string": "2640.00",
               "match_method": "exact_alias",
               "confidence": 1.0
             },
@@ -236,19 +236,19 @@
             "raw_label": "PT",
             "canonical_category": "professional_tax",
             "amount": {
-              "value": 8800.0,
+              "value": 200.0,
               "currency": "INR",
               "raw_label": "PT",
-              "raw_value_string": "8800.00",
+              "raw_value_string": "200.00",
               "match_method": "exact_alias",
               "confidence": 1.0
             },
             "amount_actual": null,
             "amount_payable": {
-              "value": 8800.0,
+              "value": 200.0,
               "currency": "INR",
               "raw_label": "PT",
-              "raw_value_string": "8800.00",
+              "raw_value_string": "200.00",
               "match_method": "exact_alias",
               "confidence": 1.0
             },
@@ -259,19 +259,19 @@
             "raw_label": "LWF",
             "canonical_category": "labour_welfare_fund",
             "amount": {
-              "value": 3000.0,
+              "value": 5.0,
               "currency": "INR",
               "raw_label": "LWF",
-              "raw_value_string": "3000.00",
+              "raw_value_string": "5.00",
               "match_method": "exact_alias",
               "confidence": 1.0
             },
             "amount_actual": null,
             "amount_payable": {
-              "value": 3000.0,
+              "value": 5.0,
               "currency": "INR",
               "raw_label": "LWF",
-              "raw_value_string": "3000.00",
+              "raw_value_string": "5.00",
               "match_method": "exact_alias",
               "confidence": 1.0
             },
@@ -306,28 +306,21 @@
           "confidence": 1.0
         },
         "total_allowances": {
-          "value": 26233.0,
+          "value": 38840.0,
           "currency": "INR",
           "raw_label": "total_allowances",
-          "raw_value_string": "26233.00",
+          "raw_value_string": "38840.00",
           "match_method": "computed_from_components",
           "confidence": 1.0
         },
-        "total_incentives_and_bonus": {
-          "value": 12607.0,
-          "currency": "INR",
-          "raw_label": "OtherAllowance",
-          "raw_value_string": "12607.00",
-          "match_method": "computed_from_components",
-          "confidence": 1.0
-        },
+        "total_incentives_and_bonus": null,
         "amount_in_words": "Fifty Seven Thousand Nine Hundred And Ninety Five Rupees"
       },
       "reconciliation": {
         "gross_minus_deductions_matches_net": true,
         "delta_vs_stated_net": 0.0,
         "sum_of_earning_items_matches_stated_gross": true,
-        "sum_of_deduction_items_matches_stated_total": false,
+        "sum_of_deduction_items_matches_stated_total": true,
         "flags": []
       }
     }

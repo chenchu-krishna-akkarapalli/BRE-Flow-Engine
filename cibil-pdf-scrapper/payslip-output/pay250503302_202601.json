@@ -45,6 +45,52 @@
       "earnings": {
         "items": [
           {
+            "raw_label": "A/C No.",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 9443.0,
+              "currency": "INR",
+              "raw_label": "A/C No.",
+              "raw_value_string": "9443",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 9443.0,
+              "currency": "INR",
+              "raw_label": "A/C No.",
+              "raw_value_string": "9443",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "PAN",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 8821.0,
+              "currency": "INR",
+              "raw_label": "PAN",
+              "raw_value_string": "8821",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 8821.0,
+              "currency": "INR",
+              "raw_label": "PAN",
+              "raw_value_string": "8821",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
             "raw_label": "BASIC PAY",
             "canonical_category": "basic_pay",
             "amount": {
@@ -84,6 +130,29 @@
               "currency": "INR",
               "raw_label": "DA",
               "raw_value_string": "12586",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "RMA",
+            "canonical_category": "other_allowance",
+            "amount": {
+              "value": 4621.0,
+              "currency": "INR",
+              "raw_label": "RMA",
+              "raw_value_string": "4621",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 4621.0,
+              "currency": "INR",
+              "raw_label": "RMA",
+              "raw_value_string": "4621",
               "match_method": "exact_alias",
               "confidence": 1.0
             },
@@ -131,6 +200,98 @@
               "raw_label": "SDA",
               "raw_value_string": "2170",
               "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "COMP ALL",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "COMP ALL",
+              "raw_value_string": "1800",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "COMP ALL",
+              "raw_value_string": "1800",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "HRA",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 2170.0,
+              "currency": "INR",
+              "raw_label": "HRA",
+              "raw_value_string": "2170",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2170.0,
+              "currency": "INR",
+              "raw_label": "HRA",
+              "raw_value_string": "2170",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "TPT ALL",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 2844.0,
+              "currency": "INR",
+              "raw_label": "TPT ALL",
+              "raw_value_string": "2844",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2844.0,
+              "currency": "INR",
+              "raw_label": "TPT ALL",
+              "raw_value_string": "2844",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "AMOUNTTO BANK",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 43858.0,
+              "currency": "INR",
+              "raw_label": "AMOUNTTO BANK",
+              "raw_value_string": "43858",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 43858.0,
+              "currency": "INR",
+              "raw_label": "AMOUNTTO BANK",
+              "raw_value_string": "43858",
+              "match_method": "positional_heuristic",
               "confidence": 1.0
             },
             "frequency": "monthly",
@@ -214,10 +375,10 @@
           "confidence": 1.0
         },
         "total_allowances": {
-          "value": 23577.0,
+          "value": 97134.0,
           "currency": "INR",
           "raw_label": "total_allowances",
-          "raw_value_string": "23577.00",
+          "raw_value_string": "97134.00",
           "match_method": "computed_from_components",
           "confidence": 1.0
         },

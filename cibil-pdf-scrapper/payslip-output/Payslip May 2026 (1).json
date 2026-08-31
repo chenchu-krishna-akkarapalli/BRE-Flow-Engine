@@ -116,54 +116,7 @@
         ]
       },
       "deductions": {
-        "items": [
-          {
-            "raw_label": "Provident Fund",
-            "canonical_category": "provident_fund",
-            "amount": {
-              "value": 2654.0,
-              "currency": "INR",
-              "raw_label": "Provident Fund",
-              "raw_value_string": "2,654.00",
-              "match_method": "exact_alias",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 2654.0,
-              "currency": "INR",
-              "raw_label": "Provident Fund",
-              "raw_value_string": "2,654.00",
-              "match_method": "exact_alias",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "Professional Tax",
-            "canonical_category": "professional_tax",
-            "amount": {
-              "value": 200.0,
-              "currency": "INR",
-              "raw_label": "Professional Tax",
-              "raw_value_string": "200.00",
-              "match_method": "exact_alias",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 200.0,
-              "currency": "INR",
-              "raw_label": "Professional Tax",
-              "raw_value_string": "200.00",
-              "match_method": "exact_alias",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          }
-        ]
+        "items": []
       },
       "summary": {
         "gross_salary": {
@@ -205,7 +158,7 @@
         "gross_minus_deductions_matches_net": true,
         "delta_vs_stated_net": 0.0,
         "sum_of_earning_items_matches_stated_gross": true,
-        "sum_of_deduction_items_matches_stated_total": true,
+        "sum_of_deduction_items_matches_stated_total": false,
         "flags": []
       }
     }

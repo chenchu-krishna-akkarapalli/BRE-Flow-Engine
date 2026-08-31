@@ -43,10 +43,81 @@
         "arrear_days": null
       },
       "earnings": {
-        "items": []
+        "items": [
+          {
+            "raw_label": "Basic",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 17094.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "17,094.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 17094.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "17,094.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "House Rent Allowance",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 8547.0,
+              "currency": "INR",
+              "raw_label": "House Rent Allowance",
+              "raw_value_string": "8,547.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 8547.0,
+              "currency": "INR",
+              "raw_label": "House Rent Allowance",
+              "raw_value_string": "8,547.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
       },
       "deductions": {
-        "items": []
+        "items": [
+          {
+            "raw_label": "PF Employee",
+            "canonical_category": "provident_fund",
+            "amount": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "PF Employee",
+              "raw_value_string": "1,800.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "PF Employee",
+              "raw_value_string": "1,800.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
       },
       "summary": {
         "gross_salary": {
@@ -73,7 +144,14 @@
           "match_method": "computed_from_components",
           "confidence": 1.0
         },
-        "total_allowances": null,
+        "total_allowances": {
+          "value": 8547.0,
+          "currency": "INR",
+          "raw_label": "total_allowances",
+          "raw_value_string": "8547.00",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
         "total_incentives_and_bonus": null,
         "amount_in_words": "Fifty Thousand Rupees only"
       },
@@ -81,7 +159,7 @@
         "gross_minus_deductions_matches_net": true,
         "delta_vs_stated_net": 0.0,
         "sum_of_earning_items_matches_stated_gross": false,
-        "sum_of_deduction_items_matches_stated_total": false,
+        "sum_of_deduction_items_matches_stated_total": true,
         "flags": []
       }
     }

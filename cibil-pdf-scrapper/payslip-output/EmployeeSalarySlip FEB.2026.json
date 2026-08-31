@@ -43,17 +43,14 @@
         "arrear_days": null
       },
       "earnings": {
-        "items": []
-      },
-      "deductions": {
         "items": [
           {
-            "raw_label": "Income Tax",
-            "canonical_category": "income_tax_tds",
+            "raw_label": "Basic Pay",
+            "canonical_category": "basic_pay",
             "amount": {
               "value": 30768.0,
               "currency": "INR",
-              "raw_label": "Income Tax",
+              "raw_label": "Basic Pay",
               "raw_value_string": "30768.00",
               "match_method": "exact_alias",
               "confidence": 1.0
@@ -62,61 +59,18 @@
             "amount_payable": {
               "value": 30768.0,
               "currency": "INR",
-              "raw_label": "Income Tax",
+              "raw_label": "Basic Pay",
               "raw_value_string": "30768.00",
               "match_method": "exact_alias",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "EPF",
-            "canonical_category": "provident_fund",
-            "amount": {
-              "value": 0.0,
-              "currency": "INR",
-              "raw_label": "EPF",
-              "raw_value_string": "0.00",
-              "match_method": "exact_alias",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 0.0,
-              "currency": "INR",
-              "raw_label": "EPF",
-              "raw_value_string": "0.00",
-              "match_method": "exact_alias",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "Other Deductions",
-            "canonical_category": "other_deduction",
-            "amount": {
-              "value": 0.0,
-              "currency": "INR",
-              "raw_label": "Other Deductions",
-              "raw_value_string": "0.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 0.0,
-              "currency": "INR",
-              "raw_label": "Other Deductions",
-              "raw_value_string": "0.00",
-              "match_method": "positional_heuristic",
               "confidence": 1.0
             },
             "frequency": "monthly",
             "page": 1
           }
         ]
+      },
+      "deductions": {
+        "items": []
       },
       "summary": {
         "gross_salary": {
@@ -150,8 +104,8 @@
       "reconciliation": {
         "gross_minus_deductions_matches_net": true,
         "delta_vs_stated_net": 0.0,
-        "sum_of_earning_items_matches_stated_gross": false,
-        "sum_of_deduction_items_matches_stated_total": false,
+        "sum_of_earning_items_matches_stated_gross": true,
+        "sum_of_deduction_items_matches_stated_total": true,
         "flags": []
       }
     }

@@ -444,21 +444,14 @@
           "confidence": 1.0
         },
         "total_allowances": {
-          "value": 31968.0,
+          "value": 87763.0,
           "currency": "INR",
           "raw_label": "total_allowances",
-          "raw_value_string": "31968.00",
+          "raw_value_string": "87763.00",
           "match_method": "computed_from_components",
           "confidence": 1.0
         },
-        "total_incentives_and_bonus": {
-          "value": 55795.0,
-          "currency": "INR",
-          "raw_label": "total_incentives_and_bonus",
-          "raw_value_string": "55795.00",
-          "match_method": "computed_from_components",
-          "confidence": 1.0
-        },
+        "total_incentives_and_bonus": null,
         "amount_in_words": "NET PAY(After Non Govt. Deductions) : 25,800"
       },
       "reconciliation": {

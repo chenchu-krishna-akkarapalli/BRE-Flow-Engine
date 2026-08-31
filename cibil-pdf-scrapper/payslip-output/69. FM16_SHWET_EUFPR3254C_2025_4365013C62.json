@@ -68,6 +68,75 @@
             "page": 1
           },
           {
+            "raw_label": "FXCXEMKZ",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 67500.0,
+              "currency": "INR",
+              "raw_label": "FXCXEMKZ",
+              "raw_value_string": "67500.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 67500.0,
+              "currency": "INR",
+              "raw_label": "FXCXEMKZ",
+              "raw_value_string": "67500.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "FXCBSTSY",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 71600.0,
+              "currency": "INR",
+              "raw_label": "FXCBSTSY",
+              "raw_value_string": "71600.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 71600.0,
+              "currency": "INR",
+              "raw_label": "FXCBSTSY",
+              "raw_value_string": "71600.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "FXCEHJDS",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 80229.0,
+              "currency": "INR",
+              "raw_label": "FXCEHJDS",
+              "raw_value_string": "80229.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 80229.0,
+              "currency": "INR",
+              "raw_label": "FXCEHJDS",
+              "raw_value_string": "80229.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
             "raw_label": "Sl. No.",
             "canonical_category": "other_earning",
             "amount": {
@@ -158,6 +227,52 @@
             },
             "frequency": "monthly",
             "page": 3
+          },
+          {
+            "raw_label": "Salary as per provisions contained in section 17(1)",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 292550.0,
+              "currency": "INR",
+              "raw_label": "Salary as per provisions contained in section 17(1)",
+              "raw_value_string": "292550.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 292550.0,
+              "currency": "INR",
+              "raw_label": "Salary as per provisions contained in section 17(1)",
+              "raw_value_string": "292550.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 3
+          },
+          {
+            "raw_label": "Income chargeable under the head \"Salaries\" [(3+1(e)-5]",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 217550.0,
+              "currency": "INR",
+              "raw_label": "Income chargeable under the head \"Salaries\" [(3+1(e)-5]",
+              "raw_value_string": "217550.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 217550.0,
+              "currency": "INR",
+              "raw_label": "Income chargeable under the head \"Salaries\" [(3+1(e)-5]",
+              "raw_value_string": "217550.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 4
           },
           {
             "raw_label": "Qualifying",
@@ -417,6 +532,29 @@
             "page": 1
           },
           {
+            "raw_label": "FXCITIEE",
+            "canonical_category": "income_tax_tds",
+            "amount": {
+              "value": 73221.0,
+              "currency": "INR",
+              "raw_label": "FXCITIEE",
+              "raw_value_string": "73221.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 73221.0,
+              "currency": "INR",
+              "raw_label": "FXCITIEE",
+              "raw_value_string": "73221.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
             "raw_label": "deductee",
             "canonical_category": "other_deduction",
             "amount": {
@@ -507,6 +645,29 @@
             },
             "frequency": "monthly",
             "page": 3
+          },
+          {
+            "raw_label": "Standard deduction under section 16(ia)",
+            "canonical_category": "other_deduction",
+            "amount": {
+              "value": 75000.0,
+              "currency": "INR",
+              "raw_label": "Standard deduction under section 16(ia)",
+              "raw_value_string": "75000.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 75000.0,
+              "currency": "INR",
+              "raw_label": "Standard deduction under section 16(ia)",
+              "raw_value_string": "75000.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 4
           },
           {
             "raw_label": "Deductible Amount",
@@ -720,10 +881,10 @@
           "confidence": 1.0
         },
         "total_allowances": {
-          "value": 491548.0,
+          "value": 1220977.0,
           "currency": "INR",
           "raw_label": "total_allowances",
-          "raw_value_string": "491548.00",
+          "raw_value_string": "1220977.00",
           "match_method": "computed_from_components",
           "confidence": 1.0
         },

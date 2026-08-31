@@ -45,6 +45,29 @@
       "earnings": {
         "items": [
           {
+            "raw_label": "Employee ID",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 3729.0,
+              "currency": "INR",
+              "raw_label": "Employee ID",
+              "raw_value_string": "3729",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 3729.0,
+              "currency": "INR",
+              "raw_label": "Employee ID",
+              "raw_value_string": "3729",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
             "raw_label": "Basic",
             "canonical_category": "basic_pay",
             "amount": {
@@ -229,6 +252,29 @@
             "page": 1
           },
           {
+            "raw_label": "Uniform",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 2042.0,
+              "currency": "INR",
+              "raw_label": "Uniform",
+              "raw_value_string": "2042.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2042.0,
+              "currency": "INR",
+              "raw_label": "Uniform",
+              "raw_value_string": "2042.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
             "raw_label": "Special Allow",
             "canonical_category": "special_allowance",
             "amount": {
@@ -246,6 +292,52 @@
               "raw_label": "Special Allow",
               "raw_value_string": "30786.00",
               "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Special Allow",
+            "canonical_category": "special_allowance",
+            "amount": {
+              "value": 30786.0,
+              "currency": "INR",
+              "raw_label": "Special Allow",
+              "raw_value_string": "30786.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 30786.0,
+              "currency": "INR",
+              "raw_label": "Special Allow",
+              "raw_value_string": "30786.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Travel Allowance",
+            "canonical_category": "conveyance_allowance",
+            "amount": {
+              "value": 2042.0,
+              "currency": "INR",
+              "raw_label": "Travel Allowance",
+              "raw_value_string": "2042.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2042.0,
+              "currency": "INR",
+              "raw_label": "Travel Allowance",
+              "raw_value_string": "2042.00",
+              "match_method": "exact_alias",
               "confidence": 1.0
             },
             "frequency": "monthly",
@@ -296,6 +388,75 @@
             },
             "frequency": "monthly",
             "page": 1
+          },
+          {
+            "raw_label": "Books and Priod",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 2000.0,
+              "currency": "INR",
+              "raw_label": "Books and Priod",
+              "raw_value_string": "2000.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2000.0,
+              "currency": "INR",
+              "raw_label": "Books and Priod",
+              "raw_value_string": "2000.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "CL",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 0.98,
+              "currency": "INR",
+              "raw_label": "CL",
+              "raw_value_string": "0.98",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 0.98,
+              "currency": "INR",
+              "raw_label": "CL",
+              "raw_value_string": "0.98",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "SL",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 0.5,
+              "currency": "INR",
+              "raw_label": "SL",
+              "raw_value_string": "0.50",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 0.5,
+              "currency": "INR",
+              "raw_label": "SL",
+              "raw_value_string": "0.50",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
           }
         ]
       },
@@ -319,98 +480,6 @@
               "raw_label": "PF",
               "raw_value_string": "1800.00",
               "match_method": "exact_alias",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "Uniform",
-            "canonical_category": "other_deduction",
-            "amount": {
-              "value": 2042.0,
-              "currency": "INR",
-              "raw_label": "Uniform",
-              "raw_value_string": "2042.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 2042.0,
-              "currency": "INR",
-              "raw_label": "Uniform",
-              "raw_value_string": "2042.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "Special Allow",
-            "canonical_category": "other_deduction",
-            "amount": {
-              "value": 30786.0,
-              "currency": "INR",
-              "raw_label": "Special Allow",
-              "raw_value_string": "30786.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 30786.0,
-              "currency": "INR",
-              "raw_label": "Special Allow",
-              "raw_value_string": "30786.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "Travel Allowance",
-            "canonical_category": "other_deduction",
-            "amount": {
-              "value": 2042.0,
-              "currency": "INR",
-              "raw_label": "Travel Allowance",
-              "raw_value_string": "2042.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 2042.0,
-              "currency": "INR",
-              "raw_label": "Travel Allowance",
-              "raw_value_string": "2042.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "Books and Priod",
-            "canonical_category": "other_deduction",
-            "amount": {
-              "value": 2000.0,
-              "currency": "INR",
-              "raw_label": "Books and Priod",
-              "raw_value_string": "2000.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 2000.0,
-              "currency": "INR",
-              "raw_label": "Books and Priod",
-              "raw_value_string": "2000.00",
-              "match_method": "positional_heuristic",
               "confidence": 1.0
             },
             "frequency": "monthly",
@@ -467,10 +536,10 @@
           "confidence": 1.0
         },
         "total_allowances": {
-          "value": 70086.0,
+          "value": 110686.48,
           "currency": "INR",
           "raw_label": "total_allowances",
-          "raw_value_string": "70086.00",
+          "raw_value_string": "110686.48",
           "match_method": "computed_from_components",
           "confidence": 1.0
         },

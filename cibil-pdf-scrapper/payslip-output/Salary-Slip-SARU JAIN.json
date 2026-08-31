@@ -43,7 +43,261 @@
         "arrear_days": null
       },
       "earnings": {
-        "items": []
+        "items": [
+          {
+            "raw_label": "1 Basic",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 40000.0,
+              "currency": "INR",
+              "raw_label": "1 Basic",
+              "raw_value_string": "40000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 40000.0,
+              "currency": "INR",
+              "raw_label": "1 Basic",
+              "raw_value_string": "40000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "3 House Rent Allowance",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 15000.0,
+              "currency": "INR",
+              "raw_label": "3 House Rent Allowance",
+              "raw_value_string": "15000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 15000.0,
+              "currency": "INR",
+              "raw_label": "3 House Rent Allowance",
+              "raw_value_string": "15000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "1 Basic",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 40000.0,
+              "currency": "INR",
+              "raw_label": "1 Basic",
+              "raw_value_string": "40000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 40000.0,
+              "currency": "INR",
+              "raw_label": "1 Basic",
+              "raw_value_string": "40000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 2
+          },
+          {
+            "raw_label": "3 House Rent Allowance",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 15000.0,
+              "currency": "INR",
+              "raw_label": "3 House Rent Allowance",
+              "raw_value_string": "15000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 15000.0,
+              "currency": "INR",
+              "raw_label": "3 House Rent Allowance",
+              "raw_value_string": "15000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 2
+          },
+          {
+            "raw_label": "1 Basic",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 40000.0,
+              "currency": "INR",
+              "raw_label": "1 Basic",
+              "raw_value_string": "40000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 40000.0,
+              "currency": "INR",
+              "raw_label": "1 Basic",
+              "raw_value_string": "40000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 3
+          },
+          {
+            "raw_label": "3 House Rent Allowance",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 15000.0,
+              "currency": "INR",
+              "raw_label": "3 House Rent Allowance",
+              "raw_value_string": "15000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 15000.0,
+              "currency": "INR",
+              "raw_label": "3 House Rent Allowance",
+              "raw_value_string": "15000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 3
+          },
+          {
+            "raw_label": "1 Basic",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 40000.0,
+              "currency": "INR",
+              "raw_label": "1 Basic",
+              "raw_value_string": "40000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 40000.0,
+              "currency": "INR",
+              "raw_label": "1 Basic",
+              "raw_value_string": "40000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 4
+          },
+          {
+            "raw_label": "3 House Rent Allowance",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 15000.0,
+              "currency": "INR",
+              "raw_label": "3 House Rent Allowance",
+              "raw_value_string": "15000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 15000.0,
+              "currency": "INR",
+              "raw_label": "3 House Rent Allowance",
+              "raw_value_string": "15000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 4
+          },
+          {
+            "raw_label": "1 Basic",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 40000.0,
+              "currency": "INR",
+              "raw_label": "1 Basic",
+              "raw_value_string": "40000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 40000.0,
+              "currency": "INR",
+              "raw_label": "1 Basic",
+              "raw_value_string": "40000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 5
+          },
+          {
+            "raw_label": "3 House Rent Allowance",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 15000.0,
+              "currency": "INR",
+              "raw_label": "3 House Rent Allowance",
+              "raw_value_string": "15000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 15000.0,
+              "currency": "INR",
+              "raw_label": "3 House Rent Allowance",
+              "raw_value_string": "15000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 5
+          },
+          {
+            "raw_label": "1 Basic",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 60000.0,
+              "currency": "INR",
+              "raw_label": "1 Basic",
+              "raw_value_string": "60000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 60000.0,
+              "currency": "INR",
+              "raw_label": "1 Basic",
+              "raw_value_string": "60000.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 6
+          }
+        ]
       },
       "deductions": {
         "items": []
@@ -73,7 +327,14 @@
           "match_method": "exact_alias",
           "confidence": 1.0
         },
-        "total_allowances": null,
+        "total_allowances": {
+          "value": 75000.0,
+          "currency": "INR",
+          "raw_label": "total_allowances",
+          "raw_value_string": "75000.00",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
         "total_incentives_and_bonus": null,
         "amount_in_words": null
       },

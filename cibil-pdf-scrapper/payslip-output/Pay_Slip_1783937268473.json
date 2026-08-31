@@ -43,17 +43,249 @@
         "arrear_days": null
       },
       "earnings": {
-        "items": []
+        "items": [
+          {
+            "raw_label": "Basic Pay",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 38700.0,
+              "currency": "INR",
+              "raw_label": "Basic Pay",
+              "raw_value_string": "38700",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 38700.0,
+              "currency": "INR",
+              "raw_label": "Basic Pay",
+              "raw_value_string": "38700",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Special Pay",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 2470.0,
+              "currency": "INR",
+              "raw_label": "Special Pay",
+              "raw_value_string": "2470",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2470.0,
+              "currency": "INR",
+              "raw_label": "Special Pay",
+              "raw_value_string": "2470",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Medical Allowance",
+            "canonical_category": "medical_allowance",
+            "amount": {
+              "value": 1000.0,
+              "currency": "INR",
+              "raw_label": "Medical Allowance",
+              "raw_value_string": "1000",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1000.0,
+              "currency": "INR",
+              "raw_label": "Medical Allowance",
+              "raw_value_string": "1000",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Dearness Allowance",
+            "canonical_category": "dearness_allowance",
+            "amount": {
+              "value": 16254.0,
+              "currency": "INR",
+              "raw_label": "Dearness Allowance",
+              "raw_value_string": "16254",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 16254.0,
+              "currency": "INR",
+              "raw_label": "Dearness Allowance",
+              "raw_value_string": "16254",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "House Rent Allowance",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 3096.0,
+              "currency": "INR",
+              "raw_label": "House Rent Allowance",
+              "raw_value_string": "3096",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 3096.0,
+              "currency": "INR",
+              "raw_label": "House Rent Allowance",
+              "raw_value_string": "3096",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "LODA/LOTA",
+            "canonical_category": "dearness_allowance",
+            "amount": {
+              "value": 1417.0,
+              "currency": "INR",
+              "raw_label": "LODA/LOTA",
+              "raw_value_string": "1417",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1417.0,
+              "currency": "INR",
+              "raw_label": "LODA/LOTA",
+              "raw_value_string": "1417",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
       },
       "deductions": {
-        "items": []
+        "items": [
+          {
+            "raw_label": "CPF/EPF",
+            "canonical_category": "provident_fund",
+            "amount": {
+              "value": 7694.0,
+              "currency": "INR",
+              "raw_label": "CPF/EPF",
+              "raw_value_string": "7694",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 7694.0,
+              "currency": "INR",
+              "raw_label": "CPF/EPF",
+              "raw_value_string": "7694",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Recovery",
+            "canonical_category": "advance_loan",
+            "amount": {
+              "value": 44.41,
+              "currency": "INR",
+              "raw_label": "Recovery",
+              "raw_value_string": "44.419",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 44.41,
+              "currency": "INR",
+              "raw_label": "Recovery",
+              "raw_value_string": "44.419",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "CPF/EPF (Corp.)",
+            "canonical_category": "provident_fund",
+            "amount": {
+              "value": 7694.0,
+              "currency": "INR",
+              "raw_label": "CPF/EPF (Corp.)",
+              "raw_value_string": "7694",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 7694.0,
+              "currency": "INR",
+              "raw_label": "CPF/EPF (Corp.)",
+              "raw_value_string": "7694",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "CPF/EPF (Emp.)",
+            "canonical_category": "provident_fund",
+            "amount": {
+              "value": 5495.0,
+              "currency": "INR",
+              "raw_label": "CPF/EPF (Emp.)",
+              "raw_value_string": "5495",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 5495.0,
+              "currency": "INR",
+              "raw_label": "CPF/EPF (Emp.)",
+              "raw_value_string": "5495",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
       },
       "summary": {
         "gross_salary": {
-          "value": 13439.0,
+          "value": 71534.0,
           "currency": "INR",
           "raw_label": "GROSS PAY",
-          "raw_value_string": "13439",
+          "raw_value_string": "71,534.00",
           "match_method": "exact_alias",
           "confidence": 1.0
         },
@@ -61,7 +293,7 @@
           "value": 58095.0,
           "currency": "INR",
           "raw_label": "NET PAY",
-          "raw_value_string": "58095",
+          "raw_value_string": "58,095.00",
           "match_method": "exact_alias",
           "confidence": 1.0
         },
@@ -69,17 +301,24 @@
           "value": 13439.0,
           "currency": "INR",
           "raw_label": "TOTAL DEDUCTIONS",
-          "raw_value_string": "13439",
+          "raw_value_string": "13,439.00",
           "match_method": "exact_alias",
           "confidence": 1.0
         },
-        "total_allowances": null,
+        "total_allowances": {
+          "value": 24237.0,
+          "currency": "INR",
+          "raw_label": "total_allowances",
+          "raw_value_string": "24237.00",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
         "total_incentives_and_bonus": null,
         "amount_in_words": null
       },
       "reconciliation": {
-        "gross_minus_deductions_matches_net": false,
-        "delta_vs_stated_net": -58095.0,
+        "gross_minus_deductions_matches_net": true,
+        "delta_vs_stated_net": 0.0,
         "sum_of_earning_items_matches_stated_gross": false,
         "sum_of_deduction_items_matches_stated_total": false,
         "flags": []

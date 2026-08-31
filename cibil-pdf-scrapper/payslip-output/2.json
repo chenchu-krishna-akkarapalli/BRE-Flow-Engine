@@ -45,6 +45,29 @@
       "earnings": {
         "items": [
           {
+            "raw_label": "Emp.Id",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 22305.0,
+              "currency": "INR",
+              "raw_label": "Emp.Id",
+              "raw_value_string": "22305",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 22305.0,
+              "currency": "INR",
+              "raw_label": "Emp.Id",
+              "raw_value_string": "22305",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
             "raw_label": "WD",
             "canonical_category": "other_earning",
             "amount": {
@@ -137,6 +160,29 @@
             "page": 1
           },
           {
+            "raw_label": "HRA",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 4537.0,
+              "currency": "INR",
+              "raw_label": "HRA",
+              "raw_value_string": "4537",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 4537.0,
+              "currency": "INR",
+              "raw_label": "HRA",
+              "raw_value_string": "4537",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
             "raw_label": "PH",
             "canonical_category": "other_earning",
             "amount": {
@@ -154,6 +200,29 @@
               "raw_label": "PH",
               "raw_value_string": "0.00",
               "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Conv",
+            "canonical_category": "conveyance_allowance",
+            "amount": {
+              "value": 2268.0,
+              "currency": "INR",
+              "raw_label": "Conv",
+              "raw_value_string": "2268",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2268.0,
+              "currency": "INR",
+              "raw_label": "Conv",
+              "raw_value_string": "2268",
+              "match_method": "fuzzy_alias",
               "confidence": 1.0
             },
             "frequency": "monthly",
@@ -252,17 +321,32 @@
             "page": 1
           },
           {
+            "raw_label": "Prod.BON",
+            "canonical_category": "bonus_incentive",
+            "amount": {
+              "value": 21842.0,
+              "currency": "INR",
+              "raw_label": "Prod.BON",
+              "raw_value_string": "21842",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 21842.0,
+              "currency": "INR",
+              "raw_label": "Prod.BON",
+              "raw_value_string": "21842",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
             "raw_label": "PL",
             "canonical_category": "special_allowance",
             "amount": {
-              "value": 2.7,
-              "currency": "INR",
-              "raw_label": "PL",
-              "raw_value_string": "2.70",
-              "match_method": "fuzzy_alias",
-              "confidence": 1.0
-            },
-            "amount_actual": {
               "value": 2.6,
               "currency": "INR",
               "raw_label": "PL",
@@ -270,11 +354,12 @@
               "match_method": "fuzzy_alias",
               "confidence": 1.0
             },
+            "amount_actual": null,
             "amount_payable": {
-              "value": 2.7,
+              "value": 2.6,
               "currency": "INR",
               "raw_label": "PL",
-              "raw_value_string": "2.70",
+              "raw_value_string": "2.60",
               "match_method": "fuzzy_alias",
               "confidence": 1.0
             },
@@ -302,29 +387,6 @@
               "currency": "INR",
               "raw_label": "P.F",
               "raw_value_string": "1800",
-              "match_method": "exact_alias",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "Advance",
-            "canonical_category": "advance_loan",
-            "amount": {
-              "value": 21842.0,
-              "currency": "INR",
-              "raw_label": "Advance",
-              "raw_value_string": "21842",
-              "match_method": "exact_alias",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 21842.0,
-              "currency": "INR",
-              "raw_label": "Advance",
-              "raw_value_string": "21842",
               "match_method": "exact_alias",
               "confidence": 1.0
             },
@@ -359,14 +421,21 @@
           "confidence": 1.0
         },
         "total_allowances": {
-          "value": 20474.7,
+          "value": 49584.6,
           "currency": "INR",
           "raw_label": "total_allowances",
-          "raw_value_string": "20474.70",
+          "raw_value_string": "49584.60",
           "match_method": "computed_from_components",
           "confidence": 1.0
         },
-        "total_incentives_and_bonus": null,
+        "total_incentives_and_bonus": {
+          "value": 21842.0,
+          "currency": "INR",
+          "raw_label": "Prod.BON",
+          "raw_value_string": "21842",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
         "amount_in_words": "Sixty Five Thousand Two Hundred Seven Only"
       },
       "reconciliation": {

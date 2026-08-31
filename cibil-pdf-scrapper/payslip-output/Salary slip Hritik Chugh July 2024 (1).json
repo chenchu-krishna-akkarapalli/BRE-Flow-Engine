@@ -66,6 +66,98 @@
             },
             "frequency": "monthly",
             "page": 1
+          },
+          {
+            "raw_label": "Basic",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 35000.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "35,000.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 35000.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "35,000.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "H.R.A",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 15000.0,
+              "currency": "INR",
+              "raw_label": "H.R.A",
+              "raw_value_string": "15,000.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 15000.0,
+              "currency": "INR",
+              "raw_label": "H.R.A",
+              "raw_value_string": "15,000.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Statutory Bonus",
+            "canonical_category": "bonus_incentive",
+            "amount": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "Statutory Bonus",
+              "raw_value_string": "0.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "Statutory Bonus",
+              "raw_value_string": "0.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Allowance",
+            "canonical_category": "other_allowance",
+            "amount": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "Allowance",
+              "raw_value_string": "0.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "Allowance",
+              "raw_value_string": "0.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
           }
         ]
       },
@@ -98,10 +190,10 @@
           "confidence": 1.0
         },
         "total_allowances": {
-          "value": 35000.0,
+          "value": 50000.0,
           "currency": "INR",
           "raw_label": "total_allowances",
-          "raw_value_string": "35000.00",
+          "raw_value_string": "50000.00",
           "match_method": "computed_from_components",
           "confidence": 1.0
         },

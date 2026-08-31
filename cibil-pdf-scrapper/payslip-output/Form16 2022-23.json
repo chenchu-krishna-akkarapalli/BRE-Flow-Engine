@@ -68,6 +68,98 @@
             "page": 1
           },
           {
+            "raw_label": "FXBYVMLC",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 177048.0,
+              "currency": "INR",
+              "raw_label": "FXBYVMLC",
+              "raw_value_string": "177048.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 177048.0,
+              "currency": "INR",
+              "raw_label": "FXBYVMLC",
+              "raw_value_string": "177048.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "FFXBQJXB",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 154590.0,
+              "currency": "INR",
+              "raw_label": "FFXBQJXB",
+              "raw_value_string": "154590.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 154590.0,
+              "currency": "INR",
+              "raw_label": "FFXBQJXB",
+              "raw_value_string": "154590.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "FFXBDNFP",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 154634.0,
+              "currency": "INR",
+              "raw_label": "FFXBDNFP",
+              "raw_value_string": "154634.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 154634.0,
+              "currency": "INR",
+              "raw_label": "FFXBDNFP",
+              "raw_value_string": "154634.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "FXBGSIDN",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 162788.0,
+              "currency": "INR",
+              "raw_label": "FXBGSIDN",
+              "raw_value_string": "162788.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 162788.0,
+              "currency": "INR",
+              "raw_label": "FXBGSIDN",
+              "raw_value_string": "162788.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
             "raw_label": "Sl. No.",
             "canonical_category": "other_earning",
             "amount": {
@@ -137,6 +229,52 @@
             "page": 1
           },
           {
+            "raw_label": "Salary as per provisions contained in section 17(1)",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 646360.0,
+              "currency": "INR",
+              "raw_label": "Salary as per provisions contained in section 17(1)",
+              "raw_value_string": "646360.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 646360.0,
+              "currency": "INR",
+              "raw_label": "Salary as per provisions contained in section 17(1)",
+              "raw_value_string": "646360.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 3
+          },
+          {
+            "raw_label": "Income chargeable under the head \"Salaries\" [(3+1(e)-5]",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 649060.0,
+              "currency": "INR",
+              "raw_label": "Income chargeable under the head \"Salaries\" [(3+1(e)-5]",
+              "raw_value_string": "649060.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 649060.0,
+              "currency": "INR",
+              "raw_label": "Income chargeable under the head \"Salaries\" [(3+1(e)-5]",
+              "raw_value_string": "649060.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 4
+          },
+          {
             "raw_label": "Qualifying",
             "canonical_category": "other_earning",
             "amount": {
@@ -153,6 +291,29 @@
               "currency": "INR",
               "raw_label": "Qualifying",
               "raw_value_string": "0.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 5
+          },
+          {
+            "raw_label": "Health and education cess",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 1096.0,
+              "currency": "INR",
+              "raw_label": "Health and education cess",
+              "raw_value_string": "1096.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1096.0,
+              "currency": "INR",
+              "raw_label": "Health and education cess",
+              "raw_value_string": "1096.00",
               "match_method": "positional_heuristic",
               "confidence": 1.0
             },
@@ -576,6 +737,29 @@
             },
             "frequency": "monthly",
             "page": 6
+          },
+          {
+            "raw_label": "Other benefits or amenities",
+            "canonical_category": "income_tax_tds",
+            "amount": {
+              "value": 2700.0,
+              "currency": "INR",
+              "raw_label": "Other benefits or amenities",
+              "raw_value_string": "2,700",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2700.0,
+              "currency": "INR",
+              "raw_label": "Other benefits or amenities",
+              "raw_value_string": "2,700",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 8
           }
         ]
       },
@@ -605,10 +789,10 @@
           "confidence": 1.0
         },
         "total_allowances": {
-          "value": 121180.0,
+          "value": 2066756.0,
           "currency": "INR",
           "raw_label": "total_allowances",
-          "raw_value_string": "121180.00",
+          "raw_value_string": "2066756.00",
           "match_method": "computed_from_components",
           "confidence": 1.0
         },

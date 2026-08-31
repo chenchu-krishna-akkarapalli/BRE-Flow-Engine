@@ -46,7 +46,31 @@
         "items": []
       },
       "deductions": {
-        "items": []
+        "items": [
+          {
+            "raw_label": "Recovery of round off amt",
+            "canonical_category": "other_deduction",
+            "amount": {
+              "value": 0.36,
+              "currency": "INR",
+              "raw_label": "Recovery of round off amt",
+              "raw_value_string": "0.36",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 0.36,
+              "currency": "INR",
+              "raw_label": "Recovery of round off amt",
+              "raw_value_string": "0.36",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
       },
       "summary": {
         "gross_salary": {
@@ -69,7 +93,7 @@
           "value": 6861.64,
           "currency": "INR",
           "raw_label": "TOTAL DEDUCTIONS",
-          "raw_value_string": "6,861.64",
+          "raw_value_string": "6861.64",
           "match_method": "exact_alias",
           "confidence": 1.0
         },

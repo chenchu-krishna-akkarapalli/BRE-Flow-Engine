@@ -13,14 +13,10 @@ pub fn to_relational(payslip: &Payslip) -> RelationalPayslip {
         for item in &stmt.earnings.items {
             let cat = item.canonical_category.as_str();
             let val = item.amount.as_ref().and_then(|a| a.value).unwrap_or(0.0);
+            let raw_val_str = item.amount.as_ref().and_then(|a| a.raw_value_string.as_deref()).unwrap_or("");
+            let is_annual = crate::patterns::is_annual_row(&item.raw_label) || item.page.map_or(false, |p| p > 1);
 
-            if cat == "production_incentive_bonus"
-                || cat == "statutory_bonus"
-                || cat == "overtime"
-                || cat == "arrears"
-                || cat == "performance_incentive"
-                || cat == "bonus_incentive"
-            {
+            if !is_annual && !raw_val_str.starts_with("00") && crate::patterns::is_incentive_or_bonus_item(&item.raw_label, cat) {
                 if val > 0.0 {
                     total_incentives_val += val;
                     incentive_count += 1;
@@ -36,7 +32,7 @@ pub fn to_relational(payslip: &Payslip) -> RelationalPayslip {
             }
         }
 
-        if total_incentives_val > 0.0 && stmt.summary.total_incentives_and_bonus.is_none() {
+        if total_incentives_val > 0.0 {
             let (raw_label, raw_val_str) = if incentive_count == 1 {
                 if let Some((r_label, amt_opt)) = first_incentive_item {
                     let r_val = amt_opt.and_then(|a| a.raw_value_string.clone()).unwrap_or_else(|| format!("{:.2}", total_incentives_val));
@@ -54,6 +50,8 @@ pub fn to_relational(payslip: &Payslip) -> RelationalPayslip {
                 "computed_from_components",
                 1.0,
             ));
+        } else {
+            stmt.summary.total_incentives_and_bonus = None;
         }
 
         if total_allowances_val > 0.0 && stmt.summary.total_allowances.is_none() {

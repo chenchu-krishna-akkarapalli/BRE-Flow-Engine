@@ -45,6 +45,29 @@
       "earnings": {
         "items": [
           {
+            "raw_label": "Emp. Code",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 104098.0,
+              "currency": "INR",
+              "raw_label": "Emp. Code",
+              "raw_value_string": "104098",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 104098.0,
+              "currency": "INR",
+              "raw_label": "Emp. Code",
+              "raw_value_string": "104098",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
             "raw_label": "Rate",
             "canonical_category": "other_earning",
             "amount": {
@@ -66,11 +89,196 @@
             },
             "frequency": "monthly",
             "page": 1
+          },
+          {
+            "raw_label": "BASIC",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 17700.0,
+              "currency": "INR",
+              "raw_label": "BASIC",
+              "raw_value_string": "17700",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 17700.0,
+              "currency": "INR",
+              "raw_label": "BASIC",
+              "raw_value_string": "17700",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "HRA",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 7080.0,
+              "currency": "INR",
+              "raw_label": "HRA",
+              "raw_value_string": "7080",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 7080.0,
+              "currency": "INR",
+              "raw_label": "HRA",
+              "raw_value_string": "7080",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "CONV.",
+            "canonical_category": "conveyance_allowance",
+            "amount": {
+              "value": 4500.0,
+              "currency": "INR",
+              "raw_label": "CONV.",
+              "raw_value_string": "4500",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 4500.0,
+              "currency": "INR",
+              "raw_label": "CONV.",
+              "raw_value_string": "4500",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "SPECIAL",
+            "canonical_category": "special_allowance",
+            "amount": {
+              "value": 4500.0,
+              "currency": "INR",
+              "raw_label": "SPECIAL",
+              "raw_value_string": "4500",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 4500.0,
+              "currency": "INR",
+              "raw_label": "SPECIAL",
+              "raw_value_string": "4500",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "SPL",
+            "canonical_category": "special_allowance",
+            "amount": {
+              "value": 1770.0,
+              "currency": "INR",
+              "raw_label": "SPL",
+              "raw_value_string": "1770",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1770.0,
+              "currency": "INR",
+              "raw_label": "SPL",
+              "raw_value_string": "1770",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "DA",
+            "canonical_category": "dearness_allowance",
+            "amount": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "DA",
+              "raw_value_string": "1800",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "DA",
+              "raw_value_string": "1800",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
           }
         ]
       },
       "deductions": {
-        "items": []
+        "items": [
+          {
+            "raw_label": "FOOD",
+            "canonical_category": "canteen_deduction",
+            "amount": {
+              "value": 1789.0,
+              "currency": "INR",
+              "raw_label": "FOOD",
+              "raw_value_string": "1789",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1789.0,
+              "currency": "INR",
+              "raw_label": "FOOD",
+              "raw_value_string": "1789",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "EDU",
+            "canonical_category": "provident_fund",
+            "amount": {
+              "value": 1000.0,
+              "currency": "INR",
+              "raw_label": "EDU",
+              "raw_value_string": "1000",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1000.0,
+              "currency": "INR",
+              "raw_label": "EDU",
+              "raw_value_string": "1000",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
       },
       "summary": {
         "gross_salary": {
@@ -98,10 +306,10 @@
           "confidence": 1.0
         },
         "total_allowances": {
-          "value": 104098.0,
+          "value": 227846.0,
           "currency": "INR",
           "raw_label": "total_allowances",
-          "raw_value_string": "104098.00",
+          "raw_value_string": "227846.00",
           "match_method": "computed_from_components",
           "confidence": 1.0
         },

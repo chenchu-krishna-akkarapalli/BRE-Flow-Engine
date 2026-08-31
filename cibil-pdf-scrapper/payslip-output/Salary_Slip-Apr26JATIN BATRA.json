@@ -68,6 +68,36 @@
             "page": 1
           },
           {
+            "raw_label": "E.L",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "E.L",
+              "raw_value_string": "0.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "E.L",
+              "raw_value_string": "0.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_payable": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "E.L",
+              "raw_value_string": "0.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
             "raw_label": "Salary Rate :",
             "canonical_category": "other_earning",
             "amount": {

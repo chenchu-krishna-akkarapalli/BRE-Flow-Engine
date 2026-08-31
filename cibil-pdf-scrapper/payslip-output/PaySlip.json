@@ -68,6 +68,29 @@
             "page": 1
           },
           {
+            "raw_label": "300.00 AIP GDS Sub.",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 30.0,
+              "currency": "INR",
+              "raw_label": "300.00 AIP GDS Sub.",
+              "raw_value_string": "30.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 30.0,
+              "currency": "INR",
+              "raw_label": "300.00 AIP GDS Sub.",
+              "raw_value_string": "30.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
             "raw_label": "DA",
             "canonical_category": "dearness_allowance",
             "amount": {
@@ -95,45 +118,22 @@
       "deductions": {
         "items": [
           {
-            "raw_label": "AIP GDS Sub.",
+            "raw_label": "PAN",
             "canonical_category": "other_deduction",
             "amount": {
-              "value": 300.0,
+              "value": 8739.0,
               "currency": "INR",
-              "raw_label": "AIP GDS Sub.",
-              "raw_value_string": "300.00",
+              "raw_label": "PAN",
+              "raw_value_string": "8739",
               "match_method": "positional_heuristic",
               "confidence": 1.0
             },
             "amount_actual": null,
             "amount_payable": {
-              "value": 300.0,
+              "value": 8739.0,
               "currency": "INR",
-              "raw_label": "AIP GDS Sub.",
-              "raw_value_string": "300.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "GDS GIS II",
-            "canonical_category": "other_deduction",
-            "amount": {
-              "value": 50.0,
-              "currency": "INR",
-              "raw_label": "GDS GIS II",
-              "raw_value_string": "50.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 50.0,
-              "currency": "INR",
-              "raw_label": "GDS GIS II",
-              "raw_value_string": "50.00",
+              "raw_label": "PAN",
+              "raw_value_string": "8739",
               "match_method": "positional_heuristic",
               "confidence": 1.0
             },
@@ -144,10 +144,10 @@
       },
       "summary": {
         "gross_salary": {
-          "value": 167287.0,
+          "value": 22025.0,
           "currency": "INR",
-          "raw_label": "GROSS PAY",
-          "raw_value_string": "1,67,287.00",
+          "raw_label": "TOTAL",
+          "raw_value_string": "22,025.00",
           "match_method": "exact_alias",
           "confidence": 1.0
         },
@@ -160,18 +160,18 @@
           "confidence": 1.0
         },
         "total_deductions": {
-          "value": 145642.0,
+          "value": 350.0,
           "currency": "INR",
-          "raw_label": "TOTAL DEDUCTIONS",
-          "raw_value_string": "145642.00",
+          "raw_label": "TOTAL",
+          "raw_value_string": "350.00",
           "match_method": "exact_alias",
           "confidence": 1.0
         },
         "total_allowances": {
-          "value": 22025.0,
+          "value": 22055.0,
           "currency": "INR",
           "raw_label": "total_allowances",
-          "raw_value_string": "22025.00",
+          "raw_value_string": "22055.00",
           "match_method": "computed_from_components",
           "confidence": 1.0
         },
@@ -179,8 +179,8 @@
         "amount_in_words": "TWENTY ONE THOUSAND SIX HUNDRED FORTY FIVE RUPEES ONLY"
       },
       "reconciliation": {
-        "gross_minus_deductions_matches_net": true,
-        "delta_vs_stated_net": 0.0,
+        "gross_minus_deductions_matches_net": false,
+        "delta_vs_stated_net": 30.0,
         "sum_of_earning_items_matches_stated_gross": false,
         "sum_of_deduction_items_matches_stated_total": false,
         "flags": []

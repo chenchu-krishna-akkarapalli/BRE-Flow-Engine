@@ -382,18 +382,18 @@
           "confidence": 1.0
         },
         "net_pay": {
-          "value": 545003.58,
+          "value": 364634.58,
           "currency": "INR",
           "raw_label": "NET PAY",
-          "raw_value_string": "545,003.58",
+          "raw_value_string": "364,634.58",
           "match_method": "exact_alias",
           "confidence": 1.0
         },
         "total_deductions": {
-          "value": 0.0,
+          "value": 180369.0,
           "currency": "INR",
           "raw_label": "TOTAL DEDUCTIONS",
-          "raw_value_string": "0.00",
+          "raw_value_string": "180,369.00",
           "match_method": "exact_alias",
           "confidence": 1.0
         },
@@ -410,9 +410,9 @@
       },
       "reconciliation": {
         "gross_minus_deductions_matches_net": true,
-        "delta_vs_stated_net": 0.0,
+        "delta_vs_stated_net": -5.820766091346741e-11,
         "sum_of_earning_items_matches_stated_gross": false,
-        "sum_of_deduction_items_matches_stated_total": false,
+        "sum_of_deduction_items_matches_stated_total": true,
         "flags": []
       }
     }

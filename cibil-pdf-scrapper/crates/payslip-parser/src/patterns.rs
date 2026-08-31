@@ -67,3 +67,71 @@ pub fn is_section_header(label: &str, headers: &[&str]) -> bool {
     let upper = label.trim().to_ascii_uppercase();
     headers.iter().any(|h| upper == *h || upper.starts_with(h))
 }
+
+use payslip_core::TextRun;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LayoutSignature {
+    UnitsColumn,
+    FinancialYearTaxBreakup,
+    AirtelMultiPage,
+    TotalSalaryLabel,
+    DualTaxWorksheet,
+    MultiPageTaxSpreadsheet,
+    SideBySideITProjection,
+    Standard,
+}
+
+pub fn is_multipage_tax_spreadsheet_layout(runs: &[TextRun<'_>]) -> bool {
+    let p1_text: String = runs.iter().filter(|r| r.page == 1).map(|r| r.text.as_ref()).collect::<Vec<_>>().join(" ").to_ascii_uppercase();
+    let p2_text: String = runs.iter().filter(|r| r.page == 2).map(|r| r.text.as_ref()).collect::<Vec<_>>().join(" ").to_ascii_uppercase();
+    p1_text.contains("ANNUAL INCOME TAX CALCULATION FOR FINANCIAL YEAR") && p2_text.contains("SALARY SLIP")
+}
+
+pub fn is_sidebyside_it_projection_layout(full_text: &str) -> bool {
+    let upper = full_text.to_ascii_uppercase();
+    upper.contains("ELECTRONIC PAY-SLIP CUM IT PROJECTION") || upper.contains("INCOME TAX CALCULATION IN RS.")
+}
+
+pub fn detect_layout_signature(full_text: &str, runs: &[TextRun<'_>]) -> LayoutSignature {
+    if is_multipage_tax_spreadsheet_layout(runs) {
+        LayoutSignature::MultiPageTaxSpreadsheet
+    } else if is_sidebyside_it_projection_layout(full_text) {
+        LayoutSignature::SideBySideITProjection
+    } else {
+        let upper = full_text.to_ascii_uppercase();
+        if upper.contains("UNITS") && (upper.contains("AMOUNT (INR)") || upper.contains("EARNINGS/ALLOWANCE")) {
+            LayoutSignature::UnitsColumn
+        } else if upper.contains("TAX BREAKUP FOR THE FINANCIAL YEAR") || upper.contains("TAX BREAKUP") {
+            LayoutSignature::FinancialYearTaxBreakup
+        } else if upper.contains("AIRTEL") || upper.contains("BHARTI AIRTEL") || upper.contains("SIPPAYOUT") || upper.contains("SIP PAYOUT") {
+            LayoutSignature::AirtelMultiPage
+        } else if upper.contains("TOTAL SALARY") || upper.contains("GROSS DEDUCTION") {
+            LayoutSignature::TotalSalaryLabel
+        } else if upper.contains("INCOME TAX WORKSHEET") || upper.contains("INCOME TAX CALCULATION") {
+            LayoutSignature::DualTaxWorksheet
+        } else {
+            LayoutSignature::Standard
+        }
+    }
+}
+
+pub fn is_incentive_or_bonus_item(raw_label: &str, canonical_category: &str) -> bool {
+    let lower_label = raw_label.to_ascii_lowercase();
+    let cat = canonical_category;
+    if cat == "production_incentive_bonus"
+        || cat == "statutory_bonus"
+        || cat == "performance_incentive"
+        || cat == "bonus_incentive"
+    {
+        return true;
+    }
+    lower_label.contains("incentive")
+        || lower_label.contains("performance incentive")
+        || lower_label.contains("sales incentive")
+        || lower_label.contains("bonus")
+        || lower_label.contains("exgratia")
+        || lower_label.contains("ex-gratia")
+        || lower_label.contains("sip payout")
+        || lower_label.contains("sip")
+}

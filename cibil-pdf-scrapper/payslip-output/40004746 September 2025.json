@@ -45,12 +45,12 @@
       "earnings": {
         "items": [
           {
-            "raw_label": "Employee Code 40004746",
+            "raw_label": "EPS No",
             "canonical_category": "other_earning",
             "amount": {
               "value": 8383.0,
               "currency": "INR",
-              "raw_label": "Employee Code 40004746",
+              "raw_label": "EPS No",
               "raw_value_string": "8383",
               "match_method": "positional_heuristic",
               "confidence": 1.0
@@ -59,7 +59,7 @@
             "amount_payable": {
               "value": 8383.0,
               "currency": "INR",
-              "raw_label": "Employee Code 40004746",
+              "raw_label": "EPS No",
               "raw_value_string": "8383",
               "match_method": "positional_heuristic",
               "confidence": 1.0
@@ -68,12 +68,35 @@
             "page": 1
           },
           {
-            "raw_label": "Employee Name",
+            "raw_label": "MH/BAN/12465/00X/395098",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 12465.0,
+              "currency": "INR",
+              "raw_label": "MH/BAN/12465/00X/395098",
+              "raw_value_string": "12465",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 12465.0,
+              "currency": "INR",
+              "raw_label": "MH/BAN/12465/00X/395098",
+              "raw_value_string": "12465",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "LWP Reversal",
             "canonical_category": "other_earning",
             "amount": {
               "value": 0.36,
               "currency": "INR",
-              "raw_label": "Employee Name",
+              "raw_label": "LWP Reversal",
               "raw_value_string": "0.36",
               "match_method": "positional_heuristic",
               "confidence": 1.0
@@ -82,55 +105,9 @@
             "amount_payable": {
               "value": 0.36,
               "currency": "INR",
-              "raw_label": "Employee Name",
+              "raw_label": "LWP Reversal",
               "raw_value_string": "0.36",
               "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "Sudhanshu Kumar Pandey",
-            "canonical_category": "other_earning",
-            "amount": {
-              "value": 30766.0,
-              "currency": "INR",
-              "raw_label": "Sudhanshu Kumar Pandey",
-              "raw_value_string": "30,766.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 30766.0,
-              "currency": "INR",
-              "raw_label": "Sudhanshu Kumar Pandey",
-              "raw_value_string": "30,766.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "HRA",
-            "canonical_category": "house_rent_allowance",
-            "amount": {
-              "value": 36918.0,
-              "currency": "INR",
-              "raw_label": "HRA",
-              "raw_value_string": "36,918.00",
-              "match_method": "exact_alias",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 36918.0,
-              "currency": "INR",
-              "raw_label": "HRA",
-              "raw_value_string": "36,918.00",
-              "match_method": "exact_alias",
               "confidence": 1.0
             },
             "frequency": "monthly",
@@ -140,65 +117,19 @@
             "raw_label": "Adhoc Allowance",
             "canonical_category": "other_earning",
             "amount": {
-              "value": 1512.0,
+              "value": 0.36,
               "currency": "INR",
               "raw_label": "Adhoc Allowance",
-              "raw_value_string": "1,512.00",
+              "raw_value_string": "0.36",
               "match_method": "positional_heuristic",
               "confidence": 1.0
             },
             "amount_actual": null,
             "amount_payable": {
-              "value": 1512.0,
+              "value": 0.36,
               "currency": "INR",
               "raw_label": "Adhoc Allowance",
-              "raw_value_string": "1,512.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "Sales Incentive",
-            "canonical_category": "bonus_incentive",
-            "amount": {
-              "value": 169213.0,
-              "currency": "INR",
-              "raw_label": "Sales Incentive",
-              "raw_value_string": "169,213.00",
-              "match_method": "fuzzy_alias",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 169213.0,
-              "currency": "INR",
-              "raw_label": "Sales Incentive",
-              "raw_value_string": "169,213.00",
-              "match_method": "fuzzy_alias",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "Exgratia",
-            "canonical_category": "other_earning",
-            "amount": {
-              "value": 30375.0,
-              "currency": "INR",
-              "raw_label": "Exgratia",
-              "raw_value_string": "30,375.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 30375.0,
-              "currency": "INR",
-              "raw_label": "Exgratia",
-              "raw_value_string": "30,375.00",
+              "raw_value_string": "0.36",
               "match_method": "positional_heuristic",
               "confidence": 1.0
             },
@@ -229,29 +160,6 @@
             "page": 1
           },
           {
-            "raw_label": "Parichay",
-            "canonical_category": "other_earning",
-            "amount": {
-              "value": 3750.0,
-              "currency": "INR",
-              "raw_label": "Parichay",
-              "raw_value_string": "3,750.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 3750.0,
-              "currency": "INR",
-              "raw_label": "Parichay",
-              "raw_value_string": "3,750.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
             "raw_label": "HRA",
             "canonical_category": "house_rent_allowance",
             "amount": {
@@ -269,29 +177,6 @@
               "raw_label": "HRA",
               "raw_value_string": "6,153.00",
               "match_method": "exact_alias",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "Star Club",
-            "canonical_category": "other_earning",
-            "amount": {
-              "value": 144055.0,
-              "currency": "INR",
-              "raw_label": "Star Club",
-              "raw_value_string": "144,055.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 144055.0,
-              "currency": "INR",
-              "raw_label": "Star Club",
-              "raw_value_string": "144,055.00",
-              "match_method": "positional_heuristic",
               "confidence": 1.0
             },
             "frequency": "monthly",
@@ -319,28 +204,97 @@
             },
             "frequency": "monthly",
             "page": 1
+          },
+          {
+            "raw_label": "Exgratia (Bonus)",
+            "canonical_category": "bonus_incentive",
+            "amount": {
+              "value": 30375.0,
+              "currency": "INR",
+              "raw_label": "Exgratia (Bonus)",
+              "raw_value_string": "30,375.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 30375.0,
+              "currency": "INR",
+              "raw_label": "Exgratia (Bonus)",
+              "raw_value_string": "30,375.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Adhoc Allowance",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 252.0,
+              "currency": "INR",
+              "raw_label": "Adhoc Allowance",
+              "raw_value_string": "252.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 252.0,
+              "currency": "INR",
+              "raw_label": "Adhoc Allowance",
+              "raw_value_string": "252.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Adjustment",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 0.36,
+              "currency": "INR",
+              "raw_label": "Adjustment",
+              "raw_value_string": "0.36",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 0.36,
+              "currency": "INR",
+              "raw_label": "Adjustment",
+              "raw_value_string": "0.36",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
           }
         ]
       },
       "deductions": {
         "items": [
           {
-            "raw_label": "Income Tax Calculation in Rs.",
-            "canonical_category": "income_tax_tds",
+            "raw_label": "EPF (Including VPF,wherever opted)",
+            "canonical_category": "provident_fund",
             "amount": {
-              "value": 184596.0,
+              "value": 44304.0,
               "currency": "INR",
-              "raw_label": "Income Tax Calculation in Rs.",
-              "raw_value_string": "184,596.00",
+              "raw_label": "EPF (Including VPF,wherever opted)",
+              "raw_value_string": "44,304.00",
               "match_method": "fuzzy_alias",
               "confidence": 1.0
             },
             "amount_actual": null,
             "amount_payable": {
-              "value": 184596.0,
+              "value": 44304.0,
               "currency": "INR",
-              "raw_label": "Income Tax Calculation in Rs.",
-              "raw_value_string": "184,596.00",
+              "raw_label": "EPF (Including VPF,wherever opted)",
+              "raw_value_string": "44,304.00",
               "match_method": "fuzzy_alias",
               "confidence": 1.0
             },
@@ -359,44 +313,44 @@
           "confidence": 1.0
         },
         "net_pay": {
-          "value": 720845.0,
+          "value": 64054.0,
           "currency": "INR",
-          "raw_label": "NET PAY",
-          "raw_value_string": "Net Pay  64,054.00 Annual income before Deduction under chapter VIA 720,845.00",
+          "raw_label": "Net Pay",
+          "raw_value_string": "64,054.00",
           "match_method": "exact_alias",
           "confidence": 1.0
         },
         "total_deductions": {
-          "value": 184596.0,
+          "value": 3692.36,
           "currency": "INR",
-          "raw_label": "TOTAL DEDUCTIONS",
-          "raw_value_string": "Gross Deductions",
+          "raw_label": "Total Deductions",
+          "raw_value_string": "3,692.36",
           "match_method": "exact_alias",
           "confidence": 1.0
         },
         "total_allowances": {
-          "value": 262112.36,
+          "value": 27454.08,
           "currency": "INR",
           "raw_label": "total_allowances",
-          "raw_value_string": "262112.36",
+          "raw_value_string": "27454.08",
           "match_method": "computed_from_components",
           "confidence": 1.0
         },
         "total_incentives_and_bonus": {
-          "value": 169213.0,
+          "value": 30375.0,
           "currency": "INR",
-          "raw_label": "Sales Incentive",
-          "raw_value_string": "169,213.00",
+          "raw_label": "Exgratia (Bonus)",
+          "raw_value_string": "30,375.00",
           "match_method": "computed_from_components",
           "confidence": 1.0
         },
         "amount_in_words": null
       },
       "reconciliation": {
-        "gross_minus_deductions_matches_net": false,
-        "delta_vs_stated_net": -837694.64,
+        "gross_minus_deductions_matches_net": true,
+        "delta_vs_stated_net": 0.0,
         "sum_of_earning_items_matches_stated_gross": false,
-        "sum_of_deduction_items_matches_stated_total": true,
+        "sum_of_deduction_items_matches_stated_total": false,
         "flags": []
       }
     }
@@ -429,24 +383,17 @@
         "bbox": {
           "x": 9.899999618530273,
           "y": 57.54998779296875,
-          "width": 765.2762451171875,
+          "width": 134.8109893798828,
           "height": 9.0
         },
         "segments": [
-          "EMPLOYEE PAN: DDUPP8383M",
-          "MONTH: 09/2025"
+          "EMPLOYEE PAN: DDUPP8383M"
         ],
         "segment_boxes": [
           {
             "x": 9.899999618530273,
             "y": 57.54998779296875,
             "width": 134.8109893798828,
-            "height": 9.0
-          },
-          {
-            "x": 704.4000244140625,
-            "y": 57.54998779296875,
-            "width": 70.7762451171875,
             "height": 9.0
           }
         ]
@@ -455,15 +402,14 @@
         "page": 1,
         "bbox": {
           "x": 12.199999809265137,
-          "y": 68.75,
-          "width": 685.0497436523438,
-          "height": 10.0
+          "y": 69.75,
+          "width": 380.2441101074219,
+          "height": 9.0
         },
         "segments": [
           "Employee Code 40004746",
           "Employee Name",
-          "Sudhanshu Kumar Pandey",
-          "Income Tax Calculation in Rs."
+          "Sudhanshu Kumar Pandey"
         ],
         "segment_boxes": [
           {
@@ -483,12 +429,6 @@
             "y": 69.75,
             "width": 108.14413452148438,
             "height": 9.0
-          },
-          {
-            "x": 564.0499877929688,
-            "y": 68.75,
-            "width": 133.19976806640625,
-            "height": 10.0
           }
         ]
       },
@@ -497,7 +437,7 @@
         "bbox": {
           "x": 12.199999809265137,
           "y": 80.85000610351562,
-          "width": 805.7000732421875,
+          "width": 508.95001220703125,
           "height": 10.0
         },
         "segments": [
@@ -505,11 +445,7 @@
           "Marketing Executive",
           "STD Basic",
           "30,766.00",
-          "Particulars",
-          "Cumulative",
-          "Add:Projected",
-          "Less:Exempted",
-          "Annual"
+          "Particulars"
         ],
         "segment_boxes": [
           {
@@ -541,30 +477,6 @@
             "y": 80.85000610351562,
             "width": 47.300018310546875,
             "height": 10.0
-          },
-          {
-            "x": 575.2000122070312,
-            "y": 80.85000610351562,
-            "width": 50.0399169921875,
-            "height": 10.0
-          },
-          {
-            "x": 633.9000244140625,
-            "y": 80.85000610351562,
-            "width": 63.0599365234375,
-            "height": 10.0
-          },
-          {
-            "x": 699.5999755859375,
-            "y": 80.85000610351562,
-            "width": 69.1600341796875,
-            "height": 10.0
-          },
-          {
-            "x": 786.5499877929688,
-            "y": 80.85000610351562,
-            "width": 31.35009765625,
-            "height": 10.0
           }
         ]
       },
@@ -572,17 +484,15 @@
         "page": 1,
         "bbox": {
           "x": 12.199999809265137,
-          "y": 90.45001220703125,
-          "width": 681.8699951171875,
-          "height": 11.0
+          "y": 92.45001220703125,
+          "width": 292.2779846191406,
+          "height": 9.0
         },
         "segments": [
           "Grade",
           "SE2",
           "Overtime Hours",
-          "0.00",
-          "Total April to",
-          "Oct to March"
+          "0.00"
         ],
         "segment_boxes": [
           {
@@ -608,18 +518,6 @@
             "y": 92.45001220703125,
             "width": 20.178009033203125,
             "height": 9.0
-          },
-          {
-            "x": 572.0499877929688,
-            "y": 90.45001220703125,
-            "width": 56.31988525390625,
-            "height": 10.0
-          },
-          {
-            "x": 636.75,
-            "y": 90.45001220703125,
-            "width": 57.32000732421875,
-            "height": 10.0
           }
         ]
       },
@@ -627,16 +525,15 @@
         "page": 1,
         "bbox": {
           "x": 12.199999809265137,
-          "y": 100.04998779296875,
-          "width": 598.4100341796875,
-          "height": 12.75
+          "y": 103.79998779296875,
+          "width": 342.65997314453125,
+          "height": 9.0
         },
         "segments": [
           "Date of Joining",
           "15.09.2020",
           "Bank A/C no",
-          "50100238854400",
-          "Sept"
+          "50100238854400"
         ],
         "segment_boxes": [
           {
@@ -662,12 +559,6 @@
             "y": 103.79998779296875,
             "width": 70.55999755859375,
             "height": 9.0
-          },
-          {
-            "x": 589.9000244140625,
-            "y": 100.04998779296875,
-            "width": 20.71002197265625,
-            "height": 10.0
           }
         ]
       },
@@ -676,7 +567,7 @@
         "bbox": {
           "x": 12.199999809265137,
           "y": 113.14999389648438,
-          "width": 819.7479858398438,
+          "width": 468.7619934082031,
           "height": 11.0
         },
         "segments": [
@@ -684,11 +575,7 @@
           "STELLAR FF LUCKNOW",
           "UAN ID",
           "101284103002",
-          "Basic Salary",
-          "184,596.00",
-          "184,596.00",
-          "0.00",
-          "369,192.00"
+          "Basic Salary"
         ],
         "segment_boxes": [
           {
@@ -720,30 +607,6 @@
             "y": 113.14999389648438,
             "width": 50.11199951171875,
             "height": 9.0
-          },
-          {
-            "x": 581.4000244140625,
-            "y": 113.14999389648438,
-            "width": 47.89801025390625,
-            "height": 9.0
-          },
-          {
-            "x": 648.0,
-            "y": 113.14999389648438,
-            "width": 47.89801025390625,
-            "height": 9.0
-          },
-          {
-            "x": 746.5999755859375,
-            "y": 113.14999389648438,
-            "width": 20.177978515625,
-            "height": 9.0
-          },
-          {
-            "x": 784.0499877929688,
-            "y": 113.14999389648438,
-            "width": 47.89801025390625,
-            "height": 9.0
           }
         ]
       },
@@ -752,7 +615,7 @@
         "bbox": {
           "x": 12.199999809265137,
           "y": 125.0,
-          "width": 819.7579345703125,
+          "width": 437.5950012207031,
           "height": 10.5
         },
         "segments": [
@@ -760,11 +623,7 @@
           "Maunathbhanjan",
           "E.S.I No",
           "-",
-          "HRA",
-          "36,918.00",
-          "36,918.00",
-          "0.00",
-          "73,836.00"
+          "HRA"
         ],
         "segment_boxes": [
           {
@@ -796,30 +655,6 @@
             "y": 125.0,
             "width": 18.94500732421875,
             "height": 9.0
-          },
-          {
-            "x": 586.4500122070312,
-            "y": 125.0,
-            "width": 42.85797119140625,
-            "height": 9.0
-          },
-          {
-            "x": 653.0499877929688,
-            "y": 125.0,
-            "width": 42.85797119140625,
-            "height": 9.0
-          },
-          {
-            "x": 746.5999755859375,
-            "y": 125.0,
-            "width": 20.177978515625,
-            "height": 9.0
-          },
-          {
-            "x": 789.0999755859375,
-            "y": 125.0,
-            "width": 42.85797119140625,
-            "height": 9.0
           }
         ]
       },
@@ -828,7 +663,7 @@
         "bbox": {
           "x": 12.199999809265137,
           "y": 136.85000610351562,
-          "width": 819.7680053710938,
+          "width": 502.38604736328125,
           "height": 10.0
         },
         "segments": [
@@ -836,11 +671,7 @@
           "MH/BAN/12465/00X/77567",
           "LWP",
           "0.00",
-          "Education Allowance",
-          "1,200.00",
-          "1,200.00",
-          "0.00",
-          "2,400.00"
+          "Education Allowance"
         ],
         "segment_boxes": [
           {
@@ -872,30 +703,6 @@
             "y": 136.85000610351562,
             "width": 83.73605346679688,
             "height": 9.0
-          },
-          {
-            "x": 591.5,
-            "y": 136.85000610351562,
-            "width": 37.8179931640625,
-            "height": 9.0
-          },
-          {
-            "x": 658.0999755859375,
-            "y": 136.85000610351562,
-            "width": 37.8179931640625,
-            "height": 9.0
-          },
-          {
-            "x": 746.5999755859375,
-            "y": 136.85000610351562,
-            "width": 20.177978515625,
-            "height": 9.0
-          },
-          {
-            "x": 794.1500244140625,
-            "y": 136.85000610351562,
-            "width": 37.8179931640625,
-            "height": 9.0
           }
         ]
       },
@@ -904,7 +711,7 @@
         "bbox": {
           "x": 12.199999809265137,
           "y": 148.70001220703125,
-          "width": 819.7680053710938,
+          "width": 487.8059997558594,
           "height": 9.5
         },
         "segments": [
@@ -912,11 +719,7 @@
           "MH/BAN/12465/00X/395098",
           "LWP Reversal",
           "0.00",
-          "Adhoc Allowance",
-          "1,512.00",
-          "1,512.00",
-          "0.00",
-          "3,024.00"
+          "Adhoc Allowance"
         ],
         "segment_boxes": [
           {
@@ -948,30 +751,6 @@
             "y": 148.70001220703125,
             "width": 69.156005859375,
             "height": 9.0
-          },
-          {
-            "x": 591.5,
-            "y": 148.70001220703125,
-            "width": 37.8179931640625,
-            "height": 9.0
-          },
-          {
-            "x": 658.0999755859375,
-            "y": 148.70001220703125,
-            "width": 37.8179931640625,
-            "height": 9.0
-          },
-          {
-            "x": 746.5999755859375,
-            "y": 148.70001220703125,
-            "width": 20.177978515625,
-            "height": 9.0
-          },
-          {
-            "x": 794.1500244140625,
-            "y": 148.70001220703125,
-            "width": 37.8179931640625,
-            "height": 9.0
           }
         ]
       },
@@ -980,7 +759,7 @@
         "bbox": {
           "x": 12.199999809265137,
           "y": 160.54998779296875,
-          "width": 819.7479858398438,
+          "width": 527.5231323242188,
           "height": 9.0
         },
         "segments": [
@@ -988,11 +767,7 @@
           "New Tax Regime",
           "Total Days Paid",
           "30.00",
-          "Annual Regular Income (A)",
-          "224,226.00",
-          "224,226.00",
-          "0.00",
-          "448,452.00"
+          "Annual Regular Income (A)"
         ],
         "segment_boxes": [
           {
@@ -1024,30 +799,6 @@
             "y": 160.54998779296875,
             "width": 108.87313842773438,
             "height": 9.0
-          },
-          {
-            "x": 581.4000244140625,
-            "y": 160.54998779296875,
-            "width": 47.89801025390625,
-            "height": 9.0
-          },
-          {
-            "x": 648.0,
-            "y": 160.54998779296875,
-            "width": 47.89801025390625,
-            "height": 9.0
-          },
-          {
-            "x": 746.5999755859375,
-            "y": 160.54998779296875,
-            "width": 20.177978515625,
-            "height": 9.0
-          },
-          {
-            "x": 784.0499877929688,
-            "y": 160.54998779296875,
-            "width": 47.89801025390625,
-            "height": 9.0
           }
         ]
       },
@@ -1056,17 +807,13 @@
         "bbox": {
           "x": 85.30000305175781,
           "y": 170.89999389648438,
-          "width": 746.6480102539062,
+          "width": 406.696044921875,
           "height": 10.5
         },
         "segments": [
           "EARNINGS",
           "DEDUCTIONS",
-          "Sales Incentive",
-          "169,213.00",
-          "0.00",
-          "0.00",
-          "169,213.00"
+          "Sales Incentive"
         ],
         "segment_boxes": [
           {
@@ -1086,30 +833,6 @@
             "y": 172.39999389648438,
             "width": 61.146026611328125,
             "height": 9.0
-          },
-          {
-            "x": 581.4000244140625,
-            "y": 172.39999389648438,
-            "width": 47.89801025390625,
-            "height": 9.0
-          },
-          {
-            "x": 675.75,
-            "y": 172.39999389648438,
-            "width": 20.177978515625,
-            "height": 9.0
-          },
-          {
-            "x": 746.5999755859375,
-            "y": 172.39999389648438,
-            "width": 20.177978515625,
-            "height": 9.0
-          },
-          {
-            "x": 784.0499877929688,
-            "y": 172.39999389648438,
-            "width": 47.89801025390625,
-            "height": 9.0
           }
         ]
       },
@@ -1118,7 +841,7 @@
         "bbox": {
           "x": 46.70000076293945,
           "y": 183.0,
-          "width": 785.2579345703125,
+          "width": 417.08099365234375,
           "height": 10.25
         },
         "segments": [
@@ -1126,11 +849,7 @@
           "Amount in Rs.",
           "Description",
           "Amount in Rs.",
-          "Exgratia",
-          "30,375.00",
-          "0.00",
-          "0.00",
-          "30,375.00"
+          "Exgratia"
         ],
         "segment_boxes": [
           {
@@ -1162,30 +881,6 @@
             "y": 184.25,
             "width": 32.930999755859375,
             "height": 9.0
-          },
-          {
-            "x": 586.4500122070312,
-            "y": 184.25,
-            "width": 42.85797119140625,
-            "height": 9.0
-          },
-          {
-            "x": 675.75,
-            "y": 184.25,
-            "width": 20.177978515625,
-            "height": 9.0
-          },
-          {
-            "x": 746.5999755859375,
-            "y": 184.25,
-            "width": 20.177978515625,
-            "height": 9.0
-          },
-          {
-            "x": 789.0999755859375,
-            "y": 184.25,
-            "width": 42.85797119140625,
-            "height": 9.0
           }
         ]
       },
@@ -1194,18 +889,14 @@
         "bbox": {
           "x": 12.199999809265137,
           "y": 196.10000610351562,
-          "width": 819.7680053710938,
+          "width": 453.75,
           "height": 9.0
         },
         "segments": [
           "Basic Salary",
           "30,766.00 Ee PF contribution",
           "3,692.00",
-          "Parichay",
-          "3,750.00",
-          "0.00",
-          "0.00",
-          "3,750.00"
+          "Parichay"
         ],
         "segment_boxes": [
           {
@@ -1231,30 +922,6 @@
             "y": 196.10000610351562,
             "width": 35.100006103515625,
             "height": 9.0
-          },
-          {
-            "x": 591.5,
-            "y": 196.10000610351562,
-            "width": 37.8179931640625,
-            "height": 9.0
-          },
-          {
-            "x": 675.75,
-            "y": 196.10000610351562,
-            "width": 20.177978515625,
-            "height": 9.0
-          },
-          {
-            "x": 746.5999755859375,
-            "y": 196.10000610351562,
-            "width": 20.177978515625,
-            "height": 9.0
-          },
-          {
-            "x": 794.1500244140625,
-            "y": 196.10000610351562,
-            "width": 37.8179931640625,
-            "height": 9.0
           }
         ]
       },
@@ -1263,18 +930,14 @@
         "bbox": {
           "x": 12.199999809265137,
           "y": 207.95001220703125,
-          "width": 819.7479858398438,
+          "width": 456.21600341796875,
           "height": 9.0
         },
         "segments": [
           "HRA",
           "6,153.00 Adjustment",
           "0.36",
-          "Star Club",
-          "144,055.00",
-          "0.00",
-          "0.00",
-          "144,055.00"
+          "Star Club"
         ],
         "segment_boxes": [
           {
@@ -1300,30 +963,6 @@
             "y": 207.95001220703125,
             "width": 37.566009521484375,
             "height": 9.0
-          },
-          {
-            "x": 581.4000244140625,
-            "y": 207.95001220703125,
-            "width": 47.89801025390625,
-            "height": 9.0
-          },
-          {
-            "x": 675.75,
-            "y": 207.95001220703125,
-            "width": 20.177978515625,
-            "height": 9.0
-          },
-          {
-            "x": 746.5999755859375,
-            "y": 207.95001220703125,
-            "width": 20.177978515625,
-            "height": 9.0
-          },
-          {
-            "x": 784.0499877929688,
-            "y": 207.95001220703125,
-            "width": 47.89801025390625,
-            "height": 9.0
           }
         ]
       },
@@ -1332,17 +971,13 @@
         "bbox": {
           "x": 12.199999809265137,
           "y": 219.79998779296875,
-          "width": 819.7479858398438,
+          "width": 527.0010986328125,
           "height": 9.0
         },
         "segments": [
           "Education Allowance",
           "200.00",
-          "Annual Irregular Income(B)",
-          "347,393.00",
-          "0.00",
-          "0.00",
-          "347,393.00"
+          "Annual Irregular Income(B)"
         ],
         "segment_boxes": [
           {
@@ -1362,30 +997,6 @@
             "y": 219.79998779296875,
             "width": 108.35110473632812,
             "height": 9.0
-          },
-          {
-            "x": 581.4000244140625,
-            "y": 219.79998779296875,
-            "width": 47.89801025390625,
-            "height": 9.0
-          },
-          {
-            "x": 675.75,
-            "y": 219.79998779296875,
-            "width": 20.177978515625,
-            "height": 9.0
-          },
-          {
-            "x": 746.5999755859375,
-            "y": 219.79998779296875,
-            "width": 20.177978515625,
-            "height": 9.0
-          },
-          {
-            "x": 784.0499877929688,
-            "y": 219.79998779296875,
-            "width": 47.89801025390625,
-            "height": 9.0
           }
         ]
       },
@@ -1394,14 +1005,12 @@
         "bbox": {
           "x": 12.199999809265137,
           "y": 231.64999389648438,
-          "width": 819.7479858398438,
+          "width": 199.8079833984375,
           "height": 9.0
         },
         "segments": [
           "Exgratia (Bonus)",
-          "30,375.00",
-          "Total Income (A + B)",
-          "795,845.00"
+          "30,375.00"
         ],
         "segment_boxes": [
           {
@@ -1414,18 +1023,6 @@
             "x": 169.14999389648438,
             "y": 231.64999389648438,
             "width": 42.85798645019531,
-            "height": 9.0
-          },
-          {
-            "x": 508.3500061035156,
-            "y": 231.64999389648438,
-            "width": 103.13119506835938,
-            "height": 9.0
-          },
-          {
-            "x": 784.0499877929688,
-            "y": 231.64999389648438,
-            "width": 47.89801025390625,
             "height": 9.0
           }
         ]
@@ -1462,14 +1059,13 @@
         "bbox": {
           "x": 12.199999809265137,
           "y": 253.10000610351562,
-          "width": 819.7479858398438,
+          "width": 505.51806640625,
           "height": 11.25
         },
         "segments": [
           "Adjustment",
           "0.36",
-          "Annual Gross Income",
-          "795,845.00"
+          "Annual Gross Income"
         ],
         "segment_boxes": [
           {
@@ -1489,12 +1085,6 @@
             "y": 253.10000610351562,
             "width": 86.86807250976562,
             "height": 9.0
-          },
-          {
-            "x": 784.0499877929688,
-            "y": 253.10000610351562,
-            "width": 47.89801025390625,
-            "height": 9.0
           }
         ]
       },
@@ -1503,15 +1093,14 @@
         "bbox": {
           "x": 12.199999809265137,
           "y": 264.95001220703125,
-          "width": 819.7579345703125,
+          "width": 520.1162109375,
           "height": 11.25
         },
         "segments": [
           "Total Earnings",
           "67,746.36 Total Deductions",
           "3,692.36",
-          "Less:Standard Deduction",
-          "75,000.00"
+          "Less:Standard Deduction"
         ],
         "segment_boxes": [
           {
@@ -1537,12 +1126,6 @@
             "y": 264.95001220703125,
             "width": 101.46621704101562,
             "height": 9.0
-          },
-          {
-            "x": 789.0999755859375,
-            "y": 264.95001220703125,
-            "width": 42.85797119140625,
-            "height": 9.0
           }
         ]
       },
@@ -1551,13 +1134,12 @@
         "bbox": {
           "x": 339.04998779296875,
           "y": 276.79998779296875,
-          "width": 492.89801025390625,
+          "width": 298.58734130859375,
           "height": 11.25
         },
         "segments": [
           "Net Pay  64,054.00",
-          "Annual income before Deduction under chapter VIA",
-          "720,845.00"
+          "Annual income before Deduction under chapter VIA"
         ],
         "segment_boxes": [
           {
@@ -1571,12 +1153,6 @@
             "y": 276.79998779296875,
             "width": 206.78732299804688,
             "height": 9.0
-          },
-          {
-            "x": 784.0499877929688,
-            "y": 276.79998779296875,
-            "width": 47.89801025390625,
-            "height": 9.0
           }
         ]
       },
@@ -1585,24 +1161,17 @@
         "bbox": {
           "x": 430.8500061035156,
           "y": 288.6499938964844,
-          "width": 401.0979919433594,
+          "width": 153.35928344726562,
           "height": 9.0
         },
         "segments": [
-          "Income chargeable to tax(rounded off)",
-          "720,850.00"
+          "Income chargeable to tax(rounded off)"
         ],
         "segment_boxes": [
           {
             "x": 430.8500061035156,
             "y": 288.6499938964844,
             "width": 153.35928344726562,
-            "height": 9.0
-          },
-          {
-            "x": 784.0499877929688,
-            "y": 288.6499938964844,
-            "width": 47.89801025390625,
             "height": 9.0
           }
         ]
@@ -1612,13 +1181,12 @@
         "bbox": {
           "x": 173.64999389648438,
           "y": 299.5,
-          "width": 658.3079833984375,
+          "width": 335.4281005859375,
           "height": 10.0
         },
         "segments": [
           "Investment Details",
-          "Income tax payable",
-          "16,042.50"
+          "Income tax payable"
         ],
         "segment_boxes": [
           {
@@ -1632,12 +1200,6 @@
             "y": 300.5,
             "width": 78.22808837890625,
             "height": 9.0
-          },
-          {
-            "x": 789.0999755859375,
-            "y": 300.5,
-            "width": 42.85797119140625,
-            "height": 9.0
           }
         ]
       },
@@ -1646,14 +1208,13 @@
         "bbox": {
           "x": 151.5500030517578,
           "y": 311.6000061035156,
-          "width": 680.407958984375,
+          "width": 341.60711669921875,
           "height": 10.0
         },
         "segments": [
           "Particulars",
           "Amount in Rs.",
-          "Rebate u/s 87A",
-          "16,042.50"
+          "Rebate u/s 87A"
         ],
         "segment_boxes": [
           {
@@ -1673,12 +1234,6 @@
             "y": 312.3500061035156,
             "width": 62.307098388671875,
             "height": 9.0
-          },
-          {
-            "x": 789.0999755859375,
-            "y": 312.3500061035156,
-            "width": 42.85797119140625,
-            "height": 9.0
           }
         ]
       },
@@ -1687,13 +1242,12 @@
         "bbox": {
           "x": 12.199999809265137,
           "y": 324.20001220703125,
-          "width": 819.7779541015625,
+          "width": 516.5340576171875,
           "height": 9.5
         },
         "segments": [
           "Chapter - VIA Deduction u/s 80c & 80 others & 80CCD (2)",
-          "Additional Voluntary Tax",
-          "0.00"
+          "Additional Voluntary Tax"
         ],
         "segment_boxes": [
           {
@@ -1707,12 +1261,6 @@
             "y": 324.20001220703125,
             "width": 97.88406372070312,
             "height": 9.0
-          },
-          {
-            "x": 811.7999877929688,
-            "y": 324.20001220703125,
-            "width": 20.177978515625,
-            "height": 9.0
           }
         ]
       },
@@ -1721,14 +1269,13 @@
         "bbox": {
           "x": 12.199999809265137,
           "y": 336.04998779296875,
-          "width": 819.7779541015625,
+          "width": 526.6502075195312,
           "height": 9.5
         },
         "segments": [
           "EPF (Including VPF,wherever opted)",
           "44,304.00",
-          "Incremental Tax per month",
-          "0.00"
+          "Incremental Tax per month"
         ],
         "segment_boxes": [
           {
@@ -1747,12 +1294,6 @@
             "x": 430.8500061035156,
             "y": 336.04998779296875,
             "width": 108.00021362304688,
-            "height": 9.0
-          },
-          {
-            "x": 811.7999877929688,
-            "y": 336.04998779296875,
-            "width": 20.177978515625,
             "height": 9.0
           }
         ]
@@ -1808,25 +1349,18 @@
         "page": 1,
         "bbox": {
           "x": 228.6999969482422,
-          "y": 547.4000244140625,
-          "width": 579.8040161132812,
-          "height": 11.39996337890625
+          "y": 549.7999877929688,
+          "width": 278.50103759765625,
+          "height": 9.0
         },
         "segments": [
-          "This is a Computer generated statement NOT requiring any Signature",
-          "Page 1 / 1"
+          "This is a Computer generated statement NOT requiring any Signature"
         ],
         "segment_boxes": [
           {
             "x": 228.6999969482422,
             "y": 549.7999877929688,
             "width": 278.50103759765625,
-            "height": 9.0
-          },
-          {
-            "x": 767.3499755859375,
-            "y": 547.4000244140625,
-            "width": 41.154052734375,
             "height": 9.0
           }
         ]
@@ -1913,66 +1447,6 @@
         [
           473.8500061035156,
           521.1500244140625
-        ],
-        [
-          508.3500061035156,
-          611.481201171875
-        ],
-        [
-          564.0499877929688,
-          697.249755859375
-        ],
-        [
-          572.0499877929688,
-          628.369873046875
-        ],
-        [
-          581.4000244140625,
-          629.3079833984375
-        ],
-        [
-          589.9000244140625,
-          629.3179931640625
-        ],
-        [
-          633.9000244140625,
-          696.9599609375
-        ],
-        [
-          648.0,
-          695.907958984375
-        ],
-        [
-          658.0999755859375,
-          695.91796875
-        ],
-        [
-          675.75,
-          695.927978515625
-        ],
-        [
-          699.5999755859375,
-          775.17626953125
-        ],
-        [
-          746.5999755859375,
-          766.7779541015625
-        ],
-        [
-          767.3499755859375,
-          808.5040283203125
-        ],
-        [
-          784.0499877929688,
-          831.9579467773438
-        ],
-        [
-          794.1500244140625,
-          831.968017578125
-        ],
-        [
-          811.7999877929688,
-          831.9779663085938
         ]
       ],
       "rows": [
@@ -2003,16 +1477,6 @@
                 "height": 9.0
               },
               "column": 0
-            },
-            {
-              "text": "MONTH: 09/2025",
-              "bbox": {
-                "x": 704.4000244140625,
-                "y": 57.54998779296875,
-                "width": 70.7762451171875,
-                "height": 9.0
-              },
-              "column": 29
             }
           ]
         },
@@ -2048,16 +1512,6 @@
                 "height": 9.0
               },
               "column": 10
-            },
-            {
-              "text": "Income Tax Calculation in Rs.",
-              "bbox": {
-                "x": 564.0499877929688,
-                "y": 68.75,
-                "width": 133.19976806640625,
-                "height": 10.0
-              },
-              "column": 21
             }
           ]
         },
@@ -2113,46 +1567,6 @@
                 "height": 10.0
               },
               "column": 19
-            },
-            {
-              "text": "Cumulative",
-              "bbox": {
-                "x": 575.2000122070312,
-                "y": 80.85000610351562,
-                "width": 50.0399169921875,
-                "height": 10.0
-              },
-              "column": 22
-            },
-            {
-              "text": "Add:Projected",
-              "bbox": {
-                "x": 633.9000244140625,
-                "y": 80.85000610351562,
-                "width": 63.0599365234375,
-                "height": 10.0
-              },
-              "column": 25
-            },
-            {
-              "text": "Less:Exempted",
-              "bbox": {
-                "x": 699.5999755859375,
-                "y": 80.85000610351562,
-                "width": 69.1600341796875,
-                "height": 10.0
-              },
-              "column": 29
-            },
-            {
-              "text": "Annual",
-              "bbox": {
-                "x": 786.5499877929688,
-                "y": 80.85000610351562,
-                "width": 31.35009765625,
-                "height": 10.0
-              },
-              "column": 32
             }
           ]
         },
@@ -2198,26 +1612,6 @@
                 "height": 9.0
               },
               "column": 10
-            },
-            {
-              "text": "Total April to",
-              "bbox": {
-                "x": 572.0499877929688,
-                "y": 90.45001220703125,
-                "width": 56.31988525390625,
-                "height": 10.0
-              },
-              "column": 22
-            },
-            {
-              "text": "Oct to March",
-              "bbox": {
-                "x": 636.75,
-                "y": 90.45001220703125,
-                "width": 57.32000732421875,
-                "height": 10.0
-              },
-              "column": 25
             }
           ]
         },
@@ -2263,16 +1657,6 @@
                 "height": 9.0
               },
               "column": 10
-            },
-            {
-              "text": "Sept",
-              "bbox": {
-                "x": 589.9000244140625,
-                "y": 100.04998779296875,
-                "width": 20.71002197265625,
-                "height": 10.0
-              },
-              "column": 24
             }
           ]
         },
@@ -2328,46 +1712,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "184,596.00",
-              "bbox": {
-                "x": 581.4000244140625,
-                "y": 113.14999389648438,
-                "width": 47.89801025390625,
-                "height": 9.0
-              },
-              "column": 23
-            },
-            {
-              "text": "184,596.00",
-              "bbox": {
-                "x": 648.0,
-                "y": 113.14999389648438,
-                "width": 47.89801025390625,
-                "height": 9.0
-              },
-              "column": 26
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 746.5999755859375,
-                "y": 113.14999389648438,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 30
-            },
-            {
-              "text": "369,192.00",
-              "bbox": {
-                "x": 784.0499877929688,
-                "y": 113.14999389648438,
-                "width": 47.89801025390625,
-                "height": 9.0
-              },
-              "column": 32
             }
           ]
         },
@@ -2423,46 +1767,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "36,918.00",
-              "bbox": {
-                "x": 586.4500122070312,
-                "y": 125.0,
-                "width": 42.85797119140625,
-                "height": 9.0
-              },
-              "column": 24
-            },
-            {
-              "text": "36,918.00",
-              "bbox": {
-                "x": 653.0499877929688,
-                "y": 125.0,
-                "width": 42.85797119140625,
-                "height": 9.0
-              },
-              "column": 26
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 746.5999755859375,
-                "y": 125.0,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 30
-            },
-            {
-              "text": "73,836.00",
-              "bbox": {
-                "x": 789.0999755859375,
-                "y": 125.0,
-                "width": 42.85797119140625,
-                "height": 9.0
-              },
-              "column": 32
             }
           ]
         },
@@ -2518,46 +1822,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "1,200.00",
-              "bbox": {
-                "x": 591.5,
-                "y": 136.85000610351562,
-                "width": 37.8179931640625,
-                "height": 9.0
-              },
-              "column": 24
-            },
-            {
-              "text": "1,200.00",
-              "bbox": {
-                "x": 658.0999755859375,
-                "y": 136.85000610351562,
-                "width": 37.8179931640625,
-                "height": 9.0
-              },
-              "column": 27
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 746.5999755859375,
-                "y": 136.85000610351562,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 30
-            },
-            {
-              "text": "2,400.00",
-              "bbox": {
-                "x": 794.1500244140625,
-                "y": 136.85000610351562,
-                "width": 37.8179931640625,
-                "height": 9.0
-              },
-              "column": 33
             }
           ]
         },
@@ -2613,46 +1877,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "1,512.00",
-              "bbox": {
-                "x": 591.5,
-                "y": 148.70001220703125,
-                "width": 37.8179931640625,
-                "height": 9.0
-              },
-              "column": 24
-            },
-            {
-              "text": "1,512.00",
-              "bbox": {
-                "x": 658.0999755859375,
-                "y": 148.70001220703125,
-                "width": 37.8179931640625,
-                "height": 9.0
-              },
-              "column": 27
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 746.5999755859375,
-                "y": 148.70001220703125,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 30
-            },
-            {
-              "text": "3,024.00",
-              "bbox": {
-                "x": 794.1500244140625,
-                "y": 148.70001220703125,
-                "width": 37.8179931640625,
-                "height": 9.0
-              },
-              "column": 33
             }
           ]
         },
@@ -2708,46 +1932,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "224,226.00",
-              "bbox": {
-                "x": 581.4000244140625,
-                "y": 160.54998779296875,
-                "width": 47.89801025390625,
-                "height": 9.0
-              },
-              "column": 23
-            },
-            {
-              "text": "224,226.00",
-              "bbox": {
-                "x": 648.0,
-                "y": 160.54998779296875,
-                "width": 47.89801025390625,
-                "height": 9.0
-              },
-              "column": 26
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 746.5999755859375,
-                "y": 160.54998779296875,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 30
-            },
-            {
-              "text": "448,452.00",
-              "bbox": {
-                "x": 784.0499877929688,
-                "y": 160.54998779296875,
-                "width": 47.89801025390625,
-                "height": 9.0
-              },
-              "column": 32
             }
           ]
         },
@@ -2783,46 +1967,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "169,213.00",
-              "bbox": {
-                "x": 581.4000244140625,
-                "y": 172.39999389648438,
-                "width": 47.89801025390625,
-                "height": 9.0
-              },
-              "column": 23
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 675.75,
-                "y": 172.39999389648438,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 28
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 746.5999755859375,
-                "y": 172.39999389648438,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 30
-            },
-            {
-              "text": "169,213.00",
-              "bbox": {
-                "x": 784.0499877929688,
-                "y": 172.39999389648438,
-                "width": 47.89801025390625,
-                "height": 9.0
-              },
-              "column": 32
             }
           ]
         },
@@ -2878,46 +2022,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "30,375.00",
-              "bbox": {
-                "x": 586.4500122070312,
-                "y": 184.25,
-                "width": 42.85797119140625,
-                "height": 9.0
-              },
-              "column": 24
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 675.75,
-                "y": 184.25,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 28
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 746.5999755859375,
-                "y": 184.25,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 30
-            },
-            {
-              "text": "30,375.00",
-              "bbox": {
-                "x": 789.0999755859375,
-                "y": 184.25,
-                "width": 42.85797119140625,
-                "height": 9.0
-              },
-              "column": 32
             }
           ]
         },
@@ -2963,46 +2067,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "3,750.00",
-              "bbox": {
-                "x": 591.5,
-                "y": 196.10000610351562,
-                "width": 37.8179931640625,
-                "height": 9.0
-              },
-              "column": 24
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 675.75,
-                "y": 196.10000610351562,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 28
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 746.5999755859375,
-                "y": 196.10000610351562,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 30
-            },
-            {
-              "text": "3,750.00",
-              "bbox": {
-                "x": 794.1500244140625,
-                "y": 196.10000610351562,
-                "width": 37.8179931640625,
-                "height": 9.0
-              },
-              "column": 33
             }
           ]
         },
@@ -3048,46 +2112,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "144,055.00",
-              "bbox": {
-                "x": 581.4000244140625,
-                "y": 207.95001220703125,
-                "width": 47.89801025390625,
-                "height": 9.0
-              },
-              "column": 23
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 675.75,
-                "y": 207.95001220703125,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 28
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 746.5999755859375,
-                "y": 207.95001220703125,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 30
-            },
-            {
-              "text": "144,055.00",
-              "bbox": {
-                "x": 784.0499877929688,
-                "y": 207.95001220703125,
-                "width": 47.89801025390625,
-                "height": 9.0
-              },
-              "column": 32
             }
           ]
         },
@@ -3123,46 +2147,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "347,393.00",
-              "bbox": {
-                "x": 581.4000244140625,
-                "y": 219.79998779296875,
-                "width": 47.89801025390625,
-                "height": 9.0
-              },
-              "column": 23
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 675.75,
-                "y": 219.79998779296875,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 28
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 746.5999755859375,
-                "y": 219.79998779296875,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 30
-            },
-            {
-              "text": "347,393.00",
-              "bbox": {
-                "x": 784.0499877929688,
-                "y": 219.79998779296875,
-                "width": 47.89801025390625,
-                "height": 9.0
-              },
-              "column": 32
             }
           ]
         },
@@ -3188,26 +2172,6 @@
                 "height": 9.0
               },
               "column": 4
-            },
-            {
-              "text": "Total Income (A + B)",
-              "bbox": {
-                "x": 508.3500061035156,
-                "y": 231.64999389648438,
-                "width": 103.13119506835938,
-                "height": 9.0
-              },
-              "column": 20
-            },
-            {
-              "text": "795,845.00",
-              "bbox": {
-                "x": 784.0499877929688,
-                "y": 231.64999389648438,
-                "width": 47.89801025390625,
-                "height": 9.0
-              },
-              "column": 32
             }
           ]
         },
@@ -3268,16 +2232,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "795,845.00",
-              "bbox": {
-                "x": 784.0499877929688,
-                "y": 253.10000610351562,
-                "width": 47.89801025390625,
-                "height": 9.0
-              },
-              "column": 32
             }
           ]
         },
@@ -3323,16 +2277,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "75,000.00",
-              "bbox": {
-                "x": 789.0999755859375,
-                "y": 264.95001220703125,
-                "width": 42.85797119140625,
-                "height": 9.0
-              },
-              "column": 32
             }
           ]
         },
@@ -3358,16 +2302,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "720,845.00",
-              "bbox": {
-                "x": 784.0499877929688,
-                "y": 276.79998779296875,
-                "width": 47.89801025390625,
-                "height": 9.0
-              },
-              "column": 32
             }
           ]
         },
@@ -3383,16 +2317,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "720,850.00",
-              "bbox": {
-                "x": 784.0499877929688,
-                "y": 288.6499938964844,
-                "width": 47.89801025390625,
-                "height": 9.0
-              },
-              "column": 32
             }
           ]
         },
@@ -3418,16 +2342,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "16,042.50",
-              "bbox": {
-                "x": 789.0999755859375,
-                "y": 300.5,
-                "width": 42.85797119140625,
-                "height": 9.0
-              },
-              "column": 32
             }
           ]
         },
@@ -3463,16 +2377,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "16,042.50",
-              "bbox": {
-                "x": 789.0999755859375,
-                "y": 312.3500061035156,
-                "width": 42.85797119140625,
-                "height": 9.0
-              },
-              "column": 32
             }
           ]
         },
@@ -3498,16 +2402,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 811.7999877929688,
-                "y": 324.20001220703125,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 34
             }
           ]
         },
@@ -3543,16 +2437,6 @@
                 "height": 9.0
               },
               "column": 18
-            },
-            {
-              "text": "0.00",
-              "bbox": {
-                "x": 811.7999877929688,
-                "y": 336.04998779296875,
-                "width": 20.177978515625,
-                "height": 9.0
-              },
-              "column": 34
             }
           ]
         },
@@ -3608,16 +2492,6 @@
                 "height": 9.0
               },
               "column": 8
-            },
-            {
-              "text": "Page 1 / 1",
-              "bbox": {
-                "x": 767.3499755859375,
-                "y": 547.4000244140625,
-                "width": 41.154052734375,
-                "height": 9.0
-              },
-              "column": 31
             }
           ]
         }

@@ -101,14 +101,7 @@
               "match_method": "exact_alias",
               "confidence": 1.0
             },
-            "amount_actual": {
-              "value": 22088.0,
-              "currency": "INR",
-              "raw_label": "Special Allowance",
-              "raw_value_string": "22,088",
-              "match_method": "exact_alias",
-              "confidence": 1.0
-            },
+            "amount_actual": null,
             "amount_payable": {
               "value": 22088.0,
               "currency": "INR",
@@ -131,14 +124,7 @@
               "match_method": "positional_heuristic",
               "confidence": 1.0
             },
-            "amount_actual": {
-              "value": 1000.0,
-              "currency": "INR",
-              "raw_label": "Books & Periodicals",
-              "raw_value_string": "1,000",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
+            "amount_actual": null,
             "amount_payable": {
               "value": 1000.0,
               "currency": "INR",
@@ -161,14 +147,7 @@
               "match_method": "positional_heuristic",
               "confidence": 1.0
             },
-            "amount_actual": {
-              "value": 2000.0,
-              "currency": "INR",
-              "raw_label": "Telephone Allowance",
-              "raw_value_string": "2,000",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
+            "amount_actual": null,
             "amount_payable": {
               "value": 2000.0,
               "currency": "INR",
@@ -191,14 +170,7 @@
               "match_method": "positional_heuristic",
               "confidence": 1.0
             },
-            "amount_actual": {
-              "value": 20000.0,
-              "currency": "INR",
-              "raw_label": "Driver Salary",
-              "raw_value_string": "20,000",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
+            "amount_actual": null,
             "amount_payable": {
               "value": 20000.0,
               "currency": "INR",
@@ -221,7 +193,8 @@
               "match_method": "positional_heuristic",
               "confidence": 1.0
             },
-            "amount_actual": {
+            "amount_actual": null,
+            "amount_payable": {
               "value": 20000.0,
               "currency": "INR",
               "raw_label": "Fuel Allowance",
@@ -229,12 +202,50 @@
               "match_method": "positional_heuristic",
               "confidence": 1.0
             },
-            "amount_payable": {
-              "value": 20000.0,
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "x4LFFA6&b",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 265751.0,
               "currency": "INR",
-              "raw_label": "Fuel Allowance",
-              "raw_value_string": "20,000",
+              "raw_label": "x4LFFA6&b",
+              "raw_value_string": "265,751",
               "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 265751.0,
+              "currency": "INR",
+              "raw_label": "x4LFFA6&b",
+              "raw_value_string": "265,751",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Basic",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 1605300.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "1,605,300",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1605300.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "1,605,300",
+              "match_method": "exact_alias",
               "confidence": 1.0
             },
             "frequency": "monthly",
@@ -258,6 +269,144 @@
               "raw_label": "House Rent Allowance",
               "raw_value_string": "802,656",
               "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Special Allowance",
+            "canonical_category": "special_allowance",
+            "amount": {
+              "value": 265056.0,
+              "currency": "INR",
+              "raw_label": "Special Allowance",
+              "raw_value_string": "265,056",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 265056.0,
+              "currency": "INR",
+              "raw_label": "Special Allowance",
+              "raw_value_string": "265,056",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Books & Periodicals",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 12000.0,
+              "currency": "INR",
+              "raw_label": "Books & Periodicals",
+              "raw_value_string": "12,000",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 12000.0,
+              "currency": "INR",
+              "raw_label": "Books & Periodicals",
+              "raw_value_string": "12,000",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Telephone Allowance",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 24000.0,
+              "currency": "INR",
+              "raw_label": "Telephone Allowance",
+              "raw_value_string": "24,000",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 24000.0,
+              "currency": "INR",
+              "raw_label": "Telephone Allowance",
+              "raw_value_string": "24,000",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Driver Salary",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 240000.0,
+              "currency": "INR",
+              "raw_label": "Driver Salary",
+              "raw_value_string": "240,000",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 240000.0,
+              "currency": "INR",
+              "raw_label": "Driver Salary",
+              "raw_value_string": "240,000",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Fuel Allowance",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 240000.0,
+              "currency": "INR",
+              "raw_label": "Fuel Allowance",
+              "raw_value_string": "240,000",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 240000.0,
+              "currency": "INR",
+              "raw_label": "Fuel Allowance",
+              "raw_value_string": "240,000",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Variable Bonus",
+            "canonical_category": "bonus_incentive",
+            "amount": {
+              "value": 129347.0,
+              "currency": "INR",
+              "raw_label": "Variable Bonus",
+              "raw_value_string": "129,347",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 129347.0,
+              "currency": "INR",
+              "raw_label": "Variable Bonus",
+              "raw_value_string": "129,347",
+              "match_method": "fuzzy_alias",
               "confidence": 1.0
             },
             "frequency": "monthly",
@@ -310,6 +459,52 @@
             "page": 1
           },
           {
+            "raw_label": "U/S 80C",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 150000.0,
+              "currency": "INR",
+              "raw_label": "U/S 80C",
+              "raw_value_string": "150,000",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 150000.0,
+              "currency": "INR",
+              "raw_label": "U/S 80C",
+              "raw_value_string": "150,000",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "November 2023",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 43065.0,
+              "currency": "INR",
+              "raw_label": "November 2023",
+              "raw_value_string": "43,065",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 43065.0,
+              "currency": "INR",
+              "raw_label": "November 2023",
+              "raw_value_string": "43,065",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
             "raw_label": "U/S 80D",
             "canonical_category": "other_earning",
             "amount": {
@@ -350,6 +545,121 @@
               "raw_label": "December 2023",
               "raw_value_string": "43,066",
               "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "January 2024",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 48494.0,
+              "currency": "INR",
+              "raw_label": "January 2024",
+              "raw_value_string": "48,494",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 48494.0,
+              "currency": "INR",
+              "raw_label": "January 2024",
+              "raw_value_string": "48,494",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Tax Due",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 543806.0,
+              "currency": "INR",
+              "raw_label": "Tax Due",
+              "raw_value_string": "543,806",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 543806.0,
+              "currency": "INR",
+              "raw_label": "Tax Due",
+              "raw_value_string": "543,806",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Educational Cess",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 21752.0,
+              "currency": "INR",
+              "raw_label": "Educational Cess",
+              "raw_value_string": "21,752",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 21752.0,
+              "currency": "INR",
+              "raw_label": "Educational Cess",
+              "raw_value_string": "21,752",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Net Tax",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 565558.0,
+              "currency": "INR",
+              "raw_label": "Net Tax",
+              "raw_value_string": "565,558",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 565558.0,
+              "currency": "INR",
+              "raw_label": "Net Tax",
+              "raw_value_string": "565,558",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Tax Deducted Till Date",
+            "canonical_category": "dearness_allowance",
+            "amount": {
+              "value": 420077.0,
+              "currency": "INR",
+              "raw_label": "Tax Deducted Till Date",
+              "raw_value_string": "420,077",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 420077.0,
+              "currency": "INR",
+              "raw_label": "Tax Deducted Till Date",
+              "raw_value_string": "420,077",
+              "match_method": "fuzzy_alias",
               "confidence": 1.0
             },
             "frequency": "monthly",
@@ -567,6 +877,29 @@
       "deductions": {
         "items": [
           {
+            "raw_label": "PF UAN.",
+            "canonical_category": "provident_fund",
+            "amount": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "PF UAN.",
+              "raw_value_string": "0.0",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "PF UAN.",
+              "raw_value_string": "0.0",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
             "raw_label": "PF Employee",
             "canonical_category": "provident_fund",
             "amount": {
@@ -682,6 +1015,29 @@
             "page": 1
           },
           {
+            "raw_label": "P P F",
+            "canonical_category": "provident_fund",
+            "amount": {
+              "value": 150000.0,
+              "currency": "INR",
+              "raw_label": "P P F",
+              "raw_value_string": "150,000",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 150000.0,
+              "currency": "INR",
+              "raw_label": "P P F",
+              "raw_value_string": "150,000",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
             "raw_label": "Standard Deduction",
             "canonical_category": "other_deduction",
             "amount": {
@@ -703,15 +1059,84 @@
             },
             "frequency": "monthly",
             "page": 1
+          },
+          {
+            "raw_label": "Professional Tax",
+            "canonical_category": "professional_tax",
+            "amount": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "Professional Tax",
+              "raw_value_string": "1,800",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "Professional Tax",
+              "raw_value_string": "1,800",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Tax / Month",
+            "canonical_category": "other_deduction",
+            "amount": {
+              "value": 48494.0,
+              "currency": "INR",
+              "raw_label": "Tax / Month",
+              "raw_value_string": "48,494",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 48494.0,
+              "currency": "INR",
+              "raw_label": "Tax / Month",
+              "raw_value_string": "48,494",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Tax Deduction for this month",
+            "canonical_category": "other_deduction",
+            "amount": {
+              "value": 48494.0,
+              "currency": "INR",
+              "raw_label": "Tax Deduction for this month",
+              "raw_value_string": "48,494",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 48494.0,
+              "currency": "INR",
+              "raw_label": "Tax Deduction for this month",
+              "raw_value_string": "48,494",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
           }
         ]
       },
       "summary": {
         "gross_salary": {
-          "value": 300000.0,
+          "value": 265751.0,
           "currency": "INR",
           "raw_label": "GROSS PAY",
-          "raw_value_string": "300,000",
+          "raw_value_string": "265,751.00",
           "match_method": "exact_alias",
           "confidence": 1.0
         },
@@ -719,27 +1144,34 @@
           "value": 215457.0,
           "currency": "INR",
           "raw_label": "NET PAY",
-          "raw_value_string": "215457",
+          "raw_value_string": "215,457.00",
           "match_method": "exact_alias",
           "confidence": 1.0
         },
         "total_deductions": {
-          "value": 84543.0,
+          "value": 50294.0,
           "currency": "INR",
           "raw_label": "TOTAL DEDUCTIONS",
-          "raw_value_string": "84543.00",
+          "raw_value_string": "50,294.00",
           "match_method": "exact_alias",
           "confidence": 1.0
         },
         "total_allowances": {
-          "value": 37183588.0,
+          "value": 40023147.0,
           "currency": "INR",
           "raw_label": "total_allowances",
-          "raw_value_string": "37183588.00",
+          "raw_value_string": "40023147.00",
           "match_method": "computed_from_components",
           "confidence": 1.0
         },
-        "total_incentives_and_bonus": null,
+        "total_incentives_and_bonus": {
+          "value": 129347.0,
+          "currency": "INR",
+          "raw_label": "Variable Bonus",
+          "raw_value_string": "129,347",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
         "amount_in_words": null
       },
       "reconciliation": {

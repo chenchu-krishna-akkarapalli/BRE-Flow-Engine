@@ -137,22 +137,22 @@
             "page": 1
           },
           {
-            "raw_label": "Holiday",
-            "canonical_category": "dearness_allowance",
+            "raw_label": "0.00 H.R.A.",
+            "canonical_category": "house_rent_allowance",
             "amount": {
-              "value": 0.0,
+              "value": 8260.0,
               "currency": "INR",
-              "raw_label": "Holiday",
-              "raw_value_string": "0.00",
+              "raw_label": "0.00 H.R.A.",
+              "raw_value_string": "8260",
               "match_method": "fuzzy_alias",
               "confidence": 1.0
             },
             "amount_actual": null,
             "amount_payable": {
-              "value": 0.0,
+              "value": 8260.0,
               "currency": "INR",
-              "raw_label": "Holiday",
-              "raw_value_string": "0.00",
+              "raw_label": "0.00 H.R.A.",
+              "raw_value_string": "8260",
               "match_method": "fuzzy_alias",
               "confidence": 1.0
             },
@@ -160,91 +160,22 @@
             "page": 1
           },
           {
-            "raw_label": "E.L",
+            "raw_label": "P.D",
             "canonical_category": "other_earning",
             "amount": {
-              "value": 0.0,
+              "value": 30.0,
               "currency": "INR",
-              "raw_label": "E.L",
-              "raw_value_string": "0.00",
+              "raw_label": "P.D",
+              "raw_value_string": "30.00",
               "match_method": "positional_heuristic",
               "confidence": 1.0
             },
             "amount_actual": null,
             "amount_payable": {
-              "value": 0.0,
+              "value": 30.0,
               "currency": "INR",
-              "raw_label": "E.L",
-              "raw_value_string": "0.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "C.L",
-            "canonical_category": "other_earning",
-            "amount": {
-              "value": 0.0,
-              "currency": "INR",
-              "raw_label": "C.L",
-              "raw_value_string": "0.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 0.0,
-              "currency": "INR",
-              "raw_label": "C.L",
-              "raw_value_string": "0.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "S.L",
-            "canonical_category": "other_earning",
-            "amount": {
-              "value": 0.0,
-              "currency": "INR",
-              "raw_label": "S.L",
-              "raw_value_string": "0.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 0.0,
-              "currency": "INR",
-              "raw_label": "S.L",
-              "raw_value_string": "0.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "C.H",
-            "canonical_category": "other_earning",
-            "amount": {
-              "value": 0.0,
-              "currency": "INR",
-              "raw_label": "C.H",
-              "raw_value_string": "0.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 0.0,
-              "currency": "INR",
-              "raw_label": "C.H",
-              "raw_value_string": "0.00",
+              "raw_label": "P.D",
+              "raw_value_string": "30.00",
               "match_method": "positional_heuristic",
               "confidence": 1.0
             },
@@ -279,46 +210,23 @@
             "page": 1
           },
           {
-            "raw_label": "H.R.A.",
-            "canonical_category": "other_deduction",
+            "raw_label": "0 E.P.F",
+            "canonical_category": "provident_fund",
             "amount": {
-              "value": 8260.0,
+              "value": 1250.0,
               "currency": "INR",
-              "raw_label": "H.R.A.",
-              "raw_value_string": "8260",
-              "match_method": "positional_heuristic",
+              "raw_label": "0 E.P.F",
+              "raw_value_string": "1250",
+              "match_method": "fuzzy_alias",
               "confidence": 1.0
             },
             "amount_actual": null,
             "amount_payable": {
-              "value": 8260.0,
+              "value": 1250.0,
               "currency": "INR",
-              "raw_label": "H.R.A.",
-              "raw_value_string": "8260",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "CONVEY.",
-            "canonical_category": "other_deduction",
-            "amount": {
-              "value": 2740.0,
-              "currency": "INR",
-              "raw_label": "CONVEY.",
-              "raw_value_string": "2740",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 2740.0,
-              "currency": "INR",
-              "raw_label": "CONVEY.",
-              "raw_value_string": "2740",
-              "match_method": "positional_heuristic",
+              "raw_label": "0 E.P.F",
+              "raw_value_string": "1250",
+              "match_method": "fuzzy_alias",
               "confidence": 1.0
             },
             "frequency": "monthly",
@@ -352,10 +260,10 @@
           "confidence": 1.0
         },
         "total_allowances": {
-          "value": 11000.0,
+          "value": 19290.0,
           "currency": "INR",
           "raw_label": "total_allowances",
-          "raw_value_string": "11000.00",
+          "raw_value_string": "19290.00",
           "match_method": "computed_from_components",
           "confidence": 1.0
         },

@@ -20,6 +20,7 @@
     "conveyance_allowance": ["conveyance", "conveyance allowance", "transport allowance", "travel allowance"],
     "medical_allowance": ["medical", "medical allowance", "med allowance", "med.all"],
     "special_allowance": ["special allowance", "spl allowance", "spl.all", "special_allowance"],
+    "other_allowance": ["rma", "r.m.a", "ration money allowance", "ration money", "other allowance", "other_allowance"],
     "washing_allowance": ["washing allowance", "washing.all", "wash.all"],
     "milk_allowance": ["milk allowance", "milk.all"],
     "bonus_incentive": ["bonus", "incentive", "incen", "prod.bon", "production bonus", "performance bonus", "variable pay", "performance incentive", "perf incentive"],

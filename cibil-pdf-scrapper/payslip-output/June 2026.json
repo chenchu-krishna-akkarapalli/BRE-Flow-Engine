@@ -114,6 +114,75 @@
             "page": 1
           },
           {
+            "raw_label": "Basic",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 21000.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "21,000",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 21000.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "21,000",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "House Rent Allowance",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 10500.0,
+              "currency": "INR",
+              "raw_label": "House Rent Allowance",
+              "raw_value_string": "10,500",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 10500.0,
+              "currency": "INR",
+              "raw_label": "House Rent Allowance",
+              "raw_value_string": "10,500",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Leave & Travel Allowance",
+            "canonical_category": "conveyance_allowance",
+            "amount": {
+              "value": 4200.0,
+              "currency": "INR",
+              "raw_label": "Leave & Travel Allowance",
+              "raw_value_string": "4,200",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 4200.0,
+              "currency": "INR",
+              "raw_label": "Leave & Travel Allowance",
+              "raw_value_string": "4,200",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
             "raw_label": "Monthly",
             "canonical_category": "other_earning",
             "amount": {
@@ -167,10 +236,10 @@
           "confidence": 1.0
         },
         "total_allowances": {
-          "value": 41964.0,
+          "value": 56664.0,
           "currency": "INR",
           "raw_label": "total_allowances",
-          "raw_value_string": "41964.00",
+          "raw_value_string": "56664.00",
           "match_method": "computed_from_components",
           "confidence": 1.0
         },

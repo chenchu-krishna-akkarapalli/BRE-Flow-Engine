@@ -43,7 +43,77 @@
         "arrear_days": null
       },
       "earnings": {
-        "items": []
+        "items": [
+          {
+            "raw_label": "Basic Pay",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 24500.0,
+              "currency": "INR",
+              "raw_label": "Basic Pay",
+              "raw_value_string": "24,500.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 24500.0,
+              "currency": "INR",
+              "raw_label": "Basic Pay",
+              "raw_value_string": "24,500.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Da",
+            "canonical_category": "dearness_allowance",
+            "amount": {
+              "value": 14210.0,
+              "currency": "INR",
+              "raw_label": "Da",
+              "raw_value_string": "14,210.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 14210.0,
+              "currency": "INR",
+              "raw_label": "Da",
+              "raw_value_string": "14,210.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Washing Allowance(Wa )",
+            "canonical_category": "washing_allowance",
+            "amount": {
+              "value": 60.0,
+              "currency": "INR",
+              "raw_label": "Washing Allowance(Wa )",
+              "raw_value_string": "60.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 60.0,
+              "currency": "INR",
+              "raw_label": "Washing Allowance(Wa )",
+              "raw_value_string": "60.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
       },
       "deductions": {
         "items": [
@@ -51,19 +121,19 @@
             "raw_label": "Nps Subscription",
             "canonical_category": "professional_tax",
             "amount": {
-              "value": 24500.0,
+              "value": 3871.0,
               "currency": "INR",
               "raw_label": "Nps Subscription",
-              "raw_value_string": "24,500.00",
+              "raw_value_string": "3,871.00",
               "match_method": "fuzzy_alias",
               "confidence": 1.0
             },
             "amount_actual": null,
             "amount_payable": {
-              "value": 24500.0,
+              "value": 3871.0,
               "currency": "INR",
               "raw_label": "Nps Subscription",
-              "raw_value_string": "24,500.00",
+              "raw_value_string": "3,871.00",
               "match_method": "fuzzy_alias",
               "confidence": 1.0
             },
@@ -74,42 +144,19 @@
             "raw_label": "Society Deduction",
             "canonical_category": "other_deduction",
             "amount": {
-              "value": 0.0,
+              "value": 20.0,
               "currency": "INR",
               "raw_label": "Society Deduction",
-              "raw_value_string": "0.00",
+              "raw_value_string": "20.00",
               "match_method": "positional_heuristic",
               "confidence": 1.0
             },
             "amount_actual": null,
             "amount_payable": {
-              "value": 0.0,
+              "value": 20.0,
               "currency": "INR",
               "raw_label": "Society Deduction",
-              "raw_value_string": "0.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "frequency": "monthly",
-            "page": 1
-          },
-          {
-            "raw_label": "Vidyut Shulk Katuati(Erec)",
-            "canonical_category": "other_deduction",
-            "amount": {
-              "value": 14210.0,
-              "currency": "INR",
-              "raw_label": "Vidyut Shulk Katuati(Erec)",
-              "raw_value_string": "14,210.00",
-              "match_method": "positional_heuristic",
-              "confidence": 1.0
-            },
-            "amount_actual": null,
-            "amount_payable": {
-              "value": 14210.0,
-              "currency": "INR",
-              "raw_label": "Vidyut Shulk Katuati(Erec)",
-              "raw_value_string": "14,210.00",
+              "raw_value_string": "20.00",
               "match_method": "positional_heuristic",
               "confidence": 1.0
             },
@@ -120,19 +167,19 @@
             "raw_label": "GIS",
             "canonical_category": "other_deduction",
             "amount": {
-              "value": 60.0,
+              "value": 100.0,
               "currency": "INR",
               "raw_label": "GIS",
-              "raw_value_string": "60.00",
+              "raw_value_string": "100.00",
               "match_method": "positional_heuristic",
               "confidence": 1.0
             },
             "amount_actual": null,
             "amount_payable": {
-              "value": 60.0,
+              "value": 100.0,
               "currency": "INR",
               "raw_label": "GIS",
-              "raw_value_string": "60.00",
+              "raw_value_string": "100.00",
               "match_method": "positional_heuristic",
               "confidence": 1.0
             },
@@ -162,19 +209,26 @@
           "value": 3991.0,
           "currency": "INR",
           "raw_label": "TOTAL DEDUCTIONS",
-          "raw_value_string": "3991.00",
+          "raw_value_string": "3,991.00",
           "match_method": "exact_alias",
           "confidence": 1.0
         },
-        "total_allowances": null,
+        "total_allowances": {
+          "value": 14270.0,
+          "currency": "INR",
+          "raw_label": "total_allowances",
+          "raw_value_string": "14270.00",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
         "total_incentives_and_bonus": null,
         "amount_in_words": null
       },
       "reconciliation": {
         "gross_minus_deductions_matches_net": true,
         "delta_vs_stated_net": 0.0,
-        "sum_of_earning_items_matches_stated_gross": false,
-        "sum_of_deduction_items_matches_stated_total": false,
+        "sum_of_earning_items_matches_stated_gross": true,
+        "sum_of_deduction_items_matches_stated_total": true,
         "flags": []
       }
     }

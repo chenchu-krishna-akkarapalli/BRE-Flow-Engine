@@ -187,12 +187,12 @@
       "deductions": {
         "items": [
           {
-            "raw_label": "LDA Welfare Fund",
+            "raw_label": "40.00 LDA Welfare Fund",
             "canonical_category": "labour_welfare_fund",
             "amount": {
               "value": 40.0,
               "currency": "INR",
-              "raw_label": "LDA Welfare Fund",
+              "raw_label": "40.00 LDA Welfare Fund",
               "raw_value_string": "40.00",
               "match_method": "fuzzy_alias",
               "confidence": 1.0
@@ -201,7 +201,7 @@
             "amount_payable": {
               "value": 40.0,
               "currency": "INR",
-              "raw_label": "LDA Welfare Fund",
+              "raw_label": "40.00 LDA Welfare Fund",
               "raw_value_string": "40.00",
               "match_method": "fuzzy_alias",
               "confidence": 1.0
