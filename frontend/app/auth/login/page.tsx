@@ -6,11 +6,13 @@ import Link from "next/link";
 import {
   AlertCircle,
   ArrowRight,
+  Briefcase,
   Building2,
   CheckCircle2,
   ChevronLeft,
   Clock,
   Cpu,
+  CreditCard,
   Fingerprint,
   Globe,
   KeyRound,
@@ -24,6 +26,7 @@ import {
   ShieldCheck,
   Sparkles,
   UserCheck,
+  Users,
   Zap,
 } from "lucide-react";
 import { ChallengePayload, requestAuthChallenge } from "@/lib/uas-client";
@@ -46,7 +49,7 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     label: "Super Admin",
     role: "SUPER_ADMIN",
-    tier: "Tier 1 • Platform Owner",
+    tier: "Tier 0 • Leadership",
     badgeClass: "bg-amber-50 text-amber-700 border-amber-200",
     iconBg: "bg-amber-100",
     iconColor: "text-amber-700",
@@ -56,9 +59,21 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     description: "Root governance, cross-tenant telemetry, and platform rule overrides.",
   },
   {
+    label: "Regional Director",
+    role: "REGIONAL_DIRECTOR",
+    tier: "Tier 1 • Parallel Head (Sales)",
+    badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    iconBg: "bg-emerald-100",
+    iconColor: "text-emerald-700",
+    icon: Globe,
+    email: "regional.director@flowbre.com",
+    tenantName: "FlowBRE Platform Owner",
+    description: "Multi-region branch structures, volume quotas, and territory director oversight.",
+  },
+  {
     label: "Operations Head",
     role: "OPERATIONS_HEAD",
-    tier: "Tier 2 • Platform Executive",
+    tier: "Tier 1 • Parallel Head (Ops)",
     badgeClass: "bg-indigo-50 text-indigo-700 border-indigo-200",
     iconBg: "bg-indigo-100",
     iconColor: "text-indigo-700",
@@ -68,13 +83,61 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     description: "Credit committee policy matrix, OCR supervision, and SLA budgets.",
   },
   {
+    label: "Accounts Head",
+    role: "ACCOUNTS_HEAD",
+    tier: "Tier 1 • Parallel Head (Corporate)",
+    badgeClass: "bg-rose-50 text-rose-700 border-rose-200",
+    iconBg: "bg-rose-100",
+    iconColor: "text-rose-700",
+    icon: CreditCard,
+    email: "accounts.head@flowbre.com",
+    tenantName: "FlowBRE Corporate Accounts",
+    description: "Financial ledgers, disbursements, billing, and transactional audit trails.",
+  },
+  {
+    label: "Area Manager",
+    role: "AREA_MANAGER",
+    tier: "Tier 2 • Sales Function",
+    badgeClass: "bg-cyan-50 text-cyan-700 border-cyan-200",
+    iconBg: "bg-cyan-100",
+    iconColor: "text-cyan-700",
+    icon: Building2,
+    email: "area.manager@boi.com",
+    tenantName: "Bank of India North Channel",
+    description: "Localized origination pipeline, regional team coordination, and branch targets.",
+  },
+  {
+    label: "Team Leader",
+    role: "TEAM_LEADER",
+    tier: "Tier 3 • Sales Function",
+    badgeClass: "bg-sky-50 text-sky-700 border-sky-200",
+    iconBg: "bg-sky-100",
+    iconColor: "text-sky-700",
+    icon: Users,
+    email: "team.leader@boi.com",
+    tenantName: "Bank of India North Channel",
+    description: "Application review pipelines, queues triage, and localized underwriting escalations.",
+  },
+  {
+    label: "Sales Manager",
+    role: "SALES_MANAGER",
+    tier: "Tier 4 • Sales Function",
+    badgeClass: "bg-purple-50 text-purple-700 border-purple-200",
+    iconBg: "bg-purple-100",
+    iconColor: "text-purple-700",
+    icon: Briefcase,
+    email: "sales.manager@boi.com",
+    tenantName: "Bank of India North Channel",
+    description: "Direct channel manager, sales enablement, and channel onboarding coordination.",
+  },
+  {
     label: "Channel Admin",
     role: "CHANNEL_ADMIN",
     tier: "Tier 5 • Channel Partner",
     badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
     iconBg: "bg-emerald-100",
     iconColor: "text-emerald-700",
-    icon: Building2,
+    icon: UserCheck,
     email: "channel.admin@boi.com",
     tenantName: "Bank of India North Channel",
     description: "Channel workspace administrator for Bank of India territory.",
@@ -82,7 +145,7 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     label: "Transactional Officer",
     role: "TRANSACTIONAL_USER",
-    tier: "Tier 9 • Field Operations",
+    tier: "Tier 6 • Field Operations",
     badgeClass: "bg-teal-50 text-teal-700 border-teal-200",
     iconBg: "bg-teal-100",
     iconColor: "text-teal-700",
@@ -677,14 +740,14 @@ function LoginFormContent() {
                 </h2>
               </div>
               <span className="text-[0.625rem] font-mono font-bold text-slate-400">
-                4 Identities
+                {DEMO_ACCOUNTS.length} Identities
               </span>
             </div>
             <p className="text-xs text-slate-500 mb-5">
               Select an executive profile to prefill credentials and inspect role-based dynamic workspace routing:
             </p>
 
-            <div className="space-y-3">
+            <div className="space-y-2.5 max-h-[560px] overflow-y-auto pr-1.5 scrollbar-thin">
               {DEMO_ACCOUNTS.map((acc) => {
                 const Icon = acc.icon;
                 const isSelected = email === acc.email && authMode === "signin";

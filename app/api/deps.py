@@ -5,6 +5,7 @@ from redis.asyncio import Redis
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.constants import HIERARCHY_ANCESTORS_MAP
 from app.core.database import get_db
 from app.core.redis import get_redis
 from app.core.security import verify_token
@@ -42,7 +43,13 @@ async def get_current_authorized_tenant(
     user_role = token_payload.get("role", "TRANSACTIONAL_USER")
     governance_level = token_payload.get("governance_level", "TENANT")
 
-    if governance_level == "PLATFORM" or user_role == "SUPER_ADMIN":
+    # Platform owners and sales hierarchy leadership (Regional Director, Area Manager, etc.) can inspect channel tenants
+    is_leadership = governance_level == "PLATFORM" or user_role in (
+        "SUPER_ADMIN", "REGIONAL_DIRECTOR", "OPERATIONS_HEAD", "ACCOUNTS_HEAD",
+        "AREA_MANAGER", "TEAM_LEADER", "SALES_MANAGER"
+    )
+
+    if is_leadership:
         target_tenant = route_tenant_uuid or token_tenant_uuid or "default"
     else:
         if route_tenant_uuid and token_tenant_uuid and route_tenant_uuid != token_tenant_uuid:
@@ -56,13 +63,20 @@ async def get_current_authorized_tenant(
 
     return target_tenant
 
-# RBAC role enforcement dependency factory
+# RBAC role enforcement dependency factory with hierarchical inheritance
 def require_roles(*allowed_roles: str) -> Callable:
     async def role_checker(user: dict = Depends(get_current_user)) -> dict:
         user_role = user.get("role")
-        if user_role not in allowed_roles and "SUPER_ADMIN" not in allowed_roles:
-            if user_role != "SUPER_ADMIN":
-                raise ForbiddenError(f"Role '{user_role}' lacks required permissions.")
+        if user_role == "SUPER_ADMIN" or user_role in allowed_roles:
+            return user
+
+        # Check if user_role is an ancestor of ANY allowed role in the corporate/sales tree
+        is_authorized = any(
+            user_role in HIERARCHY_ANCESTORS_MAP.get(target_role, [])
+            for target_role in allowed_roles
+        )
+        if not is_authorized:
+            raise ForbiddenError(f"Role '{user_role}' lacks required permissions.")
         return user
     return role_checker
 

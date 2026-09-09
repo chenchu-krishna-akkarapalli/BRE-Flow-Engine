@@ -323,7 +323,12 @@ class UASService:
 
         default_users = [
             ("super.admin@flowbre.com", "super.admin@flowbre.com", "Super Admin", "SUPER_ADMIN", boi_tenant.id),
+            ("regional.director@flowbre.com", "regional.director@flowbre.com", "Regional Director", "REGIONAL_DIRECTOR", boi_tenant.id),
             ("ops.head@flowbre.com", "ops.head@flowbre.com", "Operations Head", "OPERATIONS_HEAD", boi_tenant.id),
+            ("accounts.head@flowbre.com", "accounts.head@flowbre.com", "Accounts Head", "ACCOUNTS_HEAD", boi_tenant.id),
+            ("area.manager@boi.com", "area.manager@boi.com", "Area Manager", "AREA_MANAGER", boi_tenant.id),
+            ("team.leader@boi.com", "team.leader@boi.com", "Team Leader", "TEAM_LEADER", boi_tenant.id),
+            ("sales.manager@boi.com", "sales.manager@boi.com", "Sales Manager", "SALES_MANAGER", boi_tenant.id),
             ("channel.admin@boi.com", "channel.admin@boi.com", "Channel Admin BOI", "CHANNEL_ADMIN", boi_tenant.id),
             ("agent.john@boi.com", "agent.john@boi.com", "Loan Officer John", "TRANSACTIONAL_USER", boi_tenant.id),
         ]

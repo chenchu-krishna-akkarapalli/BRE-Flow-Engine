@@ -32,7 +32,22 @@ SYSTEM_ROLES_DEFINITION = [
     (ROLE_TRANSACTIONAL_USER, "Transactional Loan Officer", GOVERNANCE_TENANT, 6),
 ]
 
-# Canonical Navigation Schema Definition based on Section 4.1 of live-workflow.md
+# Sales and Corporate Hierarchy Ancestry Mapping
+HIERARCHY_ANCESTORS_MAP: Dict[str, List[str]] = {
+    ROLE_SUPER_ADMIN: [],
+    ROLE_REGIONAL_DIRECTOR: [ROLE_SUPER_ADMIN],
+    ROLE_OPERATIONS_HEAD: [ROLE_SUPER_ADMIN],
+    ROLE_ACCOUNTS_HEAD: [ROLE_SUPER_ADMIN],
+    ROLE_AREA_MANAGER: [ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR],
+    ROLE_TEAM_LEADER: [ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_AREA_MANAGER],
+    ROLE_SALES_MANAGER: [ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_AREA_MANAGER, ROLE_TEAM_LEADER],
+    ROLE_CHANNEL_ADMIN: [ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_AREA_MANAGER, ROLE_TEAM_LEADER, ROLE_SALES_MANAGER],
+    ROLE_TRANSACTIONAL_USER: [ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_AREA_MANAGER, ROLE_TEAM_LEADER, ROLE_SALES_MANAGER, ROLE_CHANNEL_ADMIN],
+    ROLE_DB_ADMIN: [ROLE_SUPER_ADMIN],
+    ROLE_SOC_ANALYST: [ROLE_SUPER_ADMIN],
+}
+
+# Canonical Navigation Schema Definition based on Corporate & Sales Hierarchy
 RAW_NAVIGATION_SCHEMA: List[Dict[str, Any]] = [
     {
         "title": "Portal Navigation",
@@ -53,28 +68,40 @@ RAW_NAVIGATION_SCHEMA: List[Dict[str, Any]] = [
                 "icon": "FileText",
                 "badge": "Steps 1–6",
                 "badgeType": "brand",
-                "roles": [ROLE_SUPER_ADMIN, ROLE_CHANNEL_ADMIN, ROLE_TRANSACTIONAL_USER],
+                "roles": [
+                    ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_AREA_MANAGER, ROLE_TEAM_LEADER,
+                    ROLE_SALES_MANAGER, ROLE_CHANNEL_ADMIN, ROLE_TRANSACTIONAL_USER
+                ],
                 "sort_order": 2,
             },
             {
                 "name": "User Management",
                 "path": "assignments",
                 "icon": "Users",
-                "roles": [ROLE_SUPER_ADMIN, ROLE_CHANNEL_ADMIN, ROLE_TEAM_LEADER, ROLE_SALES_MANAGER],
+                "roles": [
+                    ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_AREA_MANAGER, ROLE_TEAM_LEADER,
+                    ROLE_SALES_MANAGER, ROLE_CHANNEL_ADMIN
+                ],
                 "sort_order": 3,
             },
             {
                 "name": "Analytics",
                 "path": "telemetry",
                 "icon": "BarChart3",
-                "roles": [ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_OPERATIONS_HEAD, ROLE_ACCOUNTS_HEAD],
+                "roles": [
+                    ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_OPERATIONS_HEAD, ROLE_ACCOUNTS_HEAD,
+                    ROLE_AREA_MANAGER
+                ],
                 "sort_order": 4,
             },
             {
                 "name": "Settings",
                 "path": "configurator",
                 "icon": "Sliders",
-                "roles": [ROLE_SUPER_ADMIN, ROLE_OPERATIONS_HEAD, ROLE_CHANNEL_ADMIN],
+                "roles": [
+                    ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_OPERATIONS_HEAD, ROLE_AREA_MANAGER,
+                    ROLE_TEAM_LEADER, ROLE_SALES_MANAGER, ROLE_CHANNEL_ADMIN
+                ],
                 "sort_order": 5,
             },
         ],
@@ -86,7 +113,10 @@ RAW_NAVIGATION_SCHEMA: List[Dict[str, Any]] = [
                 "name": "Pipeline",
                 "path": "pipeline",
                 "icon": "GitPullRequest",
-                "roles": [ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_AREA_MANAGER, ROLE_TEAM_LEADER, ROLE_SALES_MANAGER],
+                "roles": [
+                    ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_AREA_MANAGER, ROLE_TEAM_LEADER,
+                    ROLE_SALES_MANAGER, ROLE_CHANNEL_ADMIN, ROLE_TRANSACTIONAL_USER
+                ],
                 "sort_order": 1,
             },
             {
@@ -95,21 +125,27 @@ RAW_NAVIGATION_SCHEMA: List[Dict[str, Any]] = [
                 "icon": "CheckCircle",
                 "badge": "Underwriting",
                 "badgeType": "emerald",
-                "roles": [ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_OPERATIONS_HEAD],
+                "roles": [ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_OPERATIONS_HEAD, ROLE_AREA_MANAGER],
                 "sort_order": 2,
             },
             {
                 "name": "Commissions",
                 "path": "commissions",
                 "icon": "CreditCard",
-                "roles": [ROLE_SUPER_ADMIN, ROLE_ACCOUNTS_HEAD, ROLE_CHANNEL_ADMIN],
+                "roles": [
+                    ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_ACCOUNTS_HEAD, ROLE_AREA_MANAGER,
+                    ROLE_TEAM_LEADER, ROLE_SALES_MANAGER, ROLE_CHANNEL_ADMIN
+                ],
                 "sort_order": 3,
             },
             {
                 "name": "Regional Hierarchy",
                 "path": "regional",
                 "icon": "MapPin",
-                "roles": [ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_AREA_MANAGER],
+                "roles": [
+                    ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_AREA_MANAGER, ROLE_TEAM_LEADER,
+                    ROLE_SALES_MANAGER
+                ],
                 "sort_order": 4,
             },
         ],
@@ -123,7 +159,10 @@ RAW_NAVIGATION_SCHEMA: List[Dict[str, Any]] = [
                 "icon": "Activity",
                 "badge": "Live",
                 "badgeType": "amber",
-                "roles": [ROLE_SUPER_ADMIN, ROLE_OPERATIONS_HEAD, ROLE_CHANNEL_ADMIN],
+                "roles": [
+                    ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_OPERATIONS_HEAD, ROLE_AREA_MANAGER,
+                    ROLE_CHANNEL_ADMIN
+                ],
                 "sort_order": 1,
             },
             {

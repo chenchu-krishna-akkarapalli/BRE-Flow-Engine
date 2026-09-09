@@ -112,6 +112,27 @@ function loadInitialSession(): {
   }
 }
 
+const SALES_HIERARCHY_ANCESTORS: Record<RoleKey, RoleKey[]> = {
+  SUPER_ADMIN: [],
+  REGIONAL_DIRECTOR: ["SUPER_ADMIN"],
+  OPERATIONS_HEAD: ["SUPER_ADMIN"],
+  ACCOUNTS_HEAD: ["SUPER_ADMIN"],
+  AREA_MANAGER: ["SUPER_ADMIN", "REGIONAL_DIRECTOR"],
+  TEAM_LEADER: ["SUPER_ADMIN", "REGIONAL_DIRECTOR", "AREA_MANAGER"],
+  SALES_MANAGER: ["SUPER_ADMIN", "REGIONAL_DIRECTOR", "AREA_MANAGER", "TEAM_LEADER"],
+  CHANNEL_ADMIN: ["SUPER_ADMIN", "REGIONAL_DIRECTOR", "AREA_MANAGER", "TEAM_LEADER", "SALES_MANAGER"],
+  TRANSACTIONAL_USER: [
+    "SUPER_ADMIN",
+    "REGIONAL_DIRECTOR",
+    "AREA_MANAGER",
+    "TEAM_LEADER",
+    "SALES_MANAGER",
+    "CHANNEL_ADMIN",
+  ],
+  DB_ADMIN: ["SUPER_ADMIN"],
+  SOC_ANALYST: ["SUPER_ADMIN"],
+};
+
 export const useAuthStore = create<AuthState>((set, get) => {
   const initial = loadInitialSession();
 
@@ -234,7 +255,12 @@ export const useAuthStore = create<AuthState>((set, get) => {
       const currentRole = get().role;
       if (!currentRole) return false;
       if (currentRole === "SUPER_ADMIN") return true;
-      return roles.includes(currentRole);
+      if (roles.includes(currentRole)) return true;
+      // Check if currentRole is an ancestor of any target role in the hierarchy
+      return roles.some((targetRole) => {
+        const ancestors = SALES_HIERARCHY_ANCESTORS[targetRole] || [];
+        return ancestors.includes(currentRole);
+      });
     },
 
     hasPermission: (permission: string) => {
