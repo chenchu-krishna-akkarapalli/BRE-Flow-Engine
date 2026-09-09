@@ -26,21 +26,39 @@ pub fn amount_on_line(line: &Line, label_upper: &str) -> Option<Money> {
 }
 
 fn head_amount(lines: &[Line], options: &[&str]) -> Option<Money> {
-    for line in lines {
+    for (i, line) in lines.iter().enumerate() {
         let upper = line.upper();
         if patterns::is_slab_working(&upper) {
             continue;
         }
-        // Compared with spaces stripped: these generators drop inter-word gaps
+        // Compared with spaces and quotes stripped: these generators drop inter-word gaps
         // ("BUSINESSOR PROFESSION", "FATHER'SNAME") as a glyph-spacing artifact,
         // and an exact match then misses the head entirely.
-        let squashed = upper.replace(' ', "");
+        let squashed = upper.replace([' ', '"', '\''], "");
         for option in options {
-            if !squashed.contains(&option.replace(' ', "")) {
-                continue;
+            let opt_squashed = option.replace([' ', '"', '\''], "");
+            if squashed.contains(&opt_squashed) {
+                if let Some(money) = amount_on_line(line, option) {
+                    return Some(money);
+                }
             }
-            if let Some(money) = amount_on_line(line, option) {
-                return Some(money);
+        }
+
+        // Two-line statutory head check:
+        // If line i contains "INCOME CHARGABLE UNDER THE HEAD" or "INCOME CHARGEABLE UNDER THE HEAD"
+        // and line i+1 has the head title and amount.
+        if squashed.contains("INCOMECHARGABLEUNDERTHEHEAD") || squashed.contains("INCOMECHARGEABLEUNDERTHEHEAD") {
+            if let Some(next_line) = lines.get(i + 1) {
+                let next_upper = next_line.upper();
+                let next_squashed = next_upper.replace([' ', '"', '\''], "");
+                for option in options {
+                    let opt_squashed = option.replace([' ', '"', '\''], "");
+                    if next_squashed.contains(&opt_squashed) {
+                        if let Some(money) = amount_on_line(next_line, option) {
+                            return Some(money);
+                        }
+                    }
+                }
             }
         }
     }

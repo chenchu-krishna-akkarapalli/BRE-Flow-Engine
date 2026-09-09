@@ -23,16 +23,21 @@ pub const SALARY: &[&str] = &[
     "SALARY (CHAPTER IV A)", "CHAPTER IV A",
     // Bare plural only. "SALARY" alone would also match the "GROSS SALARY" and
     // "TAXABLE SALARY" working lines that sit under the head.
-    "SALARIES",
+    "SALARIES", "U/S 17(1)", "U/S 17", "U/S-17",
 ];
 
 pub const HOUSE_PROPERTY: &[&str] = &[
     "INCOME FROM HOUSE PROPERTY", "HOUSE PROPERTY (CHAPTER IV C)", "CHAPTER IV C",
+    "U/S 22", "U/S-22",
 ];
 
 pub const BUSINESS: &[&str] = &[
     "INCOME FROM BUSINESS OR PROFESSION", "PROFITS AND GAINS FROM BUSINESS OR PROFESSION",
-    "INCOME FROM BUSINESS", "PROFITS AND GAINS OF BUSINESS OR PROFESSION", "CHAPTER IV D",
+    "INCOME FROM BUSINESS", "PROFITS AND GAINS OF BUSINESS OR PROFESSION",
+    "PROFIT OR GAINS OF BUSINESS OR PROFESSION", "PROFITS OR GAINS OF BUSINESS OR PROFESSION",
+    "PROFIT OR GAINS OF BUSINESS", "PROFITOR GAINS OF BUSINESS OR PROFESSION",
+    "PROFITOR GAINS", "BUSINESS OR PROFESSION", "CHAPTER IV D",
+    "U/S 28", "U/S-28", "UNDER SECTION 28",
     // Bare heading dialect: the tax-summary table names the head with no verb.
     "BUSINESS AND PROFESSION",
 ];
@@ -43,7 +48,7 @@ pub const CAPITAL_GAINS: &[&str] = &[
 
 pub const OTHER_SOURCES: &[&str] = &[
     "INCOME FROM OTHER SOURCES", "INCOME FROM OTHER SOURCE", "OTHER SOURCES (CHAPTER IV F)",
-    "CHAPTER IV F",
+    "CHAPTER IV F", "U/S 14", "U/S-14",
     // Bare heading dialect. Safe as a last entry: the head takes the first line
     // carrying an amount, and the annexure headings below carry none.
     "OTHER SOURCES",

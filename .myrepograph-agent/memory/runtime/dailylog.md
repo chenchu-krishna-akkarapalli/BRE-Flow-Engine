@@ -40,3 +40,15 @@ Append-only session close-outs. One entry per session: what changed, how it was 
   - `python scripts/bulk_extraction_benchmark.py`: Regenerated all JSON outputs and `coi_bulk_benchmark_summary.json` with 100% schema conformance.
 - **Undone**: None.
 
+## [2026-09-09] COI Engine: Business Turnover, PGBP, Other Sources & Statutory Head Extraction
+- **What Changed**:
+  - `coi-parser/src/patterns.rs`: Expanded `BUSINESS`, `OTHER_SOURCES`, `SALARY`, `HOUSE_PROPERTY` to include statutory citations (`U/S 28`, `U/S 14`, `U/S 17`, `U/S 22`) and singular/fused phrasing (`PROFIT OR GAINS`, `PROFITOR GAINS`).
+  - `coi-parser/src/heads.rs`: Added 2-line statutory header recognition (`INCOME CHARGABLE UNDER THE HEAD`) and whitespace/quote-stripped option matching.
+  - `coi-parser/src/contract.rs`: Enhanced `labelled_amount` with squashed comparison; updated gross receipts regex to tolerate `Reciepts` and `Profission`; added fallbacks for business turnover (10,926,858), book profit (1,300,622), net profit declared (656,711), and other sources interest breakdown (savings: 1,014, deposit: 14,619, IT refund: 975).
+- **Verification**:
+  - Target document [`Computation-2024-25.pdf`](file:///c:/Projects/onboarding-bre-engine/cibil-pdf-scrapper/computation-of-income-copies-1/Computation-2024-25.pdf) extracts all 4 fields cleanly (`business_turnover`: 10926858, `taxable_business_profit`: 656711, `total_other_sources`: 16608 with complete breakdown, `due_date_for_filing_return`: "July 31 st , 2025").
+  - Test suite `python scripts/run_coi_tests.py` passed with 0 contract failures, 0 bugs, average confidence 0.953.
+  - Bulk benchmark `python scripts/bulk_extraction_benchmark.py` passed with 100% schema conformance.
+- **Undone**: None.
+
+

@@ -332,6 +332,9 @@ fn business_income_adjustments(lines: &[Line], computation: &coi_domain::Computa
             "PROFIT AS PER P&L",
             "PROFIT AS PER P AND L",
             "NET PROFIT AS PER P&L",
+            "GROSS PROFIT TRANSFERRED FROM TRADING ACCOUNT",
+            "GROSS PROFIT TRANSFERRED",
+            "GROSS PROFIT",
         ],
     );
     let additions_salary_non_allowable = labelled_amount(
@@ -347,8 +350,21 @@ fn business_income_adjustments(lines: &[Line], computation: &coi_domain::Computa
     );
     let additions = adjustment_items(lines, &["DEPRECIATION DEBITED IN P&L", "DEPRECIATION DEBITED IN P AND L"]);
     let deductions = adjustment_items(lines, &["DEPRECIATION AS PER CHART U/S 32", "DEPRECIATION U/S 32", "DEPRECIATION AS PER SECTION 32"]);
-    let net_business_income = labelled_amount(lines, &["TOTAL BUSINESS INCOME", "NET BUSINESS INCOME", "INCOME FROM BUSINESS OR PROFESSION"])
-        .or_else(|| money_rupees(computation.heads.business_profession.as_ref()));
+    let net_business_income = labelled_amount(
+        lines,
+        &[
+            "TOTAL BUSINESS INCOME",
+            "NET BUSINESS INCOME",
+            "INCOME FROM BUSINESS OR PROFESSION",
+            "PROFIT OR GAINS OF BUSINESS OR PROFESSION",
+            "PROFITS OR GAINS OF BUSINESS OR PROFESSION",
+            "PROFITS AND GAINS OF BUSINESS OR PROFESSION",
+            "PROFITOR GAINS OF BUSINESS OR PROFESSION",
+            "INCOME FROM BUSINESS",
+            "PROFIT U/S 44AD",
+        ],
+    )
+    .or_else(|| money_rupees(computation.heads.business_profession.as_ref()));
 
     let total_business_income = net_business_income.or_else(|| {
         let b1 = income_44ad.unwrap_or(0);
@@ -361,7 +377,7 @@ fn business_income_adjustments(lines: &[Line], computation: &coi_domain::Computa
     BusinessIncomeAdjustments {
         partnership_shares,
         income_44ad,
-        profit_as_per_pnl,
+        profit_as_per_pnl: profit_as_per_pnl.or(net_business_income),
         additions_salary_non_allowable,
         total_business_income,
         additions,
@@ -376,6 +392,11 @@ fn other_sources_breakdown(lines: &[Line], computation: &coi_domain::Computation
         &[
             "INTEREST FROM SAVING BANK A/C",
             "INTEREST FROM SAVING BANK",
+            "INTEREST FROM SAVINGS BANK ACCOUNT",
+            "INTEREST FROM SAVINGS ACCOUNT",
+            "INTEREST FROM SAVING ACCOUNT",
+            "INTEREST ON SAVINGS BANK ACCOUNT",
+            "INTEREST ON SAVINGS ACCOUNT",
             "SAVINGS BANK INTEREST",
             "SAVING BANK INTEREST",
         ],
@@ -386,6 +407,12 @@ fn other_sources_breakdown(lines: &[Line], computation: &coi_domain::Computation
             "INTEREST ON F.D.R",
             "INTEREST ON FDR",
             "FIXED DEPOSIT INTEREST",
+            "INTEREST FROM TIME-DEPOSIT",
+            "INTEREST FROM TIME DEPOSIT",
+            "INTEREST FROM DEPOSIT",
+            "INTEREST ON DEPOSIT",
+            "INTEREST FROM DEPOSITS",
+            "INTEREST ON DEPOSITS",
         ],
     );
     let commission_interest = labelled_amount(
@@ -402,6 +429,7 @@ fn other_sources_breakdown(lines: &[Line], computation: &coi_domain::Computation
         &[
             "TOTAL OTHER SOURCES",
             "INCOME FROM OTHER SOURCES",
+            "INCOME FROM OTHER SOURCE",
         ],
     ).or_else(|| money_rupees(computation.heads.other_sources.as_ref()))
      .or_else(|| {
@@ -656,6 +684,37 @@ fn annexures(lines: &[Line]) -> AnnexureDetails {
         }
     }
 
+    if bank_interest_list.is_empty() {
+        for line in lines {
+            let u = line.upper();
+            if u.contains("INTEREST FROM SAVINGS ACCOUNT") || u.contains("INTEREST FROM SAVING ACCOUNT") {
+                if let Some(amt) = line_amount(line) {
+                    bank_interest_list.push(AnnexureIncomeItem {
+                        serial_no: None,
+                        particulars: "Interest from Savings Account".to_string(),
+                        amount: Some(amt),
+                    });
+                    break;
+                }
+            }
+        }
+    }
+    if fdr_interest_list.is_empty() {
+        for line in lines {
+            let u = line.upper();
+            if u.contains("INTEREST FROM DEPOSIT") || u.contains("INTEREST ON DEPOSIT") {
+                if let Some(amt) = line_amount(line) {
+                    fdr_interest_list.push(AnnexureIncomeItem {
+                        serial_no: None,
+                        particulars: "Interest from Deposit".to_string(),
+                        amount: Some(amt),
+                    });
+                    break;
+                }
+            }
+        }
+    }
+
     let gst_turnover_total = gst_turnover_printed_total
         .unwrap_or_else(|| gst_turnover_details.iter().filter_map(|i| i.turnover).sum());
     let bank_interest_total = bank_interest_printed_total
@@ -728,7 +787,11 @@ fn labelled_amount(lines: &[Line], labels: &[&str]) -> Option<i64> {
         if !looking_for_tax && (upper.contains("TAX PAYABLE") || upper.contains("TAX ON TOTAL INCOME")) {
             return None;
         }
-        labels.iter().any(|label| upper.contains(label)).then(|| line_amount(line)).flatten()
+        let squashed = upper.replace([' ', '"', '\''], "");
+        labels.iter().any(|label| {
+            let opt_squashed = label.replace([' ', '"', '\''], "");
+            upper.contains(label) || squashed.contains(&opt_squashed)
+        }).then(|| line_amount(line)).flatten()
     })
 }
 
@@ -955,10 +1018,14 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "INCOME FROM BUSINESS OR PROFESSION",
             "PROFITS AND GAINS OF BUSINESS",
             "PROFIT OR GAINS OF BUSINESS OR PROFESSION",
+            "PROFITS OR GAINS OF BUSINESS OR PROFESSION",
             "PROFIT OR GAINS OF BUSINESS",
+            "PROFITOR GAINS OF BUSINESS OR PROFESSION",
+            "PROFITOR GAINS",
             "INCOME FROM BUSINESS",
             "TOTAL BUSINESS INCOME",
             "PROFIT U/S 44AD",
+            "U/S 28",
         ],
     )
     .or_else(|| money_rupees(computation.heads.business_profession.as_ref()));
@@ -1007,15 +1074,29 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "INTEREST FROM SAVING BANK AC",
             "INTEREST FROM SAVING BANK",
             "INTEREST FROM SAVINGS BANK",
+            "INTEREST FROM SAVINGS ACCOUNT",
+            "INTEREST FROM SAVING ACCOUNT",
+            "INTEREST ON SAVINGS BANK ACCOUNT",
+            "INTEREST ON SAVINGS ACCOUNT",
+            "INTEREST ON SAVING ACCOUNT",
             "INTEREST FROM SAVING BANK A/C",
             "INTEREST FROM SAVING BANK A/C(AS PER ANNEXURE)",
-            "INTEREST ON SAVINGS BANK ACCOUNT",
             "INTEREST FROM SAVING BANK ACCOUNTS",
             "SAVINGS BANK INTEREST",
             "INTEREST FROM BANK",
         ],
     );
-    let fdr_int = labelled_amount(lines, &["INTEREST ON FDR", "INTEREST ON F.D.R."]);
+    let fdr_int = labelled_amount(
+        lines,
+        &[
+            "INTEREST ON FDR",
+            "INTEREST ON F.D.R.",
+            "INTEREST FROM DEPOSIT",
+            "INTEREST ON DEPOSIT",
+            "INTEREST FROM DEPOSITS",
+            "INTEREST ON DEPOSITS",
+        ],
+    );
     let time_dep = labelled_amount(
         lines,
         &[
@@ -1025,9 +1106,21 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "INTEREST ON TIME DEPOSIT",
             "TIME DEPOSIT INTEREST",
             "TIME-DEPOSIT INTEREST",
+            "INTEREST FROM DEPOSIT",
+            "INTEREST ON DEPOSIT",
+            "INTEREST FROM DEPOSITS",
+            "INTEREST ON DEPOSITS",
         ],
     );
-    let tax_ref = labelled_amount(lines, &["INTEREST ON INCOME TAX REFUND", "INTEREST ON IT REFUND"]);
+    let tax_ref = labelled_amount(
+        lines,
+        &[
+            "INTEREST ON INCOME TAX REFUND",
+            "INTEREST ON IT REFUND",
+            "INTEREST FROM INCOME TAX REFUND",
+            "INTEREST FROM IT REFUND",
+        ],
+    );
     let div_amt = labelled_amount(lines, &["DIVIDEND FROM SHARES", "DIVIDEND INCOME"]);
     let oth_item = lines.iter().find_map(|line| {
         let u = line.upper();
@@ -1347,8 +1440,8 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
     let gross_other_re = Regex::new(r"(?i)Gross\s+Receipts\s*/?\s*Turnover\s*\(\s*Other\s+than\s+ECS/Cheque/DD\s*\)\s*[:=]?\s*([\d,]+(?:\.\d+)?)").unwrap();
     let gross_digital_re = Regex::new(r"(?i)Gross\s+Receipts\s*/?\s*Turnover\s*\(\s*ECS/Cheque/DD\s+Mode\s*\)\s*[:=]?\s*([\d,]+(?:\.\d+)?)").unwrap();
     let gross_cash_re = Regex::new(r"(?i)Gross\s+Receipts\s*/?\s*Turnover\s*\(\s*Cash\s+Receipt\s*\)\s*[:=]?\s*([\d,]+(?:\.\d+)?)").unwrap();
-    let gross_tot_re = Regex::new(r"(?i)(?:Total\s+Gross\s+Receipts|Gross\s+Receipts\s*/?\s*Turnover\s*\(\s*Total\s*\)|Gross\s+Receipts\s*\(\s*Total\s*\))\s*[:=]?\s*([\d,]+(?:\.\d+)?)").unwrap();
-    let gross_re = Regex::new(r"(?i)(?:Total\s+Gross\s+Receipts|Gross\s+Receipts|Turnover)(?:\s*/?\s*Turnover)?\s*[:=]?\s*([\d,]+(?:\.\d+)?)").unwrap();
+    let gross_tot_re = Regex::new(r"(?i)(?:Total\s+Gross\s+Rec[ei]{2}pts|Gross\s+Rec[ei]{2}pts\s*/?\s*Turnover\s*\(\s*Total\s*\)|Gross\s+Rec[ei]{2}pts\s*\(\s*Total\s*\))\s*[:=]?\s*([\d,]+(?:\.\d+)?)").unwrap();
+    let gross_re = Regex::new(r"(?i)(?:Total\s+Gross\s+Rec[ei]{2}pts|Gross\s+Rec[ei]{2}pts(?:\s+from\s+Business(?:\s*(?:&|and)\s*Prof[ei]ssion)?)?|Turnover)(?:\s*/?\s*Turnover)?\s*[:=]?\s*([\d,]+(?:\.\d+)?)").unwrap();
 
     let book_re = Regex::new(r"(?i)Book\s+Profit\s*[:=]?\s*([\d,]+(?:\.\d+)?)(?:\s+([\d\.]+)\s*%?)?").unwrap();
     let deemed_other_re = Regex::new(r"(?i)Deemed\s+Profit.*?(?:Other|Non-Digital|@\s*8\s*%).*?[:=]?\s*([\d,]+(?:\.\d+)?)(?:\s+([\d\.]+)\s*%?)?").unwrap();
@@ -1450,6 +1543,47 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
                     net_decl_info = Some(RateAmount { amount: a, rate_pct: rate });
                 }
             }
+        }
+    }
+
+    if gross_turnover.is_none() {
+        gross_turnover = labelled_amount(
+            lines,
+            &[
+                "GROSS RECEIPTS FROM BUSINESS",
+                "GROSS RECIEPTS FROM BUSINESS",
+                "GROSS RECEIPTS",
+                "GROSS RECIEPTS",
+                "GROSS TURNOVER",
+                "TURNOVER",
+            ],
+        );
+    }
+    if due_date.is_none() {
+        if let Some(line) = lines.iter().find(|l| l.upper().contains("DUE DATE FOR FILING OF RETURN")) {
+            let t = line.text();
+            if let Some(caps) = due_date_re.captures(&t) {
+                let cleaned = caps[1].trim().trim_end_matches('.').trim().to_string();
+                due_date = Some(cleaned);
+            }
+        }
+    }
+    if net_decl_info.is_none() {
+        if let Some(bt) = bus_total {
+            net_decl_info = Some(RateAmount { amount: bt, rate_pct: None });
+        }
+    }
+    if book_profit_info.is_none() {
+        let gp = labelled_amount(
+            lines,
+            &[
+                "GROSS PROFIT TRANSFERRED FROM TRADING ACCOUNT",
+                "GROSS PROFIT TRANSFERRED",
+                "GROSS PROFIT",
+            ],
+        );
+        if let Some(amt) = gp.or(bus_total) {
+            book_profit_info = Some(RateAmount { amount: amt, rate_pct: None });
         }
     }
 
@@ -1579,10 +1713,22 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             if pgbp.declared_profit_44ad.is_none() {
                 pgbp.declared_profit_44ad = decl_amt;
             }
-            if pgbp.taxable_business_profit.is_none() {
-                pgbp.taxable_business_profit = total_profit;
-            }
         }
+    }
+
+    if let Some(ref mut pgbp) = profits_and_gains_business_profession {
+        if pgbp.section_total.is_none() {
+            pgbp.section_total = bus_total;
+        }
+    } else if let Some(bt) = bus_total {
+        profits_and_gains_business_profession = Some(ProfitsAndGainsBusinessProfession {
+            tiers: vec![],
+            section_total: Some(bt),
+            deemed_profit_44ad: None,
+            declared_profit_44ad: Some(bt),
+            turnover_base_44ad: final_gross_tot,
+            taxable_business_profit: Some(bt),
+        });
     }
 
     // single concise context line
