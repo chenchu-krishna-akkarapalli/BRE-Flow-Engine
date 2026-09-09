@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "repo-graph": {
+      "command": "C:/My-pro/project-map/src-tauri/target/release/mcp_server.exe",
+      "args": [
+        "--project",
+        "119b9ee3-3f3c-5c3f-80a2-82eb6898841e",
+        "--root",
+        "C:/Projects/onboarding-bre-engine"
+      ],
+      "env": {
+        "REPOGRAPH_MCP_TOOLS": "explore,files,domains,node,search,impact,callers,callees,status,edit,write,delete,batch_edit,edit_symbol,skeleton,trace,locate,lint,type_flow,slice,retrieve,shrink,learn,audit,debt,ladder"
+      }
+    }
+  }
+}
