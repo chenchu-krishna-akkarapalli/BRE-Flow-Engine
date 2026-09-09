@@ -450,14 +450,46 @@ fn ca_verification(lines: &[Line]) -> CaVerification {
     });
     let ca_name = lines.iter().find_map(|line| {
         let text = line.text();
-        Regex::new(r"(?i)\b(CA\.?\s+[A-Z][A-Z .]+)").ok()?.captures(&text)
-            .map(|captures| captures[1].trim().to_string())
+        let re = Regex::new(r"(?i)\bCA\.?\s*([A-Za-z]+(?:\s+[A-Za-z]+)*)").ok()?;
+        for caps in re.captures_iter(&text) {
+            let matched = caps[1].trim();
+            let upper = matched.to_ascii_uppercase();
+            if upper.starts_with("PITAL") || upper == "SH" || upper.starts_with("LCULAT") || upper.starts_with("RRIED") {
+                continue;
+            }
+            let full = caps.get(0).unwrap().as_str();
+            let prefix_len = full.len() - matched.len();
+            let prefix = &full[..prefix_len];
+            if !prefix.contains('.') && !prefix.contains(' ') {
+                if let Some(first_char) = matched.chars().next() {
+                    if !first_char.is_ascii_uppercase() {
+                        continue;
+                    }
+                }
+            }
+            let with_spaces = crate::assessee::clean_name(matched);
+            if with_spaces.trim().len() >= 3 {
+                return Some(format!("CA {}", with_spaces));
+            }
+        }
+        None
     });
     let firm_name = lines.iter().enumerate().find_map(|(index, line)| {
-        line.upper().contains("CHARTERED ACCOUNTANTS").then(|| {
+        let u = line.upper().replace(' ', "");
+        u.contains("CHARTEREDACCOUNTANTS").then(|| {
             let own = line.text();
-            if own.len() > "CHARTERED ACCOUNTANTS".len() + 4 { Some(own) }
-            else { lines.get(index.saturating_sub(1)).map(Line::text) }
+            if own.len() > "CHARTERED ACCOUNTANTS".len() + 4 {
+                Some(own)
+            } else {
+                lines.get(index.saturating_sub(1)).map(|l| {
+                    let t = l.text();
+                    if let Some(stripped) = t.strip_prefix("For ") {
+                        stripped.trim().to_string()
+                    } else {
+                        t
+                    }
+                })
+            }
         }).flatten()
     });
     CaVerification { firm_name, ca_name, membership_no }
@@ -684,6 +716,7 @@ fn extract_tds_tax_amount(lines: &[Line]) -> Option<i64> {
 }
 
 fn labelled_amount(lines: &[Line], labels: &[&str]) -> Option<i64> {
+    let looking_for_tax = labels.iter().any(|l| l.contains("TAX PAYABLE"));
     lines.iter().find_map(|line| {
         let upper = line.upper();
         if upper.contains("115BAC")
@@ -692,29 +725,79 @@ fn labelled_amount(lines: &[Line], labels: &[&str]) -> Option<i64> {
         {
             return None;
         }
+        if !looking_for_tax && (upper.contains("TAX PAYABLE") || upper.contains("TAX ON TOTAL INCOME")) {
+            return None;
+        }
         labels.iter().any(|label| upper.contains(label)).then(|| line_amount(line)).flatten()
     })
 }
 
 fn assessee_info(pairs: &[LabelValue], computation: &coi_domain::Computation, text: &str) -> AssesseeInfo {
-    let first_line_name = text.lines().next().and_then(|line| {
-        let mut parts = line.split('|').map(str::trim);
-        let candidate = parts.next()?;
-        let second = parts.next()?;
-        second.to_ascii_uppercase().contains("AY ").then(|| candidate.to_string())
+    let first_line_name = {
+        let mut l_iter = text.lines().map(str::trim).filter(|l| !l.is_empty());
+        if let Some(l0) = l_iter.next() {
+            if let Some(l1) = l_iter.next() {
+                let u0 = l0.to_ascii_uppercase();
+                let u1 = l1.to_ascii_uppercase();
+                if !u0.contains(':') && !u0.contains("COMPUTATION") && !u0.contains("INCOME")
+                    && (u1.contains("AY ") || u1.contains("AY 20") || u1.contains("A.Y."))
+                {
+                    Some(l0.to_string())
+                } else {
+                    let mut parts = l0.split('|').map(str::trim);
+                    let cand = parts.next();
+                    let sec = parts.next();
+                    if let (Some(c), Some(s)) = (cand, sec) {
+                        if s.to_ascii_uppercase().contains("AY ") {
+                            Some(c.to_string())
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    }
+                }
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    };
+    let raw_name = pair_value(pairs, &["NAMEOFASSESSEE", "ASSESSEENAME", "NAME"])
+        .filter(|n| {
+            let u = n.to_ascii_uppercase();
+            !u.contains("ACCOUNT") && !u.contains("BANK")
+        })
+        .or(first_line_name)
+        .or_else(|| computation.assessee.name.clone())
+        .or_else(|| inline_value(text, "NAME"));
+    let name = raw_name.map(|n| crate::assessee::clean_name(&n));
+
+    let pan = computation.assessee.pan.clone().or_else(|| {
+        crate::patterns::pan().captures(&text.to_ascii_uppercase()).map(|c| c[1].to_string())
     });
+
+    let assessment_year = pair_value(pairs, &["ASSESSMENTYEAR", "AY"])
+        .or_else(|| computation.assessment_year.map(|ay| format!("{}-{}", ay.start, ay.end)))
+        .or_else(|| inline_value(text, r"(?:ASSESSMENT\s*YEAR|A\.?Y\.?)"));
+
+    let email = pair_value(pairs, &["EMAILADDRESS", "EMAIL"])
+        .or_else(|| inline_value(text, "E-?MAIL"))
+        .filter(|e| e.contains('@'));
+
     AssesseeInfo {
-        name: pair_value(pairs, &["NAMEOFASSESSEE", "ASSESSEENAME"]).or(first_line_name),
-        pan: computation.assessee.pan.clone(),
+        name,
+        pan,
         father_name: pair_value(pairs, &["FATHERSNAME", "FATHER'SNAME"]).or_else(|| inline_value(text, "FATHER'S?NAME")),
         residential_address: pair_value(pairs, &["RESIDENTIALADDRESS"]).or_else(|| first_address(pairs)).or_else(|| inline_value(text, "ADDRESS")),
         status: computation.assessee.status.clone().or_else(|| inline_value(text, "STATUS")),
-        assessment_year: pair_value(pairs, &["ASSESSMENTYEAR"]).or_else(|| inline_value(text, "AY")),
+        assessment_year,
         ward_no: pair_value(pairs, &["WARDNO", "WARD"]),
         financial_year: pair_value(pairs, &["FINANCIALYEAR"]).or_else(|| computation.financial_year.map(|year| format!("{} - {}", year.start, year.end))),
         gender: pair_value(pairs, &["GENDER"]).or_else(|| inline_value(text, "GENDER")),
         date_of_birth: pair_value(pairs, &["DATEOFBIRTH"]).or_else(|| inline_value(text, r"DATE\s*OF\s*BIRTH")),
-        email: pair_value(pairs, &["EMAILADDRESS", "EMAIL"]).or_else(|| inline_value(text, "E-?MAIL")),
+        email,
         residential_status: pair_value(pairs, &["RESIDENTIALSTATUS"]).or_else(|| inline_value(text, r"RESIDENTIAL\s+STATUS")),
     }
 }
@@ -758,8 +841,27 @@ fn bank_details(pairs: &[LabelValue], lines: &[Line]) -> BankDetails {
         }
     }
 
+    if ifsc.is_none() {
+        let ifsc_re = Regex::new(r"\b([A-Z]{4}0[A-Z0-9]{6})\b").ok();
+        for line in lines {
+            let t = line.text();
+            if let Some(caps) = ifsc_re.as_ref().and_then(|re| re.captures(&t)) {
+                if is_valid_ifsc(&caps[1]) {
+                    ifsc = Some(caps[1].trim().to_ascii_uppercase());
+                    break;
+                }
+            }
+        }
+    }
+
     if let Some(ref mut n) = name {
-        let cleaned = n.trim().trim_matches(',').trim();
+        let mut cleaned = n.trim().trim_matches(',').trim();
+        if let Some(idx) = cleaned.find(',') {
+            cleaned = cleaned[..idx].trim();
+        }
+        if let Some(idx) = cleaned.to_ascii_uppercase().find("A/C") {
+            cleaned = cleaned[..idx].trim();
+        }
         let upper = cleaned.to_ascii_uppercase();
         if upper.starts_with("INTEREST") || upper.starts_with("SAVINGS") || upper.starts_with("DEPOSIT") || upper.contains("INTEREST ON") || upper == "TYPE" {
             name = None;
@@ -852,6 +954,9 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "PROFITS AND GAINS OF BUSINESS OR PROFESSION",
             "INCOME FROM BUSINESS OR PROFESSION",
             "PROFITS AND GAINS OF BUSINESS",
+            "PROFIT OR GAINS OF BUSINESS OR PROFESSION",
+            "PROFIT OR GAINS OF BUSINESS",
+            "INCOME FROM BUSINESS",
             "TOTAL BUSINESS INCOME",
             "PROFIT U/S 44AD",
         ],
@@ -1670,7 +1775,7 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
     if refund_amt.is_none() {
         for line in lines {
             let u = line.upper();
-            if u.contains("INTEREST ON") {
+            if u.contains("INTEREST") {
                 continue;
             }
             if u.contains("288B") || u.contains("288 B") {
@@ -1787,6 +1892,9 @@ fn tax_computation(lines: &[Line], computation: &coi_domain::Computation) -> Tax
 
     let refundable = lines.iter().find_map(|line| {
         let upper = line.upper();
+        if upper.contains("INTEREST") {
+            return None;
+        }
         (upper.contains("REFUNDABLE") || upper.contains("REFUND") || upper.contains("NET PAYABLE/REFUNDABLE"))
             .then(|| line_amount(line))
             .flatten()

@@ -4,12 +4,15 @@ Working state for the current task. Kept here rather than in the context window 
 
 ## Current task
 
-- [x] Extracted all 62 columns from `Bank_Eligibility_Matrix_v1.xlsx` (`decision table` sheet).
-- [x] Integrated canonical `BANK_MATRIX_RULES` mapping into `app/services/bre_engine.py` covering all 8 partner banks (`BOI`, `INDIAN_BANK`, `IOB`, `BOB`, `BOM`, `HDFC`, `AXIS`, `KOTAK`).
-- [x] Implemented multi-bank CIBIL floors, DPD thresholds, write-off ceilings, NRI stay limits, age floors/ceilings, and ITR rules.
-- [x] Verified PII redaction and 5-stage request memory lifecycle (`del safe_log_payload`).
-- [x] Ran automated test suite (`11/11 PASSED`).
-- [x] Verified live container execution: CIBIL 680 evaluates BOM `true`, other 7 banks `false` in `10.63 ms`.
+- [x] Scanned all 18 Computation of Income (COI) PDF files in `cibil-pdf-scrapper/computation-of-income-copies-test/`.
+- [x] Processed batch extraction through offline COI Engine (`crates/coi-cli`).
+- [x] Fixed single-segment inline colon parsing in `coi-layout/src/pairs.rs` (`Name: Mr.MohitBhatt`, `PAN:ASGPB0484K`).
+- [x] Fixed `coi-parser/src/assessee.rs` label matching and fallback bare PAN regex.
+- [x] Resolved "Tax Payable on total Income" false positive in `total_income` across `parser.rs` and `contract.rs`.
+- [x] Fixed refund collision with interest income in `contract.rs`.
+- [x] Hardened CA verification regex against "Capital Gain" false positive in `contract.rs`.
+- [x] Produced standardized nested JSON documents adhering strictly to `computation-of-income-output-reff.json` and `coi_contract.schema.json` in `cibil-pdf-scrapper/test_outputs/coi/<sanitized_filename>.json`.
+- [x] Generated benchmark report summary at `cibil-pdf-scrapper/test_outputs/coi_bulk_benchmark_summary.json` (100% schema conformance, 88.89% direct native extraction, 0 contract failures, average confidence 0.953).
 
 ## Open questions
 

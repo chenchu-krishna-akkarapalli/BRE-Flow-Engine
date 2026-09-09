@@ -6,6 +6,7 @@ use coi_layout::LabelValue;
 const LABELS: &[(&str, &str)] = &[
     ("NAME OF ASSESSEE", "name"),
     ("ASSESSEE NAME", "name"),
+    ("NAME", "name"),
     ("FATHER'S NAME", "fathers_name"),
     ("FATHERS NAME", "fathers_name"),
     ("ADDRESS", "address"),
@@ -36,7 +37,11 @@ pub fn extract(pairs: &[LabelValue], source_text: &str) -> AssesseeDetails {
         let label = pair.label.trim().trim_end_matches(':').trim().to_ascii_uppercase();
         for (candidate, field) in &ordered {
             // Exact or prefix on the whole cell: "Bank Name" must not match "NAME".
-            if label != **candidate && !label.starts_with(*candidate) {
+            if *candidate == "NAME" {
+                if label != "NAME" && label != "NAME OF ASSESSEE" && label != "ASSESSEE NAME" {
+                    continue;
+                }
+            } else if label != **candidate && !label.starts_with(*candidate) {
                 continue;
             }
             let value = pair.value.trim();
@@ -66,17 +71,22 @@ pub fn extract(pairs: &[LabelValue], source_text: &str) -> AssesseeDetails {
         }
     }
 
+    // Validate the shape of whatever the label gave us; a stray value is dropped
+    // rather than carried forward as a PAN.
+    if let Some(pan) = &details.pan {
+        let upper = pan.to_ascii_uppercase();
+        details.pan = patterns::pan().captures(&upper).map(|c| c[1].to_string());
+    }
+
     // A bare PAN anywhere beats a missing one; normalise to upper case.
     if details.pan.is_none() {
         if let Some(caps) = patterns::pan().captures(&source_text.to_ascii_uppercase()) {
             details.pan = Some(caps[1].to_string());
         }
     }
-    // Validate the shape of whatever the label gave us; a stray value is dropped
-    // rather than carried forward as a PAN.
-    if let Some(pan) = &details.pan {
-        let upper = pan.to_ascii_uppercase();
-        details.pan = patterns::pan().captures(&upper).map(|c| c[1].to_string());
+
+    if let Some(name) = details.name.as_mut() {
+        *name = clean_name(name);
     }
 
     // Presence only. The digits are never stored, so they cannot be serialised.
@@ -85,6 +95,29 @@ pub fn extract(pairs: &[LabelValue], source_text: &str) -> AssesseeDetails {
     }
 
     details
+}
+
+pub fn clean_name(value: &str) -> String {
+    let mut s = value.trim();
+    for prefix in &["MR.", "MR ", "MRS.", "MRS ", "MS.", "MS ", "SHRI ", "SMT."] {
+        if s.to_ascii_uppercase().starts_with(prefix) {
+            s = s[prefix.len()..].trim();
+            break;
+        }
+    }
+    if !s.contains(' ') && s.len() > 3 {
+        let mut spaced = String::new();
+        for (i, c) in s.chars().enumerate() {
+            if i > 0 && c.is_ascii_uppercase() {
+                spaced.push(' ');
+            }
+            spaced.push(c);
+        }
+        if spaced.contains(' ') {
+            return spaced;
+        }
+    }
+    s.to_string()
 }
 
 /// Replace every Aadhaar-shaped run in a string with the redaction marker.

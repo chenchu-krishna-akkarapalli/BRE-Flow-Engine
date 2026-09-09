@@ -83,8 +83,23 @@ pub fn label_value_pairs(lines: &[Line]) -> Vec<LabelValue> {
             }
         }
 
-        // Stacked layout: a lone label with its value on the next row.
+        // Single-segment line: check for inline "Label: Value" before trying stacked layout.
         if line.segments.len() == 1 {
+            let seg = line.segments[0].trim();
+            if let Some((lbl, val)) = seg.split_once(':') {
+                let lbl = lbl.trim();
+                let val = val.trim();
+                if !lbl.is_empty() && !val.is_empty() && !lbl.to_ascii_uppercase().contains("HTTP") {
+                    pairs.push(LabelValue {
+                        label: lbl.to_string(),
+                        value: val.to_string(),
+                        raw_line: line.text(),
+                        page: line.page,
+                    });
+                    continue;
+                }
+            }
+
             let Some(next) = lines.get(index + 1) else { continue };
             if next.page != line.page || next.segments.len() != 1 {
                 continue;
