@@ -440,6 +440,10 @@ pub struct CreditEngineSummary {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub deemed_profit_44ad: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub deemed_profit_44ad_6pct: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub deemed_profit_44ad_8pct: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub declared_profit_44ad: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub total_salaries_gross: Option<i64>,

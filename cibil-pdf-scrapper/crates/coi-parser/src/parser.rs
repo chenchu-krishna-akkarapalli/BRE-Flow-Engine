@@ -67,7 +67,12 @@ fn redact_line(mut line: Line) -> Line {
 fn total_income(lines: &[Line]) -> Option<coi_domain::Money> {
     for line in lines {
         let upper = line.upper();
-        if upper.replace(' ', "").contains("GROSSTOTALINCOME") || patterns::is_slab_working(&upper) {
+        if upper.replace(' ', "").contains("GROSSTOTALINCOME")
+            || upper.contains("115BAC")
+            || upper.contains("COMPUTATION OF TOTAL INCOME")
+            || upper.contains("COMPUTATION OF TOTAL")
+            || patterns::is_slab_working(&upper)
+        {
             continue;
         }
         let squashed = upper.replace(' ', "");
