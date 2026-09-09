@@ -1,0 +1,2287 @@
+{
+  "schema_version": "2.0",
+  "metadata": {
+    "source_file": "Payslipfeb26.pdf",
+    "page_count": 2,
+    "layout_signature": "generic-payslip",
+    "detected_locale": "IN",
+    "currency": "INR",
+    "extraction_confidence_overall": 0.95
+  },
+  "employer": {
+    "name": "BHARTIAIRTELSERVICES LIMITED",
+    "address": null,
+    "business_unit": null
+  },
+  "employee": {
+    "name": "VivekSharma",
+    "employee_id": "286706",
+    "designation": "DeputyManager",
+    "department": "Airtel Business-Domestic",
+    "date_of_joining": null,
+    "pan": "BPOPV9284B",
+    "uan": "101688397492",
+    "pf_number": null,
+    "esi_number": null,
+    "bank_account": "920010071849708",
+    "bank_name": "920010071849708",
+    "ifsc_or_routing_code": null
+  },
+  "statements": [
+    {
+      "period": {
+        "period_type": "monthly",
+        "month": null,
+        "year": null,
+        "financial_year": null,
+        "from_date": null,
+        "to_date": null,
+        "days_in_month": null,
+        "working_days": null,
+        "paid_days": null,
+        "lop_days": 0.0,
+        "arrear_days": null
+      },
+      "earnings": {
+        "items": [
+          {
+            "raw_label": "Emp.ID",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 286706.0,
+              "currency": "INR",
+              "raw_label": "Emp.ID",
+              "raw_value_string": "286706",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 286706.0,
+              "currency": "INR",
+              "raw_label": "Emp.ID",
+              "raw_value_string": "286706",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Standarddays",
+            "canonical_category": "dearness_allowance",
+            "amount": {
+              "value": 28.0,
+              "currency": "INR",
+              "raw_label": "Standarddays",
+              "raw_value_string": "28.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 28.0,
+              "currency": "INR",
+              "raw_label": "Standarddays",
+              "raw_value_string": "28.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Basic",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 21066.67,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "21,066.67",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 21066.67,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "21,066.67",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "LabourWelfare",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 5.0,
+              "currency": "INR",
+              "raw_label": "LabourWelfare",
+              "raw_value_string": "5.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 5.0,
+              "currency": "INR",
+              "raw_label": "LabourWelfare",
+              "raw_value_string": "5.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Hra",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 10533.33,
+              "currency": "INR",
+              "raw_label": "Hra",
+              "raw_value_string": "10,533.33",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 10533.33,
+              "currency": "INR",
+              "raw_label": "Hra",
+              "raw_value_string": "10,533.33",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "SpecialAllowance",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 7515.17,
+              "currency": "INR",
+              "raw_label": "SpecialAllowance",
+              "raw_value_string": "7,515.17",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 7515.17,
+              "currency": "INR",
+              "raw_label": "SpecialAllowance",
+              "raw_value_string": "7,515.17",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "MealAllowance",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 2200.0,
+              "currency": "INR",
+              "raw_label": "MealAllowance",
+              "raw_value_string": "2,200.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2200.0,
+              "currency": "INR",
+              "raw_label": "MealAllowance",
+              "raw_value_string": "2,200.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "VBF",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 211.0,
+              "currency": "INR",
+              "raw_label": "VBF",
+              "raw_value_string": "211.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 211.0,
+              "currency": "INR",
+              "raw_label": "VBF",
+              "raw_value_string": "211.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "SipPayout",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 13048.0,
+              "currency": "INR",
+              "raw_label": "SipPayout",
+              "raw_value_string": "13,048.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 13048.0,
+              "currency": "INR",
+              "raw_label": "SipPayout",
+              "raw_value_string": "13,048.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "deductions": {
+        "items": [
+          {
+            "raw_label": "Professional Tax",
+            "canonical_category": "professional_tax",
+            "amount": {
+              "value": 200.0,
+              "currency": "INR",
+              "raw_label": "Professional Tax",
+              "raw_value_string": "200.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 200.0,
+              "currency": "INR",
+              "raw_label": "Professional Tax",
+              "raw_value_string": "200.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Provident Fund-Employee",
+            "canonical_category": "provident_fund",
+            "amount": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "Provident Fund-Employee",
+              "raw_value_string": "1,800.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "Provident Fund-Employee",
+              "raw_value_string": "1,800.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "summary": {
+        "gross_salary": {
+          "value": 54363.0,
+          "currency": "INR",
+          "raw_label": "GROSS PAY",
+          "raw_value_string": "54,363.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "net_pay": {
+          "value": 52147.0,
+          "currency": "INR",
+          "raw_label": "NET PAY",
+          "raw_value_string": "52,147.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_deductions": {
+          "value": 2216.0,
+          "currency": "INR",
+          "raw_label": "TOTAL DEDUCTIONS",
+          "raw_value_string": "2,216.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_allowances": {
+          "value": 307198.5,
+          "currency": "INR",
+          "raw_label": "total_allowances",
+          "raw_value_string": "307198.50",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
+        "total_incentives_and_bonus": {
+          "value": 13048.0,
+          "currency": "INR",
+          "raw_label": "SipPayout",
+          "raw_value_string": "13,048.00",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
+        "amount_in_words": null
+      },
+      "reconciliation": {
+        "gross_minus_deductions_matches_net": true,
+        "delta_vs_stated_net": 0.0,
+        "sum_of_earning_items_matches_stated_gross": false,
+        "sum_of_deduction_items_matches_stated_total": false,
+        "flags": []
+      }
+    }
+  ],
+  "raw": {
+    "page_count": 2,
+    "lines": [
+      {
+        "page": 1,
+        "bbox": {
+          "x": 206.994140625,
+          "y": 32.926788330078125,
+          "width": 173.43267822265625,
+          "height": 10.941070556640625
+        },
+        "segments": [
+          "BHARTIAIRTELSERVICES LIMITED"
+        ],
+        "segment_boxes": [
+          {
+            "x": 206.994140625,
+            "y": 32.926788330078125,
+            "width": 173.43267822265625,
+            "height": 10.941070556640625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 206.994140625,
+          "y": 53.081390380859375,
+          "width": 190.665283203125,
+          "height": 10.941070556640625
+        },
+        "segments": [
+          "PayslipforthemonthofFEBRUARY-2026"
+        ],
+        "segment_boxes": [
+          {
+            "x": 206.994140625,
+            "y": 53.081390380859375,
+            "width": 190.665283203125,
+            "height": 10.941070556640625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.58257293701172,
+          "y": 77.84275817871094,
+          "width": 413.0372009277344,
+          "height": 8.637649536132812
+        },
+        "segments": [
+          "Emp.ID",
+          ": 286706",
+          "LOPDays",
+          ": 0",
+          "ESINo.",
+          ":"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.58257293701172,
+            "y": 78.41856384277344,
+            "width": 22.443016052246094,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 99.14903259277344,
+            "y": 77.84275817871094,
+            "width": 26.731910705566406,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 205.21261596679688,
+            "y": 78.41856384277344,
+            "width": 29.2117919921875,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 278.237060546875,
+            "y": 77.84275817871094,
+            "width": 9.45654296875,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 408.4862060546875,
+            "y": 78.41856384277344,
+            "width": 20.886199951171875,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 459.6285095214844,
+            "y": 78.41856384277344,
+            "width": 1.99127197265625,
+            "height": 8.061843872070312
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.58257293701172,
+          "y": 85.90458679199219,
+          "width": 497.665771484375,
+          "height": 8.637710571289062
+        },
+        "segments": [
+          "Name",
+          ": VivekSharma",
+          "Standarddays",
+          ": 28.00",
+          "PFNo.",
+          ": GNGGN00106930001034256"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.58257293701172,
+            "y": 86.48045349121094,
+            "width": 17.69487762451172,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 99.14903259277344,
+            "y": 85.90458679199219,
+            "width": 43.43144226074219,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 205.21261596679688,
+            "y": 86.48045349121094,
+            "width": 44.7596435546875,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 278.237060546875,
+            "y": 85.90458679199219,
+            "width": 21.54931640625,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 408.4862060546875,
+            "y": 86.48045349121094,
+            "width": 19.158660888671875,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 459.6285095214844,
+            "y": 85.90458679199219,
+            "width": 86.61984252929688,
+            "height": 8.061843872070312
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.58257293701172,
+          "y": 93.96641540527344,
+          "width": 458.5082702636719,
+          "height": 8.637710571289062
+        },
+        "segments": [
+          "Department",
+          ": Airtel Business-Domestic",
+          "Days worked",
+          ": 28.00",
+          "UAN",
+          ": 101688397492"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.58257293701172,
+            "y": 94.54228210449219,
+            "width": 37.39685821533203,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 99.14903259277344,
+            "y": 93.96641540527344,
+            "width": 71.84944152832031,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 205.21261596679688,
+            "y": 94.54228210449219,
+            "width": 41.6995849609375,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 278.237060546875,
+            "y": 93.96641540527344,
+            "width": 21.54931640625,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 408.4862060546875,
+            "y": 94.54228210449219,
+            "width": 13.8052978515625,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 459.6285095214844,
+            "y": 93.96641540527344,
+            "width": 47.46234130859375,
+            "height": 8.061843872070312
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.58257293701172,
+          "y": 102.02824401855469,
+          "width": 455.88580322265625,
+          "height": 8.637710571289062
+        },
+        "segments": [
+          "Designation",
+          ": DeputyManager",
+          "Date ofJoining",
+          ": 01/12/2022",
+          "PAN",
+          ": BPOPV9284B"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.58257293701172,
+            "y": 102.60411071777344,
+            "width": 37.668663024902344,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 99.14903259277344,
+            "y": 102.02824401855469,
+            "width": 51.15525817871094,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 205.21261596679688,
+            "y": 102.60411071777344,
+            "width": 46.8822021484375,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 278.237060546875,
+            "y": 102.02824401855469,
+            "width": 37.097137451171875,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 408.4862060546875,
+            "y": 102.60411071777344,
+            "width": 13.8052978515625,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 459.6285095214844,
+            "y": 102.02824401855469,
+            "width": 44.839874267578125,
+            "height": 8.061843872070312
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.58257293701172,
+          "y": 110.09013366699219,
+          "width": 468.87347412109375,
+          "height": 8.637649536132812
+        },
+        "segments": [
+          "Band",
+          ": A1",
+          "TaxRegime",
+          ": NewRegime",
+          "Bank A/Cno.",
+          ": 920010071849708"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.58257293701172,
+            "y": 110.66593933105469,
+            "width": 15.786521911621094,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 99.14903259277344,
+            "y": 110.09013366699219,
+            "width": 13.487457275390625,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 205.21261596679688,
+            "y": 110.66593933105469,
+            "width": 36.697784423828125,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 278.237060546875,
+            "y": 110.09013366699219,
+            "width": 40.552215576171875,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 408.4862060546875,
+            "y": 110.66593933105469,
+            "width": 39.889129638671875,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 459.6285095214844,
+            "y": 110.09013366699219,
+            "width": 57.827545166015625,
+            "height": 8.061843872070312
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.58257293701172,
+          "y": 118.15196228027344,
+          "width": 448.97564697265625,
+          "height": 8.637649536132812
+        },
+        "segments": [
+          "Location",
+          ": Ludhiana",
+          "Bank Name.",
+          ": AXISBANK"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.58257293701172,
+            "y": 118.72776794433594,
+            "width": 27.303443908691406,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 99.14903259277344,
+            "y": 118.15196228027344,
+            "width": 31.914520263671875,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 408.4862060546875,
+            "y": 118.72776794433594,
+            "width": 37.0098876953125,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 459.6285095214844,
+            "y": 118.15196228027344,
+            "width": 37.929718017578125,
+            "height": 8.061843872070312
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.58257293701172,
+          "y": 126.21379089355469,
+          "width": 61.963523864746094,
+          "height": 8.637710571289062
+        },
+        "segments": [
+          "Gender",
+          ": M"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.58257293701172,
+            "y": 126.78965759277344,
+            "width": 23.40381622314453,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 99.14903259277344,
+            "y": 126.21379089355469,
+            "width": 11.397064208984375,
+            "height": 8.061843872070312
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 229.9739990234375,
+          "y": 146.9442596435547,
+          "width": 24.728240966796875,
+          "height": 8.061843872070312
+        },
+        "segments": [
+          "Current"
+        ],
+        "segment_boxes": [
+          {
+            "x": 229.9739990234375,
+            "y": 146.9442596435547,
+            "width": 24.728240966796875,
+            "height": 8.061843872070312
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.58257293701172,
+          "y": 155.00608825683594,
+          "width": 497.6865234375,
+          "height": 8.061843872070312
+        },
+        "segments": [
+          "Earnings",
+          "MonthlyRate",
+          "Month Arrears\\Adjustments",
+          "Total",
+          "Deductions",
+          "Total"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.58257293701172,
+            "y": 155.00608825683594,
+            "width": 27.48426055908203,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 167.78265380859375,
+            "y": 155.00608825683594,
+            "width": 40.72869873046875,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 234.58074951171875,
+            "y": 155.00608825683594,
+            "width": 90.25146484375,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 354.356689453125,
+            "y": 155.00608825683594,
+            "width": 15.70361328125,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 374.51129150390625,
+            "y": 155.00608825683594,
+            "width": 35.546112060546875,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 530.5654907226562,
+            "y": 155.00608825683594,
+            "width": 15.70361328125,
+            "height": 8.061843872070312
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.573577880859375,
+          "y": 163.64376831054688,
+          "width": 497.6747741699219,
+          "height": 7.485992431640625
+        },
+        "segments": [
+          "Basic",
+          "21,066.67",
+          "21,067.00",
+          "21,067.00",
+          "LabourWelfare",
+          "5.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.573577880859375,
+            "y": 163.64376831054688,
+            "width": 14.741722106933594,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 179.19158935546875,
+            "y": 163.64376831054688,
+            "width": 27.88360595703125,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 225.25924682617188,
+            "y": 163.64376831054688,
+            "width": 27.88360595703125,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 342.15594482421875,
+            "y": 163.64376831054688,
+            "width": 27.88360595703125,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 374.5022888183594,
+            "y": 163.64376831054688,
+            "width": 41.60491943359375,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 533.91259765625,
+            "y": 163.64376831054688,
+            "width": 12.33575439453125,
+            "height": 7.485995292663574
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.573577880859375,
+          "y": 171.12973022460938,
+          "width": 497.6747741699219,
+          "height": 7.485992431640625
+        },
+        "segments": [
+          "Hra",
+          "10,533.33",
+          "10,533.00",
+          "10,533.00",
+          "Professional Tax",
+          "200.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.573577880859375,
+            "y": 171.12973022460938,
+            "width": 9.357563018798828,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 179.19158935546875,
+            "y": 171.12973022460938,
+            "width": 27.88360595703125,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 225.25924682617188,
+            "y": 171.12973022460938,
+            "width": 27.88360595703125,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 342.15594482421875,
+            "y": 171.12973022460938,
+            "width": 27.88360595703125,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 374.5022888183594,
+            "y": 171.12973022460938,
+            "width": 44.685699462890625,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 527.00244140625,
+            "y": 171.12973022460938,
+            "width": 19.24591064453125,
+            "height": 7.485995292663574
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.573577880859375,
+          "y": 178.61575317382812,
+          "width": 497.6747741699219,
+          "height": 7.485992431640625
+        },
+        "segments": [
+          "SpecialAllowance",
+          "7,515.17",
+          "7,515.00",
+          "7,515.00",
+          "Provident Fund-Employee",
+          "1,800.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.573577880859375,
+            "y": 178.61575317382812,
+            "width": 50.24261474609375,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 182.64666748046875,
+            "y": 178.61575317382812,
+            "width": 24.42852783203125,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 228.71432495117188,
+            "y": 178.61575317382812,
+            "width": 24.42852783203125,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 345.61102294921875,
+            "y": 178.61575317382812,
+            "width": 24.42852783203125,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 374.5022888183594,
+            "y": 178.61575317382812,
+            "width": 74.42813110351562,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 521.81982421875,
+            "y": 178.61575317382812,
+            "width": 24.42852783203125,
+            "height": 7.485995292663574
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.573577880859375,
+          "y": 186.10177612304688,
+          "width": 497.6747741699219,
+          "height": 7.485992431640625
+        },
+        "segments": [
+          "MealAllowance",
+          "2,200.00",
+          "2,200.00",
+          "VBF",
+          "211.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.573577880859375,
+            "y": 186.10177612304688,
+            "width": 43.33245849609375,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 228.71432495117188,
+            "y": 186.10177612304688,
+            "width": 24.42852783203125,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 345.61102294921875,
+            "y": 186.10177612304688,
+            "width": 24.42852783203125,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 374.5022888183594,
+            "y": 186.10177612304688,
+            "width": 12.126739501953125,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 527.5783081054688,
+            "y": 186.10177612304688,
+            "width": 18.6700439453125,
+            "height": 7.485995292663574
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.573577880859375,
+          "y": 193.58773803710938,
+          "width": 321.4659729003906,
+          "height": 7.485992431640625
+        },
+        "segments": [
+          "SipPayout",
+          "13,048.00",
+          "13,048.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.573577880859375,
+            "y": 193.58773803710938,
+            "width": 29.966506958007812,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 225.25924682617188,
+            "y": 193.58773803710938,
+            "width": 27.88360595703125,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 342.15594482421875,
+            "y": 193.58773803710938,
+            "width": 27.88360595703125,
+            "height": 7.485995292663574
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.27919006347656,
+          "y": 202.80125427246094,
+          "width": 499.96917724609375,
+          "height": 8.061843872070312
+        },
+        "segments": [
+          "Total",
+          "Gross Earnings",
+          "54,363.00",
+          "Gross Deductions",
+          "2,216.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.27919006347656,
+            "y": 202.80125427246094,
+            "width": 15.703601837158203,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 274.88995361328125,
+            "y": 202.80125427246094,
+            "width": 48.79058837890625,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 342.7318115234375,
+            "y": 202.80130004882812,
+            "width": 27.88360595703125,
+            "height": 7.485995292663574
+          },
+          {
+            "x": 438.43017578125,
+            "y": 202.80125427246094,
+            "width": 56.852386474609375,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 521.81982421875,
+            "y": 202.80130004882812,
+            "width": 24.42852783203125,
+            "height": 7.485995292663574
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.58257293701172,
+          "y": 212.0148162841797,
+          "width": 321.2888488769531,
+          "height": 8.061843872070312
+        },
+        "segments": [
+          "NetSalaryPayable",
+          ":52,147.00/-(FiftyTwoThousandOne HundredFourtySevenOnly)"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.58257293701172,
+            "y": 212.0148162841797,
+            "width": 56.852386474609375,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 165.9471435546875,
+            "y": 212.0148162841797,
+            "width": 203.92428588867188,
+            "height": 8.061843872070312
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.58257293701172,
+          "y": 221.2283172607422,
+          "width": 305.1651611328125,
+          "height": 8.061843872070312
+        },
+        "segments": [
+          "NetPayinSalaryAccount",
+          ":49,647.00/-(FourtyNineThousandSixHundredFourtySevenOnly)"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.58257293701172,
+            "y": 221.2283172607422,
+            "width": 78.8577651977539,
+            "height": 8.061843872070312
+          },
+          {
+            "x": 163.64376831054688,
+            "y": 221.2283172607422,
+            "width": 190.10397338867188,
+            "height": 8.061843872070312
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.58257293701172,
+          "y": 229.8660125732422,
+          "width": 264.28009033203125,
+          "height": 8.061843872070312
+        },
+        "segments": [
+          "NetPayinAirtelPayments Bank Account :2,500.00/-(TwoThousandFiveHundredOnly)"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.58257293701172,
+            "y": 229.8660125732422,
+            "width": 264.28009033203125,
+            "height": 8.061843872070312
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 152.1268310546875,
+          "y": 259.234130859375,
+          "width": 290.7814025878906,
+          "height": 10.365234375
+        },
+        "segments": [
+          "ForHRassistance,PleaseraiseticketonHRActivconnectusingHiveWeborMobileApp"
+        ],
+        "segment_boxes": [
+          {
+            "x": 152.1268310546875,
+            "y": 259.234130859375,
+            "width": 290.7814025878906,
+            "height": 10.365234375
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 281.21527099609375,
+          "y": 280.54046630859375,
+          "width": 28.076019287109375,
+          "height": 6.91015625
+        },
+        "segments": [
+          "Page -1/2"
+        ],
+        "segment_boxes": [
+          {
+            "x": 281.21527099609375,
+            "y": 280.54046630859375,
+            "width": 28.076019287109375,
+            "height": 6.91015625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 471.8202209472656,
+          "y": 294.9366149902344,
+          "width": 88.24844360351562,
+          "height": 7.485995292663574
+        },
+        "segments": [
+          "SlipGeneratedonFeb25,2026"
+        ],
+        "segment_boxes": [
+          {
+            "x": 471.8202209472656,
+            "y": 294.9366149902344,
+            "width": 88.24844360351562,
+            "height": 7.485995292663574
+          }
+        ]
+      }
+    ],
+    "table": {
+      "columns": [
+        [
+          46.27919006347656,
+          312.8626708984375
+        ],
+        [
+          99.14903259277344,
+          170.99847412109375
+        ],
+        [
+          152.1268310546875,
+          442.9082336425781
+        ],
+        [
+          163.64376831054688,
+          369.8714294433594
+        ],
+        [
+          179.19158935546875,
+          207.0751953125
+        ],
+        [
+          205.21261596679688,
+          397.659423828125
+        ],
+        [
+          225.25924682617188,
+          254.70223999023438
+        ],
+        [
+          234.58074951171875,
+          324.83221435546875
+        ],
+        [
+          274.88995361328125,
+          323.6805419921875
+        ],
+        [
+          281.21527099609375,
+          309.2912902832031
+        ],
+        [
+          342.15594482421875,
+          370.61541748046875
+        ],
+        [
+          354.356689453125,
+          370.060302734375
+        ],
+        [
+          374.5022888183594,
+          448.930419921875
+        ],
+        [
+          408.4862060546875,
+          448.3753356933594
+        ],
+        [
+          438.43017578125,
+          495.2825622558594
+        ],
+        [
+          459.6285095214844,
+          546.2483520507812
+        ],
+        [
+          471.8202209472656,
+          560.0686645507812
+        ],
+        [
+          521.81982421875,
+          546.2483520507812
+        ],
+        [
+          530.5654907226562,
+          546.2691040039062
+        ]
+      ],
+      "rows": [
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "BHARTIAIRTELSERVICES LIMITED",
+              "bbox": {
+                "x": 206.994140625,
+                "y": 32.926788330078125,
+                "width": 173.43267822265625,
+                "height": 10.941070556640625
+              },
+              "column": 5
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "PayslipforthemonthofFEBRUARY-2026",
+              "bbox": {
+                "x": 206.994140625,
+                "y": 53.081390380859375,
+                "width": 190.665283203125,
+                "height": 10.941070556640625
+              },
+              "column": 5
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Emp.ID",
+              "bbox": {
+                "x": 48.58257293701172,
+                "y": 78.41856384277344,
+                "width": 22.443016052246094,
+                "height": 8.061843872070312
+              },
+              "column": 0
+            },
+            {
+              "text": ": 286706",
+              "bbox": {
+                "x": 99.14903259277344,
+                "y": 77.84275817871094,
+                "width": 26.731910705566406,
+                "height": 8.061843872070312
+              },
+              "column": 1
+            },
+            {
+              "text": "LOPDays",
+              "bbox": {
+                "x": 205.21261596679688,
+                "y": 78.41856384277344,
+                "width": 29.2117919921875,
+                "height": 8.061843872070312
+              },
+              "column": 5
+            },
+            {
+              "text": ": 0",
+              "bbox": {
+                "x": 278.237060546875,
+                "y": 77.84275817871094,
+                "width": 9.45654296875,
+                "height": 8.061843872070312
+              },
+              "column": 9
+            },
+            {
+              "text": "ESINo.",
+              "bbox": {
+                "x": 408.4862060546875,
+                "y": 78.41856384277344,
+                "width": 20.886199951171875,
+                "height": 8.061843872070312
+              },
+              "column": 13
+            },
+            {
+              "text": ":",
+              "bbox": {
+                "x": 459.6285095214844,
+                "y": 78.41856384277344,
+                "width": 1.99127197265625,
+                "height": 8.061843872070312
+              },
+              "column": 15
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Name",
+              "bbox": {
+                "x": 48.58257293701172,
+                "y": 86.48045349121094,
+                "width": 17.69487762451172,
+                "height": 8.061843872070312
+              },
+              "column": 0
+            },
+            {
+              "text": ": VivekSharma",
+              "bbox": {
+                "x": 99.14903259277344,
+                "y": 85.90458679199219,
+                "width": 43.43144226074219,
+                "height": 8.061843872070312
+              },
+              "column": 1
+            },
+            {
+              "text": "Standarddays",
+              "bbox": {
+                "x": 205.21261596679688,
+                "y": 86.48045349121094,
+                "width": 44.7596435546875,
+                "height": 8.061843872070312
+              },
+              "column": 5
+            },
+            {
+              "text": ": 28.00",
+              "bbox": {
+                "x": 278.237060546875,
+                "y": 85.90458679199219,
+                "width": 21.54931640625,
+                "height": 8.061843872070312
+              },
+              "column": 9
+            },
+            {
+              "text": "PFNo.",
+              "bbox": {
+                "x": 408.4862060546875,
+                "y": 86.48045349121094,
+                "width": 19.158660888671875,
+                "height": 8.061843872070312
+              },
+              "column": 13
+            },
+            {
+              "text": ": GNGGN00106930001034256",
+              "bbox": {
+                "x": 459.6285095214844,
+                "y": 85.90458679199219,
+                "width": 86.61984252929688,
+                "height": 8.061843872070312
+              },
+              "column": 15
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Department",
+              "bbox": {
+                "x": 48.58257293701172,
+                "y": 94.54228210449219,
+                "width": 37.39685821533203,
+                "height": 8.061843872070312
+              },
+              "column": 0
+            },
+            {
+              "text": ": Airtel Business-Domestic",
+              "bbox": {
+                "x": 99.14903259277344,
+                "y": 93.96641540527344,
+                "width": 71.84944152832031,
+                "height": 8.061843872070312
+              },
+              "column": 1
+            },
+            {
+              "text": "Days worked",
+              "bbox": {
+                "x": 205.21261596679688,
+                "y": 94.54228210449219,
+                "width": 41.6995849609375,
+                "height": 8.061843872070312
+              },
+              "column": 5
+            },
+            {
+              "text": ": 28.00",
+              "bbox": {
+                "x": 278.237060546875,
+                "y": 93.96641540527344,
+                "width": 21.54931640625,
+                "height": 8.061843872070312
+              },
+              "column": 9
+            },
+            {
+              "text": "UAN",
+              "bbox": {
+                "x": 408.4862060546875,
+                "y": 94.54228210449219,
+                "width": 13.8052978515625,
+                "height": 8.061843872070312
+              },
+              "column": 13
+            },
+            {
+              "text": ": 101688397492",
+              "bbox": {
+                "x": 459.6285095214844,
+                "y": 93.96641540527344,
+                "width": 47.46234130859375,
+                "height": 8.061843872070312
+              },
+              "column": 15
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Designation",
+              "bbox": {
+                "x": 48.58257293701172,
+                "y": 102.60411071777344,
+                "width": 37.668663024902344,
+                "height": 8.061843872070312
+              },
+              "column": 0
+            },
+            {
+              "text": ": DeputyManager",
+              "bbox": {
+                "x": 99.14903259277344,
+                "y": 102.02824401855469,
+                "width": 51.15525817871094,
+                "height": 8.061843872070312
+              },
+              "column": 1
+            },
+            {
+              "text": "Date ofJoining",
+              "bbox": {
+                "x": 205.21261596679688,
+                "y": 102.60411071777344,
+                "width": 46.8822021484375,
+                "height": 8.061843872070312
+              },
+              "column": 5
+            },
+            {
+              "text": ": 01/12/2022",
+              "bbox": {
+                "x": 278.237060546875,
+                "y": 102.02824401855469,
+                "width": 37.097137451171875,
+                "height": 8.061843872070312
+              },
+              "column": 9
+            },
+            {
+              "text": "PAN",
+              "bbox": {
+                "x": 408.4862060546875,
+                "y": 102.60411071777344,
+                "width": 13.8052978515625,
+                "height": 8.061843872070312
+              },
+              "column": 13
+            },
+            {
+              "text": ": BPOPV9284B",
+              "bbox": {
+                "x": 459.6285095214844,
+                "y": 102.02824401855469,
+                "width": 44.839874267578125,
+                "height": 8.061843872070312
+              },
+              "column": 15
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Band",
+              "bbox": {
+                "x": 48.58257293701172,
+                "y": 110.66593933105469,
+                "width": 15.786521911621094,
+                "height": 8.061843872070312
+              },
+              "column": 0
+            },
+            {
+              "text": ": A1",
+              "bbox": {
+                "x": 99.14903259277344,
+                "y": 110.09013366699219,
+                "width": 13.487457275390625,
+                "height": 8.061843872070312
+              },
+              "column": 1
+            },
+            {
+              "text": "TaxRegime",
+              "bbox": {
+                "x": 205.21261596679688,
+                "y": 110.66593933105469,
+                "width": 36.697784423828125,
+                "height": 8.061843872070312
+              },
+              "column": 5
+            },
+            {
+              "text": ": NewRegime",
+              "bbox": {
+                "x": 278.237060546875,
+                "y": 110.09013366699219,
+                "width": 40.552215576171875,
+                "height": 8.061843872070312
+              },
+              "column": 9
+            },
+            {
+              "text": "Bank A/Cno.",
+              "bbox": {
+                "x": 408.4862060546875,
+                "y": 110.66593933105469,
+                "width": 39.889129638671875,
+                "height": 8.061843872070312
+              },
+              "column": 13
+            },
+            {
+              "text": ": 920010071849708",
+              "bbox": {
+                "x": 459.6285095214844,
+                "y": 110.09013366699219,
+                "width": 57.827545166015625,
+                "height": 8.061843872070312
+              },
+              "column": 15
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Location",
+              "bbox": {
+                "x": 48.58257293701172,
+                "y": 118.72776794433594,
+                "width": 27.303443908691406,
+                "height": 8.061843872070312
+              },
+              "column": 0
+            },
+            {
+              "text": ": Ludhiana",
+              "bbox": {
+                "x": 99.14903259277344,
+                "y": 118.15196228027344,
+                "width": 31.914520263671875,
+                "height": 8.061843872070312
+              },
+              "column": 1
+            },
+            {
+              "text": "Bank Name.",
+              "bbox": {
+                "x": 408.4862060546875,
+                "y": 118.72776794433594,
+                "width": 37.0098876953125,
+                "height": 8.061843872070312
+              },
+              "column": 13
+            },
+            {
+              "text": ": AXISBANK",
+              "bbox": {
+                "x": 459.6285095214844,
+                "y": 118.15196228027344,
+                "width": 37.929718017578125,
+                "height": 8.061843872070312
+              },
+              "column": 15
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Gender",
+              "bbox": {
+                "x": 48.58257293701172,
+                "y": 126.78965759277344,
+                "width": 23.40381622314453,
+                "height": 8.061843872070312
+              },
+              "column": 0
+            },
+            {
+              "text": ": M",
+              "bbox": {
+                "x": 99.14903259277344,
+                "y": 126.21379089355469,
+                "width": 11.397064208984375,
+                "height": 8.061843872070312
+              },
+              "column": 1
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Current",
+              "bbox": {
+                "x": 229.9739990234375,
+                "y": 146.9442596435547,
+                "width": 24.728240966796875,
+                "height": 8.061843872070312
+              },
+              "column": 7
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Earnings",
+              "bbox": {
+                "x": 48.58257293701172,
+                "y": 155.00608825683594,
+                "width": 27.48426055908203,
+                "height": 8.061843872070312
+              },
+              "column": 0
+            },
+            {
+              "text": "MonthlyRate",
+              "bbox": {
+                "x": 167.78265380859375,
+                "y": 155.00608825683594,
+                "width": 40.72869873046875,
+                "height": 8.061843872070312
+              },
+              "column": 3
+            },
+            {
+              "text": "Month Arrears\\Adjustments",
+              "bbox": {
+                "x": 234.58074951171875,
+                "y": 155.00608825683594,
+                "width": 90.25146484375,
+                "height": 8.061843872070312
+              },
+              "column": 7
+            },
+            {
+              "text": "Total",
+              "bbox": {
+                "x": 354.356689453125,
+                "y": 155.00608825683594,
+                "width": 15.70361328125,
+                "height": 8.061843872070312
+              },
+              "column": 11
+            },
+            {
+              "text": "Deductions",
+              "bbox": {
+                "x": 374.51129150390625,
+                "y": 155.00608825683594,
+                "width": 35.546112060546875,
+                "height": 8.061843872070312
+              },
+              "column": 12
+            },
+            {
+              "text": "Total",
+              "bbox": {
+                "x": 530.5654907226562,
+                "y": 155.00608825683594,
+                "width": 15.70361328125,
+                "height": 8.061843872070312
+              },
+              "column": 18
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Basic",
+              "bbox": {
+                "x": 48.573577880859375,
+                "y": 163.64376831054688,
+                "width": 14.741722106933594,
+                "height": 7.485995292663574
+              },
+              "column": 0
+            },
+            {
+              "text": "21,066.67",
+              "bbox": {
+                "x": 179.19158935546875,
+                "y": 163.64376831054688,
+                "width": 27.88360595703125,
+                "height": 7.485995292663574
+              },
+              "column": 4
+            },
+            {
+              "text": "21,067.00",
+              "bbox": {
+                "x": 225.25924682617188,
+                "y": 163.64376831054688,
+                "width": 27.88360595703125,
+                "height": 7.485995292663574
+              },
+              "column": 6
+            },
+            {
+              "text": "21,067.00",
+              "bbox": {
+                "x": 342.15594482421875,
+                "y": 163.64376831054688,
+                "width": 27.88360595703125,
+                "height": 7.485995292663574
+              },
+              "column": 10
+            },
+            {
+              "text": "LabourWelfare",
+              "bbox": {
+                "x": 374.5022888183594,
+                "y": 163.64376831054688,
+                "width": 41.60491943359375,
+                "height": 7.485995292663574
+              },
+              "column": 12
+            },
+            {
+              "text": "5.00",
+              "bbox": {
+                "x": 533.91259765625,
+                "y": 163.64376831054688,
+                "width": 12.33575439453125,
+                "height": 7.485995292663574
+              },
+              "column": 18
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Hra",
+              "bbox": {
+                "x": 48.573577880859375,
+                "y": 171.12973022460938,
+                "width": 9.357563018798828,
+                "height": 7.485995292663574
+              },
+              "column": 0
+            },
+            {
+              "text": "10,533.33",
+              "bbox": {
+                "x": 179.19158935546875,
+                "y": 171.12973022460938,
+                "width": 27.88360595703125,
+                "height": 7.485995292663574
+              },
+              "column": 4
+            },
+            {
+              "text": "10,533.00",
+              "bbox": {
+                "x": 225.25924682617188,
+                "y": 171.12973022460938,
+                "width": 27.88360595703125,
+                "height": 7.485995292663574
+              },
+              "column": 6
+            },
+            {
+              "text": "10,533.00",
+              "bbox": {
+                "x": 342.15594482421875,
+                "y": 171.12973022460938,
+                "width": 27.88360595703125,
+                "height": 7.485995292663574
+              },
+              "column": 10
+            },
+            {
+              "text": "Professional Tax",
+              "bbox": {
+                "x": 374.5022888183594,
+                "y": 171.12973022460938,
+                "width": 44.685699462890625,
+                "height": 7.485995292663574
+              },
+              "column": 12
+            },
+            {
+              "text": "200.00",
+              "bbox": {
+                "x": 527.00244140625,
+                "y": 171.12973022460938,
+                "width": 19.24591064453125,
+                "height": 7.485995292663574
+              },
+              "column": 18
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "SpecialAllowance",
+              "bbox": {
+                "x": 48.573577880859375,
+                "y": 178.61575317382812,
+                "width": 50.24261474609375,
+                "height": 7.485995292663574
+              },
+              "column": 0
+            },
+            {
+              "text": "7,515.17",
+              "bbox": {
+                "x": 182.64666748046875,
+                "y": 178.61575317382812,
+                "width": 24.42852783203125,
+                "height": 7.485995292663574
+              },
+              "column": 4
+            },
+            {
+              "text": "7,515.00",
+              "bbox": {
+                "x": 228.71432495117188,
+                "y": 178.61575317382812,
+                "width": 24.42852783203125,
+                "height": 7.485995292663574
+              },
+              "column": 6
+            },
+            {
+              "text": "7,515.00",
+              "bbox": {
+                "x": 345.61102294921875,
+                "y": 178.61575317382812,
+                "width": 24.42852783203125,
+                "height": 7.485995292663574
+              },
+              "column": 10
+            },
+            {
+              "text": "Provident Fund-Employee",
+              "bbox": {
+                "x": 374.5022888183594,
+                "y": 178.61575317382812,
+                "width": 74.42813110351562,
+                "height": 7.485995292663574
+              },
+              "column": 12
+            },
+            {
+              "text": "1,800.00",
+              "bbox": {
+                "x": 521.81982421875,
+                "y": 178.61575317382812,
+                "width": 24.42852783203125,
+                "height": 7.485995292663574
+              },
+              "column": 17
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "MealAllowance",
+              "bbox": {
+                "x": 48.573577880859375,
+                "y": 186.10177612304688,
+                "width": 43.33245849609375,
+                "height": 7.485995292663574
+              },
+              "column": 0
+            },
+            {
+              "text": "2,200.00",
+              "bbox": {
+                "x": 228.71432495117188,
+                "y": 186.10177612304688,
+                "width": 24.42852783203125,
+                "height": 7.485995292663574
+              },
+              "column": 6
+            },
+            {
+              "text": "2,200.00",
+              "bbox": {
+                "x": 345.61102294921875,
+                "y": 186.10177612304688,
+                "width": 24.42852783203125,
+                "height": 7.485995292663574
+              },
+              "column": 10
+            },
+            {
+              "text": "VBF",
+              "bbox": {
+                "x": 374.5022888183594,
+                "y": 186.10177612304688,
+                "width": 12.126739501953125,
+                "height": 7.485995292663574
+              },
+              "column": 12
+            },
+            {
+              "text": "211.00",
+              "bbox": {
+                "x": 527.5783081054688,
+                "y": 186.10177612304688,
+                "width": 18.6700439453125,
+                "height": 7.485995292663574
+              },
+              "column": 18
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "SipPayout",
+              "bbox": {
+                "x": 48.573577880859375,
+                "y": 193.58773803710938,
+                "width": 29.966506958007812,
+                "height": 7.485995292663574
+              },
+              "column": 0
+            },
+            {
+              "text": "13,048.00",
+              "bbox": {
+                "x": 225.25924682617188,
+                "y": 193.58773803710938,
+                "width": 27.88360595703125,
+                "height": 7.485995292663574
+              },
+              "column": 6
+            },
+            {
+              "text": "13,048.00",
+              "bbox": {
+                "x": 342.15594482421875,
+                "y": 193.58773803710938,
+                "width": 27.88360595703125,
+                "height": 7.485995292663574
+              },
+              "column": 10
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Total",
+              "bbox": {
+                "x": 46.27919006347656,
+                "y": 202.80125427246094,
+                "width": 15.703601837158203,
+                "height": 8.061843872070312
+              },
+              "column": 0
+            },
+            {
+              "text": "Gross Earnings",
+              "bbox": {
+                "x": 274.88995361328125,
+                "y": 202.80125427246094,
+                "width": 48.79058837890625,
+                "height": 8.061843872070312
+              },
+              "column": 8
+            },
+            {
+              "text": "54,363.00",
+              "bbox": {
+                "x": 342.7318115234375,
+                "y": 202.80130004882812,
+                "width": 27.88360595703125,
+                "height": 7.485995292663574
+              },
+              "column": 10
+            },
+            {
+              "text": "Gross Deductions",
+              "bbox": {
+                "x": 438.43017578125,
+                "y": 202.80125427246094,
+                "width": 56.852386474609375,
+                "height": 8.061843872070312
+              },
+              "column": 14
+            },
+            {
+              "text": "2,216.00",
+              "bbox": {
+                "x": 521.81982421875,
+                "y": 202.80130004882812,
+                "width": 24.42852783203125,
+                "height": 7.485995292663574
+              },
+              "column": 17
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "NetSalaryPayable",
+              "bbox": {
+                "x": 48.58257293701172,
+                "y": 212.0148162841797,
+                "width": 56.852386474609375,
+                "height": 8.061843872070312
+              },
+              "column": 0
+            },
+            {
+              "text": ":52,147.00/-(FiftyTwoThousandOne HundredFourtySevenOnly)",
+              "bbox": {
+                "x": 165.9471435546875,
+                "y": 212.0148162841797,
+                "width": 203.92428588867188,
+                "height": 8.061843872070312
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "NetPayinSalaryAccount",
+              "bbox": {
+                "x": 48.58257293701172,
+                "y": 221.2283172607422,
+                "width": 78.8577651977539,
+                "height": 8.061843872070312
+              },
+              "column": 0
+            },
+            {
+              "text": ":49,647.00/-(FourtyNineThousandSixHundredFourtySevenOnly)",
+              "bbox": {
+                "x": 163.64376831054688,
+                "y": 221.2283172607422,
+                "width": 190.10397338867188,
+                "height": 8.061843872070312
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "NetPayinAirtelPayments Bank Account :2,500.00/-(TwoThousandFiveHundredOnly)",
+              "bbox": {
+                "x": 48.58257293701172,
+                "y": 229.8660125732422,
+                "width": 264.28009033203125,
+                "height": 8.061843872070312
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "ForHRassistance,PleaseraiseticketonHRActivconnectusingHiveWeborMobileApp",
+              "bbox": {
+                "x": 152.1268310546875,
+                "y": 259.234130859375,
+                "width": 290.7814025878906,
+                "height": 10.365234375
+              },
+              "column": 2
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Page -1/2",
+              "bbox": {
+                "x": 281.21527099609375,
+                "y": 280.54046630859375,
+                "width": 28.076019287109375,
+                "height": 6.91015625
+              },
+              "column": 9
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "SlipGeneratedonFeb25,2026",
+              "bbox": {
+                "x": 471.8202209472656,
+                "y": 294.9366149902344,
+                "width": 88.24844360351562,
+                "height": 7.485995292663574
+              },
+              "column": 16
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

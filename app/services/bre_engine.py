@@ -8,7 +8,7 @@ from app.constants.limits import MIN_SALARIED_MONTHLY_SALARY, TENANT_CIBIL_OVERL
 from app.core.exceptions import InvalidPayloadError
 from app.core.logging import logger, redact_pii
 
-# Bureau cells that represent a clean / on-time (0-day) status. The parser maps
+# Bureau cells that represent a clean / on-time (0-day) status. The parser maps work 
 # any of these to a 0 DPD value; every other cell must be numerically coercible.
 # Distinguishes "the caller did not tell us where they bank" (legacy flat
 # /evaluate payloads carry no such field — REL-501 cannot be judged, so it is

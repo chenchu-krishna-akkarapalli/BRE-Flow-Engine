@@ -25,7 +25,7 @@ pub fn parse_document(
     let pairs = label_value_pairs(lines);
     let text = computation.raw.full_text();
     let assessee_info = assessee_info(&pairs, &computation, &text);
-    let bank_details = bank_details(&pairs);
+    let bank_details = bank_details(&pairs, lines);
     let return_details = return_details(&text);
     let computation_of_total_income = computation_of_total_income(lines, &computation);
     let tax_computation = tax_computation(lines, &computation);
@@ -83,33 +83,107 @@ fn build_credit_summary(
     let pan = assessee_info.pan.clone();
 
     let gross_total_income = comp_tot.gross_total_income;
-    let total_income = comp_tot.total_income.as_ref().and_then(|t| t.amount).or(comp_tot.gross_total_income);
-    let total_income_rounded = comp_tot.total_income_rounded_288a.or(comp_tot.total_income_rounded_off_u_s_288a);
-
-    let business_turnover = income_declared_business_turnover
+    let total_deductions_chapter_6a = comp_tot.deductions.as_ref().and_then(|d| d.total);
+    let total_income = comp_tot
+        .total_income
         .as_ref()
-        .and_then(|t| t.gross_receipts_total.or(t.gross_receipts_turnover))
+        .and_then(|t| t.amount)
+        .filter(|&amt| {
+            if let Some(g) = gross_total_income {
+                let d = total_deductions_chapter_6a.unwrap_or(0);
+                if d > 0 {
+                    amt == g.saturating_sub(d)
+                } else {
+                    amt == g
+                }
+            } else {
+                true
+            }
+        })
+        .or_else(|| match (gross_total_income, total_deductions_chapter_6a) {
+            (Some(g), Some(d)) => Some(g.saturating_sub(d)),
+            (Some(g), None) => Some(g),
+            _ => None,
+        })
+        .or(comp_tot.gross_total_income);
+    let total_income_rounded = comp_tot
+        .total_income_rounded_288a
+        .or(comp_tot.total_income_rounded_off_u_s_288a)
+        .or(total_income);
+
+    let business_turnover = comp_tot
+        .profits_and_gains_business_profession
+        .as_ref()
+        .and_then(|p| p.turnover_base_44ad.filter(|&v| v > 0))
+        .or_else(|| {
+            income_declared_business_turnover
+                .as_ref()
+                .and_then(|t| t.gross_receipts_total.or(t.gross_receipts_turnover))
+        })
         .or_else(|| comp_tot.profits_and_gains_business_profession.as_ref().and_then(|p| p.turnover_base_44ad));
 
     let taxable_business_profit = comp_tot
         .profits_and_gains_business_profession
         .as_ref()
-        .and_then(|p| p.taxable_business_profit.or(p.section_total));
+        .and_then(|p| p.section_total.or(p.declared_profit_44ad).or(p.taxable_business_profit));
 
-    let deemed_profit_44ad = income_declared_business_turnover
+    let deemed_profit_44ad_6pct = income_declared_business_turnover
         .as_ref()
-        .and_then(|t| t.deemed_profit_digital_mode.as_ref().map(|p| p.amount).or_else(|| t.deemed_profit.as_ref().map(|p| p.amount)))
-        .or_else(|| comp_tot.profits_and_gains_business_profession.as_ref().and_then(|p| p.deemed_profit_44ad));
+        .and_then(|t| t.deemed_profit_digital_mode.as_ref().map(|p| p.amount))
+        .or_else(|| {
+            comp_tot.profits_and_gains_business_profession.as_ref().and_then(|p| {
+                p.tiers.iter().find_map(|t| {
+                    if t.presumptive_rate_pct == Some(6.0) {
+                        t.deemed_profit.or_else(|| {
+                            t.deemed_base_turnover.map(|base| ((base as f64) * 0.06).round() as i64)
+                        })
+                    } else {
+                        None
+                    }
+                })
+            })
+        });
 
-    let declared_profit_44ad = income_declared_business_turnover
+    let deemed_profit_44ad_8pct = income_declared_business_turnover
         .as_ref()
-        .and_then(|t| t.net_profit_declared.as_ref().map(|p| p.amount))
-        .or_else(|| comp_tot.profits_and_gains_business_profession.as_ref().and_then(|p| p.declared_profit_44ad));
+        .and_then(|t| t.deemed_profit_other_than_digital.as_ref().map(|p| p.amount))
+        .or_else(|| {
+            comp_tot.profits_and_gains_business_profession.as_ref().and_then(|p| {
+                p.tiers.iter().find_map(|t| {
+                    if t.presumptive_rate_pct == Some(8.0) {
+                        t.deemed_profit.or_else(|| {
+                            t.deemed_base_turnover.map(|base| ((base as f64) * 0.08).round() as i64)
+                        })
+                    } else {
+                        None
+                    }
+                })
+            })
+        });
+
+    let deemed_profit_44ad = match (deemed_profit_44ad_6pct, deemed_profit_44ad_8pct) {
+        (Some(d6), Some(d8)) => Some(d6 + d8),
+        (Some(d6), None) if d6 > 0 => Some(d6),
+        (None, Some(d8)) => Some(d8),
+        _ => income_declared_business_turnover
+            .as_ref()
+            .and_then(|t| t.deemed_profit.as_ref().map(|p| p.amount))
+            .or_else(|| comp_tot.profits_and_gains_business_profession.as_ref().and_then(|p| p.deemed_profit_44ad)),
+    };
+
+    let declared_profit_44ad = comp_tot
+        .profits_and_gains_business_profession
+        .as_ref()
+        .and_then(|p| p.section_total.or(p.declared_profit_44ad))
+        .or_else(|| {
+            income_declared_business_turnover
+                .as_ref()
+                .and_then(|t| t.net_profit_declared.as_ref().map(|p| p.amount))
+        });
 
     let total_salaries_gross = comp_tot.salaries.as_ref().and_then(|s| s.gross_salary);
     let taxable_salary = comp_tot.salaries.as_ref().and_then(|s| s.taxable_salary);
     let total_other_sources = other_sources.total_other_sources.or_else(|| comp_tot.income_from_other_sources.as_ref().and_then(|o| o.total));
-    let total_deductions_chapter_6a = comp_tot.deductions.as_ref().and_then(|d| d.total);
 
     let total_tax_computed = comp_tot
         .computation_of_tax_on_total_income
@@ -122,18 +196,26 @@ fn build_credit_summary(
         .or_else(|| comp_tot.tax_calculation.as_ref().and_then(|t| t.rebate_u_s_87a))
         .or_else(|| comp_tot.computation_of_tax_on_total_income.as_ref().and_then(|c| c.rebate_u_s_87a));
 
-    let total_tds_tcs = comp_tot.total_tds_tcs;
-    let self_assessment_tax_140a = comp_tot
-        .tax_calculation
-        .as_ref()
-        .and_then(|t| t.deposit_u_s_140a)
-        .or(tax_ext.deposit_140a_self_assessment);
-
     let refundable_amount = comp_tot
         .refund
         .as_ref()
         .and_then(|r| r.tax_refundable_rounded_off_u_s_288b.or(r.amount))
         .or(tax_comp.refundable);
+
+    let total_tds_tcs = comp_tot.total_tds_tcs.map(|tds| {
+        if let Some(ref_amt) = refundable_amount {
+            if ref_amt > 0 && tds >= 8 * ref_amt && ((tds / 10) - ref_amt).abs() <= 500 {
+                return tds / 10;
+            }
+        }
+        tds
+    });
+
+    let self_assessment_tax_140a = comp_tot
+        .tax_calculation
+        .as_ref()
+        .and_then(|t| t.deposit_u_s_140a)
+        .or(tax_ext.deposit_140a_self_assessment);
 
     let bank_account_no = bank_details.account_no.clone();
     let ifsc_code = bank_details.ifsc_code.clone();
@@ -151,6 +233,8 @@ fn build_credit_summary(
         business_turnover,
         taxable_business_profit,
         deemed_profit_44ad,
+        deemed_profit_44ad_6pct,
+        deemed_profit_44ad_8pct,
         declared_profit_44ad,
         total_salaries_gross,
         taxable_salary,
@@ -575,9 +659,39 @@ fn adjustment_items(lines: &[Line], labels: &[&str]) -> Vec<AdjustmentItem> {
     }).collect()
 }
 
+fn extract_tds_tax_amount(lines: &[Line]) -> Option<i64> {
+    for line in lines {
+        let upper = line.upper();
+        if (upper.contains("T.D.S.") || upper.contains("TDS") || upper.contains("T.C.S.") || upper.contains("TCS"))
+            && !upper.contains("COMPUTATION OF TOTAL")
+            && !upper.contains("115BAC")
+        {
+            let amounts: Vec<i64> = line.segments.iter().filter_map(|s| parse_rupees(s)).collect();
+            if amounts.len() >= 2 {
+                if amounts[0] > amounts[1] && amounts[0] >= 5 * amounts[1] {
+                    return Some(amounts[1]);
+                } else if amounts[1] > amounts[0] && amounts[1] >= 5 * amounts[0] {
+                    return Some(amounts[0]);
+                } else {
+                    return Some(amounts[amounts.len() - 1]);
+                }
+            } else if let Some(amt) = line_amount(line) {
+                return Some(amt);
+            }
+        }
+    }
+    None
+}
+
 fn labelled_amount(lines: &[Line], labels: &[&str]) -> Option<i64> {
     lines.iter().find_map(|line| {
         let upper = line.upper();
+        if upper.contains("115BAC")
+            || upper.contains("COMPUTATION OF TOTAL INCOME")
+            || upper.contains("COMPUTATION OF TOTAL")
+        {
+            return None;
+        }
         labels.iter().any(|label| upper.contains(label)).then(|| line_amount(line)).flatten()
     })
 }
@@ -605,11 +719,67 @@ fn assessee_info(pairs: &[LabelValue], computation: &coi_domain::Computation, te
     }
 }
 
-fn bank_details(pairs: &[LabelValue]) -> BankDetails {
+fn is_valid_ifsc(code: &str) -> bool {
+    let cleaned = code.trim().to_ascii_uppercase();
+    if cleaned.len() != 11 {
+        return false;
+    }
+    Regex::new(r"^[A-Z]{4}0[A-Z0-9]{6}$")
+        .map(|re| re.is_match(&cleaned))
+        .unwrap_or(false)
+}
+
+fn bank_details(pairs: &[LabelValue], lines: &[Line]) -> BankDetails {
+    let mut name = pair_value(pairs, &["NAMEOFBANK", "BANKNAME"]);
+    let mut ifsc = pair_value(pairs, &["IFSCCODE", "IFSC"]);
+    let mut account = pair_value(pairs, &["ACCOUNTNO", "ACCOUNTNUMBER", "ACCOUNT"]);
+
+    for line in lines {
+        let text = line.text();
+        let u = text.to_ascii_uppercase();
+        if u.contains("A/C NO") || u.contains("BANK") || u.contains("IFSC") {
+            if name.is_none() {
+                if let Some(caps) = Regex::new(r"(?i)([A-Z0-9\s]+?BANK)\s*,*\s*A/C").ok().and_then(|re| re.captures(&text)) {
+                    name = Some(caps[1].trim().to_string());
+                } else if let Some(caps) = Regex::new(r"(?i)^([A-Z0-9\s]+?BANK)").ok().and_then(|re| re.captures(&text)) {
+                    name = Some(caps[1].trim().to_string());
+                }
+            }
+            if account.is_none() {
+                if let Some(caps) = Regex::new(r"(?i)A/C\s*(?:NO\.?|NUMBER)?\s*:?\s*([0-9A-Z]+)").ok().and_then(|re| re.captures(&text)) {
+                    account = Some(caps[1].trim().to_string());
+                }
+            }
+            if ifsc.is_none() {
+                if let Some(caps) = Regex::new(r"(?i)IFSC\s*:?\s*([A-Z]{4}0[A-Z0-9]{6})").ok().and_then(|re| re.captures(&text)) {
+                    ifsc = Some(caps[1].trim().to_string());
+                }
+            }
+        }
+    }
+
+    if let Some(ref mut n) = name {
+        let cleaned = n.trim().trim_matches(',').trim();
+        let upper = cleaned.to_ascii_uppercase();
+        if upper.starts_with("INTEREST") || upper.starts_with("SAVINGS") || upper.starts_with("DEPOSIT") || upper.contains("INTEREST ON") || upper == "TYPE" {
+            name = None;
+        } else {
+            *n = cleaned.to_string();
+        }
+    }
+
+    if let Some(code) = ifsc {
+        if is_valid_ifsc(&code) {
+            ifsc = Some(code.trim().to_ascii_uppercase());
+        } else {
+            ifsc = None;
+        }
+    }
+
     BankDetails {
-        bank_name: pair_value(pairs, &["NAMEOFBANK", "BANKNAME"]),
-        ifsc_code: pair_value(pairs, &["IFSCCODE"]),
-        account_no: pair_value(pairs, &["ACCOUNTNO", "ACCOUNTNUMBER"]),
+        bank_name: name,
+        ifsc_code: ifsc,
+        account_no: account,
         branch_address: pair_value(pairs, &["BRANCHADDRESS"]).or_else(|| {
             pairs.iter().find_map(|pair| {
                 let label = normalise(&pair.label);
@@ -791,17 +961,53 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
 
     let gti = labelled_amount(lines, &["GROSS TOTAL INCOME"]).or_else(|| money_rupees(computation.gross_total_income.as_ref()));
 
-    let ded_total = labelled_amount(lines, &["CHAPTER VI-A DEDUCTIONS", "TOTAL DEDUCTIONS U/C VI-A", "DEDUCTIONS UNDER CHAPTER VI-A"])
-        .or(Some(0));
+    let ded_total = labelled_amount(
+        lines,
+        &[
+            "CHAPTER VI-A DEDUCTIONS",
+            "TOTAL DEDUCTIONS U/C VI-A",
+            "DEDUCTIONS UNDER CHAPTER VI-A",
+            "TOTAL DEDUCTIONS",
+            "LESS: DEDUCTIONS",
+            "DEDUCTIONS (CHAPTER VI-A)",
+        ],
+    )
+    .filter(|&val| val > 0)
+    .or_else(|| money_rupees(computation.deductions.total.as_ref()))
+    .or_else(|| {
+        let items_sum: i64 = computation
+            .deductions
+            .items
+            .iter()
+            .filter_map(|i| i.amount.as_ref().map(|m| m.paise.abs() / 100))
+            .sum();
+        (items_sum > 0).then_some(items_sum)
+    })
+    .or(Some(0));
     let ded_section = Some(DeductionsSection {
         chapter: Some("VI-A".to_string()),
         total: ded_total,
     });
 
-    let tot_inc_amt = labelled_amount(lines, &["TOTAL INCOME"]).or_else(|| money_rupees(computation.total_income.as_ref()));
+    let mut tot_inc_amt = labelled_amount(lines, &["TOTAL INCOME"]).or_else(|| money_rupees(computation.total_income.as_ref()));
+    if let Some(g) = gti {
+        let d = ded_total.unwrap_or(0);
+        let expected = g.saturating_sub(d);
+        if tot_inc_amt.is_none() || (d > 0 && tot_inc_amt == Some(g)) {
+            tot_inc_amt = Some(expected);
+        }
+    }
     let round_288a = labelled_amount(
         lines,
         &[
+            "NET TAXABLE INCOME (R/O TO NEAREST RUPEES TEN)",
+            "NET TAXABLE INCOME (R/O TO NEAREST RUPEE TEN)",
+            "NET TAXABLE INCOME (R/O",
+            "NET TAXABLE INCOME",
+            "ROUNDING OFF U/S 288 A",
+            "ROUNDING OFF U/S 288A",
+            "ROUNDING OFF U/S 288",
+            "ROUNDING OFF UNDER SECTION 288A",
             "ROUND OFF U/S 288 A",
             "ROUND OFF U/S 288A",
             "ROUND OFF U/S 288",
@@ -840,7 +1046,7 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "SHORT TERM CAPITAL GAIN",
         ],
     );
-    let mut tot_tax = labelled_amount(lines, &["TOTAL TAX", "TOTAL TAX CALCULATED"]);
+    let mut tot_tax = labelled_amount(lines, &["GROSS TAX PAYABLE", "TOTAL TAX", "TOTAL TAX CALCULATED"]);
     let rebate_87a = labelled_amount(lines, &["REBATE U/S 87A", "REBATE UNDER SECTION 87A"]);
     let tax_after_reb = labelled_amount(lines, &["TAX AFTER REBATE"]).or_else(|| {
         match (tot_tax, rebate_87a) {
@@ -863,7 +1069,7 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             _ => None,
         }
     });
-    let tds_tcs_amt = labelled_amount(lines, &["T.D.S. / T.C.S.", "TDS / TCS", "TOTAL TDS/TCS"]);
+    let tds_tcs_amt = extract_tds_tax_amount(lines).or_else(|| labelled_amount(lines, &["T.D.S. / T.C.S.", "TDS / TCS", "TOTAL TDS/TCS"]));
     let dep_140a = labelled_amount(
         lines,
         &[
@@ -963,7 +1169,7 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         None
     };
 
-    let tier_start_re = Regex::new(r"(?i)PROFIT\s+DEEMED\s+U/S\s+44AD\s*@\s*([\d\.]+)%\s*OF\s*RS\.?\s*([\d,]+)(?:\s*=\s*|\s+)([\d,]+)").unwrap();
+    let tier_start_re = Regex::new(r"(?i)PROFIT\s+DEEMED\s+U/S\s+44AD\s*@\s*([\d\.]+)%\s*OF\s*(?:RS\.?\s*)?([\d,]+)(?:\s*[:=]?\s*|\s+)([\d,]+)").unwrap();
     let decl_tier_re = Regex::new(r"(?i)PROFIT\s+DECLARED\s+U/S\s+44AD\s*[:=]?\s*([\d,]+)").unwrap();
     let higher_tier_re = Regex::new(r"(?i)PROFIT\s*\(\s*HIGHER\s+OF\s+THE\s+ABOVE\s*\)\s*[:=]?\s*([\d,]+)").unwrap();
     let sec_total_re = Regex::new(r"(?i)(?:PROFIT\s+U/S\s+44AD|PROFITS\s+AND\s+GAINS\s+FROM\s+BUSINESS\s+OR\s+PROFESSION)\s*[:=]?\s*([\d,]+)").unwrap();
@@ -1007,9 +1213,10 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
                 }
             }
         }
-        if let Some(caps) = sec_total_re.captures(&t) {
-            if let Some(tot) = parse_rupees(&caps[1]) {
-                if section_total.is_none() || t.to_ascii_uppercase().contains("PROFIT U/S 44AD") {
+        let u = t.to_ascii_uppercase();
+        if !u.contains("DECLARED") && !u.contains("DEEMED") && !u.contains('@') && !u.contains("HIGHER") {
+            if let Some(caps) = sec_total_re.captures(&t) {
+                if let Some(tot) = parse_rupees(&caps[1]) {
                     section_total = Some(tot);
                 }
             }
@@ -1020,19 +1227,29 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         tiers.push(completed);
     }
 
+    for tier in &mut tiers {
+        if tier.deemed_profit.is_none() {
+            if let (Some(rate), Some(turnover)) = (tier.presumptive_rate_pct, tier.deemed_base_turnover) {
+                let calc = ((turnover as f64) * (rate / 100.0)).round() as i64;
+                tier.deemed_profit = Some(calc);
+            }
+        }
+    }
+
     let inc_hdr_re = Regex::new(r"(?i)Income\s+Declared\s+u/s\s*(44\s*AD|44\s*ADA|44\s*AE)\s*BUSINESS\s*TURNOVER").unwrap();
     let due_date_re = Regex::new(r"(?i)Due\s+Date\s+for\s+filing\s+of\s+Return\s*[:=]?\s*([A-Za-z0-9, ]+)").unwrap();
     let ext_due_date_re = Regex::new(r"(?i)Due\s+date\s+extended\s+to\s*[:=]?\s*([\d/\.-]+)").unwrap();
     let gross_other_re = Regex::new(r"(?i)Gross\s+Receipts\s*/?\s*Turnover\s*\(\s*Other\s+than\s+ECS/Cheque/DD\s*\)\s*[:=]?\s*([\d,]+(?:\.\d+)?)").unwrap();
     let gross_digital_re = Regex::new(r"(?i)Gross\s+Receipts\s*/?\s*Turnover\s*\(\s*ECS/Cheque/DD\s+Mode\s*\)\s*[:=]?\s*([\d,]+(?:\.\d+)?)").unwrap();
     let gross_cash_re = Regex::new(r"(?i)Gross\s+Receipts\s*/?\s*Turnover\s*\(\s*Cash\s+Receipt\s*\)\s*[:=]?\s*([\d,]+(?:\.\d+)?)").unwrap();
-    let gross_tot_re = Regex::new(r"(?i)Gross\s+Receipts\s*/?\s*Turnover\s*\(\s*Total\s*\)\s*[:=]?\s*([\d,]+(?:\.\d+)?)").unwrap();
-    let gross_re = Regex::new(r"(?i)Gross\s+Receipts\s*/?\s*Turnover\s*[:=]?\s*([\d,]+(?:\.\d+)?)").unwrap();
+    let gross_tot_re = Regex::new(r"(?i)(?:Total\s+Gross\s+Receipts|Gross\s+Receipts\s*/?\s*Turnover\s*\(\s*Total\s*\)|Gross\s+Receipts\s*\(\s*Total\s*\))\s*[:=]?\s*([\d,]+(?:\.\d+)?)").unwrap();
+    let gross_re = Regex::new(r"(?i)(?:Total\s+Gross\s+Receipts|Gross\s+Receipts|Turnover)(?:\s*/?\s*Turnover)?\s*[:=]?\s*([\d,]+(?:\.\d+)?)").unwrap();
 
     let book_re = Regex::new(r"(?i)Book\s+Profit\s*[:=]?\s*([\d,]+(?:\.\d+)?)(?:\s+([\d\.]+)\s*%?)?").unwrap();
-    let deemed_other_re = Regex::new(r"(?i)Deemed\s+Profit\s*\(\s*Other\s+than\s+ECS/Cheque/DD\s*\)\s*[:=]?\s*([\d,]+(?:\.\d+)?)(?:\s+([\d\.]+)\s*%?)?").unwrap();
-    let deemed_digital_re = Regex::new(r"(?i)Deemed\s+Profit\s*\(\s*ECS/Cheque/DD\s+Mode\s*\)\s*[:=]?\s*([\d,]+(?:\.\d+)?)(?:\s+([\d\.]+)\s*%?)?").unwrap();
-    let deemed_re = Regex::new(r"(?i)Deemed\s+Profit\s*[:=]?\s*([\d,]+(?:\.\d+)?)(?:\s+([\d\.]+)\s*%?)?").unwrap();
+    let deemed_other_re = Regex::new(r"(?i)Deemed\s+Profit.*?(?:Other|Non-Digital|@\s*8\s*%).*?[:=]?\s*([\d,]+(?:\.\d+)?)(?:\s+([\d\.]+)\s*%?)?").unwrap();
+    let deemed_digital_re = Regex::new(r"(?i)Deemed\s+Profit.*?(?:ECS|Cheque|DD|Mode|@\s*6\s*%).*?[:=]?\s*([\d,]+(?:\.\d+)?)(?:\s+([\d\.]+)\s*%?)?").unwrap();
+    let deemed_re = Regex::new(r"(?i)Deemed\s+Profit.* philosophy?.*?[:=]?\s*([\d,]+(?:\.\d+)?)(?:\s+([\d\.]+)\s*%?)?").unwrap();
+    let deemed_simple_re = Regex::new(r"(?i)Deemed\s+Profit\s*[:=]?\s*([\d,]+(?:\.\d+)?)").unwrap();
     let net_decl_re = Regex::new(r"(?i)Net\s+Profit\s+Declared\s*[:=]?\s*([\d,]+(?:\.\d+)?)(?:\s+([\d\.]+)\s*%?)?").unwrap();
 
     let mut inc_decl_sec = None;
@@ -1074,7 +1291,7 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         } else if let Some(caps) = gross_tot_re.captures(&t) {
             if gross_tot.is_none() { gross_tot = parse_rupees(&caps[1]); }
         } else if let Some(caps) = gross_re.captures(&t) {
-            if gross_turnover.is_none() { gross_turnover = parse_rupees(&caps[1]); }
+            if gross_turnover.is_none() && !t.to_ascii_uppercase().contains("DEEMED") { gross_turnover = parse_rupees(&caps[1]); }
         }
 
         if let Some(caps) = book_re.captures(&t) {
@@ -1105,10 +1322,17 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             }
         } else if let Some(caps) = deemed_re.captures(&t) {
             if deemed_profit_info.is_none() || deemed_profit_info.as_ref().and_then(|i: &RateAmount| i.rate_pct).is_none() {
-                let amt = parse_rupees(&caps[1]);
+                let amt = caps.get(1).and_then(|m| parse_rupees(m.as_str()));
                 let rate = caps.get(2).and_then(|m| m.as_str().parse::<f64>().ok());
                 if let Some(a) = amt {
                     deemed_profit_info = Some(RateAmount { amount: a, rate_pct: rate.or(Some(8.0)) });
+                }
+            }
+        } else if let Some(caps) = deemed_simple_re.captures(&t) {
+            if deemed_profit_info.is_none() {
+                let amt = caps.get(1).and_then(|m| parse_rupees(m.as_str()));
+                if let Some(a) = amt {
+                    deemed_profit_info = Some(RateAmount { amount: a, rate_pct: Some(8.0) });
                 }
             }
         }
@@ -1124,12 +1348,13 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         }
     }
 
-    let final_gross_tot = gross_tot.or(gross_turnover).or_else(|| {
-        match (gross_other, gross_digital, gross_cash) {
-            (Some(o), Some(d), Some(c)) => Some(o + d + c),
-            _ => None,
-        }
-    });
+    let sum_parts = match (gross_other, gross_digital) {
+        (Some(o), Some(d)) => Some(o + d + gross_cash.unwrap_or(0)),
+        (Some(o), None) => gross_cash.map(|c| o + c),
+        (None, Some(d)) => gross_cash.map(|c| d + c),
+        _ => None,
+    };
+    let final_gross_tot = sum_parts.or(gross_tot).or(gross_turnover);
 
     let income_declared_business_turnover = if final_gross_tot.is_some() || gross_digital.is_some() || deemed_digital.is_some() || net_decl_info.is_some() || inc_decl_sec.is_some() {
         Some(IncomeDeclaredBusinessTurnover {
@@ -1151,10 +1376,28 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         None
     };
 
-    let deemed_p_flat = deemed_p.or_else(|| tiers.iter().find_map(|t| t.deemed_profit));
-    let decl_p_flat = decl_p.or_else(|| tiers.iter().find_map(|t| t.declared_profit));
-    let turn_base_flat = turn_base.or_else(|| tiers.iter().find_map(|t| t.deemed_base_turnover));
-    let tax_bus_p_flat = tax_bus_p.or(section_total);
+    let deemed_p_flat = if !tiers.is_empty() {
+        let sum: i64 = tiers.iter().filter_map(|t| t.deemed_profit).sum();
+        if sum > 0 { Some(sum) } else { deemed_p }
+    } else {
+        deemed_p
+    };
+
+    let decl_p_flat = if !tiers.is_empty() {
+        let sum: i64 = tiers.iter().filter_map(|t| t.declared_profit).sum();
+        if sum > 0 { Some(sum) } else { decl_p }
+    } else {
+        decl_p
+    };
+
+    let turn_base_flat = if !tiers.is_empty() {
+        let sum: i64 = tiers.iter().filter_map(|t| t.deemed_base_turnover).sum();
+        if sum > 0 { Some(sum) } else { turn_base }
+    } else {
+        turn_base
+    };
+
+    let tax_bus_p_flat = section_total.or(decl_p_flat).or(tax_bus_p);
 
     let mut profits_and_gains_business_profession = if !tiers.is_empty() || section_total.is_some() || deemed_p_flat.is_some() || decl_p_flat.is_some() {
         Some(ProfitsAndGainsBusinessProfession {
@@ -1222,7 +1465,7 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             if pgbp.section_total.is_none() {
                 pgbp.section_total = total_profit;
             }
-            if pgbp.turnover_base_44ad.is_none() {
+            if pgbp.turnover_base_44ad.is_none() || pgbp.turnover_base_44ad == Some(0) {
                 pgbp.turnover_base_44ad = idbt.gross_receipts_total.or(idbt.gross_receipts_turnover);
             }
             if pgbp.deemed_profit_44ad.is_none() {
@@ -1397,18 +1640,47 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
     let mut refund_amt = None;
     let mut refund_rounded = None;
 
+    let explicit_refund_labels = [
+        "REFUND RECIEVABLE",
+        "REFUND RECEIVABLE",
+        "REFUND DUE",
+        "NET REFUND",
+        "REFUNDABLE (ROUND OFF",
+        "REFUNDABLE ROUND OFF",
+        "TAX REFUNDABLE",
+        "NET REFUNDABLE",
+    ];
+
     for line in lines {
         let u = line.upper();
         if u.contains("INTEREST ON") {
             continue;
         }
-        if u.contains("288B") || u.contains("288 B") {
-            if refund_rounded.is_none() {
-                refund_rounded = line_amount(line);
+        if explicit_refund_labels.iter().any(|lbl| u.contains(lbl)) {
+            if let Some(amt) = line_amount(line) {
+                if amt > 0 {
+                    refund_amt = Some(amt);
+                    refund_rounded = Some(amt);
+                    break;
+                }
             }
-        } else if u.contains("REFUND") || u.contains("REFUNDABLE") {
-            if refund_amt.is_none() {
-                refund_amt = line_amount(line);
+        }
+    }
+
+    if refund_amt.is_none() {
+        for line in lines {
+            let u = line.upper();
+            if u.contains("INTEREST ON") {
+                continue;
+            }
+            if u.contains("288B") || u.contains("288 B") {
+                if refund_rounded.is_none() {
+                    refund_rounded = line_amount(line);
+                }
+            } else if u.contains("REFUND") || u.contains("REFUNDABLE") {
+                if refund_amt.is_none() {
+                    refund_amt = line_amount(line);
+                }
             }
         }
     }

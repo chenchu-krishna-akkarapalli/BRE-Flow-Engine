@@ -1,0 +1,2023 @@
+{
+  "schema_version": "2.0",
+  "metadata": {
+    "source_file": "dec 25 salary slip.pdf",
+    "page_count": 1,
+    "layout_signature": "generic-payslip",
+    "detected_locale": "IN",
+    "currency": "INR",
+    "extraction_confidence_overall": 0.95
+  },
+  "employer": {
+    "name": "Randstad India Private Limited",
+    "address": "Deputed at PVH ARVIND FASHION PVT LTD (BRAND TOMMY HILFI",
+    "business_unit": null
+  },
+  "employee": {
+    "name": "Jaspal Singh",
+    "employee_id": null,
+    "designation": "Store Manager",
+    "department": null,
+    "date_of_joining": null,
+    "pan": null,
+    "uan": "100721734349",
+    "pf_number": "TNMAS00357910002718655",
+    "esi_number": null,
+    "bank_account": null,
+    "bank_name": "AXIS BANK",
+    "ifsc_or_routing_code": null
+  },
+  "statements": [
+    {
+      "period": {
+        "period_type": "monthly",
+        "month": "December",
+        "year": 2025,
+        "financial_year": null,
+        "from_date": null,
+        "to_date": null,
+        "days_in_month": null,
+        "working_days": null,
+        "paid_days": null,
+        "lop_days": 0.0,
+        "arrear_days": null
+      },
+      "earnings": {
+        "items": [
+          {
+            "raw_label": "Basic",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 22000.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "22000.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 22000.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "22000.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "HRA",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 8800.0,
+              "currency": "INR",
+              "raw_label": "HRA",
+              "raw_value_string": "8800.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 8800.0,
+              "currency": "INR",
+              "raw_label": "HRA",
+              "raw_value_string": "8800.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "TelephoneAllow",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 3000.0,
+              "currency": "INR",
+              "raw_label": "TelephoneAllow",
+              "raw_value_string": "3000.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 3000.0,
+              "currency": "INR",
+              "raw_label": "TelephoneAllow",
+              "raw_value_string": "3000.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "OtherAllowance",
+            "canonical_category": "overtime",
+            "amount": {
+              "value": 12607.0,
+              "currency": "INR",
+              "raw_label": "OtherAllowance",
+              "raw_value_string": "12607.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 12607.0,
+              "currency": "INR",
+              "raw_label": "OtherAllowance",
+              "raw_value_string": "12607.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "LTA",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 1834.0,
+              "currency": "INR",
+              "raw_label": "LTA",
+              "raw_value_string": "1834.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1834.0,
+              "currency": "INR",
+              "raw_label": "LTA",
+              "raw_value_string": "1834.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "DepCompAllow",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 10199.0,
+              "currency": "INR",
+              "raw_label": "DepCompAllow",
+              "raw_value_string": "10199.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 10199.0,
+              "currency": "INR",
+              "raw_label": "DepCompAllow",
+              "raw_value_string": "10199.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "VehicleReimb",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 2400.0,
+              "currency": "INR",
+              "raw_label": "VehicleReimb",
+              "raw_value_string": "2400.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2400.0,
+              "currency": "INR",
+              "raw_label": "VehicleReimb",
+              "raw_value_string": "2400.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "deductions": {
+        "items": [
+          {
+            "raw_label": "PF",
+            "canonical_category": "provident_fund",
+            "amount": {
+              "value": 2640.0,
+              "currency": "INR",
+              "raw_label": "PF",
+              "raw_value_string": "2640.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2640.0,
+              "currency": "INR",
+              "raw_label": "PF",
+              "raw_value_string": "2640.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "PT",
+            "canonical_category": "professional_tax",
+            "amount": {
+              "value": 200.0,
+              "currency": "INR",
+              "raw_label": "PT",
+              "raw_value_string": "200.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 200.0,
+              "currency": "INR",
+              "raw_label": "PT",
+              "raw_value_string": "200.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "LWF",
+            "canonical_category": "labour_welfare_fund",
+            "amount": {
+              "value": 5.0,
+              "currency": "INR",
+              "raw_label": "LWF",
+              "raw_value_string": "5.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 5.0,
+              "currency": "INR",
+              "raw_label": "LWF",
+              "raw_value_string": "5.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "summary": {
+        "gross_salary": {
+          "value": 60840.0,
+          "currency": "INR",
+          "raw_label": "GROSS PAY",
+          "raw_value_string": "60840.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "net_pay": {
+          "value": 57995.0,
+          "currency": "INR",
+          "raw_label": "NET PAY",
+          "raw_value_string": "57995.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_deductions": {
+          "value": 2845.0,
+          "currency": "INR",
+          "raw_label": "TOTAL DEDUCTIONS",
+          "raw_value_string": "2845.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_allowances": {
+          "value": 38840.0,
+          "currency": "INR",
+          "raw_label": "total_allowances",
+          "raw_value_string": "38840.00",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
+        "total_incentives_and_bonus": null,
+        "amount_in_words": "Fifty Seven Thousand Nine Hundred And Ninety Five Rupees"
+      },
+      "reconciliation": {
+        "gross_minus_deductions_matches_net": true,
+        "delta_vs_stated_net": 0.0,
+        "sum_of_earning_items_matches_stated_gross": true,
+        "sum_of_deduction_items_matches_stated_total": true,
+        "flags": []
+      }
+    }
+  ],
+  "raw": {
+    "page_count": 1,
+    "lines": [
+      {
+        "page": 1,
+        "bbox": {
+          "x": 203.46009826660156,
+          "y": 19.82159423828125,
+          "width": 222.34373474121094,
+          "height": 16.0
+        },
+        "segments": [
+          "Randstad India Private Limited"
+        ],
+        "segment_boxes": [
+          {
+            "x": 203.46009826660156,
+            "y": 19.82159423828125,
+            "width": 222.34373474121094,
+            "height": 16.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 207.7801055908203,
+          "y": 35.6295166015625,
+          "width": 312.25604248046875,
+          "height": 9.82427978515625
+        },
+        "segments": [
+          "Deputed at",
+          "PVH ARVIND FASHION PVT LTD (BRAND TOMMY HILFI"
+        ],
+        "segment_boxes": [
+          {
+            "x": 207.7801055908203,
+            "y": 35.6295166015625,
+            "width": 47.70263671875,
+            "height": 9.75
+          },
+          {
+            "x": 268.64990234375,
+            "y": 35.70379638671875,
+            "width": 251.38623046875,
+            "height": 9.75
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 207.7801055908203,
+          "y": 46.19390869140625,
+          "width": 250.57810974121094,
+          "height": 14.0
+        },
+        "segments": [
+          "Payslip for the Month of December 2025"
+        ],
+        "segment_boxes": [
+          {
+            "x": 207.7801055908203,
+            "y": 46.19390869140625,
+            "width": 250.57810974121094,
+            "height": 14.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 32.400001525878906,
+          "y": 71.50750732421875,
+          "width": 455.53271484375,
+          "height": 11.19207763671875
+        },
+        "segments": [
+          "Employee Code",
+          "1423838",
+          "Designation",
+          "Store Manager"
+        ],
+        "segment_boxes": [
+          {
+            "x": 32.400001525878906,
+            "y": 72.9796142578125,
+            "width": 64.037109375,
+            "height": 9.0
+          },
+          {
+            "x": 122.4000015258789,
+            "y": 71.50750732421875,
+            "width": 35.03759002685547,
+            "height": 9.0
+          },
+          {
+            "x": 356.3999938964844,
+            "y": 73.6995849609375,
+            "width": 47.53125,
+            "height": 9.0
+          },
+          {
+            "x": 428.3999938964844,
+            "y": 72.22747802734375,
+            "width": 59.53271484375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 32.400001525878906,
+          "y": 89.50750732421875,
+          "width": 442.5029296875,
+          "height": 11.19207763671875
+        },
+        "segments": [
+          "Employee Name",
+          "Jaspal Singh",
+          "Location",
+          "AMRITSAR"
+        ],
+        "segment_boxes": [
+          {
+            "x": 32.400001525878906,
+            "y": 90.9796142578125,
+            "width": 66.52880859375,
+            "height": 9.0
+          },
+          {
+            "x": 122.4000015258789,
+            "y": 89.50750732421875,
+            "width": 51.53466033935547,
+            "height": 9.0
+          },
+          {
+            "x": 356.3999938964844,
+            "y": 91.6995849609375,
+            "width": 34.02685546875,
+            "height": 9.0
+          },
+          {
+            "x": 428.3999938964844,
+            "y": 90.22747802734375,
+            "width": 46.5029296875,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 32.400001525878906,
+          "y": 107.50750732421875,
+          "width": 446.0537109375,
+          "height": 11.19207763671875
+        },
+        "segments": [
+          "PF Number",
+          "TNMAS00357910002718655",
+          "ESIC Number",
+          "2613929053"
+        ],
+        "segment_boxes": [
+          {
+            "x": 32.400001525878906,
+            "y": 108.9796142578125,
+            "width": 46.0107421875,
+            "height": 9.0
+          },
+          {
+            "x": 122.4000015258789,
+            "y": 107.50750732421875,
+            "width": 116.59130096435547,
+            "height": 9.0
+          },
+          {
+            "x": 356.3999938964844,
+            "y": 109.6995849609375,
+            "width": 55.51611328125,
+            "height": 9.0
+          },
+          {
+            "x": 428.3999938964844,
+            "y": 108.22747802734375,
+            "width": 50.0537109375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 32.400001525878906,
+          "y": 125.5784912109375,
+          "width": 401.00537109375,
+          "height": 11.12109375
+        },
+        "segments": [
+          "Worked Days",
+          "31",
+          "LOP Days",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 32.400001525878906,
+            "y": 126.927978515625,
+            "width": 49.5120849609375,
+            "height": 8.25
+          },
+          {
+            "x": 122.4000015258789,
+            "y": 125.5784912109375,
+            "width": 9.176506042480469,
+            "height": 8.25
+          },
+          {
+            "x": 356.3999938964844,
+            "y": 127.6995849609375,
+            "width": 41.01416015625,
+            "height": 9.0
+          },
+          {
+            "x": 428.3999938964844,
+            "y": 126.22747802734375,
+            "width": 5.00537109375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 32.400001525878906,
+          "y": 143.5784912109375,
+          "width": 456.064453125,
+          "height": 11.28912353515625
+        },
+        "segments": [
+          "Date Of Join",
+          "16/12/19",
+          "EPF UAN",
+          "100721734349"
+        ],
+        "segment_boxes": [
+          {
+            "x": 32.400001525878906,
+            "y": 144.927978515625,
+            "width": 45.8543701171875,
+            "height": 8.25
+          },
+          {
+            "x": 122.4000015258789,
+            "y": 143.5784912109375,
+            "width": 32.11376190185547,
+            "height": 8.25
+          },
+          {
+            "x": 356.3999938964844,
+            "y": 145.86761474609375,
+            "width": 39.005859375,
+            "height": 9.0
+          },
+          {
+            "x": 428.3999938964844,
+            "y": 144.3953857421875,
+            "width": 60.064453125,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 21.600000381469727,
+          "y": 178.99957275390625,
+          "width": 346.8863525390625,
+          "height": 11.1600341796875
+        },
+        "segments": [
+          "Earnings",
+          "Actual",
+          "Earned",
+          "Deductions"
+        ],
+        "segment_boxes": [
+          {
+            "x": 21.600000381469727,
+            "y": 179.7196044921875,
+            "width": 35.52099609375,
+            "height": 9.0
+          },
+          {
+            "x": 194.706298828125,
+            "y": 181.15960693359375,
+            "width": 25.013671875,
+            "height": 9.0
+          },
+          {
+            "x": 262.698486328125,
+            "y": 181.15960693359375,
+            "width": 29.021484375,
+            "height": 9.0
+          },
+          {
+            "x": 323.4599914550781,
+            "y": 178.99957275390625,
+            "width": 45.0263671875,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 21.600000381469727,
+          "y": 200.0574951171875,
+          "width": 480.0,
+          "height": 10.67999267578125
+        },
+        "segments": [
+          "Basic",
+          "22000.00",
+          "22000.00",
+          "PF",
+          "2640.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 21.600000381469727,
+            "y": 201.7374267578125,
+            "width": 22.007810592651367,
+            "height": 9.0
+          },
+          {
+            "x": 182.18190002441406,
+            "y": 201.73748779296875,
+            "width": 37.5380859375,
+            "height": 9.0
+          },
+          {
+            "x": 254.18179321289062,
+            "y": 201.73748779296875,
+            "width": 37.5380859375,
+            "height": 9.0
+          },
+          {
+            "x": 323.4599914550781,
+            "y": 200.0574951171875,
+            "width": 11.50048828125,
+            "height": 9.0
+          },
+          {
+            "x": 469.0672912597656,
+            "y": 200.0574951171875,
+            "width": 32.53271484375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 21.600000381469727,
+          "y": 219.7374267578125,
+          "width": 479.99993896484375,
+          "height": 9.60009765625
+        },
+        "segments": [
+          "HRA",
+          "8800.00",
+          "8800.00",
+          "PT",
+          "200.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 21.600000381469727,
+            "y": 219.7374267578125,
+            "width": 19.001951217651367,
+            "height": 9.0
+          },
+          {
+            "x": 187.18719482421875,
+            "y": 219.73748779296875,
+            "width": 32.53271484375,
+            "height": 9.0
+          },
+          {
+            "x": 259.18719482421875,
+            "y": 219.73748779296875,
+            "width": 32.53271484375,
+            "height": 9.0
+          },
+          {
+            "x": 323.4599914550781,
+            "y": 220.3375244140625,
+            "width": 11.50048828125,
+            "height": 9.0
+          },
+          {
+            "x": 474.0726013183594,
+            "y": 220.3375244140625,
+            "width": 27.52734375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 21.600000381469727,
+          "y": 237.7374267578125,
+          "width": 480.0,
+          "height": 11.88006591796875
+        },
+        "segments": [
+          "TelephoneAllow",
+          "3000.00",
+          "3000.00",
+          "LWF",
+          "5.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 21.600000381469727,
+            "y": 237.7374267578125,
+            "width": 63.0439453125,
+            "height": 9.0
+          },
+          {
+            "x": 187.18719482421875,
+            "y": 237.73748779296875,
+            "width": 32.53271484375,
+            "height": 9.0
+          },
+          {
+            "x": 259.18719482421875,
+            "y": 237.73748779296875,
+            "width": 32.53271484375,
+            "height": 9.0
+          },
+          {
+            "x": 323.4599914550781,
+            "y": 240.61749267578125,
+            "width": 18.32958984375,
+            "height": 9.0
+          },
+          {
+            "x": 484.0834045410156,
+            "y": 240.61749267578125,
+            "width": 17.5166015625,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 21.600000381469727,
+          "y": 255.73748779296875,
+          "width": 270.119873046875,
+          "height": 9.0
+        },
+        "segments": [
+          "OtherAllowance",
+          "12607.00",
+          "12607.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 21.600000381469727,
+            "y": 255.73748779296875,
+            "width": 63.53173828125,
+            "height": 9.0
+          },
+          {
+            "x": 182.18190002441406,
+            "y": 255.73748779296875,
+            "width": 37.5380859375,
+            "height": 9.0
+          },
+          {
+            "x": 254.18179321289062,
+            "y": 255.73748779296875,
+            "width": 37.5380859375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 21.600000381469727,
+          "y": 273.73748779296875,
+          "width": 270.1199035644531,
+          "height": 9.0
+        },
+        "segments": [
+          "LTA",
+          "1834.00",
+          "1834.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 21.600000381469727,
+            "y": 273.73748779296875,
+            "width": 15.169919967651367,
+            "height": 9.0
+          },
+          {
+            "x": 187.18719482421875,
+            "y": 273.73748779296875,
+            "width": 32.53271484375,
+            "height": 9.0
+          },
+          {
+            "x": 259.18719482421875,
+            "y": 273.73748779296875,
+            "width": 32.53271484375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 21.600000381469727,
+          "y": 291.73748779296875,
+          "width": 270.119873046875,
+          "height": 9.0
+        },
+        "segments": [
+          "DepCompAllow",
+          "10199.00",
+          "10199.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 21.600000381469727,
+            "y": 291.73748779296875,
+            "width": 62.0244140625,
+            "height": 9.0
+          },
+          {
+            "x": 182.18190002441406,
+            "y": 291.73748779296875,
+            "width": 37.5380859375,
+            "height": 9.0
+          },
+          {
+            "x": 254.18179321289062,
+            "y": 291.73748779296875,
+            "width": 37.5380859375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 21.600000381469727,
+          "y": 309.73748779296875,
+          "width": 270.1199035644531,
+          "height": 9.0
+        },
+        "segments": [
+          "VehicleReimb",
+          "2400.00",
+          "2400.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 21.600000381469727,
+            "y": 309.73748779296875,
+            "width": 55.0283203125,
+            "height": 9.0
+          },
+          {
+            "x": 187.18719482421875,
+            "y": 309.73748779296875,
+            "width": 32.53271484375,
+            "height": 9.0
+          },
+          {
+            "x": 259.18719482421875,
+            "y": 309.73748779296875,
+            "width": 32.53271484375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 21.600000381469727,
+          "y": 387.9555969238281,
+          "width": 494.8500061035156,
+          "height": 9.0
+        },
+        "segments": [
+          "Total Earnings",
+          "60840.00",
+          "Total Deductions",
+          "2845.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 21.600000381469727,
+            "y": 387.9555969238281,
+            "width": 58.02978515625,
+            "height": 9.0
+          },
+          {
+            "x": 254.18429565429688,
+            "y": 387.9555969238281,
+            "width": 37.5380859375,
+            "height": 9.0
+          },
+          {
+            "x": 325.1700134277344,
+            "y": 387.9555969238281,
+            "width": 67.53515625,
+            "height": 9.0
+          },
+          {
+            "x": 483.91729736328125,
+            "y": 387.9555969238281,
+            "width": 32.53271484375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 25.40999984741211,
+          "y": 420.9555969238281,
+          "width": 135.427978515625,
+          "height": 10.44000244140625
+        },
+        "segments": [
+          "Net Pay",
+          "57995.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 25.40999984741211,
+            "y": 420.9555969238281,
+            "width": 32.01416015625,
+            "height": 9.0
+          },
+          {
+            "x": 123.29989624023438,
+            "y": 422.3955993652344,
+            "width": 37.5380859375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 25.40999984741211,
+          "y": 444.085693359375,
+          "width": 364.88885498046875,
+          "height": 9.801605224609375
+        },
+        "segments": [
+          "Amount In Words",
+          "Fifty Seven Thousand Nine Hundred And Ninety Five Rupees"
+        ],
+        "segment_boxes": [
+          {
+            "x": 25.40999984741211,
+            "y": 444.085693359375,
+            "width": 69.52587890625,
+            "height": 9.0
+          },
+          {
+            "x": 124.73989868164062,
+            "y": 444.1372985839844,
+            "width": 265.5589599609375,
+            "height": 9.75
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 25.40999984741211,
+          "y": 467.4834899902344,
+          "width": 487.5237121582031,
+          "height": 11.2738037109375
+        },
+        "segments": [
+          "Bank Name",
+          "AXIS BANK",
+          "PaymentMethod",
+          "Fund Transfer"
+        ],
+        "segment_boxes": [
+          {
+            "x": 25.40999984741211,
+            "y": 469.0072937011719,
+            "width": 50.939945220947266,
+            "height": 9.75
+          },
+          {
+            "x": 124.73989868164062,
+            "y": 467.4834899902344,
+            "width": 47.51806640625,
+            "height": 9.0
+          },
+          {
+            "x": 339.3599853515625,
+            "y": 469.0072937011719,
+            "width": 70.9969482421875,
+            "height": 9.75
+          },
+          {
+            "x": 456.9078063964844,
+            "y": 467.4834899902344,
+            "width": 56.025909423828125,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 25.40999984741211,
+          "y": 490.1335144042969,
+          "width": 477.534912109375,
+          "height": 11.273773193359375
+        },
+        "segments": [
+          "Account/Instrument Number",
+          "914010047760445",
+          "Paid Date",
+          "31-12-2025"
+        ],
+        "segment_boxes": [
+          {
+            "x": 25.40999984741211,
+            "y": 491.65728759765625,
+            "width": 121.3846435546875,
+            "height": 9.75
+          },
+          {
+            "x": 187.64999389648438,
+            "y": 490.1335144042969,
+            "width": 75.08056640625,
+            "height": 9.0
+          },
+          {
+            "x": 339.3599853515625,
+            "y": 491.65728759765625,
+            "width": 42.818115234375,
+            "height": 9.75
+          },
+          {
+            "x": 456.9078063964844,
+            "y": 490.1335144042969,
+            "width": 46.037109375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 158.39999389648438,
+          "y": 520.1386108398438,
+          "width": 285.2493591308594,
+          "height": 8.25
+        },
+        "segments": [
+          "This is computer generated payslip and does not require signature and stamp."
+        ],
+        "segment_boxes": [
+          {
+            "x": 158.39999389648438,
+            "y": 520.1386108398438,
+            "width": 285.2493591308594,
+            "height": 8.25
+          }
+        ]
+      }
+    ],
+    "table": {
+      "columns": [
+        [
+          21.600000381469727,
+          146.79464721679688
+        ],
+        [
+          32.400001525878906,
+          98.9288101196289
+        ],
+        [
+          122.4000015258789,
+          390.2988586425781
+        ],
+        [
+          158.39999389648438,
+          443.64935302734375
+        ],
+        [
+          182.18190002441406,
+          262.7305603027344
+        ],
+        [
+          194.706298828125,
+          219.719970703125
+        ],
+        [
+          203.46009826660156,
+          458.35821533203125
+        ],
+        [
+          254.18179321289062,
+          291.7223815917969
+        ],
+        [
+          262.698486328125,
+          520.0361328125
+        ],
+        [
+          323.4599914550781,
+          392.7051696777344
+        ],
+        [
+          339.3599853515625,
+          410.35693359375
+        ],
+        [
+          356.3999938964844,
+          411.9161071777344
+        ],
+        [
+          428.3999938964844,
+          488.4644470214844
+        ],
+        [
+          456.9078063964844,
+          512.9337158203125
+        ],
+        [
+          469.0672912597656,
+          501.6000061035156
+        ],
+        [
+          483.91729736328125,
+          516.4500122070312
+        ]
+      ],
+      "rows": [
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Randstad India Private Limited",
+              "bbox": {
+                "x": 203.46009826660156,
+                "y": 19.82159423828125,
+                "width": 222.34373474121094,
+                "height": 16.0
+              },
+              "column": 6
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Deputed at",
+              "bbox": {
+                "x": 207.7801055908203,
+                "y": 35.6295166015625,
+                "width": 47.70263671875,
+                "height": 9.75
+              },
+              "column": 6
+            },
+            {
+              "text": "PVH ARVIND FASHION PVT LTD (BRAND TOMMY HILFI",
+              "bbox": {
+                "x": 268.64990234375,
+                "y": 35.70379638671875,
+                "width": 251.38623046875,
+                "height": 9.75
+              },
+              "column": 8
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Payslip for the Month of December 2025",
+              "bbox": {
+                "x": 207.7801055908203,
+                "y": 46.19390869140625,
+                "width": 250.57810974121094,
+                "height": 14.0
+              },
+              "column": 6
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Employee Code",
+              "bbox": {
+                "x": 32.400001525878906,
+                "y": 72.9796142578125,
+                "width": 64.037109375,
+                "height": 9.0
+              },
+              "column": 1
+            },
+            {
+              "text": "1423838",
+              "bbox": {
+                "x": 122.4000015258789,
+                "y": 71.50750732421875,
+                "width": 35.03759002685547,
+                "height": 9.0
+              },
+              "column": 2
+            },
+            {
+              "text": "Designation",
+              "bbox": {
+                "x": 356.3999938964844,
+                "y": 73.6995849609375,
+                "width": 47.53125,
+                "height": 9.0
+              },
+              "column": 11
+            },
+            {
+              "text": "Store Manager",
+              "bbox": {
+                "x": 428.3999938964844,
+                "y": 72.22747802734375,
+                "width": 59.53271484375,
+                "height": 9.0
+              },
+              "column": 12
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Employee Name",
+              "bbox": {
+                "x": 32.400001525878906,
+                "y": 90.9796142578125,
+                "width": 66.52880859375,
+                "height": 9.0
+              },
+              "column": 1
+            },
+            {
+              "text": "Jaspal Singh",
+              "bbox": {
+                "x": 122.4000015258789,
+                "y": 89.50750732421875,
+                "width": 51.53466033935547,
+                "height": 9.0
+              },
+              "column": 2
+            },
+            {
+              "text": "Location",
+              "bbox": {
+                "x": 356.3999938964844,
+                "y": 91.6995849609375,
+                "width": 34.02685546875,
+                "height": 9.0
+              },
+              "column": 11
+            },
+            {
+              "text": "AMRITSAR",
+              "bbox": {
+                "x": 428.3999938964844,
+                "y": 90.22747802734375,
+                "width": 46.5029296875,
+                "height": 9.0
+              },
+              "column": 12
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "PF Number",
+              "bbox": {
+                "x": 32.400001525878906,
+                "y": 108.9796142578125,
+                "width": 46.0107421875,
+                "height": 9.0
+              },
+              "column": 1
+            },
+            {
+              "text": "TNMAS00357910002718655",
+              "bbox": {
+                "x": 122.4000015258789,
+                "y": 107.50750732421875,
+                "width": 116.59130096435547,
+                "height": 9.0
+              },
+              "column": 2
+            },
+            {
+              "text": "ESIC Number",
+              "bbox": {
+                "x": 356.3999938964844,
+                "y": 109.6995849609375,
+                "width": 55.51611328125,
+                "height": 9.0
+              },
+              "column": 11
+            },
+            {
+              "text": "2613929053",
+              "bbox": {
+                "x": 428.3999938964844,
+                "y": 108.22747802734375,
+                "width": 50.0537109375,
+                "height": 9.0
+              },
+              "column": 12
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Worked Days",
+              "bbox": {
+                "x": 32.400001525878906,
+                "y": 126.927978515625,
+                "width": 49.5120849609375,
+                "height": 8.25
+              },
+              "column": 1
+            },
+            {
+              "text": "31",
+              "bbox": {
+                "x": 122.4000015258789,
+                "y": 125.5784912109375,
+                "width": 9.176506042480469,
+                "height": 8.25
+              },
+              "column": 2
+            },
+            {
+              "text": "LOP Days",
+              "bbox": {
+                "x": 356.3999938964844,
+                "y": 127.6995849609375,
+                "width": 41.01416015625,
+                "height": 9.0
+              },
+              "column": 11
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 428.3999938964844,
+                "y": 126.22747802734375,
+                "width": 5.00537109375,
+                "height": 9.0
+              },
+              "column": 12
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Date Of Join",
+              "bbox": {
+                "x": 32.400001525878906,
+                "y": 144.927978515625,
+                "width": 45.8543701171875,
+                "height": 8.25
+              },
+              "column": 1
+            },
+            {
+              "text": "16/12/19",
+              "bbox": {
+                "x": 122.4000015258789,
+                "y": 143.5784912109375,
+                "width": 32.11376190185547,
+                "height": 8.25
+              },
+              "column": 2
+            },
+            {
+              "text": "EPF UAN",
+              "bbox": {
+                "x": 356.3999938964844,
+                "y": 145.86761474609375,
+                "width": 39.005859375,
+                "height": 9.0
+              },
+              "column": 11
+            },
+            {
+              "text": "100721734349",
+              "bbox": {
+                "x": 428.3999938964844,
+                "y": 144.3953857421875,
+                "width": 60.064453125,
+                "height": 9.0
+              },
+              "column": 12
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Earnings",
+              "bbox": {
+                "x": 21.600000381469727,
+                "y": 179.7196044921875,
+                "width": 35.52099609375,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Actual",
+              "bbox": {
+                "x": 194.706298828125,
+                "y": 181.15960693359375,
+                "width": 25.013671875,
+                "height": 9.0
+              },
+              "column": 5
+            },
+            {
+              "text": "Earned",
+              "bbox": {
+                "x": 262.698486328125,
+                "y": 181.15960693359375,
+                "width": 29.021484375,
+                "height": 9.0
+              },
+              "column": 8
+            },
+            {
+              "text": "Deductions",
+              "bbox": {
+                "x": 323.4599914550781,
+                "y": 178.99957275390625,
+                "width": 45.0263671875,
+                "height": 9.0
+              },
+              "column": 9
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Basic",
+              "bbox": {
+                "x": 21.600000381469727,
+                "y": 201.7374267578125,
+                "width": 22.007810592651367,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "22000.00",
+              "bbox": {
+                "x": 182.18190002441406,
+                "y": 201.73748779296875,
+                "width": 37.5380859375,
+                "height": 9.0
+              },
+              "column": 4
+            },
+            {
+              "text": "22000.00",
+              "bbox": {
+                "x": 254.18179321289062,
+                "y": 201.73748779296875,
+                "width": 37.5380859375,
+                "height": 9.0
+              },
+              "column": 7
+            },
+            {
+              "text": "PF",
+              "bbox": {
+                "x": 323.4599914550781,
+                "y": 200.0574951171875,
+                "width": 11.50048828125,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "2640.00",
+              "bbox": {
+                "x": 469.0672912597656,
+                "y": 200.0574951171875,
+                "width": 32.53271484375,
+                "height": 9.0
+              },
+              "column": 14
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "HRA",
+              "bbox": {
+                "x": 21.600000381469727,
+                "y": 219.7374267578125,
+                "width": 19.001951217651367,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "8800.00",
+              "bbox": {
+                "x": 187.18719482421875,
+                "y": 219.73748779296875,
+                "width": 32.53271484375,
+                "height": 9.0
+              },
+              "column": 4
+            },
+            {
+              "text": "8800.00",
+              "bbox": {
+                "x": 259.18719482421875,
+                "y": 219.73748779296875,
+                "width": 32.53271484375,
+                "height": 9.0
+              },
+              "column": 8
+            },
+            {
+              "text": "PT",
+              "bbox": {
+                "x": 323.4599914550781,
+                "y": 220.3375244140625,
+                "width": 11.50048828125,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "200.00",
+              "bbox": {
+                "x": 474.0726013183594,
+                "y": 220.3375244140625,
+                "width": 27.52734375,
+                "height": 9.0
+              },
+              "column": 14
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "TelephoneAllow",
+              "bbox": {
+                "x": 21.600000381469727,
+                "y": 237.7374267578125,
+                "width": 63.0439453125,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "3000.00",
+              "bbox": {
+                "x": 187.18719482421875,
+                "y": 237.73748779296875,
+                "width": 32.53271484375,
+                "height": 9.0
+              },
+              "column": 4
+            },
+            {
+              "text": "3000.00",
+              "bbox": {
+                "x": 259.18719482421875,
+                "y": 237.73748779296875,
+                "width": 32.53271484375,
+                "height": 9.0
+              },
+              "column": 8
+            },
+            {
+              "text": "LWF",
+              "bbox": {
+                "x": 323.4599914550781,
+                "y": 240.61749267578125,
+                "width": 18.32958984375,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "5.00",
+              "bbox": {
+                "x": 484.0834045410156,
+                "y": 240.61749267578125,
+                "width": 17.5166015625,
+                "height": 9.0
+              },
+              "column": 15
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "OtherAllowance",
+              "bbox": {
+                "x": 21.600000381469727,
+                "y": 255.73748779296875,
+                "width": 63.53173828125,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "12607.00",
+              "bbox": {
+                "x": 182.18190002441406,
+                "y": 255.73748779296875,
+                "width": 37.5380859375,
+                "height": 9.0
+              },
+              "column": 4
+            },
+            {
+              "text": "12607.00",
+              "bbox": {
+                "x": 254.18179321289062,
+                "y": 255.73748779296875,
+                "width": 37.5380859375,
+                "height": 9.0
+              },
+              "column": 7
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "LTA",
+              "bbox": {
+                "x": 21.600000381469727,
+                "y": 273.73748779296875,
+                "width": 15.169919967651367,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "1834.00",
+              "bbox": {
+                "x": 187.18719482421875,
+                "y": 273.73748779296875,
+                "width": 32.53271484375,
+                "height": 9.0
+              },
+              "column": 4
+            },
+            {
+              "text": "1834.00",
+              "bbox": {
+                "x": 259.18719482421875,
+                "y": 273.73748779296875,
+                "width": 32.53271484375,
+                "height": 9.0
+              },
+              "column": 8
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "DepCompAllow",
+              "bbox": {
+                "x": 21.600000381469727,
+                "y": 291.73748779296875,
+                "width": 62.0244140625,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "10199.00",
+              "bbox": {
+                "x": 182.18190002441406,
+                "y": 291.73748779296875,
+                "width": 37.5380859375,
+                "height": 9.0
+              },
+              "column": 4
+            },
+            {
+              "text": "10199.00",
+              "bbox": {
+                "x": 254.18179321289062,
+                "y": 291.73748779296875,
+                "width": 37.5380859375,
+                "height": 9.0
+              },
+              "column": 7
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "VehicleReimb",
+              "bbox": {
+                "x": 21.600000381469727,
+                "y": 309.73748779296875,
+                "width": 55.0283203125,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "2400.00",
+              "bbox": {
+                "x": 187.18719482421875,
+                "y": 309.73748779296875,
+                "width": 32.53271484375,
+                "height": 9.0
+              },
+              "column": 4
+            },
+            {
+              "text": "2400.00",
+              "bbox": {
+                "x": 259.18719482421875,
+                "y": 309.73748779296875,
+                "width": 32.53271484375,
+                "height": 9.0
+              },
+              "column": 8
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Total Earnings",
+              "bbox": {
+                "x": 21.600000381469727,
+                "y": 387.9555969238281,
+                "width": 58.02978515625,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "60840.00",
+              "bbox": {
+                "x": 254.18429565429688,
+                "y": 387.9555969238281,
+                "width": 37.5380859375,
+                "height": 9.0
+              },
+              "column": 7
+            },
+            {
+              "text": "Total Deductions",
+              "bbox": {
+                "x": 325.1700134277344,
+                "y": 387.9555969238281,
+                "width": 67.53515625,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "2845.00",
+              "bbox": {
+                "x": 483.91729736328125,
+                "y": 387.9555969238281,
+                "width": 32.53271484375,
+                "height": 9.0
+              },
+              "column": 15
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Net Pay",
+              "bbox": {
+                "x": 25.40999984741211,
+                "y": 420.9555969238281,
+                "width": 32.01416015625,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "57995.00",
+              "bbox": {
+                "x": 123.29989624023438,
+                "y": 422.3955993652344,
+                "width": 37.5380859375,
+                "height": 9.0
+              },
+              "column": 2
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Amount In Words",
+              "bbox": {
+                "x": 25.40999984741211,
+                "y": 444.085693359375,
+                "width": 69.52587890625,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Fifty Seven Thousand Nine Hundred And Ninety Five Rupees",
+              "bbox": {
+                "x": 124.73989868164062,
+                "y": 444.1372985839844,
+                "width": 265.5589599609375,
+                "height": 9.75
+              },
+              "column": 2
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Bank Name",
+              "bbox": {
+                "x": 25.40999984741211,
+                "y": 469.0072937011719,
+                "width": 50.939945220947266,
+                "height": 9.75
+              },
+              "column": 0
+            },
+            {
+              "text": "AXIS BANK",
+              "bbox": {
+                "x": 124.73989868164062,
+                "y": 467.4834899902344,
+                "width": 47.51806640625,
+                "height": 9.0
+              },
+              "column": 2
+            },
+            {
+              "text": "PaymentMethod",
+              "bbox": {
+                "x": 339.3599853515625,
+                "y": 469.0072937011719,
+                "width": 70.9969482421875,
+                "height": 9.75
+              },
+              "column": 10
+            },
+            {
+              "text": "Fund Transfer",
+              "bbox": {
+                "x": 456.9078063964844,
+                "y": 467.4834899902344,
+                "width": 56.025909423828125,
+                "height": 9.0
+              },
+              "column": 13
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Account/Instrument Number",
+              "bbox": {
+                "x": 25.40999984741211,
+                "y": 491.65728759765625,
+                "width": 121.3846435546875,
+                "height": 9.75
+              },
+              "column": 0
+            },
+            {
+              "text": "914010047760445",
+              "bbox": {
+                "x": 187.64999389648438,
+                "y": 490.1335144042969,
+                "width": 75.08056640625,
+                "height": 9.0
+              },
+              "column": 4
+            },
+            {
+              "text": "Paid Date",
+              "bbox": {
+                "x": 339.3599853515625,
+                "y": 491.65728759765625,
+                "width": 42.818115234375,
+                "height": 9.75
+              },
+              "column": 10
+            },
+            {
+              "text": "31-12-2025",
+              "bbox": {
+                "x": 456.9078063964844,
+                "y": 490.1335144042969,
+                "width": 46.037109375,
+                "height": 9.0
+              },
+              "column": 13
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "This is computer generated payslip and does not require signature and stamp.",
+              "bbox": {
+                "x": 158.39999389648438,
+                "y": 520.1386108398438,
+                "width": 285.2493591308594,
+                "height": 8.25
+              },
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

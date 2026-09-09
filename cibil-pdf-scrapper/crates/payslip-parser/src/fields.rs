@@ -1,5 +1,5 @@
 use crate::patterns;
-use payslip_domain::{EmployeeInfo, EmployerDetails, Money, PayPeriod};
+use payslip_domain::{EmployeeInfo, EmployerDetails, Money, Period};
 use payslip_layout::Line;
 
 // Label -> which EmployeeInfo slot it fills. Longest match wins, so
@@ -179,14 +179,11 @@ fn value_in_other_lines(lines: &[Line], label: &str) -> Option<String> {
 
 pub fn extract_employee(lines: &[Line]) -> EmployeeInfo {
     let mut info = EmployeeInfo::default();
+    let dict = crate::dictionary::get_dictionary();
 
     for (index, line) in lines.iter().enumerate() {
-        // Longest labels first so a prefix never shadows a more specific one.
-        let mut labels: Vec<&(&str, &str)> = EMPLOYEE_LABELS.iter().collect();
-        labels.sort_by_key(|(label, _)| std::cmp::Reverse(label.len()));
-
-        for (label, slot) in labels {
-            let target = match *slot {
+        for (slot, aliases) in &dict.employee {
+            let target = match slot.as_str() {
                 "name" => &mut info.name,
                 "employee_id" => &mut info.employee_id,
                 "designation" => &mut info.designation,
@@ -197,21 +194,24 @@ pub fn extract_employee(lines: &[Line]) -> EmployeeInfo {
                 "esi_number" => &mut info.esi_number,
                 "bank_account" => &mut info.bank_account,
                 "date_of_joining" => &mut info.date_of_joining,
+                "bank_name" => &mut info.bank_name,
+                "ifsc_or_routing_code" => &mut info.ifsc_or_routing_code,
                 _ => continue,
             };
             if target.is_some() {
                 continue;
             }
 
-            let Some(value) = value_for(line, label)
-                .or_else(|| next_line_colon_value(lines, index, label))
-                .or_else(|| value_below(lines, index, label))
-                .or_else(|| value_in_other_lines(lines, label))
-            else {
-                continue;
-            };
-
-            *target = Some(value);
+            for alias in aliases {
+                let upper_alias = alias.to_ascii_uppercase();
+                if let Some(value) = value_for(line, &upper_alias)
+                    .or_else(|| next_line_colon_value(lines, index, &upper_alias))
+                    .or_else(|| value_below(lines, index, &upper_alias))
+                {
+                    *target = Some(value);
+                    break;
+                }
+            }
         }
     }
 
@@ -242,19 +242,28 @@ pub fn extract_employee(lines: &[Line]) -> EmployeeInfo {
 pub fn extract_employer(lines: &[Line]) -> EmployerDetails {
     let mut employer = EmployerDetails::default();
 
-    let title_at = lines.iter().position(|l| {
-        let upper = l.text().to_ascii_uppercase();
-        upper.contains("PAYSLIP") || upper.contains("PAY SLIP") || upper.contains("SALARY SLIP")
-    });
-
-    let header_end = title_at.unwrap_or(lines.len().min(4));
-    for line in lines.iter().take(header_end.max(1)) {
+    for line in lines.iter().take(4) {
         let text = line.text().trim().to_string();
         if text.len() < 3 || patterns::amount().is_match(&text) {
             continue;
         }
         let upper = text.to_ascii_uppercase();
-        if upper.contains("PAYSLIP") || upper.contains("PAY SLIP") {
+        if upper.contains("PAYSLIP") || upper.contains("PAY SLIP") || upper.contains("SALARY SLIP") {
+            if let Some(first_seg) = line.segments.first() {
+                let seg_text = first_seg.trim().to_string();
+                let seg_upper = seg_text.to_ascii_uppercase();
+                if seg_text.len() >= 3
+                    && !seg_upper.contains("PAYSLIP")
+                    && !seg_upper.contains("PAY SLIP")
+                    && !seg_upper.contains("SALARY SLIP")
+                    && !seg_upper.contains("FOR THE MONTH")
+                {
+                    if employer.name.is_none() {
+                        employer.name = Some(seg_text);
+                        continue;
+                    }
+                }
+            }
             continue;
         }
         if employer.name.is_none() {
@@ -266,8 +275,17 @@ pub fn extract_employer(lines: &[Line]) -> EmployerDetails {
     employer
 }
 
-pub fn extract_period(lines: &[Line]) -> PayPeriod {
-    let mut period = PayPeriod::default();
+#[derive(Debug, Clone, Default)]
+pub struct RawPeriod {
+    pub raw: Option<String>,
+    pub month: Option<String>,
+    pub year: Option<u16>,
+    pub paid_days: Option<String>,
+    pub lop_days: Option<String>,
+}
+
+pub fn extract_period(lines: &[Line]) -> RawPeriod {
+    let mut period = RawPeriod::default();
 
     for line in lines {
         let text = line.text();
@@ -295,9 +313,12 @@ pub fn extract_period(lines: &[Line]) -> PayPeriod {
 
         for (label, slot) in [("PAID DAYS", 0), ("LOP", 1), ("LOSS OF PAY", 1)] {
             if let Some(value) = value_for(line, label) {
-                let target = if slot == 0 { &mut period.paid_days } else { &mut period.lop_days };
-                if target.is_none() {
-                    *target = Some(value);
+                if slot == 0 {
+                    if period.paid_days.is_none() {
+                        period.paid_days = Some(value);
+                    }
+                } else if period.lop_days.is_none() {
+                    period.lop_days = Some(value);
                 }
             }
         }
@@ -310,8 +331,34 @@ pub fn extract_net_pay_words(lines: &[Line]) -> Option<String> {
     lines.iter().find_map(|line| {
         let text = line.text();
         let upper = text.to_ascii_uppercase();
-        (upper.contains("IN WORDS") || (upper.contains("RUPEES") && upper.contains("ONLY")))
-            .then(|| text.trim().to_string())
+        if upper.contains("EARNINGS/ALLOWANCE") || upper.contains("BASIC PAY") {
+            return None;
+        }
+        if upper.contains("IN WORDS") || ((upper.contains("RUPEES") || upper.contains("INDIAN RUPEE")) && upper.contains("ONLY")) {
+            let mut s = text.trim().to_string();
+            if let Some(pos) = s.to_ascii_uppercase().find("IN WORDS") {
+                s = s[pos + 8..].trim().to_string();
+            }
+            if let Some(pos) = s.find(". Net Amount").or_else(|| s.find(" Net Amount")) {
+                s = s[..pos].trim().to_string();
+            }
+            if s.starts_with("Rupees ") {
+                s = s[7..].trim().to_string();
+            }
+            if s.starts_with(':') || s.starts_with('-') {
+                s = s[1..].trim().to_string();
+            }
+            if s.ends_with(':') || s.ends_with('-') {
+                s = s[..s.len() - 1].trim().to_string();
+            }
+            if s.starts_with('(') && s.ends_with(')') {
+                s = s[1..s.len() - 1].trim().to_string();
+            }
+            if !s.is_empty() {
+                return Some(s);
+            }
+        }
+        None
     })
 }
 
@@ -323,37 +370,118 @@ pub fn extract_net_pay_words(lines: &[Line]) -> Option<String> {
 /// is the next one after it.
 pub fn labelled_amount(lines: &[Line], labels: &[&str]) -> Option<Money> {
     for label in labels {
-        for (line_idx, line) in lines.iter().enumerate() {
-            if patterns::is_annual_row(&line.text()) {
+        let label_upper = label.to_ascii_uppercase();
+        // Iterate bottom-up (rev) so explicit summary rows take priority over upper table rates/components
+        for (line_idx, line) in lines.iter().enumerate().rev() {
+            let line_txt = line.text();
+            let upper_txt = line_txt.to_ascii_uppercase();
+            if upper_txt.contains("GROSS EARNINGS - TOTAL DEDUCTIONS")
+                || upper_txt.contains("EARNINGS - DEDUCTIONS")
+                || upper_txt.contains("EMPLOYEE ID")
+                || upper_txt.contains("EMP ID")
+                || patterns::is_annual_row(&upper_txt)
+            {
                 continue;
             }
             for (index, segment) in line.segments.iter().enumerate() {
-                let Some(at) = segment.to_ascii_uppercase().find(label) else { continue };
+                if patterns::is_annual_row(segment) {
+                    continue;
+                }
+                let Some(at) = segment.to_ascii_uppercase().find(&label_upper) else { continue };
 
-                // Same cell, amount after the label: "Total Earnings: 1,234.00".
-                if let Some(money) = Money::find_first_from(segment, at + label.len()) {
+                // Same cell, amount after the label: "Gross Salary : 1,75,000".
+                if let Some(money) = Money::find_first_from(segment, at + label_upper.len()) {
                     return Some(money);
                 }
                 // Otherwise the first amount in a following cell on the same line.
-                let mut found_on_line = None;
-                for next in line.segments.iter().skip(index + 1) {
+                let is_deduction_search = label_upper.contains("DEDUCT");
+                let mut line_amounts = Vec::new();
+                for (s_idx, next) in line.segments.iter().enumerate().skip(index + 1) {
+                    if patterns::is_annual_row(next) {
+                        continue;
+                    }
                     if let Some(money) = Money::find_first(next) {
-                        found_on_line = Some(money);
-                        break;
+                        let box_x = line.segment_boxes.get(s_idx).map_or(0.0, |b| b.x);
+                        line_amounts.push((money, box_x));
                     }
                 }
-                if found_on_line.is_some() {
-                    return found_on_line;
+                if !line_amounts.is_empty() {
+                    if is_deduction_search && line_amounts.len() >= 2 {
+                        let ded_amt = line_amounts.iter().find(|(_, x)| *x >= 200.0).map(|(m, _)| m.clone())
+                            .unwrap_or_else(|| line_amounts.last().unwrap().0.clone());
+                        return Some(ded_amt);
+                    } else if !is_deduction_search && line_amounts.len() >= 2 && (label_upper.contains("GROSS") || label_upper.contains("INCOME")) {
+                        let earn_amts: Vec<&(Money, f32)> = line_amounts.iter().filter(|(_, x)| *x < 380.0).collect();
+                        if earn_amts.len() >= 2 {
+                            return Some(earn_amts[1].0.clone());
+                        }
+                    }
+                    return Some(line_amounts.first().unwrap().0.clone());
                 }
 
-                // If no amount on the same line, check the line immediately beneath.
-                if let Some(next_line) = lines.get(line_idx + 1) {
-                    if !patterns::is_annual_row(&next_line.text()) {
-                        for seg in &next_line.segments {
-                            if let Some(money) = Money::find_first(seg) {
-                                return Some(money);
+                // If no amount on the same line, check adjacent lines using horizontal bbox alignment
+                let label_box = line.segment_boxes.get(index);
+                for dist in 1..lines.len() {
+                    for &dir in &[1isize, -1isize] {
+                        let target_idx = line_idx as isize + (dist as isize * dir);
+                        if target_idx >= 0 && (target_idx as usize) < lines.len() {
+                            let adj_line = &lines[target_idx as usize];
+                            if !patterns::is_annual_row(&adj_line.text()) {
+                                if let Some(l_box) = label_box {
+                                    let mut best_match: Option<(Money, f32)> = None;
+                                    for (s_idx, seg) in adj_line.segments.iter().enumerate() {
+                                        if let Some(money) = Money::find_first(seg) {
+                                            if let Some(s_box) = adj_line.segment_boxes.get(s_idx) {
+                                                let dx = (s_box.x - l_box.x).abs();
+                                                if dx < 15.0f32 || (label.contains("TAKE HOME") || label.contains("NET")) {
+                                                    let is_ded_label = label.contains("DEDUCT");
+                                                    if !is_ded_label || money.rupees() < 300_000.0 {
+                                                        if best_match.as_ref().map_or(true, |(_, min_dx)| dx < *min_dx) {
+                                                            best_match = Some((money, dx));
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if let Some((money, _)) = best_match {
+                                        return Some(money);
+                                    }
+                                } else if let Some(seg) = adj_line.segments.get(index) {
+                                    if let Some(money) = Money::find_first(seg) {
+                                        return Some(money);
+                                    }
+                                }
                             }
                         }
+                    }
+                }
+            }
+        }
+    }
+    None
+}
+
+/// Extracts (gross, deduction, net) from equation-style summary header rows:
+/// "Earnings - Deductions + Adjustment = Net Amount"
+/// "79,010.00 - 12,357.00 + 0.00 = 66,653.00"
+pub fn extract_equation_summary(lines: &[Line]) -> Option<(Money, Money, Money)> {
+    for (line_idx, line) in lines.iter().enumerate() {
+        let text = line.text();
+        if (text.contains("Earnings") || text.contains("Gross")) && text.contains("Deduction") && (text.contains("Net Amount") || text.contains("Net Pay") || text.contains("Net")) {
+            // Check current or subsequent line for numeric figures
+            for search_idx in line_idx..std::cmp::min(line_idx + 4, lines.len()) {
+                let target_line = &lines[search_idx];
+                let moneys: Vec<Money> = Money::find_all(&target_line.text())
+                    .into_iter()
+                    .filter(|m| m.rupees() < 10_000_000.0)
+                    .collect();
+                if moneys.len() >= 3 {
+                    let gross = moneys[0].clone();
+                    let ded = moneys[1].clone();
+                    let net = moneys.last().cloned().unwrap();
+                    if (gross.paise - ded.paise - net.paise).abs() <= 100 {
+                        return Some((gross, ded, net));
                     }
                 }
             }

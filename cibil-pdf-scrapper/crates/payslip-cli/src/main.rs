@@ -1,7 +1,6 @@
 // payslip-cli — decode one payslip or a whole directory.
 //
-//   payslip-cli <file.pdf>              parsed payslip as JSON
-//   payslip-cli <file.pdf> --relational nested relational payslip JSON
+//   payslip-cli <file.pdf>              parsed payslip as JSON (Schema v2.0)
 //   payslip-cli <file.pdf> --raw        raw runs + lines only, no interpretation
 //   payslip-cli --batch <dir>           one summary row per file, writes target/payslip-output
 //   payslip-cli --batch <dir> --out <d> plus one JSON document per payslip
@@ -21,7 +20,7 @@ fn main() -> ExitCode {
 
     if positional.is_empty() {
         eprintln!(
-            "Usage: payslip-cli <file.pdf> [--raw] [--relational] [--pretty]\n       payslip-cli --batch <dir> [--relational] [--json]"
+            "Usage: payslip-cli <file.pdf> [--raw] [--pretty]\n       payslip-cli --batch <dir> [--out <out_dir>] [--json]"
         );
         return ExitCode::from(2);
     }
@@ -35,21 +34,14 @@ fn main() -> ExitCode {
         run_batch(
             Path::new(positional[0]),
             flag("--json"),
-            flag("--relational"),
-            out_dir.or_else(|| {
-                Some(PathBuf::from(if flag("--relational") {
-                    "target/payslip-relational-output"
-                } else {
-                    "target/payslip-output"
-                }))
-            }),
+            out_dir.or_else(|| Some(PathBuf::from("payslip-output"))),
         )
     } else {
-        run_single(Path::new(positional[0]), flag("--raw"), flag("--relational"), flag("--pretty"))
+        run_single(Path::new(positional[0]), flag("--raw"), flag("--pretty"))
     }
 }
 
-fn run_single(path: &Path, raw_only: bool, relational: bool, pretty: bool) -> ExitCode {
+fn run_single(path: &Path, raw_only: bool, pretty: bool) -> ExitCode {
     let (bytes, name) = if path == Path::new("-") {
         let mut buf = Vec::new();
         if let Err(e) = std::io::stdin().read_to_end(&mut buf) {
@@ -92,14 +84,7 @@ fn run_single(path: &Path, raw_only: bool, relational: bool, pretty: bool) -> Ex
         serde_json::json!({ "source": name, "pages": pages, "runs": runs, "lines": lines })
     } else {
         match payslip_parser::parse_payslip(&name, &runs, pages) {
-            Ok(p) => {
-                if relational {
-                    serde_json::to_value(payslip_parser::to_relational(&p))
-                } else {
-                    serde_json::to_value(&p)
-                }
-                .unwrap_or_else(|e| serde_json::json!({ "error": e.to_string() }))
-            }
+            Ok(p) => serde_json::to_value(&p).unwrap_or_else(|e| serde_json::json!({ "error": e.to_string() })),
             Err(e) => {
                 eprintln!("{name}: {e}");
                 return ExitCode::FAILURE;
@@ -122,7 +107,7 @@ fn run_single(path: &Path, raw_only: bool, relational: bool, pretty: bool) -> Ex
     ExitCode::SUCCESS
 }
 
-fn run_batch(dir: &Path, as_json: bool, relational: bool, out_dir: Option<PathBuf>) -> ExitCode {
+fn run_batch(dir: &Path, as_json: bool, out_dir: Option<PathBuf>) -> ExitCode {
     if let Some(out) = &out_dir {
         if let Err(e) = fs::create_dir_all(out) {
             eprintln!("{}: {e}", out.display());
@@ -171,17 +156,10 @@ fn run_batch(dir: &Path, as_json: bool, relational: bool, out_dir: Option<PathBu
                     })
             });
 
-        // A per-document file is written for successes AND failures: a payslip
-        // missing from the output directory would otherwise be indistinguishable
-        // from one that was never submitted.
         if let Some(out) = &out_dir {
             let target = out.join(format!("{}.json", path.file_stem().unwrap_or_default().to_string_lossy()));
             let document = match &outcome {
-                Ok(slip) => if relational {
-                    serde_json::to_value(payslip_parser::to_relational(slip))
-                } else {
-                    serde_json::to_value(slip)
-                }.unwrap_or_else(|e| {
+                Ok(slip) => serde_json::to_value(slip).unwrap_or_else(|e| {
                     serde_json::json!({ "source": name, "error": e.to_string() })
                 }),
                 Err(e) => serde_json::json!({ "source": name, "status": error_status(e), "error": e }),
@@ -200,28 +178,30 @@ fn run_batch(dir: &Path, as_json: bool, relational: bool, out_dir: Option<PathBu
             Ok(slip) => {
                 ok += 1;
                 if as_json {
-                    if relational {
-                        records.push(serde_json::to_value(payslip_parser::to_relational(&slip)).unwrap_or_default());
-                    } else {
-                        records.push(serde_json::to_value(&slip).unwrap_or_default());
-                    }
+                    records.push(serde_json::to_value(&slip).unwrap_or_default());
                 } else {
+                    let stmt = slip.statements.first();
+                    let ern_count = stmt.map(|s| s.earnings.items.len()).unwrap_or(0);
+                    let ded_count = stmt.map(|s| s.deductions.items.len()).unwrap_or(0);
+                    let net_raw = stmt
+                        .and_then(|s| s.summary.net_pay.as_ref())
+                        .and_then(|a| a.raw_value_string.clone())
+                        .unwrap_or_else(|| "-".into());
+
                     println!(
                         "{:<44} {:>5} {:>6} {:>4} {:>4} {:>14}  OK ({})",
                         short,
                         slip.raw.page_count,
                         slip.raw.lines.len(),
-                        slip.earnings.len(),
-                        slip.deductions.len(),
-                        slip.net_pay.as_ref().map(|m| m.raw.clone()).unwrap_or_else(|| "-".into()),
-                        slip.format,
+                        ern_count,
+                        ded_count,
+                        net_raw,
+                        slip.metadata.layout_signature,
                     );
                 }
             }
             Err(e) => {
                 failed += 1;
-                // Surfaced, never swallowed: a file that could not be read is
-                // reported by name with its reason and fails the run.
                 if as_json {
                     records.push(serde_json::json!({ "source": name, "status": error_status(&e), "error": e }));
                 } else {

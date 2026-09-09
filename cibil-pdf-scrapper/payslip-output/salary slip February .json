@@ -1,0 +1,1925 @@
+{
+  "schema_version": "2.0",
+  "metadata": {
+    "source_file": "salary slip February .pdf",
+    "page_count": 1,
+    "layout_signature": "generic-payslip",
+    "detected_locale": "IN",
+    "currency": "INR",
+    "extraction_confidence_overall": 0.95
+  },
+  "employer": {
+    "name": "Lucknow Development Authority,Lucknow",
+    "address": "Tan No.:",
+    "business_unit": null
+  },
+  "employee": {
+    "name": "Mr. KULDEEP KUMAR",
+    "employee_id": "4104",
+    "designation": "JUNIOR ENGINEER",
+    "department": "LDA",
+    "date_of_joining": null,
+    "pan": "CHRPD2992Q",
+    "uan": null,
+    "pf_number": null,
+    "esi_number": null,
+    "bank_account": "19460110035214",
+    "bank_name": "UCO Bank",
+    "ifsc_or_routing_code": "UCBA0001946"
+  },
+  "statements": [
+    {
+      "period": {
+        "period_type": "monthly",
+        "month": "February",
+        "year": 2026,
+        "financial_year": null,
+        "from_date": null,
+        "to_date": null,
+        "days_in_month": null,
+        "working_days": null,
+        "paid_days": null,
+        "lop_days": null,
+        "arrear_days": null
+      },
+      "earnings": {
+        "items": [
+          {
+            "raw_label": "Basic Pay",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 36500.0,
+              "currency": "INR",
+              "raw_label": "Basic Pay",
+              "raw_value_string": "36500.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 36500.0,
+              "currency": "INR",
+              "raw_label": "Basic Pay",
+              "raw_value_string": "36500.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Dearness Alllowance (58",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 21170.0,
+              "currency": "INR",
+              "raw_label": "Dearness Alllowance (58",
+              "raw_value_string": "21170.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 21170.0,
+              "currency": "INR",
+              "raw_label": "Dearness Alllowance (58",
+              "raw_value_string": "21170.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "House Rent Allownace",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 4040.0,
+              "currency": "INR",
+              "raw_label": "House Rent Allownace",
+              "raw_value_string": "4040.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 4040.0,
+              "currency": "INR",
+              "raw_label": "House Rent Allownace",
+              "raw_value_string": "4040.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Medical Allowance",
+            "canonical_category": "medical_allowance",
+            "amount": {
+              "value": 1000.0,
+              "currency": "INR",
+              "raw_label": "Medical Allowance",
+              "raw_value_string": "1000.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1000.0,
+              "currency": "INR",
+              "raw_label": "Medical Allowance",
+              "raw_value_string": "1000.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "News Paper Allowance",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 150.0,
+              "currency": "INR",
+              "raw_label": "News Paper Allowance",
+              "raw_value_string": "150.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 150.0,
+              "currency": "INR",
+              "raw_label": "News Paper Allowance",
+              "raw_value_string": "150.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Pradhikaran Bhatta",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 1070.0,
+              "currency": "INR",
+              "raw_label": "Pradhikaran Bhatta",
+              "raw_value_string": "1070.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1070.0,
+              "currency": "INR",
+              "raw_label": "Pradhikaran Bhatta",
+              "raw_value_string": "1070.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "deductions": {
+        "items": [
+          {
+            "raw_label": "40.00 LDA Welfare Fund",
+            "canonical_category": "labour_welfare_fund",
+            "amount": {
+              "value": 40.0,
+              "currency": "INR",
+              "raw_label": "40.00 LDA Welfare Fund",
+              "raw_value_string": "40.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 40.0,
+              "currency": "INR",
+              "raw_label": "40.00 LDA Welfare Fund",
+              "raw_value_string": "40.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "summary": {
+        "gross_salary": {
+          "value": 63930.0,
+          "currency": "INR",
+          "raw_label": "GROSS PAY",
+          "raw_value_string": "63930.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "net_pay": {
+          "value": 63890.0,
+          "currency": "INR",
+          "raw_label": "NET PAY",
+          "raw_value_string": "63890.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_deductions": {
+          "value": 40.0,
+          "currency": "INR",
+          "raw_label": "TOTAL DEDUCTIONS",
+          "raw_value_string": "40.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_allowances": {
+          "value": 27430.0,
+          "currency": "INR",
+          "raw_label": "total_allowances",
+          "raw_value_string": "27430.00",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
+        "total_incentives_and_bonus": null,
+        "amount_in_words": "Sixty Three Thousand Eight Hundred Ninety Rupees Only"
+      },
+      "reconciliation": {
+        "gross_minus_deductions_matches_net": true,
+        "delta_vs_stated_net": 0.0,
+        "sum_of_earning_items_matches_stated_gross": true,
+        "sum_of_deduction_items_matches_stated_total": true,
+        "flags": []
+      }
+    }
+  ],
+  "raw": {
+    "page_count": 1,
+    "lines": [
+      {
+        "page": 1,
+        "bbox": {
+          "x": 151.95703125,
+          "y": 51.45000076293945,
+          "width": 202.49456787109375,
+          "height": 10.799999237060547
+        },
+        "segments": [
+          "Lucknow Development Authority,Lucknow"
+        ],
+        "segment_boxes": [
+          {
+            "x": 151.95703125,
+            "y": 51.45000076293945,
+            "width": 202.49456787109375,
+            "height": 10.799999237060547
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 151.95703125,
+          "y": 81.0,
+          "width": 272.2294921875,
+          "height": 9.0
+        },
+        "segments": [
+          ", Pradhikaran Bhawan, Vipin Khand ,Gomti Nagar , Lucknow - 226010"
+        ],
+        "segment_boxes": [
+          {
+            "x": 151.95703125,
+            "y": 81.0,
+            "width": 272.2294921875,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 151.95703125,
+          "y": 91.5,
+          "width": 33.076385498046875,
+          "height": 9.0
+        },
+        "segments": [
+          "Tan No.:"
+        ],
+        "segment_boxes": [
+          {
+            "x": 151.95703125,
+            "y": 91.5,
+            "width": 33.076385498046875,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 151.95703125,
+          "y": 102.0,
+          "width": 94.90139770507812,
+          "height": 9.0
+        },
+        "segments": [
+          "Tel/Fax: 180018005000"
+        ],
+        "segment_boxes": [
+          {
+            "x": 151.95703125,
+            "y": 102.0,
+            "width": 94.90139770507812,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 151.95703125,
+          "y": 112.5,
+          "width": 33.063201904296875,
+          "height": 9.0
+        },
+        "segments": [
+          "CIN No.:"
+        ],
+        "segment_boxes": [
+          {
+            "x": 151.95703125,
+            "y": 112.5,
+            "width": 33.063201904296875,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 151.95703125,
+          "y": 123.0,
+          "width": 115.96405029296875,
+          "height": 9.0
+        },
+        "segments": [
+          "GST No.: 09AAALL0016F1ZK"
+        ],
+        "segment_boxes": [
+          {
+            "x": 151.95703125,
+            "y": 123.0,
+            "width": 115.96405029296875,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 151.95703125,
+          "y": 133.5,
+          "width": 134.49447631835938,
+          "height": 9.0
+        },
+        "segments": [
+          "Email: ldavc[at]rediffmail[dot]com"
+        ],
+        "segment_boxes": [
+          {
+            "x": 151.95703125,
+            "y": 133.5,
+            "width": 134.49447631835938,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 242.26171875,
+          "y": 144.75,
+          "width": 122.234375,
+          "height": 12.0
+        },
+        "segments": [
+          "Pay Slip February-2026"
+        ],
+        "segment_boxes": [
+          {
+            "x": 242.26171875,
+            "y": 144.75,
+            "width": 122.234375,
+            "height": 12.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 41.70703125,
+          "y": 159.75,
+          "width": 331.1330261230469,
+          "height": 9.0
+        },
+        "segments": [
+          "Employee Name : Mr. KULDEEP KUMAR",
+          "Father/Spouse_Name Mr. Prabha Kant"
+        ],
+        "segment_boxes": [
+          {
+            "x": 41.70703125,
+            "y": 159.75,
+            "width": 159.57435607910156,
+            "height": 9.0
+          },
+          {
+            "x": 218.61328125,
+            "y": 159.75,
+            "width": 154.22677612304688,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 41.70703125,
+          "y": 170.25,
+          "width": 428.05804443359375,
+          "height": 9.0
+        },
+        "segments": [
+          "DUBAY",
+          "Dubey",
+          "Employee Id :4104"
+        ],
+        "segment_boxes": [
+          {
+            "x": 41.70703125,
+            "y": 170.25,
+            "width": 28.561485290527344,
+            "height": 9.0
+          },
+          {
+            "x": 218.61328125,
+            "y": 170.25,
+            "width": 25.283523559570312,
+            "height": 9.0
+          },
+          {
+            "x": 395.51953125,
+            "y": 170.25,
+            "width": 74.24554443359375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 41.70703125,
+          "y": 181.5,
+          "width": 449.36968994140625,
+          "height": 9.0
+        },
+        "segments": [
+          "Unit/Posting Location : LDA",
+          "Designation : JUNIOR ENGINEER",
+          "Service Status : Regular"
+        ],
+        "segment_boxes": [
+          {
+            "x": 41.70703125,
+            "y": 181.5,
+            "width": 110.93792724609375,
+            "height": 9.0
+          },
+          {
+            "x": 218.61328125,
+            "y": 181.5,
+            "width": 131.24960327148438,
+            "height": 9.0
+          },
+          {
+            "x": 395.51953125,
+            "y": 181.5,
+            "width": 95.55718994140625,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 41.70703125,
+          "y": 192.75,
+          "width": 462.27239990234375,
+          "height": 9.0
+        },
+        "segments": [
+          "Section/Cell : DIVISION 6 PRAVARTAN",
+          "Bank Name : UCO Bank",
+          "IFSC Code : UCBA0001946"
+        ],
+        "segment_boxes": [
+          {
+            "x": 41.70703125,
+            "y": 192.75,
+            "width": 155.0177764892578,
+            "height": 9.0
+          },
+          {
+            "x": 218.61328125,
+            "y": 192.75,
+            "width": 93.92593383789062,
+            "height": 9.0
+          },
+          {
+            "x": 395.51953125,
+            "y": 192.75,
+            "width": 108.45989990234375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 395.51953125,
+          "y": 204.0,
+          "width": 101.7796630859375,
+          "height": 9.0
+        },
+        "segments": [
+          "Pay Scale : (PB-6(35400-"
+        ],
+        "segment_boxes": [
+          {
+            "x": 395.51953125,
+            "y": 204.0,
+            "width": 101.7796630859375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 41.70703125,
+          "y": 214.5,
+          "width": 507.04681396484375,
+          "height": 9.0
+        },
+        "segments": [
+          "Branch Name : UCO Bank LDA",
+          "Bank A/c No : 19460110035214",
+          "112400+4200))35400 - 112400+4200"
+        ],
+        "segment_boxes": [
+          {
+            "x": 41.70703125,
+            "y": 214.5,
+            "width": 120.81536865234375,
+            "height": 9.0
+          },
+          {
+            "x": 218.61328125,
+            "y": 214.5,
+            "width": 129.64154052734375,
+            "height": 9.0
+          },
+          {
+            "x": 395.51953125,
+            "y": 214.5,
+            "width": 153.23431396484375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 41.70703125,
+          "y": 225.75,
+          "width": 245.56048583984375,
+          "height": 9.0
+        },
+        "segments": [
+          "Level No. : L-6",
+          "Class : CLASS-III"
+        ],
+        "segment_boxes": [
+          {
+            "x": 41.70703125,
+            "y": 225.75,
+            "width": 57.57124328613281,
+            "height": 9.0
+          },
+          {
+            "x": 218.61328125,
+            "y": 225.75,
+            "width": 68.65423583984375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 41.70703125,
+          "y": 237.0,
+          "width": 252.18743896484375,
+          "height": 9.0
+        },
+        "segments": [
+          "Working Days : 28",
+          "Absent Days : 0 / 0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 41.70703125,
+            "y": 237.0,
+            "width": 72.01460266113281,
+            "height": 9.0
+          },
+          {
+            "x": 218.61328125,
+            "y": 237.0,
+            "width": 75.28118896484375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 41.70703125,
+          "y": 253.5,
+          "width": 79.9578628540039,
+          "height": 9.0
+        },
+        "segments": [
+          "PAN : CHRPD2992Q"
+        ],
+        "segment_boxes": [
+          {
+            "x": 41.70703125,
+            "y": 253.5,
+            "width": 79.9578628540039,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 97.55859375,
+          "y": 270.75,
+          "width": 393.05718994140625,
+          "height": 9.0
+        },
+        "segments": [
+          "Earnings",
+          "Deductions",
+          "Contribution"
+        ],
+        "segment_boxes": [
+          {
+            "x": 97.55859375,
+            "y": 270.75,
+            "width": 35.40846252441406,
+            "height": 9.0
+          },
+          {
+            "x": 251.87109375,
+            "y": 270.75,
+            "width": 45.678497314453125,
+            "height": 9.0
+          },
+          {
+            "x": 440.2265625,
+            "y": 270.75,
+            "width": 50.38922119140625,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 83.19140625,
+          "y": 289.5,
+          "width": 457.47894287109375,
+          "height": 14.25
+        },
+        "segments": [
+          "Head",
+          "Amount",
+          "Head",
+          "Amount",
+          "Head",
+          "Amount Rs"
+        ],
+        "segment_boxes": [
+          {
+            "x": 83.19140625,
+            "y": 294.75,
+            "width": 21.095230102539062,
+            "height": 9.0
+          },
+          {
+            "x": 152.47265625,
+            "y": 289.5,
+            "width": 31.909027099609375,
+            "height": 9.0
+          },
+          {
+            "x": 242.953125,
+            "y": 294.75,
+            "width": 21.09521484375,
+            "height": 9.0
+          },
+          {
+            "x": 322.3125,
+            "y": 289.5,
+            "width": 31.90899658203125,
+            "height": 9.0
+          },
+          {
+            "x": 401.90625,
+            "y": 294.75,
+            "width": 21.09521484375,
+            "height": 9.0
+          },
+          {
+            "x": 496.13671875,
+            "y": 294.75,
+            "width": 44.53363037109375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 163.23046875,
+          "y": 300.0,
+          "width": 180.23757934570312,
+          "height": 9.0
+        },
+        "segments": [
+          "Rs",
+          "Rs"
+        ],
+        "segment_boxes": [
+          {
+            "x": 163.23046875,
+            "y": 300.0,
+            "width": 10.386001586914062,
+            "height": 9.0
+          },
+          {
+            "x": 333.08203125,
+            "y": 300.0,
+            "width": 10.386016845703125,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 43.20703125,
+          "y": 317.25,
+          "width": 525.5478515625,
+          "height": 9.0
+        },
+        "segments": [
+          "Basic Pay",
+          "36500.00 Welfare",
+          "40.00 LDA Welfare Fund",
+          "40.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 43.20703125,
+            "y": 317.25,
+            "width": 38.99461364746094,
+            "height": 9.0
+          },
+          {
+            "x": 149.54296875,
+            "y": 317.25,
+            "width": 73.60125732421875,
+            "height": 9.0
+          },
+          {
+            "x": 334.25390625,
+            "y": 317.25,
+            "width": 99.3076171875,
+            "height": 9.0
+          },
+          {
+            "x": 546.15234375,
+            "y": 317.25,
+            "width": 22.6025390625,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 43.20703125,
+          "y": 328.5,
+          "width": 144.11280822753906,
+          "height": 14.25
+        },
+        "segments": [
+          "Dearness Alllowance (58",
+          "21170.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 43.20703125,
+            "y": 328.5,
+            "width": 98.99708557128906,
+            "height": 9.0
+          },
+          {
+            "x": 149.54296875,
+            "y": 333.75,
+            "width": 37.77687072753906,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 43.20703125,
+          "y": 339.0,
+          "width": 9.72329330444336,
+          "height": 9.0
+        },
+        "segments": [
+          "%)"
+        ],
+        "segment_boxes": [
+          {
+            "x": 43.20703125,
+            "y": 339.0,
+            "width": 9.72329330444336,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 43.20703125,
+          "y": 350.25,
+          "width": 144.10548400878906,
+          "height": 9.0
+        },
+        "segments": [
+          "House Rent Allownace",
+          "4040.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 43.20703125,
+            "y": 350.25,
+            "width": 90.12030029296875,
+            "height": 9.0
+          },
+          {
+            "x": 154.59375,
+            "y": 350.25,
+            "width": 32.71876525878906,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 43.20703125,
+          "y": 361.5,
+          "width": 144.10548400878906,
+          "height": 9.0
+        },
+        "segments": [
+          "Medical Allowance",
+          "1000.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 43.20703125,
+            "y": 361.5,
+            "width": 75.41180419921875,
+            "height": 9.0
+          },
+          {
+            "x": 154.59375,
+            "y": 361.5,
+            "width": 32.71876525878906,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 43.20703125,
+          "y": 372.75,
+          "width": 144.10987854003906,
+          "height": 9.0
+        },
+        "segments": [
+          "News Paper Allowance",
+          "150.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 43.20703125,
+            "y": 372.75,
+            "width": 91.95721435546875,
+            "height": 9.0
+          },
+          {
+            "x": 159.65625,
+            "y": 372.75,
+            "width": 27.660659790039062,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 43.20703125,
+          "y": 384.0,
+          "width": 144.10548400878906,
+          "height": 9.0
+        },
+        "segments": [
+          "Pradhikaran Bhatta",
+          "1070.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 43.20703125,
+            "y": 384.0,
+            "width": 76.33897399902344,
+            "height": 9.0
+          },
+          {
+            "x": 154.59375,
+            "y": 384.0,
+            "width": 32.71876525878906,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 41.70703125,
+          "y": 396.0,
+          "width": 528.5390014648438,
+          "height": 9.0
+        },
+        "segments": [
+          "Total Earnings",
+          "63930.00 Total Deductions",
+          "40.00 Total Contribution",
+          "40.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 41.70703125,
+            "y": 396.0,
+            "width": 57.786041259765625,
+            "height": 9.0
+          },
+          {
+            "x": 150.05859375,
+            "y": 396.0,
+            "width": 109.07168579101562,
+            "height": 9.0
+          },
+          {
+            "x": 335.0859375,
+            "y": 396.0,
+            "width": 98.29022216796875,
+            "height": 9.0
+          },
+          {
+            "x": 546.984375,
+            "y": 396.0,
+            "width": 23.26165771484375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 44.70703125,
+          "y": 411.0,
+          "width": 113.26199340820312,
+          "height": 10.5
+        },
+        "segments": [
+          "Gross Salary : 63930.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 44.70703125,
+            "y": 411.0,
+            "width": 113.26199340820312,
+            "height": 10.5
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 44.70703125,
+          "y": 431.25,
+          "width": 110.06709289550781,
+          "height": 10.5
+        },
+        "segments": [
+          "Net Payable : 63890.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 44.70703125,
+            "y": 431.25,
+            "width": 110.06709289550781,
+            "height": 10.5
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 44.70703125,
+          "y": 451.5,
+          "width": 375.92510986328125,
+          "height": 10.5
+        },
+        "segments": [
+          "Net Payable in Words : Sixty Three Thousand Eight Hundred Ninety Rupees Only"
+        ],
+        "segment_boxes": [
+          {
+            "x": 44.70703125,
+            "y": 451.5,
+            "width": 375.92510986328125,
+            "height": 10.5
+          }
+        ]
+      }
+    ],
+    "table": {
+      "columns": [
+        [
+          41.70703125,
+          420.63214111328125
+        ],
+        [
+          83.19140625,
+          104.28663635253906
+        ],
+        [
+          97.55859375,
+          132.96705627441406
+        ],
+        [
+          149.54296875,
+          424.1865234375
+        ],
+        [
+          159.65625,
+          187.31690979003906
+        ],
+        [
+          218.61328125,
+          372.8400573730469
+        ],
+        [
+          242.26171875,
+          364.49609375
+        ],
+        [
+          251.87109375,
+          297.5495910644531
+        ],
+        [
+          322.3125,
+          354.22149658203125
+        ],
+        [
+          333.08203125,
+          433.5615234375
+        ],
+        [
+          395.51953125,
+          548.7538452148438
+        ],
+        [
+          401.90625,
+          423.00146484375
+        ],
+        [
+          440.2265625,
+          490.61578369140625
+        ],
+        [
+          496.13671875,
+          540.6703491210938
+        ],
+        [
+          546.15234375,
+          570.2460327148438
+        ]
+      ],
+      "rows": [
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Lucknow Development Authority,Lucknow",
+              "bbox": {
+                "x": 151.95703125,
+                "y": 51.45000076293945,
+                "width": 202.49456787109375,
+                "height": 10.799999237060547
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": ", Pradhikaran Bhawan, Vipin Khand ,Gomti Nagar , Lucknow - 226010",
+              "bbox": {
+                "x": 151.95703125,
+                "y": 81.0,
+                "width": 272.2294921875,
+                "height": 9.0
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Tan No.:",
+              "bbox": {
+                "x": 151.95703125,
+                "y": 91.5,
+                "width": 33.076385498046875,
+                "height": 9.0
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Tel/Fax: 180018005000",
+              "bbox": {
+                "x": 151.95703125,
+                "y": 102.0,
+                "width": 94.90139770507812,
+                "height": 9.0
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "CIN No.:",
+              "bbox": {
+                "x": 151.95703125,
+                "y": 112.5,
+                "width": 33.063201904296875,
+                "height": 9.0
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "GST No.: 09AAALL0016F1ZK",
+              "bbox": {
+                "x": 151.95703125,
+                "y": 123.0,
+                "width": 115.96405029296875,
+                "height": 9.0
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Email: ldavc[at]rediffmail[dot]com",
+              "bbox": {
+                "x": 151.95703125,
+                "y": 133.5,
+                "width": 134.49447631835938,
+                "height": 9.0
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Pay Slip February-2026",
+              "bbox": {
+                "x": 242.26171875,
+                "y": 144.75,
+                "width": 122.234375,
+                "height": 12.0
+              },
+              "column": 6
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Employee Name : Mr. KULDEEP KUMAR",
+              "bbox": {
+                "x": 41.70703125,
+                "y": 159.75,
+                "width": 159.57435607910156,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Father/Spouse_Name Mr. Prabha Kant",
+              "bbox": {
+                "x": 218.61328125,
+                "y": 159.75,
+                "width": 154.22677612304688,
+                "height": 9.0
+              },
+              "column": 5
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "DUBAY",
+              "bbox": {
+                "x": 41.70703125,
+                "y": 170.25,
+                "width": 28.561485290527344,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Dubey",
+              "bbox": {
+                "x": 218.61328125,
+                "y": 170.25,
+                "width": 25.283523559570312,
+                "height": 9.0
+              },
+              "column": 5
+            },
+            {
+              "text": "Employee Id :4104",
+              "bbox": {
+                "x": 395.51953125,
+                "y": 170.25,
+                "width": 74.24554443359375,
+                "height": 9.0
+              },
+              "column": 10
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Unit/Posting Location : LDA",
+              "bbox": {
+                "x": 41.70703125,
+                "y": 181.5,
+                "width": 110.93792724609375,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Designation : JUNIOR ENGINEER",
+              "bbox": {
+                "x": 218.61328125,
+                "y": 181.5,
+                "width": 131.24960327148438,
+                "height": 9.0
+              },
+              "column": 5
+            },
+            {
+              "text": "Service Status : Regular",
+              "bbox": {
+                "x": 395.51953125,
+                "y": 181.5,
+                "width": 95.55718994140625,
+                "height": 9.0
+              },
+              "column": 10
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Section/Cell : DIVISION 6 PRAVARTAN",
+              "bbox": {
+                "x": 41.70703125,
+                "y": 192.75,
+                "width": 155.0177764892578,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Bank Name : UCO Bank",
+              "bbox": {
+                "x": 218.61328125,
+                "y": 192.75,
+                "width": 93.92593383789062,
+                "height": 9.0
+              },
+              "column": 5
+            },
+            {
+              "text": "IFSC Code : UCBA0001946",
+              "bbox": {
+                "x": 395.51953125,
+                "y": 192.75,
+                "width": 108.45989990234375,
+                "height": 9.0
+              },
+              "column": 10
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Pay Scale : (PB-6(35400-",
+              "bbox": {
+                "x": 395.51953125,
+                "y": 204.0,
+                "width": 101.7796630859375,
+                "height": 9.0
+              },
+              "column": 10
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Branch Name : UCO Bank LDA",
+              "bbox": {
+                "x": 41.70703125,
+                "y": 214.5,
+                "width": 120.81536865234375,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Bank A/c No : 19460110035214",
+              "bbox": {
+                "x": 218.61328125,
+                "y": 214.5,
+                "width": 129.64154052734375,
+                "height": 9.0
+              },
+              "column": 5
+            },
+            {
+              "text": "112400+4200))35400 - 112400+4200",
+              "bbox": {
+                "x": 395.51953125,
+                "y": 214.5,
+                "width": 153.23431396484375,
+                "height": 9.0
+              },
+              "column": 10
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Level No. : L-6",
+              "bbox": {
+                "x": 41.70703125,
+                "y": 225.75,
+                "width": 57.57124328613281,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Class : CLASS-III",
+              "bbox": {
+                "x": 218.61328125,
+                "y": 225.75,
+                "width": 68.65423583984375,
+                "height": 9.0
+              },
+              "column": 5
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Working Days : 28",
+              "bbox": {
+                "x": 41.70703125,
+                "y": 237.0,
+                "width": 72.01460266113281,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Absent Days : 0 / 0",
+              "bbox": {
+                "x": 218.61328125,
+                "y": 237.0,
+                "width": 75.28118896484375,
+                "height": 9.0
+              },
+              "column": 5
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "PAN : CHRPD2992Q",
+              "bbox": {
+                "x": 41.70703125,
+                "y": 253.5,
+                "width": 79.9578628540039,
+                "height": 9.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Earnings",
+              "bbox": {
+                "x": 97.55859375,
+                "y": 270.75,
+                "width": 35.40846252441406,
+                "height": 9.0
+              },
+              "column": 2
+            },
+            {
+              "text": "Deductions",
+              "bbox": {
+                "x": 251.87109375,
+                "y": 270.75,
+                "width": 45.678497314453125,
+                "height": 9.0
+              },
+              "column": 7
+            },
+            {
+              "text": "Contribution",
+              "bbox": {
+                "x": 440.2265625,
+                "y": 270.75,
+                "width": 50.38922119140625,
+                "height": 9.0
+              },
+              "column": 12
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Head",
+              "bbox": {
+                "x": 83.19140625,
+                "y": 294.75,
+                "width": 21.095230102539062,
+                "height": 9.0
+              },
+              "column": 1
+            },
+            {
+              "text": "Amount",
+              "bbox": {
+                "x": 152.47265625,
+                "y": 289.5,
+                "width": 31.909027099609375,
+                "height": 9.0
+              },
+              "column": 3
+            },
+            {
+              "text": "Head",
+              "bbox": {
+                "x": 242.953125,
+                "y": 294.75,
+                "width": 21.09521484375,
+                "height": 9.0
+              },
+              "column": 6
+            },
+            {
+              "text": "Amount",
+              "bbox": {
+                "x": 322.3125,
+                "y": 289.5,
+                "width": 31.90899658203125,
+                "height": 9.0
+              },
+              "column": 8
+            },
+            {
+              "text": "Head",
+              "bbox": {
+                "x": 401.90625,
+                "y": 294.75,
+                "width": 21.09521484375,
+                "height": 9.0
+              },
+              "column": 11
+            },
+            {
+              "text": "Amount Rs",
+              "bbox": {
+                "x": 496.13671875,
+                "y": 294.75,
+                "width": 44.53363037109375,
+                "height": 9.0
+              },
+              "column": 13
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Rs",
+              "bbox": {
+                "x": 163.23046875,
+                "y": 300.0,
+                "width": 10.386001586914062,
+                "height": 9.0
+              },
+              "column": 4
+            },
+            {
+              "text": "Rs",
+              "bbox": {
+                "x": 333.08203125,
+                "y": 300.0,
+                "width": 10.386016845703125,
+                "height": 9.0
+              },
+              "column": 9
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Basic Pay",
+              "bbox": {
+                "x": 43.20703125,
+                "y": 317.25,
+                "width": 38.99461364746094,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "36500.00 Welfare",
+              "bbox": {
+                "x": 149.54296875,
+                "y": 317.25,
+                "width": 73.60125732421875,
+                "height": 9.0
+              },
+              "column": 3
+            },
+            {
+              "text": "40.00 LDA Welfare Fund",
+              "bbox": {
+                "x": 334.25390625,
+                "y": 317.25,
+                "width": 99.3076171875,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "40.00",
+              "bbox": {
+                "x": 546.15234375,
+                "y": 317.25,
+                "width": 22.6025390625,
+                "height": 9.0
+              },
+              "column": 14
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Dearness Alllowance (58",
+              "bbox": {
+                "x": 43.20703125,
+                "y": 328.5,
+                "width": 98.99708557128906,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "21170.00",
+              "bbox": {
+                "x": 149.54296875,
+                "y": 333.75,
+                "width": 37.77687072753906,
+                "height": 9.0
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "%)",
+              "bbox": {
+                "x": 43.20703125,
+                "y": 339.0,
+                "width": 9.72329330444336,
+                "height": 9.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "House Rent Allownace",
+              "bbox": {
+                "x": 43.20703125,
+                "y": 350.25,
+                "width": 90.12030029296875,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "4040.00",
+              "bbox": {
+                "x": 154.59375,
+                "y": 350.25,
+                "width": 32.71876525878906,
+                "height": 9.0
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Medical Allowance",
+              "bbox": {
+                "x": 43.20703125,
+                "y": 361.5,
+                "width": 75.41180419921875,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "1000.00",
+              "bbox": {
+                "x": 154.59375,
+                "y": 361.5,
+                "width": 32.71876525878906,
+                "height": 9.0
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "News Paper Allowance",
+              "bbox": {
+                "x": 43.20703125,
+                "y": 372.75,
+                "width": 91.95721435546875,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "150.00",
+              "bbox": {
+                "x": 159.65625,
+                "y": 372.75,
+                "width": 27.660659790039062,
+                "height": 9.0
+              },
+              "column": 4
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Pradhikaran Bhatta",
+              "bbox": {
+                "x": 43.20703125,
+                "y": 384.0,
+                "width": 76.33897399902344,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "1070.00",
+              "bbox": {
+                "x": 154.59375,
+                "y": 384.0,
+                "width": 32.71876525878906,
+                "height": 9.0
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Total Earnings",
+              "bbox": {
+                "x": 41.70703125,
+                "y": 396.0,
+                "width": 57.786041259765625,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "63930.00 Total Deductions",
+              "bbox": {
+                "x": 150.05859375,
+                "y": 396.0,
+                "width": 109.07168579101562,
+                "height": 9.0
+              },
+              "column": 3
+            },
+            {
+              "text": "40.00 Total Contribution",
+              "bbox": {
+                "x": 335.0859375,
+                "y": 396.0,
+                "width": 98.29022216796875,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "40.00",
+              "bbox": {
+                "x": 546.984375,
+                "y": 396.0,
+                "width": 23.26165771484375,
+                "height": 9.0
+              },
+              "column": 14
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Gross Salary : 63930.00",
+              "bbox": {
+                "x": 44.70703125,
+                "y": 411.0,
+                "width": 113.26199340820312,
+                "height": 10.5
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Net Payable : 63890.00",
+              "bbox": {
+                "x": 44.70703125,
+                "y": 431.25,
+                "width": 110.06709289550781,
+                "height": 10.5
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Net Payable in Words : Sixty Three Thousand Eight Hundred Ninety Rupees Only",
+              "bbox": {
+                "x": 44.70703125,
+                "y": 451.5,
+                "width": 375.92510986328125,
+                "height": 10.5
+              },
+              "column": 0
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

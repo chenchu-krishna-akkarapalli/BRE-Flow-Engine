@@ -68,7 +68,7 @@ pub fn labelled(lines: &[Line], options: &[&str]) -> Option<Money> {
 /// sheet is about to perform, not a negative amount — reading it as a sign
 /// makes the deduction ADD to total income.
 pub fn extract_deductions(lines: &[Line]) -> ChapterViaDeductions {
-    let total = head_amount(lines, patterns::DEDUCTIONS_VIA)
+    let mut total = head_amount(lines, patterns::DEDUCTIONS_VIA)
         .map(|m| Money::from_paise(m.paise.abs(), m.raw));
     let mut items = Vec::new();
     let mut inside = false;
@@ -101,6 +101,13 @@ pub fn extract_deductions(lines: &[Line]) -> ChapterViaDeductions {
             amount,
             raw_line: line.text(),
         });
+    }
+
+    if (total.is_none() || total.as_ref().map(|t| t.paise).unwrap_or(0) == 0) && !items.is_empty() {
+        let sum_paise: i64 = items.iter().filter_map(|i| i.amount.as_ref().map(|m| m.paise.abs())).sum();
+        if sum_paise > 0 {
+            total = Some(Money::from_paise(sum_paise, &sum_paise.to_string()));
+        }
     }
 
     ChapterViaDeductions { items, total }

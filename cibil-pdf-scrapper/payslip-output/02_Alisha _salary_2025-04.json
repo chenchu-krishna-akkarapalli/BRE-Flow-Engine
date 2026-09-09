@@ -1,0 +1,1798 @@
+{
+  "schema_version": "2.0",
+  "metadata": {
+    "source_file": "02_Alisha _salary_2025-04.pdf",
+    "page_count": 1,
+    "layout_signature": "unknown",
+    "detected_locale": "IN",
+    "currency": "INR",
+    "extraction_confidence_overall": 0.95
+  },
+  "employer": {
+    "name": "GET GORGEOUS SALON",
+    "address": "Office Address : CHINHAT CHAURAHA LUCKNOW",
+    "business_unit": null
+  },
+  "employee": {
+    "name": "Alisha Bano",
+    "employee_id": null,
+    "designation": "Head Beautician",
+    "department": null,
+    "date_of_joining": "01-04-2019",
+    "pan": "DLAPB7579D",
+    "uan": "Nil",
+    "pf_number": null,
+    "esi_number": null,
+    "bank_account": "177301000004352",
+    "bank_name": "Indian",
+    "ifsc_or_routing_code": "IOBA0001773"
+  },
+  "statements": [
+    {
+      "period": {
+        "period_type": "monthly",
+        "month": "April",
+        "year": 2025,
+        "financial_year": null,
+        "from_date": null,
+        "to_date": null,
+        "days_in_month": null,
+        "working_days": null,
+        "paid_days": null,
+        "lop_days": 0.0,
+        "arrear_days": null
+      },
+      "earnings": {
+        "items": [
+          {
+            "raw_label": "Components",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 226028.0,
+              "currency": "INR",
+              "raw_label": "Components",
+              "raw_value_string": "226028",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 226028.0,
+              "currency": "INR",
+              "raw_label": "Components",
+              "raw_value_string": "226028",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Amount (Rs.)",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 27000.0,
+              "currency": "INR",
+              "raw_label": "Amount (Rs.)",
+              "raw_value_string": "27000.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 27000.0,
+              "currency": "INR",
+              "raw_label": "Amount (Rs.)",
+              "raw_value_string": "27000.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Basic",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 27000.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "27000.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 27000.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "27000.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "deductions": {
+        "items": [
+          {
+            "raw_label": "Common Deductions",
+            "canonical_category": "other_deduction",
+            "amount": {
+              "value": 7579.0,
+              "currency": "INR",
+              "raw_label": "Common Deductions",
+              "raw_value_string": "7579",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 7579.0,
+              "currency": "INR",
+              "raw_label": "Common Deductions",
+              "raw_value_string": "7579",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "summary": {
+        "gross_salary": {
+          "value": 32000.0,
+          "currency": "INR",
+          "raw_label": "GROSS PAY",
+          "raw_value_string": "32000.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "net_pay": {
+          "value": 32000.0,
+          "currency": "INR",
+          "raw_label": "NET PAY",
+          "raw_value_string": "32000.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_deductions": {
+          "value": 0.0,
+          "currency": "INR",
+          "raw_label": "TOTAL DEDUCTIONS",
+          "raw_value_string": "0.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_allowances": {
+          "value": 253028.0,
+          "currency": "INR",
+          "raw_label": "total_allowances",
+          "raw_value_string": "253028.00",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
+        "total_incentives_and_bonus": null,
+        "amount_in_words": "Total Pay 32000.00 Thirty Two Thousand Rupees Only."
+      },
+      "reconciliation": {
+        "gross_minus_deductions_matches_net": true,
+        "delta_vs_stated_net": 0.0,
+        "sum_of_earning_items_matches_stated_gross": false,
+        "sum_of_deduction_items_matches_stated_total": false,
+        "flags": []
+      }
+    }
+  ],
+  "raw": {
+    "page_count": 1,
+    "lines": [
+      {
+        "page": 1,
+        "bbox": {
+          "x": 267.04998779296875,
+          "y": 41.040016174316406,
+          "width": 202.12850952148438,
+          "height": 17.040000915527344
+        },
+        "segments": [
+          "GET GORGEOUS SALON"
+        ],
+        "segment_boxes": [
+          {
+            "x": 267.04998779296875,
+            "y": 41.040016174316406,
+            "width": 202.12850952148438,
+            "height": 17.040000915527344
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 261.7699890136719,
+          "y": 62.4000244140625,
+          "width": 212.61798095703125,
+          "height": 9.0
+        },
+        "segments": [
+          "Office Address : CHINHAT CHAURAHA LUCKNOW"
+        ],
+        "segment_boxes": [
+          {
+            "x": 261.7699890136719,
+            "y": 62.4000244140625,
+            "width": 212.61798095703125,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 295.3699951171875,
+          "y": 73.46002197265625,
+          "width": 145.822998046875,
+          "height": 9.0
+        },
+        "segments": [
+          "Business Unit : SALON & PARLOR"
+        ],
+        "segment_boxes": [
+          {
+            "x": 295.3699951171875,
+            "y": 73.46002197265625,
+            "width": 145.822998046875,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 231.64999389648438,
+          "y": 186.61997985839844,
+          "width": 139.33990478515625,
+          "height": 12.479999542236328
+        },
+        "segments": [
+          "SalarySlip for April -2025"
+        ],
+        "segment_boxes": [
+          {
+            "x": 231.64999389648438,
+            "y": 186.61997985839844,
+            "width": 139.33990478515625,
+            "height": 12.479999542236328
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.2400016784668,
+          "y": 228.97998046875,
+          "width": 498.4395751953125,
+          "height": 9.0
+        },
+        "segments": [
+          "Employee Name: Alisha Bano",
+          "EmployeeType: Executive",
+          "Employee Code : Get/02"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.2400016784668,
+            "y": 228.97998046875,
+            "width": 123.43505859375,
+            "height": 9.0
+          },
+          {
+            "x": 312.2900085449219,
+            "y": 228.97998046875,
+            "width": 108.53985595703125,
+            "height": 9.0
+          },
+          {
+            "x": 445.6300048828125,
+            "y": 228.97998046875,
+            "width": 98.049560546875,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 42.84000015258789,
+          "y": 256.3699645996094,
+          "width": 441.34002685546875,
+          "height": 12.000030517578125
+        },
+        "segments": [
+          "Designation: Head Beautician",
+          "Duration: 1st April, 2025 to 30 April, 2025"
+        ],
+        "segment_boxes": [
+          {
+            "x": 42.84000015258789,
+            "y": 256.3699645996094,
+            "width": 129.70880126953125,
+            "height": 11.040008544921875
+          },
+          {
+            "x": 312.2900085449219,
+            "y": 259.3699951171875,
+            "width": 171.8900146484375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.2400016784668,
+          "y": 278.45001220703125,
+          "width": 377.2300109863281,
+          "height": 9.0
+        },
+        "segments": [
+          "Function: Beautician & Hair Dresser",
+          "No of Days in the Month: 30"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.2400016784668,
+            "y": 278.45001220703125,
+            "width": 147.2629852294922,
+            "height": 9.0
+          },
+          {
+            "x": 312.2900085449219,
+            "y": 278.45001220703125,
+            "width": 110.17999267578125,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.2400016784668,
+          "y": 297.77001953125,
+          "width": 337.27001953125,
+          "height": 9.0
+        },
+        "segments": [
+          "Date of Joining: 01-04-2019",
+          "Working Days: 26"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.2400016784668,
+            "y": 297.77001953125,
+            "width": 109.69999694824219,
+            "height": 9.0
+          },
+          {
+            "x": 312.2900085449219,
+            "y": 297.77001953125,
+            "width": 70.22000122070312,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.2400016784668,
+          "y": 316.8499755859375,
+          "width": 343.8670654296875,
+          "height": 9.0
+        },
+        "segments": [
+          "Provident Fund: N.A.",
+          "ESIC Number: N.A."
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.2400016784668,
+            "y": 316.8499755859375,
+            "width": 81.739990234375,
+            "height": 9.0
+          },
+          {
+            "x": 312.2900085449219,
+            "y": 316.8499755859375,
+            "width": 76.81704711914062,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.2400016784668,
+          "y": 336.04998779296875,
+          "width": 427.8999938964844,
+          "height": 9.0
+        },
+        "segments": [
+          "Current Office Location: Chinhat Lucknow-226028",
+          "Total Arrear Days: 0",
+          "LOP: 0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.2400016784668,
+            "y": 336.04998779296875,
+            "width": 205.3699951171875,
+            "height": 9.0
+          },
+          {
+            "x": 312.2900085449219,
+            "y": 336.04998779296875,
+            "width": 79.45999145507812,
+            "height": 9.0
+          },
+          {
+            "x": 445.6300048828125,
+            "y": 336.04998779296875,
+            "width": 27.509979248046875,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 40.08000183105469,
+          "y": 355.3699951171875,
+          "width": 456.63397216796875,
+          "height": 9.959991455078125
+        },
+        "segments": [
+          "Bank Name: Indian",
+          "Account No: 177301000004352",
+          "IFSC Code: IOBA0001773",
+          "Branch Name:"
+        ],
+        "segment_boxes": [
+          {
+            "x": 40.08000183105469,
+            "y": 355.3699951171875,
+            "width": 74.86798858642578,
+            "height": 9.0
+          },
+          {
+            "x": 168.25999450683594,
+            "y": 355.3699951171875,
+            "width": 123.93293762207031,
+            "height": 9.0
+          },
+          {
+            "x": 307.010009765625,
+            "y": 355.3699951171875,
+            "width": 103.36099243164062,
+            "height": 9.0
+          },
+          {
+            "x": 440.7099914550781,
+            "y": 356.3299865722656,
+            "width": 56.003997802734375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 40.08000183105469,
+          "y": 366.5299987792969,
+          "width": 499.71990966796875,
+          "height": 9.1199951171875
+        },
+        "segments": [
+          "Overseas Bank",
+          "Vibhuti Khand Lucknow"
+        ],
+        "segment_boxes": [
+          {
+            "x": 40.08000183105469,
+            "y": 366.5299987792969,
+            "width": 61.15800476074219,
+            "height": 9.0
+          },
+          {
+            "x": 440.7099914550781,
+            "y": 366.6499938964844,
+            "width": 99.08993530273438,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.2400016784668,
+          "y": 385.7300109863281,
+          "width": 360.1960144042969,
+          "height": 9.959991455078125
+        },
+        "segments": [
+          "UAN No:Nil",
+          "PAN No: DLAPB7579D"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.2400016784668,
+            "y": 386.69000244140625,
+            "width": 43.76698684692383,
+            "height": 9.0
+          },
+          {
+            "x": 312.2900085449219,
+            "y": 385.7300109863281,
+            "width": 93.14599609375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 151.22000122070312,
+          "y": 424.0299987792969,
+          "width": 309.95599365234375,
+          "height": 9.0
+        },
+        "segments": [
+          "Earnings",
+          "Deductions"
+        ],
+        "segment_boxes": [
+          {
+            "x": 151.22000122070312,
+            "y": 424.0299987792969,
+            "width": 37.740020751953125,
+            "height": 9.0
+          },
+          {
+            "x": 413.1099853515625,
+            "y": 424.0299987792969,
+            "width": 48.066009521484375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 40.08000183105469,
+          "y": 443.2300109863281,
+          "width": 523.0450439453125,
+          "height": 9.959991455078125
+        },
+        "segments": [
+          "Components",
+          "Amount (Rs.)",
+          "Common Deductions",
+          "Amount (Rs.)"
+        ],
+        "segment_boxes": [
+          {
+            "x": 40.08000183105469,
+            "y": 443.2300109863281,
+            "width": 54.060020446777344,
+            "height": 9.0
+          },
+          {
+            "x": 243.77000427246094,
+            "y": 444.19000244140625,
+            "width": 52.54496765136719,
+            "height": 9.0
+          },
+          {
+            "x": 307.010009765625,
+            "y": 443.2300109863281,
+            "width": 89.72601318359375,
+            "height": 9.0
+          },
+          {
+            "x": 510.5799865722656,
+            "y": 444.19000244140625,
+            "width": 52.545074462890625,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.2400016784668,
+          "y": 463.3900146484375,
+          "width": 518.1400146484375,
+          "height": 9.0
+        },
+        "segments": [
+          "Basic",
+          "27000.00",
+          "Provident Fund(Employee)",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.2400016784668,
+            "y": 463.3900146484375,
+            "width": 21.638996124267578,
+            "height": 9.0
+          },
+          {
+            "x": 259.25,
+            "y": 463.3900146484375,
+            "width": 36.435089111328125,
+            "height": 9.0
+          },
+          {
+            "x": 312.2900085449219,
+            "y": 463.3900146484375,
+            "width": 104.3331298828125,
+            "height": 9.0
+          },
+          {
+            "x": 558.4600219726562,
+            "y": 463.3900146484375,
+            "width": 4.91998291015625,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.2400016784668,
+          "y": 482.5899963378906,
+          "width": 251.39601135253906,
+          "height": 9.0
+        },
+        "segments": [
+          "HRA",
+          "5000.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.2400016784668,
+            "y": 482.5899963378906,
+            "width": 18.22500228881836,
+            "height": 9.0
+          },
+          {
+            "x": 263.92999267578125,
+            "y": 482.5899963378906,
+            "width": 32.706024169921875,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.2400016784668,
+          "y": 501.7900085449219,
+          "width": 251.5699920654297,
+          "height": 9.0
+        },
+        "segments": [
+          "LTA",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.2400016784668,
+            "y": 501.7900085449219,
+            "width": 16.064998626708984,
+            "height": 9.0
+          },
+          {
+            "x": 291.7699890136719,
+            "y": 501.7900085449219,
+            "width": 5.040008544921875,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.2400016784668,
+          "y": 520.989990234375,
+          "width": 251.5699920654297,
+          "height": 9.0
+        },
+        "segments": [
+          "StatutoryBonus",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.2400016784668,
+            "y": 520.989990234375,
+            "width": 63.26400375366211,
+            "height": 9.0
+          },
+          {
+            "x": 291.7699890136719,
+            "y": 520.989990234375,
+            "width": 5.040008544921875,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.2400016784668,
+          "y": 540.1900024414062,
+          "width": 251.5699920654297,
+          "height": 9.0
+        },
+        "segments": [
+          "ChildrenEducationAllowance",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.2400016784668,
+            "y": 540.1900024414062,
+            "width": 118.02197265625,
+            "height": 9.0
+          },
+          {
+            "x": 291.7699890136719,
+            "y": 540.1900024414062,
+            "width": 5.040008544921875,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.0,
+          "y": 559.4200439453125,
+          "width": 251.69000244140625,
+          "height": 9.0
+        },
+        "segments": [
+          "BooksandPeriodicals",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.0,
+            "y": 559.4200439453125,
+            "width": 85.19998168945312,
+            "height": 9.0
+          },
+          {
+            "x": 291.7699890136719,
+            "y": 559.4200439453125,
+            "width": 4.920013427734375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 40.08000183105469,
+          "y": 570.5799560546875,
+          "width": 39.40198516845703,
+          "height": 9.0
+        },
+        "segments": [
+          "Allowance"
+        ],
+        "segment_boxes": [
+          {
+            "x": 40.08000183105469,
+            "y": 570.5799560546875,
+            "width": 39.40198516845703,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.2400016784668,
+          "y": 589.780029296875,
+          "width": 251.4499969482422,
+          "height": 9.0
+        },
+        "segments": [
+          "Professional Training",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.2400016784668,
+            "y": 589.780029296875,
+            "width": 82.72198486328125,
+            "height": 9.0
+          },
+          {
+            "x": 291.7699890136719,
+            "y": 589.780029296875,
+            "width": 4.920013427734375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.2400016784668,
+          "y": 608.8599853515625,
+          "width": 251.4499969482422,
+          "height": 9.0
+        },
+        "segments": [
+          "Special Allowance",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.2400016784668,
+            "y": 608.8599853515625,
+            "width": 71.22898864746094,
+            "height": 9.0
+          },
+          {
+            "x": 291.7699890136719,
+            "y": 608.8599853515625,
+            "width": 4.920013427734375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.2400016784668,
+          "y": 627.0999755859375,
+          "width": 518.1400146484375,
+          "height": 9.0
+        },
+        "segments": [
+          "Gross Earning (A)",
+          "32000.00",
+          "Total Deductions (B)",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.2400016784668,
+            "y": 627.0999755859375,
+            "width": 76.2080078125,
+            "height": 9.0
+          },
+          {
+            "x": 259.3699951171875,
+            "y": 627.0999755859375,
+            "width": 36.435089111328125,
+            "height": 9.0
+          },
+          {
+            "x": 312.2900085449219,
+            "y": 627.0999755859375,
+            "width": 87.00497436523438,
+            "height": 9.0
+          },
+          {
+            "x": 558.4600219726562,
+            "y": 627.0999755859375,
+            "width": 4.91998291015625,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.2400016784668,
+          "y": 646.1799926757812,
+          "width": 250.56507873535156,
+          "height": 9.0
+        },
+        "segments": [
+          "Net Pay(A - B)",
+          "32000.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.2400016784668,
+            "y": 646.1799926757812,
+            "width": 61.562992095947266,
+            "height": 9.0
+          },
+          {
+            "x": 259.3699951171875,
+            "y": 646.1799926757812,
+            "width": 36.435089111328125,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 42.720001220703125,
+          "y": 665.5,
+          "width": 407.51202392578125,
+          "height": 9.96002197265625
+        },
+        "segments": [
+          "Total Pay",
+          "32000.00",
+          "Thirty Two Thousand Rupees Only."
+        ],
+        "segment_boxes": [
+          {
+            "x": 42.720001220703125,
+            "y": 665.5,
+            "width": 39.57899475097656,
+            "height": 9.0
+          },
+          {
+            "x": 259.3699951171875,
+            "y": 665.5,
+            "width": 36.435089111328125,
+            "height": 9.0
+          },
+          {
+            "x": 310.9700012207031,
+            "y": 666.4600219726562,
+            "width": 139.26202392578125,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 161.17999267578125,
+          "y": 715.2000122070312,
+          "width": 285.10107421875,
+          "height": 9.0
+        },
+        "segments": [
+          "Note: This is a Computer Generated Slip and does not require signature"
+        ],
+        "segment_boxes": [
+          {
+            "x": 161.17999267578125,
+            "y": 715.2000122070312,
+            "width": 285.10107421875,
+            "height": 9.0
+          }
+        ]
+      }
+    ],
+    "table": {
+      "columns": [
+        [
+          40.08000183105469,
+          250.61000061035156
+        ],
+        [
+          151.22000122070312,
+          188.96002197265625
+        ],
+        [
+          161.17999267578125,
+          446.28106689453125
+        ],
+        [
+          168.25999450683594,
+          292.19293212890625
+        ],
+        [
+          231.64999389648438,
+          370.9898986816406
+        ],
+        [
+          243.77000427246094,
+          296.3149719238281
+        ],
+        [
+          259.25,
+          474.3879699707031
+        ],
+        [
+          267.04998779296875,
+          469.1784973144531
+        ],
+        [
+          291.7699890136719,
+          441.1929931640625
+        ],
+        [
+          307.010009765625,
+          484.1800231933594
+        ],
+        [
+          413.1099853515625,
+          461.1759948730469
+        ],
+        [
+          440.7099914550781,
+          543.6795654296875
+        ],
+        [
+          510.5799865722656,
+          563.1250610351562
+        ],
+        [
+          558.4600219726562,
+          563.3800048828125
+        ]
+      ],
+      "rows": [
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "GET GORGEOUS SALON",
+              "bbox": {
+                "x": 267.04998779296875,
+                "y": 41.040016174316406,
+                "width": 202.12850952148438,
+                "height": 17.040000915527344
+              },
+              "column": 7
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Office Address : CHINHAT CHAURAHA LUCKNOW",
+              "bbox": {
+                "x": 261.7699890136719,
+                "y": 62.4000244140625,
+                "width": 212.61798095703125,
+                "height": 9.0
+              },
+              "column": 6
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Business Unit : SALON & PARLOR",
+              "bbox": {
+                "x": 295.3699951171875,
+                "y": 73.46002197265625,
+                "width": 145.822998046875,
+                "height": 9.0
+              },
+              "column": 8
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "SalarySlip for April -2025",
+              "bbox": {
+                "x": 231.64999389648438,
+                "y": 186.61997985839844,
+                "width": 139.33990478515625,
+                "height": 12.479999542236328
+              },
+              "column": 4
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Employee Name: Alisha Bano",
+              "bbox": {
+                "x": 45.2400016784668,
+                "y": 228.97998046875,
+                "width": 123.43505859375,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "EmployeeType: Executive",
+              "bbox": {
+                "x": 312.2900085449219,
+                "y": 228.97998046875,
+                "width": 108.53985595703125,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "Employee Code : Get/02",
+              "bbox": {
+                "x": 445.6300048828125,
+                "y": 228.97998046875,
+                "width": 98.049560546875,
+                "height": 9.0
+              },
+              "column": 11
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Designation: Head Beautician",
+              "bbox": {
+                "x": 42.84000015258789,
+                "y": 256.3699645996094,
+                "width": 129.70880126953125,
+                "height": 11.040008544921875
+              },
+              "column": 0
+            },
+            {
+              "text": "Duration: 1st April, 2025 to 30 April, 2025",
+              "bbox": {
+                "x": 312.2900085449219,
+                "y": 259.3699951171875,
+                "width": 171.8900146484375,
+                "height": 9.0
+              },
+              "column": 9
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Function: Beautician & Hair Dresser",
+              "bbox": {
+                "x": 45.2400016784668,
+                "y": 278.45001220703125,
+                "width": 147.2629852294922,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "No of Days in the Month: 30",
+              "bbox": {
+                "x": 312.2900085449219,
+                "y": 278.45001220703125,
+                "width": 110.17999267578125,
+                "height": 9.0
+              },
+              "column": 9
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Date of Joining: 01-04-2019",
+              "bbox": {
+                "x": 45.2400016784668,
+                "y": 297.77001953125,
+                "width": 109.69999694824219,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Working Days: 26",
+              "bbox": {
+                "x": 312.2900085449219,
+                "y": 297.77001953125,
+                "width": 70.22000122070312,
+                "height": 9.0
+              },
+              "column": 9
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Provident Fund: N.A.",
+              "bbox": {
+                "x": 45.2400016784668,
+                "y": 316.8499755859375,
+                "width": 81.739990234375,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "ESIC Number: N.A.",
+              "bbox": {
+                "x": 312.2900085449219,
+                "y": 316.8499755859375,
+                "width": 76.81704711914062,
+                "height": 9.0
+              },
+              "column": 9
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Current Office Location: Chinhat Lucknow-226028",
+              "bbox": {
+                "x": 45.2400016784668,
+                "y": 336.04998779296875,
+                "width": 205.3699951171875,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Total Arrear Days: 0",
+              "bbox": {
+                "x": 312.2900085449219,
+                "y": 336.04998779296875,
+                "width": 79.45999145507812,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "LOP: 0",
+              "bbox": {
+                "x": 445.6300048828125,
+                "y": 336.04998779296875,
+                "width": 27.509979248046875,
+                "height": 9.0
+              },
+              "column": 11
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Bank Name: Indian",
+              "bbox": {
+                "x": 40.08000183105469,
+                "y": 355.3699951171875,
+                "width": 74.86798858642578,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Account No: 177301000004352",
+              "bbox": {
+                "x": 168.25999450683594,
+                "y": 355.3699951171875,
+                "width": 123.93293762207031,
+                "height": 9.0
+              },
+              "column": 3
+            },
+            {
+              "text": "IFSC Code: IOBA0001773",
+              "bbox": {
+                "x": 307.010009765625,
+                "y": 355.3699951171875,
+                "width": 103.36099243164062,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "Branch Name:",
+              "bbox": {
+                "x": 440.7099914550781,
+                "y": 356.3299865722656,
+                "width": 56.003997802734375,
+                "height": 9.0
+              },
+              "column": 11
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Overseas Bank",
+              "bbox": {
+                "x": 40.08000183105469,
+                "y": 366.5299987792969,
+                "width": 61.15800476074219,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Vibhuti Khand Lucknow",
+              "bbox": {
+                "x": 440.7099914550781,
+                "y": 366.6499938964844,
+                "width": 99.08993530273438,
+                "height": 9.0
+              },
+              "column": 11
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "UAN No:Nil",
+              "bbox": {
+                "x": 45.2400016784668,
+                "y": 386.69000244140625,
+                "width": 43.76698684692383,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "PAN No: DLAPB7579D",
+              "bbox": {
+                "x": 312.2900085449219,
+                "y": 385.7300109863281,
+                "width": 93.14599609375,
+                "height": 9.0
+              },
+              "column": 9
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Earnings",
+              "bbox": {
+                "x": 151.22000122070312,
+                "y": 424.0299987792969,
+                "width": 37.740020751953125,
+                "height": 9.0
+              },
+              "column": 1
+            },
+            {
+              "text": "Deductions",
+              "bbox": {
+                "x": 413.1099853515625,
+                "y": 424.0299987792969,
+                "width": 48.066009521484375,
+                "height": 9.0
+              },
+              "column": 10
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Components",
+              "bbox": {
+                "x": 40.08000183105469,
+                "y": 443.2300109863281,
+                "width": 54.060020446777344,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Amount (Rs.)",
+              "bbox": {
+                "x": 243.77000427246094,
+                "y": 444.19000244140625,
+                "width": 52.54496765136719,
+                "height": 9.0
+              },
+              "column": 5
+            },
+            {
+              "text": "Common Deductions",
+              "bbox": {
+                "x": 307.010009765625,
+                "y": 443.2300109863281,
+                "width": 89.72601318359375,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "Amount (Rs.)",
+              "bbox": {
+                "x": 510.5799865722656,
+                "y": 444.19000244140625,
+                "width": 52.545074462890625,
+                "height": 9.0
+              },
+              "column": 12
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Basic",
+              "bbox": {
+                "x": 45.2400016784668,
+                "y": 463.3900146484375,
+                "width": 21.638996124267578,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "27000.00",
+              "bbox": {
+                "x": 259.25,
+                "y": 463.3900146484375,
+                "width": 36.435089111328125,
+                "height": 9.0
+              },
+              "column": 6
+            },
+            {
+              "text": "Provident Fund(Employee)",
+              "bbox": {
+                "x": 312.2900085449219,
+                "y": 463.3900146484375,
+                "width": 104.3331298828125,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 558.4600219726562,
+                "y": 463.3900146484375,
+                "width": 4.91998291015625,
+                "height": 9.0
+              },
+              "column": 13
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "HRA",
+              "bbox": {
+                "x": 45.2400016784668,
+                "y": 482.5899963378906,
+                "width": 18.22500228881836,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "5000.00",
+              "bbox": {
+                "x": 263.92999267578125,
+                "y": 482.5899963378906,
+                "width": 32.706024169921875,
+                "height": 9.0
+              },
+              "column": 7
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "LTA",
+              "bbox": {
+                "x": 45.2400016784668,
+                "y": 501.7900085449219,
+                "width": 16.064998626708984,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 291.7699890136719,
+                "y": 501.7900085449219,
+                "width": 5.040008544921875,
+                "height": 9.0
+              },
+              "column": 8
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "StatutoryBonus",
+              "bbox": {
+                "x": 45.2400016784668,
+                "y": 520.989990234375,
+                "width": 63.26400375366211,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 291.7699890136719,
+                "y": 520.989990234375,
+                "width": 5.040008544921875,
+                "height": 9.0
+              },
+              "column": 8
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "ChildrenEducationAllowance",
+              "bbox": {
+                "x": 45.2400016784668,
+                "y": 540.1900024414062,
+                "width": 118.02197265625,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 291.7699890136719,
+                "y": 540.1900024414062,
+                "width": 5.040008544921875,
+                "height": 9.0
+              },
+              "column": 8
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "BooksandPeriodicals",
+              "bbox": {
+                "x": 45.0,
+                "y": 559.4200439453125,
+                "width": 85.19998168945312,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 291.7699890136719,
+                "y": 559.4200439453125,
+                "width": 4.920013427734375,
+                "height": 9.0
+              },
+              "column": 8
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Allowance",
+              "bbox": {
+                "x": 40.08000183105469,
+                "y": 570.5799560546875,
+                "width": 39.40198516845703,
+                "height": 9.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Professional Training",
+              "bbox": {
+                "x": 45.2400016784668,
+                "y": 589.780029296875,
+                "width": 82.72198486328125,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 291.7699890136719,
+                "y": 589.780029296875,
+                "width": 4.920013427734375,
+                "height": 9.0
+              },
+              "column": 8
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Special Allowance",
+              "bbox": {
+                "x": 45.2400016784668,
+                "y": 608.8599853515625,
+                "width": 71.22898864746094,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 291.7699890136719,
+                "y": 608.8599853515625,
+                "width": 4.920013427734375,
+                "height": 9.0
+              },
+              "column": 8
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Gross Earning (A)",
+              "bbox": {
+                "x": 45.2400016784668,
+                "y": 627.0999755859375,
+                "width": 76.2080078125,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "32000.00",
+              "bbox": {
+                "x": 259.3699951171875,
+                "y": 627.0999755859375,
+                "width": 36.435089111328125,
+                "height": 9.0
+              },
+              "column": 6
+            },
+            {
+              "text": "Total Deductions (B)",
+              "bbox": {
+                "x": 312.2900085449219,
+                "y": 627.0999755859375,
+                "width": 87.00497436523438,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 558.4600219726562,
+                "y": 627.0999755859375,
+                "width": 4.91998291015625,
+                "height": 9.0
+              },
+              "column": 13
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Net Pay(A - B)",
+              "bbox": {
+                "x": 45.2400016784668,
+                "y": 646.1799926757812,
+                "width": 61.562992095947266,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "32000.00",
+              "bbox": {
+                "x": 259.3699951171875,
+                "y": 646.1799926757812,
+                "width": 36.435089111328125,
+                "height": 9.0
+              },
+              "column": 6
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Total Pay",
+              "bbox": {
+                "x": 42.720001220703125,
+                "y": 665.5,
+                "width": 39.57899475097656,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "32000.00",
+              "bbox": {
+                "x": 259.3699951171875,
+                "y": 665.5,
+                "width": 36.435089111328125,
+                "height": 9.0
+              },
+              "column": 6
+            },
+            {
+              "text": "Thirty Two Thousand Rupees Only.",
+              "bbox": {
+                "x": 310.9700012207031,
+                "y": 666.4600219726562,
+                "width": 139.26202392578125,
+                "height": 9.0
+              },
+              "column": 9
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Note: This is a Computer Generated Slip and does not require signature",
+              "bbox": {
+                "x": 161.17999267578125,
+                "y": 715.2000122070312,
+                "width": 285.10107421875,
+                "height": 9.0
+              },
+              "column": 2
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

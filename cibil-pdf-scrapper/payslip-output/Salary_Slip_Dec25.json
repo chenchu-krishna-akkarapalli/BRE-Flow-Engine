@@ -1,0 +1,2479 @@
+{
+  "schema_version": "2.0",
+  "metadata": {
+    "source_file": "Salary_Slip_Dec25.pdf",
+    "page_count": 1,
+    "layout_signature": "unknown",
+    "detected_locale": "IN",
+    "currency": "INR",
+    "extraction_confidence_overall": 0.95
+  },
+  "employer": {
+    "name": "(INR)",
+    "address": null,
+    "business_unit": null
+  },
+  "employee": {
+    "name": "Location",
+    "employee_id": null,
+    "designation": null,
+    "department": "0",
+    "date_of_joining": "Grade",
+    "pan": "PF No :UAN No :",
+    "uan": null,
+    "pf_number": null,
+    "esi_number": null,
+    "bank_account": null,
+    "bank_name": "Bank A/C No :",
+    "ifsc_or_routing_code": null
+  },
+  "statements": [
+    {
+      "period": {
+        "period_type": "monthly",
+        "month": null,
+        "year": null,
+        "financial_year": null,
+        "from_date": null,
+        "to_date": null,
+        "days_in_month": null,
+        "working_days": null,
+        "paid_days": null,
+        "lop_days": null,
+        "arrear_days": null
+      },
+      "earnings": {
+        "items": [
+          {
+            "raw_label": "1230349.00455,425.00",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 222480.0,
+              "currency": "INR",
+              "raw_label": "1230349.00455,425.00",
+              "raw_value_string": "222,480.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 222480.0,
+              "currency": "INR",
+              "raw_label": "1230349.00455,425.00",
+              "raw_value_string": "222,480.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Basic Pay",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 218001.43,
+              "currency": "INR",
+              "raw_label": "Basic Pay",
+              "raw_value_string": "218,001.43",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 218001.43,
+              "currency": "INR",
+              "raw_label": "Basic Pay",
+              "raw_value_string": "218,001.43",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "House Rent Allowance",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 87200.57,
+              "currency": "INR",
+              "raw_label": "House Rent Allowance",
+              "raw_value_string": "87,200.57",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 87200.57,
+              "currency": "INR",
+              "raw_label": "House Rent Allowance",
+              "raw_value_string": "87,200.57",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Leave Trvl Allowance",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 18166.79,
+              "currency": "INR",
+              "raw_label": "Leave Trvl Allowance",
+              "raw_value_string": "18,166.79",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 18166.79,
+              "currency": "INR",
+              "raw_label": "Leave Trvl Allowance",
+              "raw_value_string": "18,166.79",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "SPL-Flexi Pay Allowance",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 176301.45,
+              "currency": "INR",
+              "raw_label": "SPL-Flexi Pay Allowance",
+              "raw_value_string": "176,301.45",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 176301.45,
+              "currency": "INR",
+              "raw_label": "SPL-Flexi Pay Allowance",
+              "raw_value_string": "176,301.45",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Car Allowance-CIL",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 26666.67,
+              "currency": "INR",
+              "raw_label": "Car Allowance-CIL",
+              "raw_value_string": "26,666.67",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 26666.67,
+              "currency": "INR",
+              "raw_label": "Car Allowance-CIL",
+              "raw_value_string": "26,666.67",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Meal Coupon",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 2200.0,
+              "currency": "INR",
+              "raw_label": "Meal Coupon",
+              "raw_value_string": "2,200.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2200.0,
+              "currency": "INR",
+              "raw_label": "Meal Coupon",
+              "raw_value_string": "2,200.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Fuel Reimbursement - CIL",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "Fuel Reimbursement - CIL",
+              "raw_value_string": "1,800.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "Fuel Reimbursement - CIL",
+              "raw_value_string": "1,800.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Driver Salary - CIL",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 13000.0,
+              "currency": "INR",
+              "raw_label": "Driver Salary - CIL",
+              "raw_value_string": "13,000.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 13000.0,
+              "currency": "INR",
+              "raw_label": "Driver Salary - CIL",
+              "raw_value_string": "13,000.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Professional Development",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 1666.67,
+              "currency": "INR",
+              "raw_label": "Professional Development",
+              "raw_value_string": "1,666.67",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1666.67,
+              "currency": "INR",
+              "raw_label": "Professional Development",
+              "raw_value_string": "1,666.67",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "deductions": {
+        "items": [
+          {
+            "raw_label": "Provident Fund Employee",
+            "canonical_category": "provident_fund",
+            "amount": {
+              "value": 26160.0,
+              "currency": "INR",
+              "raw_label": "Provident Fund Employee",
+              "raw_value_string": "26,160.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 26160.0,
+              "currency": "INR",
+              "raw_label": "Provident Fund Employee",
+              "raw_value_string": "26,160.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Meal Allowance Deduction",
+            "canonical_category": "other_deduction",
+            "amount": {
+              "value": 2200.0,
+              "currency": "INR",
+              "raw_label": "Meal Allowance Deduction",
+              "raw_value_string": "2,200.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2200.0,
+              "currency": "INR",
+              "raw_label": "Meal Allowance Deduction",
+              "raw_value_string": "2,200.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Professional Tax Dedn",
+            "canonical_category": "professional_tax",
+            "amount": {
+              "value": 200.0,
+              "currency": "INR",
+              "raw_label": "Professional Tax Dedn",
+              "raw_value_string": "200.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 200.0,
+              "currency": "INR",
+              "raw_label": "Professional Tax Dedn",
+              "raw_value_string": "200.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Income Tax Deduction",
+            "canonical_category": "income_tax_tds",
+            "amount": {
+              "value": 151809.0,
+              "currency": "INR",
+              "raw_label": "Income Tax Deduction",
+              "raw_value_string": "151,809.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 151809.0,
+              "currency": "INR",
+              "raw_label": "Income Tax Deduction",
+              "raw_value_string": "151,809.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "summary": {
+        "gross_salary": {
+          "value": 545003.58,
+          "currency": "INR",
+          "raw_label": "GROSS PAY",
+          "raw_value_string": "545,003.58",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "net_pay": {
+          "value": 364634.58,
+          "currency": "INR",
+          "raw_label": "NET PAY",
+          "raw_value_string": "364,634.58",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_deductions": {
+          "value": 180369.0,
+          "currency": "INR",
+          "raw_label": "TOTAL DEDUCTIONS",
+          "raw_value_string": "180,369.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_allowances": {
+          "value": 549482.15,
+          "currency": "INR",
+          "raw_label": "total_allowances",
+          "raw_value_string": "549482.15",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
+        "total_incentives_and_bonus": null,
+        "amount_in_words": "Units 0 0 0 0 0 0 0 0 0 Three Hundred Sixty Four Thousand Six Hundred Thirty Four Indian Rupee and Fifty Eight paise Only."
+      },
+      "reconciliation": {
+        "gross_minus_deductions_matches_net": true,
+        "delta_vs_stated_net": -5.820766091346741e-11,
+        "sum_of_earning_items_matches_stated_gross": false,
+        "sum_of_deduction_items_matches_stated_total": true,
+        "flags": []
+      }
+    }
+  ],
+  "raw": {
+    "page_count": 1,
+    "lines": [
+      {
+        "page": 1,
+        "bbox": {
+          "x": 501.6199951171875,
+          "y": 51.510009765625,
+          "width": 22.50897216796875,
+          "height": 9.0
+        },
+        "segments": [
+          "31.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 501.6199951171875,
+            "y": 51.510009765625,
+            "width": 22.50897216796875,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 201.3800048828125,
+          "y": 57.0,
+          "width": 25.0,
+          "height": 10.0
+        },
+        "segments": [
+          "(INR)"
+        ],
+        "segment_boxes": [
+          {
+            "x": 201.3800048828125,
+            "y": 57.0,
+            "width": 25.0,
+            "height": 10.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 264.6199951171875,
+          "y": 66.510009765625,
+          "width": 27.51300048828125,
+          "height": 9.0
+        },
+        "segments": [
+          "200.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 264.6199951171875,
+            "y": 66.510009765625,
+            "width": 27.51300048828125,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 224.6199951171875,
+          "y": 74.010009765625,
+          "width": 256.01800537109375,
+          "height": 14.010009765625
+        },
+        "segments": [
+          "26,160.00",
+          "2,200.00",
+          "180,369.00",
+          "364,634.58"
+        ],
+        "segment_boxes": [
+          {
+            "x": 224.6199951171875,
+            "y": 79.010009765625,
+            "width": 40.014007568359375,
+            "height": 9.0
+          },
+          {
+            "x": 244.6199951171875,
+            "y": 74.010009765625,
+            "width": 35.010009765625,
+            "height": 9.0
+          },
+          {
+            "x": 408.6199951171875,
+            "y": 79.02001953125,
+            "width": 45.01800537109375,
+            "height": 9.0
+          },
+          {
+            "x": 435.6199951171875,
+            "y": 79.02001953125,
+            "width": 45.01800537109375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 284.6199951171875,
+          "y": 80.97998046875,
+          "width": 330.98199462890625,
+          "height": 12.0400390625
+        },
+        "segments": [
+          "151,809.00",
+          "ATKPK9241J"
+        ],
+        "segment_boxes": [
+          {
+            "x": 284.6199951171875,
+            "y": 84.02001953125,
+            "width": 45.01800537109375,
+            "height": 9.0
+          },
+          {
+            "x": 561.6199951171875,
+            "y": 80.97998046875,
+            "width": 53.98199462890625,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 601.6199951171875,
+          "y": 87.04998779296875,
+          "width": 60.0479736328125,
+          "height": 9.0
+        },
+        "segments": [
+          "100127381848"
+        ],
+        "segment_boxes": [
+          {
+            "x": 601.6199951171875,
+            "y": 87.04998779296875,
+            "width": 60.0479736328125,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 200.69000244140625,
+          "y": 101.0,
+          "width": 34.44000244140625,
+          "height": 10.0
+        },
+        "segments": [
+          "Amount"
+        ],
+        "segment_boxes": [
+          {
+            "x": 200.69000244140625,
+            "y": 101.0,
+            "width": 34.44000244140625,
+            "height": 10.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 581.6199951171875,
+          "y": 119.510009765625,
+          "width": 93.510009765625,
+          "height": 9.0
+        },
+        "segments": [
+          "KD/MAL/216426/11033"
+        ],
+        "segment_boxes": [
+          {
+            "x": 581.6199951171875,
+            "y": 119.510009765625,
+            "width": 93.510009765625,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 122.69000244140625,
+          "y": 162.0,
+          "width": 50.02000427246094,
+          "height": 10.0
+        },
+        "segments": [
+          "01/02/2021",
+          "5A"
+        ],
+        "segment_boxes": [
+          {
+            "x": 122.69000244140625,
+            "y": 162.0,
+            "width": 50.02000427246094,
+            "height": 10.0
+          },
+          {
+            "x": 147.69000244140625,
+            "y": 162.0,
+            "width": 12.220001220703125,
+            "height": 10.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 200.69000244140625,
+          "y": 205.0,
+          "width": 88.93399047851562,
+          "height": 14.0
+        },
+        "segments": [
+          "Units",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 200.69000244140625,
+            "y": 209.0,
+            "width": 22.770004272460938,
+            "height": 10.0
+          },
+          {
+            "x": 224.6199951171875,
+            "y": 205.0,
+            "width": 5.003997802734375,
+            "height": 9.0
+          },
+          {
+            "x": 244.6199951171875,
+            "y": 205.0,
+            "width": 5.003997802734375,
+            "height": 9.0
+          },
+          {
+            "x": 264.6199951171875,
+            "y": 205.0,
+            "width": 5.003997802734375,
+            "height": 9.0
+          },
+          {
+            "x": 284.6199951171875,
+            "y": 205.0,
+            "width": 5.003997802734375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 122.69000244140625,
+          "y": 264.0,
+          "width": 66.66000366210938,
+          "height": 10.0
+        },
+        "segments": [
+          "Date of Joining",
+          "Grade"
+        ],
+        "segment_boxes": [
+          {
+            "x": 122.69000244140625,
+            "y": 264.0,
+            "width": 66.66000366210938,
+            "height": 10.0
+          },
+          {
+            "x": 147.69000244140625,
+            "y": 264.0,
+            "width": 27.779998779296875,
+            "height": 10.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 224.6199951171875,
+          "y": 427.0,
+          "width": 414.97100830078125,
+          "height": 14.0
+        },
+        "segments": [
+          "Provident Fund Employee",
+          "Meal Allowance Deduction",
+          "Professional Tax Dedn",
+          "Income Tax Deduction",
+          "Gross Deductions",
+          "Net Pay",
+          "Other Information",
+          "Paid Days :",
+          "Bank Name :Bank A/C No :",
+          "Pan Number :PF No :UAN No :"
+        ],
+        "segment_boxes": [
+          {
+            "x": 224.6199951171875,
+            "y": 427.0,
+            "width": 103.49099731445312,
+            "height": 9.0
+          },
+          {
+            "x": 244.6199951171875,
+            "y": 427.0,
+            "width": 106.00198364257812,
+            "height": 9.0
+          },
+          {
+            "x": 264.6199951171875,
+            "y": 427.0,
+            "width": 90.989990234375,
+            "height": 9.0
+          },
+          {
+            "x": 284.6199951171875,
+            "y": 427.0,
+            "width": 89.99099731445312,
+            "height": 9.0
+          },
+          {
+            "x": 409.69000244140625,
+            "y": 430.0,
+            "width": 79.44000244140625,
+            "height": 10.0
+          },
+          {
+            "x": 436.69000244140625,
+            "y": 430.0,
+            "width": 35.540008544921875,
+            "height": 10.0
+          },
+          {
+            "x": 486.760009765625,
+            "y": 430.0,
+            "width": 85.5250244140625,
+            "height": 11.0
+          },
+          {
+            "x": 501.6199951171875,
+            "y": 432.0,
+            "width": 45.98101806640625,
+            "height": 9.0
+          },
+          {
+            "x": 521.6199951171875,
+            "y": 432.0,
+            "width": 76.96099853515625,
+            "height": 9.0
+          },
+          {
+            "x": 561.6199951171875,
+            "y": 432.0,
+            "width": 77.97100830078125,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 200.69000244140625,
+          "y": 433.0,
+          "width": 50.010009765625,
+          "height": 10.0
+        },
+        "segments": [
+          "Deductions"
+        ],
+        "segment_boxes": [
+          {
+            "x": 200.69000244140625,
+            "y": 433.0,
+            "width": 50.010009765625,
+            "height": 10.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 201.3800048828125,
+          "y": 497.0,
+          "width": 25.0,
+          "height": 10.0
+        },
+        "segments": [
+          "(INR)"
+        ],
+        "segment_boxes": [
+          {
+            "x": 201.3800048828125,
+            "y": 497.0,
+            "width": 25.0,
+            "height": 10.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 484.760009765625,
+          "y": 505.97998046875,
+          "width": 21.977996826171875,
+          "height": 11.0
+        },
+        "segments": [
+          "YTD"
+        ],
+        "segment_boxes": [
+          {
+            "x": 484.760009765625,
+            "y": 505.97998046875,
+            "width": 21.977996826171875,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 244.6199951171875,
+          "y": 513.010009765625,
+          "width": 402.01800537109375,
+          "height": 14.010009765625
+        },
+        "segments": [
+          "87,200.57",
+          "18,166.79",
+          "26,666.67",
+          "2,200.00",
+          "1,800.00",
+          "13,000.00",
+          "1,666.67",
+          "1230349.00455,425.00",
+          "222,480.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 244.6199951171875,
+            "y": 518.010009765625,
+            "width": 40.014007568359375,
+            "height": 9.0
+          },
+          {
+            "x": 264.6199951171875,
+            "y": 518.010009765625,
+            "width": 40.014007568359375,
+            "height": 9.0
+          },
+          {
+            "x": 304.6199951171875,
+            "y": 518.010009765625,
+            "width": 40.014007568359375,
+            "height": 9.0
+          },
+          {
+            "x": 324.6199951171875,
+            "y": 513.010009765625,
+            "width": 35.010009765625,
+            "height": 9.0
+          },
+          {
+            "x": 344.6199951171875,
+            "y": 513.010009765625,
+            "width": 35.010009765625,
+            "height": 9.0
+          },
+          {
+            "x": 364.6199951171875,
+            "y": 518.010009765625,
+            "width": 40.014007568359375,
+            "height": 9.0
+          },
+          {
+            "x": 384.6199951171875,
+            "y": 513.010009765625,
+            "width": 35.010009765625,
+            "height": 9.0
+          },
+          {
+            "x": 561.6199951171875,
+            "y": 518.02001953125,
+            "width": 65.01800537109375,
+            "height": 9.0
+          },
+          {
+            "x": 601.6199951171875,
+            "y": 517.02001953125,
+            "width": 45.01800537109375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 224.6199951171875,
+          "y": 523.02001953125,
+          "width": 369.5150146484375,
+          "height": 10.489990234375
+        },
+        "segments": [
+          "218,001.43",
+          "176,301.45",
+          "545,003.58",
+          "5,946,841.215,536,930.001,685,774.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 224.6199951171875,
+            "y": 523.02001953125,
+            "width": 45.01800537109375,
+            "height": 9.0
+          },
+          {
+            "x": 284.6199951171875,
+            "y": 523.02001953125,
+            "width": 45.01800537109375,
+            "height": 9.0
+          },
+          {
+            "x": 408.6199951171875,
+            "y": 524.02001953125,
+            "width": 45.01800537109375,
+            "height": 9.0
+          },
+          {
+            "x": 501.6199951171875,
+            "y": 524.510009765625,
+            "width": 92.5150146484375,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 122.69000244140625,
+          "y": 529.0,
+          "width": 118.88998413085938,
+          "height": 10.0
+        },
+        "segments": [
+          "Chetan Prabhu Dial Kanda",
+          "Pune"
+        ],
+        "segment_boxes": [
+          {
+            "x": 122.69000244140625,
+            "y": 529.0,
+            "width": 118.88998413085938,
+            "height": 10.0
+          },
+          {
+            "x": 147.69000244140625,
+            "y": 529.0,
+            "width": 23.339996337890625,
+            "height": 10.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 200.69000244140625,
+          "y": 541.0,
+          "width": 34.44000244140625,
+          "height": 10.0
+        },
+        "segments": [
+          "Amount"
+        ],
+        "segment_boxes": [
+          {
+            "x": 200.69000244140625,
+            "y": 541.0,
+            "width": 34.44000244140625,
+            "height": 10.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 64.83001708984375,
+          "y": 558.1500244140625,
+          "width": 229.29595947265625,
+          "height": 12.0
+        },
+        "segments": [
+          "Payslip of the month  December Year 2025"
+        ],
+        "segment_boxes": [
+          {
+            "x": 64.83001708984375,
+            "y": 558.1500244140625,
+            "width": 229.29595947265625,
+            "height": 12.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 41.83001708984375,
+          "y": 576.8099975585938,
+          "width": 266.61602783203125,
+          "height": 12.0
+        },
+        "segments": [
+          "Syngenta Global Capability Center Private Limited"
+        ],
+        "segment_boxes": [
+          {
+            "x": 41.83001708984375,
+            "y": 576.8099975585938,
+            "width": 266.61602783203125,
+            "height": 12.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 122.69000244140625,
+          "y": 633.0,
+          "width": 73.88999938964844,
+          "height": 10.0
+        },
+        "segments": [
+          "Employee Name",
+          "Location"
+        ],
+        "segment_boxes": [
+          {
+            "x": 122.69000244140625,
+            "y": 633.0,
+            "width": 73.88999938964844,
+            "height": 10.0
+          },
+          {
+            "x": 147.69000244140625,
+            "y": 633.0,
+            "width": 37.790008544921875,
+            "height": 10.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 200.69000244140625,
+          "y": 675.0,
+          "width": 752.6900024414062,
+          "height": 13.0
+        },
+        "segments": [
+          "Units",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "Three Hundred Sixty Four Thousand Six Hundred Thirty Four Indian Rupee and Fifty Eight paise Only."
+        ],
+        "segment_boxes": [
+          {
+            "x": 200.69000244140625,
+            "y": 675.0,
+            "width": 22.770004272460938,
+            "height": 10.0
+          },
+          {
+            "x": 224.6199951171875,
+            "y": 676.0,
+            "width": 5.003997802734375,
+            "height": 9.0
+          },
+          {
+            "x": 244.6199951171875,
+            "y": 676.0,
+            "width": 5.003997802734375,
+            "height": 9.0
+          },
+          {
+            "x": 264.6199951171875,
+            "y": 676.0,
+            "width": 5.003997802734375,
+            "height": 9.0
+          },
+          {
+            "x": 284.6199951171875,
+            "y": 676.0,
+            "width": 5.003997802734375,
+            "height": 9.0
+          },
+          {
+            "x": 304.6199951171875,
+            "y": 676.0,
+            "width": 5.003997802734375,
+            "height": 9.0
+          },
+          {
+            "x": 324.6199951171875,
+            "y": 676.0,
+            "width": 5.003997802734375,
+            "height": 9.0
+          },
+          {
+            "x": 344.6199951171875,
+            "y": 676.0,
+            "width": 5.003997802734375,
+            "height": 9.0
+          },
+          {
+            "x": 364.6199951171875,
+            "y": 676.0,
+            "width": 5.003997802734375,
+            "height": 9.0
+          },
+          {
+            "x": 384.6199951171875,
+            "y": 676.0,
+            "width": 5.003997802734375,
+            "height": 9.0
+          },
+          {
+            "x": 463.3800048828125,
+            "y": 678.0,
+            "width": 490.0,
+            "height": 10.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 122.69000244140625,
+          "y": 814.0,
+          "width": 110.010009765625,
+          "height": 10.0
+        },
+        "segments": [
+          "10016060",
+          "Technical Manager"
+        ],
+        "segment_boxes": [
+          {
+            "x": 122.69000244140625,
+            "y": 814.0,
+            "width": 44.480010986328125,
+            "height": 10.0
+          },
+          {
+            "x": 147.69000244140625,
+            "y": 814.0,
+            "width": 85.010009765625,
+            "height": 10.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 201.69000244140625,
+          "y": 935.0,
+          "width": 348.583984375,
+          "height": 15.0
+        },
+        "segments": [
+          "Earnings/Allowance",
+          "Basic Pay",
+          "House Rent Allowance",
+          "Leave Trvl Allowance",
+          "SPL-Flexi Pay Allowance",
+          "Car Allowance-CIL",
+          "Meal Coupon",
+          "Fuel Reimbursement - CIL",
+          "Driver Salary - CIL",
+          "Professional Development",
+          "Gross Earnings",
+          "Net Pay in WordsOther Detail"
+        ],
+        "segment_boxes": [
+          {
+            "x": 201.69000244140625,
+            "y": 936.0,
+            "width": 87.77999877929688,
+            "height": 10.0
+          },
+          {
+            "x": 224.6199951171875,
+            "y": 936.0,
+            "width": 39.98699951171875,
+            "height": 9.0
+          },
+          {
+            "x": 244.6199951171875,
+            "y": 936.0,
+            "width": 90.99899291992188,
+            "height": 9.0
+          },
+          {
+            "x": 264.6199951171875,
+            "y": 936.0,
+            "width": 85.49099731445312,
+            "height": 9.0
+          },
+          {
+            "x": 284.6199951171875,
+            "y": 936.0,
+            "width": 100.46697998046875,
+            "height": 9.0
+          },
+          {
+            "x": 304.6199951171875,
+            "y": 936.0,
+            "width": 74.98797607421875,
+            "height": 9.0
+          },
+          {
+            "x": 324.6199951171875,
+            "y": 936.0,
+            "width": 53.51397705078125,
+            "height": 9.0
+          },
+          {
+            "x": 344.6199951171875,
+            "y": 936.0,
+            "width": 105.47100830078125,
+            "height": 9.0
+          },
+          {
+            "x": 364.6199951171875,
+            "y": 936.0,
+            "width": 73.96200561523438,
+            "height": 9.0
+          },
+          {
+            "x": 384.6199951171875,
+            "y": 936.0,
+            "width": 105.00299072265625,
+            "height": 9.0
+          },
+          {
+            "x": 409.69000244140625,
+            "y": 935.0,
+            "width": 68.8800048828125,
+            "height": 10.0
+          },
+          {
+            "x": 464.760009765625,
+            "y": 939.0,
+            "width": 85.51397705078125,
+            "height": 11.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 501.6199951171875,
+          "y": 941.0,
+          "width": 201.4840087890625,
+          "height": 9.0
+        },
+        "segments": [
+          "Projected Annual SalaryProjected TaxableTax on Total Income",
+          "Tax Paid Till DateBalance Tax to be paid",
+          "Provident Fund Employer"
+        ],
+        "segment_boxes": [
+          {
+            "x": 501.6199951171875,
+            "y": 941.0,
+            "width": 121.97198486328125,
+            "height": 9.0
+          },
+          {
+            "x": 561.6199951171875,
+            "y": 941.0,
+            "width": 111.989013671875,
+            "height": 9.0
+          },
+          {
+            "x": 601.6199951171875,
+            "y": 941.0,
+            "width": 101.4840087890625,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 96.83001708984375,
+          "y": 948.0,
+          "width": 116.65199279785156,
+          "height": 12.0
+        },
+        "segments": [
+          "Employee Information",
+          "Employee Code",
+          "Position",
+          "Address"
+        ],
+        "segment_boxes": [
+          {
+            "x": 96.83001708984375,
+            "y": 948.0,
+            "width": 116.65199279785156,
+            "height": 12.0
+          },
+          {
+            "x": 122.69000244140625,
+            "y": 950.0,
+            "width": 71.1199951171875,
+            "height": 10.0
+          },
+          {
+            "x": 147.69000244140625,
+            "y": 950.0,
+            "width": 35.55000305175781,
+            "height": 10.0
+          },
+          {
+            "x": 172.69000244140625,
+            "y": 950.0,
+            "width": 36.66999816894531,
+            "height": 10.0
+          }
+        ]
+      }
+    ],
+    "table": {
+      "columns": [
+        [
+          41.83001708984375,
+          308.446044921875
+        ],
+        [
+          64.83001708984375,
+          294.1259765625
+        ],
+        [
+          96.83001708984375,
+          213.4820098876953
+        ],
+        [
+          122.69000244140625,
+          241.57998657226562
+        ],
+        [
+          147.69000244140625,
+          232.70001220703125
+        ],
+        [
+          172.69000244140625,
+          209.36000061035156
+        ],
+        [
+          200.69000244140625,
+          289.4700012207031
+        ],
+        [
+          224.6199951171875,
+          328.1109924316406
+        ],
+        [
+          244.6199951171875,
+          350.6219787597656
+        ],
+        [
+          264.6199951171875,
+          355.6099853515625
+        ],
+        [
+          284.6199951171875,
+          385.08697509765625
+        ],
+        [
+          304.6199951171875,
+          379.60797119140625
+        ],
+        [
+          324.6199951171875,
+          378.13397216796875
+        ],
+        [
+          344.6199951171875,
+          450.09100341796875
+        ],
+        [
+          364.6199951171875,
+          438.5820007324219
+        ],
+        [
+          384.6199951171875,
+          489.62298583984375
+        ],
+        [
+          408.6199951171875,
+          489.1300048828125
+        ],
+        [
+          435.6199951171875,
+          480.63800048828125
+        ],
+        [
+          463.3800048828125,
+          953.3800048828125
+        ],
+        [
+          484.760009765625,
+          572.2850341796875
+        ],
+        [
+          501.6199951171875,
+          623.5919799804688
+        ],
+        [
+          521.6199951171875,
+          598.5809936523438
+        ],
+        [
+          561.6199951171875,
+          673.6090087890625
+        ],
+        [
+          581.6199951171875,
+          675.1300048828125
+        ],
+        [
+          601.6199951171875,
+          703.10400390625
+        ]
+      ],
+      "rows": [
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "31.00",
+              "bbox": {
+                "x": 501.6199951171875,
+                "y": 51.510009765625,
+                "width": 22.50897216796875,
+                "height": 9.0
+              },
+              "column": 20
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "(INR)",
+              "bbox": {
+                "x": 201.3800048828125,
+                "y": 57.0,
+                "width": 25.0,
+                "height": 10.0
+              },
+              "column": 6
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "200.00",
+              "bbox": {
+                "x": 264.6199951171875,
+                "y": 66.510009765625,
+                "width": 27.51300048828125,
+                "height": 9.0
+              },
+              "column": 9
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "26,160.00",
+              "bbox": {
+                "x": 224.6199951171875,
+                "y": 79.010009765625,
+                "width": 40.014007568359375,
+                "height": 9.0
+              },
+              "column": 7
+            },
+            {
+              "text": "2,200.00",
+              "bbox": {
+                "x": 244.6199951171875,
+                "y": 74.010009765625,
+                "width": 35.010009765625,
+                "height": 9.0
+              },
+              "column": 8
+            },
+            {
+              "text": "180,369.00",
+              "bbox": {
+                "x": 408.6199951171875,
+                "y": 79.02001953125,
+                "width": 45.01800537109375,
+                "height": 9.0
+              },
+              "column": 16
+            },
+            {
+              "text": "364,634.58",
+              "bbox": {
+                "x": 435.6199951171875,
+                "y": 79.02001953125,
+                "width": 45.01800537109375,
+                "height": 9.0
+              },
+              "column": 17
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "151,809.00",
+              "bbox": {
+                "x": 284.6199951171875,
+                "y": 84.02001953125,
+                "width": 45.01800537109375,
+                "height": 9.0
+              },
+              "column": 10
+            },
+            {
+              "text": "ATKPK9241J",
+              "bbox": {
+                "x": 561.6199951171875,
+                "y": 80.97998046875,
+                "width": 53.98199462890625,
+                "height": 9.0
+              },
+              "column": 22
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "100127381848",
+              "bbox": {
+                "x": 601.6199951171875,
+                "y": 87.04998779296875,
+                "width": 60.0479736328125,
+                "height": 9.0
+              },
+              "column": 24
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Amount",
+              "bbox": {
+                "x": 200.69000244140625,
+                "y": 101.0,
+                "width": 34.44000244140625,
+                "height": 10.0
+              },
+              "column": 6
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "KD/MAL/216426/11033",
+              "bbox": {
+                "x": 581.6199951171875,
+                "y": 119.510009765625,
+                "width": 93.510009765625,
+                "height": 9.0
+              },
+              "column": 23
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "01/02/2021",
+              "bbox": {
+                "x": 122.69000244140625,
+                "y": 162.0,
+                "width": 50.02000427246094,
+                "height": 10.0
+              },
+              "column": 3
+            },
+            {
+              "text": "5A",
+              "bbox": {
+                "x": 147.69000244140625,
+                "y": 162.0,
+                "width": 12.220001220703125,
+                "height": 10.0
+              },
+              "column": 4
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Units",
+              "bbox": {
+                "x": 200.69000244140625,
+                "y": 209.0,
+                "width": 22.770004272460938,
+                "height": 10.0
+              },
+              "column": 6
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 224.6199951171875,
+                "y": 205.0,
+                "width": 5.003997802734375,
+                "height": 9.0
+              },
+              "column": 7
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 244.6199951171875,
+                "y": 205.0,
+                "width": 5.003997802734375,
+                "height": 9.0
+              },
+              "column": 8
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 264.6199951171875,
+                "y": 205.0,
+                "width": 5.003997802734375,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 284.6199951171875,
+                "y": 205.0,
+                "width": 5.003997802734375,
+                "height": 9.0
+              },
+              "column": 10
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Date of Joining",
+              "bbox": {
+                "x": 122.69000244140625,
+                "y": 264.0,
+                "width": 66.66000366210938,
+                "height": 10.0
+              },
+              "column": 3
+            },
+            {
+              "text": "Grade",
+              "bbox": {
+                "x": 147.69000244140625,
+                "y": 264.0,
+                "width": 27.779998779296875,
+                "height": 10.0
+              },
+              "column": 4
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Provident Fund Employee",
+              "bbox": {
+                "x": 224.6199951171875,
+                "y": 427.0,
+                "width": 103.49099731445312,
+                "height": 9.0
+              },
+              "column": 7
+            },
+            {
+              "text": "Meal Allowance Deduction",
+              "bbox": {
+                "x": 244.6199951171875,
+                "y": 427.0,
+                "width": 106.00198364257812,
+                "height": 9.0
+              },
+              "column": 8
+            },
+            {
+              "text": "Professional Tax Dedn",
+              "bbox": {
+                "x": 264.6199951171875,
+                "y": 427.0,
+                "width": 90.989990234375,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "Income Tax Deduction",
+              "bbox": {
+                "x": 284.6199951171875,
+                "y": 427.0,
+                "width": 89.99099731445312,
+                "height": 9.0
+              },
+              "column": 10
+            },
+            {
+              "text": "Gross Deductions",
+              "bbox": {
+                "x": 409.69000244140625,
+                "y": 430.0,
+                "width": 79.44000244140625,
+                "height": 10.0
+              },
+              "column": 16
+            },
+            {
+              "text": "Net Pay",
+              "bbox": {
+                "x": 436.69000244140625,
+                "y": 430.0,
+                "width": 35.540008544921875,
+                "height": 10.0
+              },
+              "column": 17
+            },
+            {
+              "text": "Other Information",
+              "bbox": {
+                "x": 486.760009765625,
+                "y": 430.0,
+                "width": 85.5250244140625,
+                "height": 11.0
+              },
+              "column": 19
+            },
+            {
+              "text": "Paid Days :",
+              "bbox": {
+                "x": 501.6199951171875,
+                "y": 432.0,
+                "width": 45.98101806640625,
+                "height": 9.0
+              },
+              "column": 20
+            },
+            {
+              "text": "Bank Name :Bank A/C No :",
+              "bbox": {
+                "x": 521.6199951171875,
+                "y": 432.0,
+                "width": 76.96099853515625,
+                "height": 9.0
+              },
+              "column": 21
+            },
+            {
+              "text": "Pan Number :PF No :UAN No :",
+              "bbox": {
+                "x": 561.6199951171875,
+                "y": 432.0,
+                "width": 77.97100830078125,
+                "height": 9.0
+              },
+              "column": 22
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Deductions",
+              "bbox": {
+                "x": 200.69000244140625,
+                "y": 433.0,
+                "width": 50.010009765625,
+                "height": 10.0
+              },
+              "column": 6
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "(INR)",
+              "bbox": {
+                "x": 201.3800048828125,
+                "y": 497.0,
+                "width": 25.0,
+                "height": 10.0
+              },
+              "column": 6
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "YTD",
+              "bbox": {
+                "x": 484.760009765625,
+                "y": 505.97998046875,
+                "width": 21.977996826171875,
+                "height": 11.0
+              },
+              "column": 19
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "87,200.57",
+              "bbox": {
+                "x": 244.6199951171875,
+                "y": 518.010009765625,
+                "width": 40.014007568359375,
+                "height": 9.0
+              },
+              "column": 8
+            },
+            {
+              "text": "18,166.79",
+              "bbox": {
+                "x": 264.6199951171875,
+                "y": 518.010009765625,
+                "width": 40.014007568359375,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "26,666.67",
+              "bbox": {
+                "x": 304.6199951171875,
+                "y": 518.010009765625,
+                "width": 40.014007568359375,
+                "height": 9.0
+              },
+              "column": 11
+            },
+            {
+              "text": "2,200.00",
+              "bbox": {
+                "x": 324.6199951171875,
+                "y": 513.010009765625,
+                "width": 35.010009765625,
+                "height": 9.0
+              },
+              "column": 12
+            },
+            {
+              "text": "1,800.00",
+              "bbox": {
+                "x": 344.6199951171875,
+                "y": 513.010009765625,
+                "width": 35.010009765625,
+                "height": 9.0
+              },
+              "column": 13
+            },
+            {
+              "text": "13,000.00",
+              "bbox": {
+                "x": 364.6199951171875,
+                "y": 518.010009765625,
+                "width": 40.014007568359375,
+                "height": 9.0
+              },
+              "column": 14
+            },
+            {
+              "text": "1,666.67",
+              "bbox": {
+                "x": 384.6199951171875,
+                "y": 513.010009765625,
+                "width": 35.010009765625,
+                "height": 9.0
+              },
+              "column": 15
+            },
+            {
+              "text": "1230349.00455,425.00",
+              "bbox": {
+                "x": 561.6199951171875,
+                "y": 518.02001953125,
+                "width": 65.01800537109375,
+                "height": 9.0
+              },
+              "column": 22
+            },
+            {
+              "text": "222,480.00",
+              "bbox": {
+                "x": 601.6199951171875,
+                "y": 517.02001953125,
+                "width": 45.01800537109375,
+                "height": 9.0
+              },
+              "column": 24
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "218,001.43",
+              "bbox": {
+                "x": 224.6199951171875,
+                "y": 523.02001953125,
+                "width": 45.01800537109375,
+                "height": 9.0
+              },
+              "column": 7
+            },
+            {
+              "text": "176,301.45",
+              "bbox": {
+                "x": 284.6199951171875,
+                "y": 523.02001953125,
+                "width": 45.01800537109375,
+                "height": 9.0
+              },
+              "column": 10
+            },
+            {
+              "text": "545,003.58",
+              "bbox": {
+                "x": 408.6199951171875,
+                "y": 524.02001953125,
+                "width": 45.01800537109375,
+                "height": 9.0
+              },
+              "column": 16
+            },
+            {
+              "text": "5,946,841.215,536,930.001,685,774.00",
+              "bbox": {
+                "x": 501.6199951171875,
+                "y": 524.510009765625,
+                "width": 92.5150146484375,
+                "height": 9.0
+              },
+              "column": 20
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Chetan Prabhu Dial Kanda",
+              "bbox": {
+                "x": 122.69000244140625,
+                "y": 529.0,
+                "width": 118.88998413085938,
+                "height": 10.0
+              },
+              "column": 3
+            },
+            {
+              "text": "Pune",
+              "bbox": {
+                "x": 147.69000244140625,
+                "y": 529.0,
+                "width": 23.339996337890625,
+                "height": 10.0
+              },
+              "column": 4
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Amount",
+              "bbox": {
+                "x": 200.69000244140625,
+                "y": 541.0,
+                "width": 34.44000244140625,
+                "height": 10.0
+              },
+              "column": 6
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Payslip of the month  December Year 2025",
+              "bbox": {
+                "x": 64.83001708984375,
+                "y": 558.1500244140625,
+                "width": 229.29595947265625,
+                "height": 12.0
+              },
+              "column": 1
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Syngenta Global Capability Center Private Limited",
+              "bbox": {
+                "x": 41.83001708984375,
+                "y": 576.8099975585938,
+                "width": 266.61602783203125,
+                "height": 12.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Employee Name",
+              "bbox": {
+                "x": 122.69000244140625,
+                "y": 633.0,
+                "width": 73.88999938964844,
+                "height": 10.0
+              },
+              "column": 3
+            },
+            {
+              "text": "Location",
+              "bbox": {
+                "x": 147.69000244140625,
+                "y": 633.0,
+                "width": 37.790008544921875,
+                "height": 10.0
+              },
+              "column": 4
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Units",
+              "bbox": {
+                "x": 200.69000244140625,
+                "y": 675.0,
+                "width": 22.770004272460938,
+                "height": 10.0
+              },
+              "column": 6
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 224.6199951171875,
+                "y": 676.0,
+                "width": 5.003997802734375,
+                "height": 9.0
+              },
+              "column": 7
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 244.6199951171875,
+                "y": 676.0,
+                "width": 5.003997802734375,
+                "height": 9.0
+              },
+              "column": 8
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 264.6199951171875,
+                "y": 676.0,
+                "width": 5.003997802734375,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 284.6199951171875,
+                "y": 676.0,
+                "width": 5.003997802734375,
+                "height": 9.0
+              },
+              "column": 10
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 304.6199951171875,
+                "y": 676.0,
+                "width": 5.003997802734375,
+                "height": 9.0
+              },
+              "column": 11
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 324.6199951171875,
+                "y": 676.0,
+                "width": 5.003997802734375,
+                "height": 9.0
+              },
+              "column": 12
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 344.6199951171875,
+                "y": 676.0,
+                "width": 5.003997802734375,
+                "height": 9.0
+              },
+              "column": 13
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 364.6199951171875,
+                "y": 676.0,
+                "width": 5.003997802734375,
+                "height": 9.0
+              },
+              "column": 14
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 384.6199951171875,
+                "y": 676.0,
+                "width": 5.003997802734375,
+                "height": 9.0
+              },
+              "column": 15
+            },
+            {
+              "text": "Three Hundred Sixty Four Thousand Six Hundred Thirty Four Indian Rupee and Fifty Eight paise Only.",
+              "bbox": {
+                "x": 463.3800048828125,
+                "y": 678.0,
+                "width": 490.0,
+                "height": 10.0
+              },
+              "column": 18
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "10016060",
+              "bbox": {
+                "x": 122.69000244140625,
+                "y": 814.0,
+                "width": 44.480010986328125,
+                "height": 10.0
+              },
+              "column": 3
+            },
+            {
+              "text": "Technical Manager",
+              "bbox": {
+                "x": 147.69000244140625,
+                "y": 814.0,
+                "width": 85.010009765625,
+                "height": 10.0
+              },
+              "column": 4
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Earnings/Allowance",
+              "bbox": {
+                "x": 201.69000244140625,
+                "y": 936.0,
+                "width": 87.77999877929688,
+                "height": 10.0
+              },
+              "column": 6
+            },
+            {
+              "text": "Basic Pay",
+              "bbox": {
+                "x": 224.6199951171875,
+                "y": 936.0,
+                "width": 39.98699951171875,
+                "height": 9.0
+              },
+              "column": 7
+            },
+            {
+              "text": "House Rent Allowance",
+              "bbox": {
+                "x": 244.6199951171875,
+                "y": 936.0,
+                "width": 90.99899291992188,
+                "height": 9.0
+              },
+              "column": 8
+            },
+            {
+              "text": "Leave Trvl Allowance",
+              "bbox": {
+                "x": 264.6199951171875,
+                "y": 936.0,
+                "width": 85.49099731445312,
+                "height": 9.0
+              },
+              "column": 9
+            },
+            {
+              "text": "SPL-Flexi Pay Allowance",
+              "bbox": {
+                "x": 284.6199951171875,
+                "y": 936.0,
+                "width": 100.46697998046875,
+                "height": 9.0
+              },
+              "column": 10
+            },
+            {
+              "text": "Car Allowance-CIL",
+              "bbox": {
+                "x": 304.6199951171875,
+                "y": 936.0,
+                "width": 74.98797607421875,
+                "height": 9.0
+              },
+              "column": 11
+            },
+            {
+              "text": "Meal Coupon",
+              "bbox": {
+                "x": 324.6199951171875,
+                "y": 936.0,
+                "width": 53.51397705078125,
+                "height": 9.0
+              },
+              "column": 12
+            },
+            {
+              "text": "Fuel Reimbursement - CIL",
+              "bbox": {
+                "x": 344.6199951171875,
+                "y": 936.0,
+                "width": 105.47100830078125,
+                "height": 9.0
+              },
+              "column": 13
+            },
+            {
+              "text": "Driver Salary - CIL",
+              "bbox": {
+                "x": 364.6199951171875,
+                "y": 936.0,
+                "width": 73.96200561523438,
+                "height": 9.0
+              },
+              "column": 14
+            },
+            {
+              "text": "Professional Development",
+              "bbox": {
+                "x": 384.6199951171875,
+                "y": 936.0,
+                "width": 105.00299072265625,
+                "height": 9.0
+              },
+              "column": 15
+            },
+            {
+              "text": "Gross Earnings",
+              "bbox": {
+                "x": 409.69000244140625,
+                "y": 935.0,
+                "width": 68.8800048828125,
+                "height": 10.0
+              },
+              "column": 16
+            },
+            {
+              "text": "Net Pay in WordsOther Detail",
+              "bbox": {
+                "x": 464.760009765625,
+                "y": 939.0,
+                "width": 85.51397705078125,
+                "height": 11.0
+              },
+              "column": 18
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Projected Annual SalaryProjected TaxableTax on Total Income",
+              "bbox": {
+                "x": 501.6199951171875,
+                "y": 941.0,
+                "width": 121.97198486328125,
+                "height": 9.0
+              },
+              "column": 20
+            },
+            {
+              "text": "Tax Paid Till DateBalance Tax to be paid",
+              "bbox": {
+                "x": 561.6199951171875,
+                "y": 941.0,
+                "width": 111.989013671875,
+                "height": 9.0
+              },
+              "column": 22
+            },
+            {
+              "text": "Provident Fund Employer",
+              "bbox": {
+                "x": 601.6199951171875,
+                "y": 941.0,
+                "width": 101.4840087890625,
+                "height": 9.0
+              },
+              "column": 24
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Employee Information",
+              "bbox": {
+                "x": 96.83001708984375,
+                "y": 948.0,
+                "width": 116.65199279785156,
+                "height": 12.0
+              },
+              "column": 2
+            },
+            {
+              "text": "Employee Code",
+              "bbox": {
+                "x": 122.69000244140625,
+                "y": 950.0,
+                "width": 71.1199951171875,
+                "height": 10.0
+              },
+              "column": 3
+            },
+            {
+              "text": "Position",
+              "bbox": {
+                "x": 147.69000244140625,
+                "y": 950.0,
+                "width": 35.55000305175781,
+                "height": 10.0
+              },
+              "column": 4
+            },
+            {
+              "text": "Address",
+              "bbox": {
+                "x": 172.69000244140625,
+                "y": 950.0,
+                "width": 36.66999816894531,
+                "height": 10.0
+              },
+              "column": 5
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

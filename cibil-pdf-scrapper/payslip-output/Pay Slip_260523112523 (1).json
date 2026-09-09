@@ -1,0 +1,1358 @@
+{
+  "schema_version": "2.0",
+  "metadata": {
+    "source_file": "Pay Slip_260523112523 (1).pdf",
+    "page_count": 1,
+    "layout_signature": "generic-payslip",
+    "detected_locale": "IN",
+    "currency": "INR",
+    "extraction_confidence_overall": 0.95
+  },
+  "employer": {
+    "name": "DEPARTMENT OF PRISON ADMINISTRATION AND REFORM SERVICES",
+    "address": "DG PRISON ADMINISTRATION AND REFORM SERVICES",
+    "business_unit": null
+  },
+  "employee": {
+    "name": "YOGESH VISHWAKARMA",
+    "employee_id": null,
+    "designation": "JAIL WARDER",
+    "department": null,
+    "date_of_joining": null,
+    "pan": "AVPPV5851L",
+    "uan": null,
+    "pf_number": null,
+    "esi_number": null,
+    "bank_account": null,
+    "bank_name": null,
+    "ifsc_or_routing_code": null
+  },
+  "statements": [
+    {
+      "period": {
+        "period_type": "monthly",
+        "month": "Apr",
+        "year": 2026,
+        "financial_year": null,
+        "from_date": null,
+        "to_date": null,
+        "days_in_month": null,
+        "working_days": null,
+        "paid_days": null,
+        "lop_days": null,
+        "arrear_days": null
+      },
+      "earnings": {
+        "items": [
+          {
+            "raw_label": "Basic Pay",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 24500.0,
+              "currency": "INR",
+              "raw_label": "Basic Pay",
+              "raw_value_string": "24,500.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 24500.0,
+              "currency": "INR",
+              "raw_label": "Basic Pay",
+              "raw_value_string": "24,500.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Da",
+            "canonical_category": "dearness_allowance",
+            "amount": {
+              "value": 14210.0,
+              "currency": "INR",
+              "raw_label": "Da",
+              "raw_value_string": "14,210.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 14210.0,
+              "currency": "INR",
+              "raw_label": "Da",
+              "raw_value_string": "14,210.00",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Washing Allowance(Wa )",
+            "canonical_category": "washing_allowance",
+            "amount": {
+              "value": 60.0,
+              "currency": "INR",
+              "raw_label": "Washing Allowance(Wa )",
+              "raw_value_string": "60.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 60.0,
+              "currency": "INR",
+              "raw_label": "Washing Allowance(Wa )",
+              "raw_value_string": "60.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "deductions": {
+        "items": [
+          {
+            "raw_label": "Nps Subscription",
+            "canonical_category": "professional_tax",
+            "amount": {
+              "value": 3871.0,
+              "currency": "INR",
+              "raw_label": "Nps Subscription",
+              "raw_value_string": "3,871.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 3871.0,
+              "currency": "INR",
+              "raw_label": "Nps Subscription",
+              "raw_value_string": "3,871.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Society Deduction",
+            "canonical_category": "other_deduction",
+            "amount": {
+              "value": 20.0,
+              "currency": "INR",
+              "raw_label": "Society Deduction",
+              "raw_value_string": "20.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 20.0,
+              "currency": "INR",
+              "raw_label": "Society Deduction",
+              "raw_value_string": "20.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "GIS",
+            "canonical_category": "other_deduction",
+            "amount": {
+              "value": 100.0,
+              "currency": "INR",
+              "raw_label": "GIS",
+              "raw_value_string": "100.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 100.0,
+              "currency": "INR",
+              "raw_label": "GIS",
+              "raw_value_string": "100.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "summary": {
+        "gross_salary": {
+          "value": 38770.0,
+          "currency": "INR",
+          "raw_label": "GROSS PAY",
+          "raw_value_string": "38,770.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "net_pay": {
+          "value": 34779.0,
+          "currency": "INR",
+          "raw_label": "NET PAY",
+          "raw_value_string": "34779",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_deductions": {
+          "value": 3991.0,
+          "currency": "INR",
+          "raw_label": "TOTAL DEDUCTIONS",
+          "raw_value_string": "3,991.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_allowances": {
+          "value": 14270.0,
+          "currency": "INR",
+          "raw_label": "total_allowances",
+          "raw_value_string": "14270.00",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
+        "total_incentives_and_bonus": null,
+        "amount_in_words": null
+      },
+      "reconciliation": {
+        "gross_minus_deductions_matches_net": true,
+        "delta_vs_stated_net": 0.0,
+        "sum_of_earning_items_matches_stated_gross": true,
+        "sum_of_deduction_items_matches_stated_total": true,
+        "flags": []
+      }
+    }
+  ],
+  "raw": {
+    "page_count": 1,
+    "lines": [
+      {
+        "page": 1,
+        "bbox": {
+          "x": 75.28948974609375,
+          "y": 47.78349685668945,
+          "width": 445.64874267578125,
+          "height": 14.326123237609863
+        },
+        "segments": [
+          "DEPARTMENT OF PRISON ADMINISTRATION AND REFORM SERVICES"
+        ],
+        "segment_boxes": [
+          {
+            "x": 75.28948974609375,
+            "y": 47.78349685668945,
+            "width": 445.64874267578125,
+            "height": 14.326123237609863
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 160.60337829589844,
+          "y": 72.24078369140625,
+          "width": 275.036376953125,
+          "height": 11.17437744140625
+        },
+        "segments": [
+          "DG PRISON ADMINISTRATION AND REFORM SERVICES"
+        ],
+        "segment_boxes": [
+          {
+            "x": 160.60337829589844,
+            "y": 72.24078369140625,
+            "width": 275.036376953125,
+            "height": 11.17437744140625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 246.92745971679688,
+          "y": 92.96590423583984,
+          "width": 102.39218139648438,
+          "height": 8.816078186035156
+        },
+        "segments": [
+          "DISTRICT JAIL BAHRAICH"
+        ],
+        "segment_boxes": [
+          {
+            "x": 246.92745971679688,
+            "y": 92.96590423583984,
+            "width": 102.39218139648438,
+            "height": 8.816078186035156
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 230.68429565429688,
+          "y": 110.5980453491211,
+          "width": 134.8756103515625,
+          "height": 8.816078186035156
+        },
+        "segments": [
+          "Pay Slip for the Month of Apr-2026"
+        ],
+        "segment_boxes": [
+          {
+            "x": 230.68429565429688,
+            "y": 110.5980453491211,
+            "width": 134.8756103515625,
+            "height": 8.816078186035156
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.39747619628906,
+          "y": 142.9237060546875,
+          "width": 406.23394775390625,
+          "height": 11.7547607421875
+        },
+        "segments": [
+          "Name",
+          "YOGESH VISHWAKARMA",
+          "eHrms Id",
+          "1407123"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.39747619628906,
+            "y": 142.9237060546875,
+            "width": 31.321182250976562,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 148.25169372558594,
+            "y": 142.9237060546875,
+            "width": 132.16651916503906,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 302.53302001953125,
+            "y": 142.9237060546875,
+            "width": 47.71929931640625,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 405.3872375488281,
+            "y": 142.9237060546875,
+            "width": 46.24420166015625,
+            "height": 11.754767417907715
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.39747619628906,
+          "y": 165.69854736328125,
+          "width": 429.71478271484375,
+          "height": 11.7547607421875
+        },
+        "segments": [
+          "Designation",
+          "JAIL WARDER",
+          "Pan No",
+          "AVPPV5851L"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.39747619628906,
+            "y": 165.69854736328125,
+            "width": 62.25779724121094,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 148.25169372558594,
+            "y": 165.69854736328125,
+            "width": 73.20327758789062,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 302.53302001953125,
+            "y": 165.69854736328125,
+            "width": 38.2431640625,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 405.3872375488281,
+            "y": 165.69854736328125,
+            "width": 69.72503662109375,
+            "height": 11.754767417907715
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.39747619628906,
+          "y": 188.473388671875,
+          "width": 439.26556396484375,
+          "height": 11.7547607421875
+        },
+        "segments": [
+          "Attendance",
+          "30",
+          "e-Salary Code",
+          "110136972799"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.39747619628906,
+            "y": 188.473388671875,
+            "width": 59.8873291015625,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 148.25169372558594,
+            "y": 188.473388671875,
+            "width": 13.212631225585938,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 302.53302001953125,
+            "y": 188.473388671875,
+            "width": 71.88888549804688,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 405.3872375488281,
+            "y": 188.473388671875,
+            "width": 79.27578735351562,
+            "height": 11.754767417907715
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.39747619628906,
+          "y": 211.248291015625,
+          "width": 301.14129638671875,
+          "height": 11.7547607421875
+        },
+        "segments": [
+          "Posting Oﬃce",
+          "DISTRICT JAIL BAHRAICH, BEHRAICH"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.39747619628906,
+            "y": 211.248291015625,
+            "width": 73.32954406738281,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 148.25169372558594,
+            "y": 211.248291015625,
+            "width": 198.28709411621094,
+            "height": 11.754767417907715
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.13214874267578,
+          "y": 243.5738525390625,
+          "width": 485.01043701171875,
+          "height": 11.7547607421875
+        },
+        "segments": [
+          "Earnings",
+          "Amount",
+          "Deductions",
+          "Amount"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.13214874267578,
+            "y": 243.5738525390625,
+            "width": 45.56694793701172,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 225.01353454589844,
+            "y": 243.5738525390625,
+            "width": 41.49754333496094,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 303.46282958984375,
+            "y": 243.5738525390625,
+            "width": 59.175628662109375,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 489.6450500488281,
+            "y": 243.5738525390625,
+            "width": 41.497528076171875,
+            "height": 11.754767417907715
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.13214874267578,
+          "y": 267.0833740234375,
+          "width": 488.56329345703125,
+          "height": 11.7547607421875
+        },
+        "segments": [
+          "Basic Pay",
+          "24,500.00",
+          "Nps Subscription",
+          "3,871.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.13214874267578,
+            "y": 267.0833740234375,
+            "width": 50.933502197265625,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 225.01353454589844,
+            "y": 267.0833740234375,
+            "width": 51.65669250488281,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 303.46282958984375,
+            "y": 267.0833740234375,
+            "width": 89.58993530273438,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 489.6450500488281,
+            "y": 267.0833740234375,
+            "width": 45.050384521484375,
+            "height": 11.754767417907715
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.13214874267578,
+          "y": 290.59295654296875,
+          "width": 473.03753662109375,
+          "height": 11.7547607421875
+        },
+        "segments": [
+          "Grade Pay",
+          "0.00",
+          "Society Deduction",
+          "20.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.13214874267578,
+            "y": 290.59295654296875,
+            "width": 53.15473937988281,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 225.01353454589844,
+            "y": 290.59295654296875,
+            "width": 22.918350219726562,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 303.46282958984375,
+            "y": 290.59295654296875,
+            "width": 94.35955810546875,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 489.6450500488281,
+            "y": 290.59295654296875,
+            "width": 29.524627685546875,
+            "height": 11.754767417907715
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.13214874267578,
+          "y": 314.10247802734375,
+          "width": 466.43121337890625,
+          "height": 11.7547607421875
+        },
+        "segments": [
+          "Da",
+          "14,210.00",
+          "Vidyut Shulk Katuati(Erec)",
+          "0.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.13214874267578,
+            "y": 314.10247802734375,
+            "width": 14.108016967773438,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 225.01353454589844,
+            "y": 314.10247802734375,
+            "width": 51.65669250488281,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 303.46282958984375,
+            "y": 314.10247802734375,
+            "width": 135.690673828125,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 489.6450500488281,
+            "y": 314.10247802734375,
+            "width": 22.918304443359375,
+            "height": 11.754767417907715
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.13214874267578,
+          "y": 337.61199951171875,
+          "width": 479.64385986328125,
+          "height": 11.7547607421875
+        },
+        "segments": [
+          "Washing Allowance(Wa )",
+          "60.00",
+          "GIS",
+          "100.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.13214874267578,
+            "y": 337.61199951171875,
+            "width": 130.002685546875,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 225.01353454589844,
+            "y": 337.61199951171875,
+            "width": 29.524673461914062,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 303.46282958984375,
+            "y": 337.61199951171875,
+            "width": 18.18316650390625,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 489.6450500488281,
+            "y": 337.61199951171875,
+            "width": 36.130950927734375,
+            "height": 11.754767417907715
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.13214874267578,
+          "y": 361.1215515136719,
+          "width": 488.56329345703125,
+          "height": 11.7547607421875
+        },
+        "segments": [
+          "Total Earnings",
+          "38,770.00",
+          "Total Deductions",
+          "3,991.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.13214874267578,
+            "y": 361.1215515136719,
+            "width": 74.73001861572266,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 225.01353454589844,
+            "y": 361.1215515136719,
+            "width": 51.65669250488281,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 303.46282958984375,
+            "y": 361.1215515136719,
+            "width": 88.33868408203125,
+            "height": 11.754767417907715
+          },
+          {
+            "x": 489.6450500488281,
+            "y": 361.1215515136719,
+            "width": 45.050384521484375,
+            "height": 11.754767417907715
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.3361701965332,
+          "y": 395.6511535644531,
+          "width": 77.34513854980469,
+          "height": 10.285430908203125
+        },
+        "segments": [
+          "Net Pay : ₹34779"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.3361701965332,
+            "y": 395.6511535644531,
+            "width": 77.34513854980469,
+            "height": 10.285430908203125
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 48.3361701965332,
+          "y": 422.0993957519531,
+          "width": 253.8058319091797,
+          "height": 10.285430908203125
+        },
+        "segments": [
+          "Thirty Four Thousand Seven Hundred Seventy Nine Only"
+        ],
+        "segment_boxes": [
+          {
+            "x": 48.3361701965332,
+            "y": 422.0993957519531,
+            "width": 253.8058319091797,
+            "height": 10.285430908203125
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 40.98944091796875,
+          "y": 455.8943786621094,
+          "width": 513.2913818359375,
+          "height": 8.081402778625488
+        },
+        "segments": [
+          "This pay slip is generated from the UP eHrms Portal. Salary data is received from the DDO portal. For any discrepancy, please contact your DDO."
+        ],
+        "segment_boxes": [
+          {
+            "x": 40.98944091796875,
+            "y": 455.8943786621094,
+            "width": 513.2913818359375,
+            "height": 8.081402778625488
+          }
+        ]
+      }
+    ],
+    "table": {
+      "columns": [
+        [
+          40.98944091796875,
+          554.2808227539062
+        ],
+        [
+          48.3361701965332,
+          302.1419982910156
+        ],
+        [
+          75.28948974609375,
+          520.938232421875
+        ],
+        [
+          148.25169372558594,
+          346.5387878417969
+        ],
+        [
+          160.60337829589844,
+          435.6397705078125
+        ],
+        [
+          225.01353454589844,
+          365.5599060058594
+        ],
+        [
+          246.92745971679688,
+          349.31964111328125
+        ],
+        [
+          302.53302001953125,
+          439.15350341796875
+        ],
+        [
+          405.3872375488281,
+          484.66302490234375
+        ],
+        [
+          489.6450500488281,
+          534.6954345703125
+        ]
+      ],
+      "rows": [
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "DEPARTMENT OF PRISON ADMINISTRATION AND REFORM SERVICES",
+              "bbox": {
+                "x": 75.28948974609375,
+                "y": 47.78349685668945,
+                "width": 445.64874267578125,
+                "height": 14.326123237609863
+              },
+              "column": 2
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "DG PRISON ADMINISTRATION AND REFORM SERVICES",
+              "bbox": {
+                "x": 160.60337829589844,
+                "y": 72.24078369140625,
+                "width": 275.036376953125,
+                "height": 11.17437744140625
+              },
+              "column": 4
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "DISTRICT JAIL BAHRAICH",
+              "bbox": {
+                "x": 246.92745971679688,
+                "y": 92.96590423583984,
+                "width": 102.39218139648438,
+                "height": 8.816078186035156
+              },
+              "column": 6
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Pay Slip for the Month of Apr-2026",
+              "bbox": {
+                "x": 230.68429565429688,
+                "y": 110.5980453491211,
+                "width": 134.8756103515625,
+                "height": 8.816078186035156
+              },
+              "column": 5
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Name",
+              "bbox": {
+                "x": 45.39747619628906,
+                "y": 142.9237060546875,
+                "width": 31.321182250976562,
+                "height": 11.754767417907715
+              },
+              "column": 1
+            },
+            {
+              "text": "YOGESH VISHWAKARMA",
+              "bbox": {
+                "x": 148.25169372558594,
+                "y": 142.9237060546875,
+                "width": 132.16651916503906,
+                "height": 11.754767417907715
+              },
+              "column": 3
+            },
+            {
+              "text": "eHrms Id",
+              "bbox": {
+                "x": 302.53302001953125,
+                "y": 142.9237060546875,
+                "width": 47.71929931640625,
+                "height": 11.754767417907715
+              },
+              "column": 7
+            },
+            {
+              "text": "1407123",
+              "bbox": {
+                "x": 405.3872375488281,
+                "y": 142.9237060546875,
+                "width": 46.24420166015625,
+                "height": 11.754767417907715
+              },
+              "column": 8
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Designation",
+              "bbox": {
+                "x": 45.39747619628906,
+                "y": 165.69854736328125,
+                "width": 62.25779724121094,
+                "height": 11.754767417907715
+              },
+              "column": 1
+            },
+            {
+              "text": "JAIL WARDER",
+              "bbox": {
+                "x": 148.25169372558594,
+                "y": 165.69854736328125,
+                "width": 73.20327758789062,
+                "height": 11.754767417907715
+              },
+              "column": 3
+            },
+            {
+              "text": "Pan No",
+              "bbox": {
+                "x": 302.53302001953125,
+                "y": 165.69854736328125,
+                "width": 38.2431640625,
+                "height": 11.754767417907715
+              },
+              "column": 7
+            },
+            {
+              "text": "AVPPV5851L",
+              "bbox": {
+                "x": 405.3872375488281,
+                "y": 165.69854736328125,
+                "width": 69.72503662109375,
+                "height": 11.754767417907715
+              },
+              "column": 8
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Attendance",
+              "bbox": {
+                "x": 45.39747619628906,
+                "y": 188.473388671875,
+                "width": 59.8873291015625,
+                "height": 11.754767417907715
+              },
+              "column": 1
+            },
+            {
+              "text": "30",
+              "bbox": {
+                "x": 148.25169372558594,
+                "y": 188.473388671875,
+                "width": 13.212631225585938,
+                "height": 11.754767417907715
+              },
+              "column": 3
+            },
+            {
+              "text": "e-Salary Code",
+              "bbox": {
+                "x": 302.53302001953125,
+                "y": 188.473388671875,
+                "width": 71.88888549804688,
+                "height": 11.754767417907715
+              },
+              "column": 7
+            },
+            {
+              "text": "110136972799",
+              "bbox": {
+                "x": 405.3872375488281,
+                "y": 188.473388671875,
+                "width": 79.27578735351562,
+                "height": 11.754767417907715
+              },
+              "column": 8
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Posting Oﬃce",
+              "bbox": {
+                "x": 45.39747619628906,
+                "y": 211.248291015625,
+                "width": 73.32954406738281,
+                "height": 11.754767417907715
+              },
+              "column": 1
+            },
+            {
+              "text": "DISTRICT JAIL BAHRAICH, BEHRAICH",
+              "bbox": {
+                "x": 148.25169372558594,
+                "y": 211.248291015625,
+                "width": 198.28709411621094,
+                "height": 11.754767417907715
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Earnings",
+              "bbox": {
+                "x": 46.13214874267578,
+                "y": 243.5738525390625,
+                "width": 45.56694793701172,
+                "height": 11.754767417907715
+              },
+              "column": 1
+            },
+            {
+              "text": "Amount",
+              "bbox": {
+                "x": 225.01353454589844,
+                "y": 243.5738525390625,
+                "width": 41.49754333496094,
+                "height": 11.754767417907715
+              },
+              "column": 5
+            },
+            {
+              "text": "Deductions",
+              "bbox": {
+                "x": 303.46282958984375,
+                "y": 243.5738525390625,
+                "width": 59.175628662109375,
+                "height": 11.754767417907715
+              },
+              "column": 7
+            },
+            {
+              "text": "Amount",
+              "bbox": {
+                "x": 489.6450500488281,
+                "y": 243.5738525390625,
+                "width": 41.497528076171875,
+                "height": 11.754767417907715
+              },
+              "column": 9
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Basic Pay",
+              "bbox": {
+                "x": 46.13214874267578,
+                "y": 267.0833740234375,
+                "width": 50.933502197265625,
+                "height": 11.754767417907715
+              },
+              "column": 1
+            },
+            {
+              "text": "24,500.00",
+              "bbox": {
+                "x": 225.01353454589844,
+                "y": 267.0833740234375,
+                "width": 51.65669250488281,
+                "height": 11.754767417907715
+              },
+              "column": 5
+            },
+            {
+              "text": "Nps Subscription",
+              "bbox": {
+                "x": 303.46282958984375,
+                "y": 267.0833740234375,
+                "width": 89.58993530273438,
+                "height": 11.754767417907715
+              },
+              "column": 7
+            },
+            {
+              "text": "3,871.00",
+              "bbox": {
+                "x": 489.6450500488281,
+                "y": 267.0833740234375,
+                "width": 45.050384521484375,
+                "height": 11.754767417907715
+              },
+              "column": 9
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Grade Pay",
+              "bbox": {
+                "x": 46.13214874267578,
+                "y": 290.59295654296875,
+                "width": 53.15473937988281,
+                "height": 11.754767417907715
+              },
+              "column": 1
+            },
+            {
+              "text": "0.00",
+              "bbox": {
+                "x": 225.01353454589844,
+                "y": 290.59295654296875,
+                "width": 22.918350219726562,
+                "height": 11.754767417907715
+              },
+              "column": 5
+            },
+            {
+              "text": "Society Deduction",
+              "bbox": {
+                "x": 303.46282958984375,
+                "y": 290.59295654296875,
+                "width": 94.35955810546875,
+                "height": 11.754767417907715
+              },
+              "column": 7
+            },
+            {
+              "text": "20.00",
+              "bbox": {
+                "x": 489.6450500488281,
+                "y": 290.59295654296875,
+                "width": 29.524627685546875,
+                "height": 11.754767417907715
+              },
+              "column": 9
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Da",
+              "bbox": {
+                "x": 46.13214874267578,
+                "y": 314.10247802734375,
+                "width": 14.108016967773438,
+                "height": 11.754767417907715
+              },
+              "column": 1
+            },
+            {
+              "text": "14,210.00",
+              "bbox": {
+                "x": 225.01353454589844,
+                "y": 314.10247802734375,
+                "width": 51.65669250488281,
+                "height": 11.754767417907715
+              },
+              "column": 5
+            },
+            {
+              "text": "Vidyut Shulk Katuati(Erec)",
+              "bbox": {
+                "x": 303.46282958984375,
+                "y": 314.10247802734375,
+                "width": 135.690673828125,
+                "height": 11.754767417907715
+              },
+              "column": 7
+            },
+            {
+              "text": "0.00",
+              "bbox": {
+                "x": 489.6450500488281,
+                "y": 314.10247802734375,
+                "width": 22.918304443359375,
+                "height": 11.754767417907715
+              },
+              "column": 9
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Washing Allowance(Wa )",
+              "bbox": {
+                "x": 46.13214874267578,
+                "y": 337.61199951171875,
+                "width": 130.002685546875,
+                "height": 11.754767417907715
+              },
+              "column": 1
+            },
+            {
+              "text": "60.00",
+              "bbox": {
+                "x": 225.01353454589844,
+                "y": 337.61199951171875,
+                "width": 29.524673461914062,
+                "height": 11.754767417907715
+              },
+              "column": 5
+            },
+            {
+              "text": "GIS",
+              "bbox": {
+                "x": 303.46282958984375,
+                "y": 337.61199951171875,
+                "width": 18.18316650390625,
+                "height": 11.754767417907715
+              },
+              "column": 7
+            },
+            {
+              "text": "100.00",
+              "bbox": {
+                "x": 489.6450500488281,
+                "y": 337.61199951171875,
+                "width": 36.130950927734375,
+                "height": 11.754767417907715
+              },
+              "column": 9
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Total Earnings",
+              "bbox": {
+                "x": 46.13214874267578,
+                "y": 361.1215515136719,
+                "width": 74.73001861572266,
+                "height": 11.754767417907715
+              },
+              "column": 1
+            },
+            {
+              "text": "38,770.00",
+              "bbox": {
+                "x": 225.01353454589844,
+                "y": 361.1215515136719,
+                "width": 51.65669250488281,
+                "height": 11.754767417907715
+              },
+              "column": 5
+            },
+            {
+              "text": "Total Deductions",
+              "bbox": {
+                "x": 303.46282958984375,
+                "y": 361.1215515136719,
+                "width": 88.33868408203125,
+                "height": 11.754767417907715
+              },
+              "column": 7
+            },
+            {
+              "text": "3,991.00",
+              "bbox": {
+                "x": 489.6450500488281,
+                "y": 361.1215515136719,
+                "width": 45.050384521484375,
+                "height": 11.754767417907715
+              },
+              "column": 9
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Net Pay : ₹34779",
+              "bbox": {
+                "x": 48.3361701965332,
+                "y": 395.6511535644531,
+                "width": 77.34513854980469,
+                "height": 10.285430908203125
+              },
+              "column": 1
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Thirty Four Thousand Seven Hundred Seventy Nine Only",
+              "bbox": {
+                "x": 48.3361701965332,
+                "y": 422.0993957519531,
+                "width": 253.8058319091797,
+                "height": 10.285430908203125
+              },
+              "column": 1
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "This pay slip is generated from the UP eHrms Portal. Salary data is received from the DDO portal. For any discrepancy, please contact your DDO.",
+              "bbox": {
+                "x": 40.98944091796875,
+                "y": 455.8943786621094,
+                "width": 513.2913818359375,
+                "height": 8.081402778625488
+              },
+              "column": 0
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

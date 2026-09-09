@@ -162,6 +162,12 @@
         "deemed_profit_44ad": {
           "$ref": "#/$defs/integer_or_null"
         },
+        "deemed_profit_44ad_6pct": {
+          "$ref": "#/$defs/integer_or_null"
+        },
+        "deemed_profit_44ad_8pct": {
+          "$ref": "#/$defs/integer_or_null"
+        },
         "declared_profit_44ad": {
           "$ref": "#/$defs/integer_or_null"
         },

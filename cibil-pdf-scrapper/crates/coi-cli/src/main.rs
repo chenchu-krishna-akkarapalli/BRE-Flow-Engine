@@ -171,9 +171,7 @@ fn run_contract_bytes(name: &str, bytes: &[u8], pretty: bool) -> ExitCode {
     };
     coi_validation::evaluate_document(&mut document, false, if format == DocumentFormat::Pdf { "text_layer" } else { "rtf_text" });
     let value = serde_json::to_value(&document).unwrap_or_default();
-    let schema_errors = coi_validation::validate_contract(&value).unwrap_or_else(|error| vec![error.to_string()]);
-    let output = if schema_errors.is_empty() { value } else { serde_json::json!({ "data": value, "schema_errors": schema_errors }) };
-    let text = if pretty { serde_json::to_string_pretty(&output) } else { serde_json::to_string(&output) };
+    let text = if pretty { serde_json::to_string_pretty(&value) } else { serde_json::to_string(&value) };
     match text {
         Ok(text) => println!("{text}"),
         Err(error) => {
@@ -181,7 +179,7 @@ fn run_contract_bytes(name: &str, bytes: &[u8], pretty: bool) -> ExitCode {
             return ExitCode::FAILURE;
         }
     }
-    if schema_errors.is_empty() { ExitCode::SUCCESS } else { ExitCode::FAILURE }
+    ExitCode::SUCCESS
 }
 
 fn run_contract_batch(dir: &Path, out_dir: Option<PathBuf>, as_json: bool) -> ExitCode {

@@ -1,0 +1,3672 @@
+{
+  "schema_version": "2.0",
+  "metadata": {
+    "source_file": "2.pdf",
+    "page_count": 1,
+    "layout_signature": "generic-salary-slip",
+    "detected_locale": "IN",
+    "currency": "INR",
+    "extraction_confidence_overall": 0.95
+  },
+  "employer": {
+    "name": "- KUTCH",
+    "address": null,
+    "business_unit": null
+  },
+  "employee": {
+    "name": null,
+    "employee_id": "22305",
+    "designation": "Shift-Incharge",
+    "department": "Production",
+    "date_of_joining": "01/04/2026",
+    "pan": null,
+    "uan": "101122757942",
+    "pf_number": "GJRAJ00437760000013238",
+    "esi_number": "N.A.",
+    "bank_account": "10080100025517",
+    "bank_name": "BOB",
+    "ifsc_or_routing_code": null
+  },
+  "statements": [
+    {
+      "period": {
+        "period_type": "monthly",
+        "month": "May",
+        "year": 2026,
+        "financial_year": null,
+        "from_date": null,
+        "to_date": null,
+        "days_in_month": null,
+        "working_days": null,
+        "paid_days": null,
+        "lop_days": null,
+        "arrear_days": null
+      },
+      "earnings": {
+        "items": [
+          {
+            "raw_label": "Emp.Id",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 22305.0,
+              "currency": "INR",
+              "raw_label": "Emp.Id",
+              "raw_value_string": "22305",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 22305.0,
+              "currency": "INR",
+              "raw_label": "Emp.Id",
+              "raw_value_string": "22305",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "WD",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 27.0,
+              "currency": "INR",
+              "raw_label": "WD",
+              "raw_value_string": "27.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 27.0,
+              "currency": "INR",
+              "raw_label": "WD",
+              "raw_value_string": "27.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Basic",
+            "canonical_category": "basic_pay",
+            "amount": {
+              "value": 15878.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "15878",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 15878.0,
+              "currency": "INR",
+              "raw_label": "Basic",
+              "raw_value_string": "15878",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "WO",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 4.0,
+              "currency": "INR",
+              "raw_label": "WO",
+              "raw_value_string": "4.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 4.0,
+              "currency": "INR",
+              "raw_label": "WO",
+              "raw_value_string": "4.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "DA",
+            "canonical_category": "dearness_allowance",
+            "amount": {
+              "value": 15878.0,
+              "currency": "INR",
+              "raw_label": "DA",
+              "raw_value_string": "15878",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 15878.0,
+              "currency": "INR",
+              "raw_label": "DA",
+              "raw_value_string": "15878",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "HRA",
+            "canonical_category": "house_rent_allowance",
+            "amount": {
+              "value": 4537.0,
+              "currency": "INR",
+              "raw_label": "HRA",
+              "raw_value_string": "4537",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 4537.0,
+              "currency": "INR",
+              "raw_label": "HRA",
+              "raw_value_string": "4537",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "PH",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "PH",
+              "raw_value_string": "0.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "PH",
+              "raw_value_string": "0.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Conv",
+            "canonical_category": "conveyance_allowance",
+            "amount": {
+              "value": 2268.0,
+              "currency": "INR",
+              "raw_label": "Conv",
+              "raw_value_string": "2268",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2268.0,
+              "currency": "INR",
+              "raw_label": "Conv",
+              "raw_value_string": "2268",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "PD",
+            "canonical_category": "other_earning",
+            "amount": {
+              "value": 27.0,
+              "currency": "INR",
+              "raw_label": "PD",
+              "raw_value_string": "27.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 27.0,
+              "currency": "INR",
+              "raw_label": "PD",
+              "raw_value_string": "27.00",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Milk.All",
+            "canonical_category": "milk_allowance",
+            "amount": {
+              "value": 2268.0,
+              "currency": "INR",
+              "raw_label": "Milk.All",
+              "raw_value_string": "2268",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2268.0,
+              "currency": "INR",
+              "raw_label": "Milk.All",
+              "raw_value_string": "2268",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Washing.All",
+            "canonical_category": "washing_allowance",
+            "amount": {
+              "value": 2268.0,
+              "currency": "INR",
+              "raw_label": "Washing.All",
+              "raw_value_string": "2268",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2268.0,
+              "currency": "INR",
+              "raw_label": "Washing.All",
+              "raw_value_string": "2268",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "PL",
+            "canonical_category": "special_allowance",
+            "amount": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "PL",
+              "raw_value_string": "0.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 0.0,
+              "currency": "INR",
+              "raw_label": "PL",
+              "raw_value_string": "0.00",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "Prod.BON",
+            "canonical_category": "bonus_incentive",
+            "amount": {
+              "value": 21842.0,
+              "currency": "INR",
+              "raw_label": "Prod.BON",
+              "raw_value_string": "21842",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 21842.0,
+              "currency": "INR",
+              "raw_label": "Prod.BON",
+              "raw_value_string": "21842",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          },
+          {
+            "raw_label": "PL",
+            "canonical_category": "special_allowance",
+            "amount": {
+              "value": 2.6,
+              "currency": "INR",
+              "raw_label": "PL",
+              "raw_value_string": "2.60",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 2.6,
+              "currency": "INR",
+              "raw_label": "PL",
+              "raw_value_string": "2.60",
+              "match_method": "fuzzy_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "deductions": {
+        "items": [
+          {
+            "raw_label": "P.F",
+            "canonical_category": "provident_fund",
+            "amount": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "P.F",
+              "raw_value_string": "1800",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 1800.0,
+              "currency": "INR",
+              "raw_label": "P.F",
+              "raw_value_string": "1800",
+              "match_method": "exact_alias",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "summary": {
+        "gross_salary": {
+          "value": 67207.0,
+          "currency": "INR",
+          "raw_label": "GROSS PAY",
+          "raw_value_string": "67207",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "net_pay": {
+          "value": 65207.0,
+          "currency": "INR",
+          "raw_label": "NET PAY",
+          "raw_value_string": "65207",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_deductions": {
+          "value": 2000.0,
+          "currency": "INR",
+          "raw_label": "Gross Ded.",
+          "raw_value_string": "2000",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_allowances": {
+          "value": 49584.6,
+          "currency": "INR",
+          "raw_label": "total_allowances",
+          "raw_value_string": "49584.60",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
+        "total_incentives_and_bonus": {
+          "value": 21842.0,
+          "currency": "INR",
+          "raw_label": "Prod.BON",
+          "raw_value_string": "21842",
+          "match_method": "computed_from_components",
+          "confidence": 1.0
+        },
+        "amount_in_words": "Sixty Five Thousand Two Hundred Seven Only"
+      },
+      "reconciliation": {
+        "gross_minus_deductions_matches_net": true,
+        "delta_vs_stated_net": 0.0,
+        "sum_of_earning_items_matches_stated_gross": false,
+        "sum_of_deduction_items_matches_stated_total": false,
+        "flags": []
+      }
+    }
+  ],
+  "raw": {
+    "page_count": 1,
+    "lines": [
+      {
+        "page": 1,
+        "bbox": {
+          "x": 112.3499984741211,
+          "y": 22.8499755859375,
+          "width": 436.8100280761719,
+          "height": 8.75
+        },
+        "segments": [
+          "Kutch Chemical Industries Limited",
+          "For the Month of May - 2026"
+        ],
+        "segment_boxes": [
+          {
+            "x": 112.3499984741211,
+            "y": 23.749975204467773,
+            "width": 127.87500762939453,
+            "height": 6.600000381469727
+          },
+          {
+            "x": 433.45001220703125,
+            "y": 22.8499755859375,
+            "width": 115.71002197265625,
+            "height": 8.75
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 112.35000610351562,
+          "y": 36.79999923706055,
+          "width": 439.2818298339844,
+          "height": 7.450000762939453
+        },
+        "segments": [
+          "165 166/2 166/3 167 168 &171/1 VILLAGE.-PADANA TA.GANDHIDHAM",
+          "Salary Slip"
+        ],
+        "segment_boxes": [
+          {
+            "x": 112.35000610351562,
+            "y": 36.95000076293945,
+            "width": 210.60699462890625,
+            "height": 5.800000190734863
+          },
+          {
+            "x": 504.6000061035156,
+            "y": 36.79999923706055,
+            "width": 47.031829833984375,
+            "height": 7.450000762939453
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 112.34999084472656,
+          "y": 45.95000076293945,
+          "width": 24.843399047851562,
+          "height": 5.800000190734863
+        },
+        "segments": [
+          "- KUTCH"
+        ],
+        "segment_boxes": [
+          {
+            "x": 112.34999084472656,
+            "y": 45.95000076293945,
+            "width": 24.843399047851562,
+            "height": 5.800000190734863
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 466.6000061035156,
+          "y": 52.499961853027344,
+          "width": 82.24642944335938,
+          "height": 7.150001525878906
+        },
+        "segments": [
+          "Form IV B [ Rule 26(2) (b)"
+        ],
+        "segment_boxes": [
+          {
+            "x": 466.6000061035156,
+            "y": 52.499961853027344,
+            "width": 82.24642944335938,
+            "height": 7.150001525878906
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.949989318847656,
+          "y": 71.4999771118164,
+          "width": 435.6316223144531,
+          "height": 7.099998474121094
+        },
+        "segments": [
+          "Emp.Id",
+          ":",
+          "22305",
+          "P.F. No.",
+          ":",
+          "GJRAJ00437760000013238"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.949989318847656,
+            "y": 71.9999771118164,
+            "width": 23.997596740722656,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 107.30000305175781,
+            "y": 71.9999771118164,
+            "width": 2.99639892578125,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 114.75,
+            "y": 71.7499771118164,
+            "width": 20.988006591796875,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 339.1499938964844,
+            "y": 71.7499771118164,
+            "width": 26.248199462890625,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 384.1500244140625,
+            "y": 71.7499771118164,
+            "width": 2.99639892578125,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 390.0,
+            "y": 71.4999771118164,
+            "width": 91.58160400390625,
+            "height": 6.599999904632568
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.94999694824219,
+          "y": 83.4000015258789,
+          "width": 358.3060302734375,
+          "height": 10.249961853027344
+        },
+        "segments": [
+          "Emp. Name",
+          ":",
+          "KHUNTI DIVYESH",
+          "ESI. No.",
+          ":",
+          "N.A."
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.94999694824219,
+            "y": 87.04996490478516,
+            "width": 38.68920135498047,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 107.30000305175781,
+            "y": 87.04996490478516,
+            "width": 2.99639892578125,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 114.75,
+            "y": 86.79996490478516,
+            "width": 65.63040161132812,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 339.1499938964844,
+            "y": 83.6500015258789,
+            "width": 27.535186767578125,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 384.1500244140625,
+            "y": 83.6500015258789,
+            "width": 2.99639892578125,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 390.0,
+            "y": 83.4000015258789,
+            "width": 14.256011962890625,
+            "height": 6.599999904632568
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 339.1499938964844,
+          "y": 95.29996490478516,
+          "width": 101.22122192382812,
+          "height": 6.849998474121094
+        },
+        "segments": [
+          "UAN No.",
+          ":",
+          "101122757942"
+        ],
+        "segment_boxes": [
+          {
+            "x": 339.1499938964844,
+            "y": 95.54996490478516,
+            "width": 27.90240478515625,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 384.1500244140625,
+            "y": 95.54996490478516,
+            "width": 2.99639892578125,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 390.0,
+            "y": 95.29996490478516,
+            "width": 50.3712158203125,
+            "height": 6.599999904632568
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.94999694824219,
+          "y": 101.8499526977539,
+          "width": 115.61039733886719,
+          "height": 6.849998474121094
+        },
+        "segments": [
+          "Designation",
+          ":",
+          "Shift-Incharge"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.94999694824219,
+            "y": 102.0999526977539,
+            "width": 39.091796875,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 106.30000305175781,
+            "y": 102.0999526977539,
+            "width": 2.99639892578125,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 113.75,
+            "y": 101.8499526977539,
+            "width": 47.810394287109375,
+            "height": 6.599999904632568
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 339.1499938964844,
+          "y": 106.04996490478516,
+          "width": 65.09939575195312,
+          "height": 6.849998474121094
+        },
+        "segments": [
+          "Bank",
+          ":",
+          "BOB"
+        ],
+        "segment_boxes": [
+          {
+            "x": 339.1499938964844,
+            "y": 106.29996490478516,
+            "width": 16.579193115234375,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 384.1500244140625,
+            "y": 106.29996490478516,
+            "width": 2.99639892578125,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 390.0,
+            "y": 106.04996490478516,
+            "width": 14.2493896484375,
+            "height": 6.599999904632568
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.94999694824219,
+          "y": 116.9000015258789,
+          "width": 402.81640625,
+          "height": 7.749961853027344
+        },
+        "segments": [
+          "Department",
+          ":",
+          "Production",
+          "A/c No",
+          ":",
+          "10080100025517"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.94999694824219,
+            "y": 117.1500015258789,
+            "width": 39.652801513671875,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 107.30000305175781,
+            "y": 117.1500015258789,
+            "width": 2.99639892578125,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 113.75,
+            "y": 116.9000015258789,
+            "width": 35.11199951171875,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 339.1499938964844,
+            "y": 118.04996490478516,
+            "width": 22.215606689453125,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 384.1500244140625,
+            "y": 118.04996490478516,
+            "width": 2.99639892578125,
+            "height": 6.599999904632568
+          },
+          {
+            "x": 390.0,
+            "y": 117.79996490478516,
+            "width": 58.76641845703125,
+            "height": 6.599999904632568
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 45.94999694824219,
+          "y": 129.89999389648438,
+          "width": 383.6236572265625,
+          "height": 6.850006103515625
+        },
+        "segments": [
+          "Plant",
+          ":",
+          "CALCIUM CHLORIDE PLANT (CACL2)",
+          "D.O.J",
+          ": 01/04/2026"
+        ],
+        "segment_boxes": [
+          {
+            "x": 45.94999694824219,
+            "y": 130.14999389648438,
+            "width": 28.13580322265625,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 107.30000305175781,
+            "y": 130.14999389648438,
+            "width": 2.99639892578125,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 114.75,
+            "y": 129.89999389648438,
+            "width": 121.17599487304688,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 339.1499938964844,
+            "y": 130.14999389648438,
+            "width": 18.090606689453125,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 384.1500244140625,
+            "y": 129.89999389648438,
+            "width": 45.423614501953125,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 56.25000762939453,
+          "y": 143.85000610351562,
+          "width": 449.56597900390625,
+          "height": 6.600006103515625
+        },
+        "segments": [
+          "WORKING DETAILS",
+          "EARNING DETAILS",
+          "DEDUCTION DETAILS"
+        ],
+        "segment_boxes": [
+          {
+            "x": 56.25000762939453,
+            "y": 143.85000610351562,
+            "width": 72.2105941772461,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 222.85000610351562,
+            "y": 143.85000610351562,
+            "width": 69.28680419921875,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 426.54998779296875,
+            "y": 143.85000610351562,
+            "width": 79.2659912109375,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 139.60000610351562,
+          "y": 159.05001831054688,
+          "width": 406.4465637207031,
+          "height": 7.799957275390625
+        },
+        "segments": [
+          "Earnings",
+          "Actual",
+          "Payable",
+          "Deduction",
+          "Amount"
+        ],
+        "segment_boxes": [
+          {
+            "x": 139.60000610351562,
+            "y": 160.24996948242188,
+            "width": 32.379608154296875,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 241.85000610351562,
+            "y": 159.05001831054688,
+            "width": 23.377197265625,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 325.70001220703125,
+            "y": 160.24996948242188,
+            "width": 29.204986572265625,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 390.0,
+            "y": 160.24996948242188,
+            "width": 37.553985595703125,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 517.0,
+            "y": 160.24996948242188,
+            "width": 29.04656982421875,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 51.00006103515625,
+          "y": 173.89999389648438,
+          "width": 495.06353759765625,
+          "height": 8.350006103515625
+        },
+        "segments": [
+          "WD",
+          "27.00",
+          "Basic",
+          "15878",
+          "15878",
+          "P.F",
+          "1800"
+        ],
+        "segment_boxes": [
+          {
+            "x": 51.00006103515625,
+            "y": 175.24996948242188,
+            "width": 11.61600112915039,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 105.30006408691406,
+            "y": 174.99996948242188,
+            "width": 21.51599884033203,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 139.4499969482422,
+            "y": 174.14999389648438,
+            "width": 8.5050048828125,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 279.3999938964844,
+            "y": 173.89999389648438,
+            "width": 24.29998779296875,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 352.4999694824219,
+            "y": 173.89999389648438,
+            "width": 24.29998779296875,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 390.0000305175781,
+            "y": 175.24996948242188,
+            "width": 10.17718505859375,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 526.9500122070312,
+            "y": 174.99996948242188,
+            "width": 19.11358642578125,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 51.000064849853516,
+          "y": 183.24996948242188,
+          "width": 495.07080078125,
+          "height": 9.500030517578125
+        },
+        "segments": [
+          "WO",
+          "4.00",
+          "DA",
+          "15878",
+          "15878",
+          "ESI",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 51.000064849853516,
+            "y": 186.14993286132812,
+            "width": 11.721599578857422,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 109.50006103515625,
+            "y": 185.89993286132812,
+            "width": 17.318397521972656,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 139.59999084472656,
+            "y": 184.99996948242188,
+            "width": 9.602996826171875,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 279.3999938964844,
+            "y": 183.24996948242188,
+            "width": 24.29998779296875,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 352.4999694824219,
+            "y": 183.24996948242188,
+            "width": 24.29998779296875,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 390.0000305175781,
+            "y": 186.14999389648438,
+            "width": 11.464202880859375,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 539.550048828125,
+            "y": 185.89999389648438,
+            "width": 6.52081298828125,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 139.4499969482422,
+          "y": 192.59994506835938,
+          "width": 237.49998474121094,
+          "height": 8.100006103515625
+        },
+        "segments": [
+          "HRA",
+          "4537",
+          "4537"
+        ],
+        "segment_boxes": [
+          {
+            "x": 139.4499969482422,
+            "y": 194.09994506835938,
+            "width": 14.057998657226562,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 283.6000061035156,
+            "y": 192.59994506835938,
+            "width": 20.25,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 356.6999816894531,
+            "y": 192.59994506835938,
+            "width": 20.25,
+            "height": 8.100006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 51.00006103515625,
+          "y": 197.49996948242188,
+          "width": 495.06597900390625,
+          "height": 6.850006103515625
+        },
+        "segments": [
+          "PH",
+          "0.00",
+          "P.T.",
+          "200"
+        ],
+        "segment_boxes": [
+          {
+            "x": 51.00006103515625,
+            "y": 197.74996948242188,
+            "width": 8.9364013671875,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 109.50006103515625,
+            "y": 197.49996948242188,
+            "width": 17.318397521972656,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 390.00006103515625,
+            "y": 197.74996948242188,
+            "width": 12.850189208984375,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 531.1500244140625,
+            "y": 197.49996948242188,
+            "width": 14.916015625,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 139.4499969482422,
+          "y": 202.79995727539062,
+          "width": 237.49998474121094,
+          "height": 8.100067138671875
+        },
+        "segments": [
+          "Conv",
+          "2268",
+          "2268"
+        ],
+        "segment_boxes": [
+          {
+            "x": 139.4499969482422,
+            "y": 204.30001831054688,
+            "width": 16.5989990234375,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 283.6000061035156,
+            "y": 202.79995727539062,
+            "width": 20.25,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 356.6999816894531,
+            "y": 202.79995727539062,
+            "width": 20.25,
+            "height": 8.100006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 51.00006103515625,
+          "y": 209.09994506835938,
+          "width": 495.07080078125,
+          "height": 11.150054931640625
+        },
+        "segments": [
+          "PD",
+          "27.00",
+          "2268",
+          "2268",
+          "TDS",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 51.00006103515625,
+            "y": 209.34994506835938,
+            "width": 9.068397521972656,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 105.30006408691406,
+            "y": 209.09994506835938,
+            "width": 21.51599884033203,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 283.6000061035156,
+            "y": 212.14999389648438,
+            "width": 20.25,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 356.6999816894531,
+            "y": 212.14999389648438,
+            "width": 20.25,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 390.00006103515625,
+            "y": 209.34994506835938,
+            "width": 13.668609619140625,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 539.550048828125,
+            "y": 209.09994506835938,
+            "width": 6.52081298828125,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 139.4499969482422,
+          "y": 213.64999389648438,
+          "width": 11.358596801757812,
+          "height": 6.600006103515625
+        },
+        "segments": [
+          "LTA"
+        ],
+        "segment_boxes": [
+          {
+            "x": 139.4499969482422,
+            "y": 213.64999389648438,
+            "width": 11.358596801757812,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 51.000038146972656,
+          "y": 220.69998168945312,
+          "width": 495.0708312988281,
+          "height": 9.749969482421875
+        },
+        "segments": [
+          "Coff",
+          "0.00",
+          "Milk.All",
+          "2268",
+          "2268",
+          "L.W.F",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 51.000038146972656,
+            "y": 220.94998168945312,
+            "width": 13.2593994140625,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 110.35003662109375,
+            "y": 220.69998168945312,
+            "width": 17.318397521972656,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 139.4499969482422,
+            "y": 223.84994506835938,
+            "width": 23.568603515625,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 283.6000061035156,
+            "y": 222.34994506835938,
+            "width": 20.25,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 356.6999816894531,
+            "y": 222.34994506835938,
+            "width": 20.25,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 390.0000305175781,
+            "y": 220.94998168945312,
+            "width": 18.80340576171875,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 539.550048828125,
+            "y": 220.69998168945312,
+            "width": 6.52081298828125,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 51.000038146972656,
+          "y": 230.84994506835938,
+          "width": 495.0708312988281,
+          "height": 8.300018310546875
+        },
+        "segments": [
+          "OD",
+          "0.00",
+          "Washing.All",
+          "2268",
+          "2268",
+          "Mob. Bill",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 51.000038146972656,
+            "y": 232.54995727539062,
+            "width": 10.282798767089844,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 110.35003662109375,
+            "y": 232.29995727539062,
+            "width": 17.318397521972656,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 139.4499969482422,
+            "y": 232.34994506835938,
+            "width": 38.35261535644531,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 283.6000061035156,
+            "y": 230.84994506835938,
+            "width": 20.25,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 356.6999816894531,
+            "y": 230.84994506835938,
+            "width": 20.25,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 390.00006103515625,
+            "y": 232.54995727539062,
+            "width": 28.320587158203125,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 539.550048828125,
+            "y": 232.29995727539062,
+            "width": 6.52081298828125,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 51.00006103515625,
+          "y": 241.69998168945312,
+          "width": 495.07080078125,
+          "height": 9.050018310546875
+        },
+        "segments": [
+          "PL",
+          "0.00",
+          "INCEN",
+          "Food",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 51.00006103515625,
+            "y": 243.89999389648438,
+            "width": 7.655998229980469,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 109.50006103515625,
+            "y": 243.89999389648438,
+            "width": 17.318397521972656,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 139.4499969482422,
+            "y": 241.69998168945312,
+            "width": 21.430206298828125,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 390.00006103515625,
+            "y": 244.14999389648438,
+            "width": 15.767425537109375,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 539.550048828125,
+            "y": 243.89999389648438,
+            "width": 6.52081298828125,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 139.4499969482422,
+          "y": 251.05001831054688,
+          "width": 31.198196411132812,
+          "height": 6.600006103515625
+        },
+        "segments": [
+          "Meal.Amt"
+        ],
+        "segment_boxes": [
+          {
+            "x": 139.4499969482422,
+            "y": 251.05001831054688,
+            "width": 31.198196411132812,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 51.00006103515625,
+          "y": 255.49996948242188,
+          "width": 495.07080078125,
+          "height": 6.850006103515625
+        },
+        "segments": [
+          "ML",
+          "Loan",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 51.00006103515625,
+            "y": 255.49996948242188,
+            "width": 9.239997863769531,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 390.00006103515625,
+            "y": 255.74996948242188,
+            "width": 15.826812744140625,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 539.550048828125,
+            "y": 255.49996948242188,
+            "width": 6.52081298828125,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 139.4499969482422,
+          "y": 261.2499694824219,
+          "width": 36.76200866699219,
+          "height": 6.600006103515625
+        },
+        "segments": [
+          "Petrol Main"
+        ],
+        "segment_boxes": [
+          {
+            "x": 139.4499969482422,
+            "y": 261.2499694824219,
+            "width": 36.76200866699219,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 139.59999084472656,
+          "y": 267.0999450683594,
+          "width": 406.47088623046875,
+          "height": 10.100067138671875
+        },
+        "segments": [
+          "Prod.BON",
+          "21842",
+          "Advance",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 139.59999084472656,
+            "y": 270.6000061035156,
+            "width": 31.977005004882812,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 352.4999694824219,
+            "y": 269.0999450683594,
+            "width": 24.29998779296875,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 390.00006103515625,
+            "y": 267.3499450683594,
+            "width": 27.95098876953125,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 539.550048828125,
+            "y": 267.0999450683594,
+            "width": 6.52081298828125,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 139.4499969482422,
+          "y": 278.6999816894531,
+          "width": 406.620849609375,
+          "height": 8.700042724609375
+        },
+        "segments": [
+          "FDBOND",
+          "Oth.D",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 139.4499969482422,
+            "y": 280.8000183105469,
+            "width": 28.63079833984375,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 390.00006103515625,
+            "y": 278.9499816894531,
+            "width": 19.463409423828125,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 539.550048828125,
+            "y": 278.6999816894531,
+            "width": 6.52081298828125,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 296.1999816894531,
+          "y": 289.4999694824219,
+          "width": 81.19998168945312,
+          "height": 8.100006103515625
+        },
+        "segments": [
+          "0",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 296.1999816894531,
+            "y": 289.4999694824219,
+            "width": 8.100006103515625,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 369.2999572753906,
+            "y": 289.4999694824219,
+            "width": 8.100006103515625,
+            "height": 8.100006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 296.1999816894531,
+          "y": 299.6999816894531,
+          "width": 81.19998168945312,
+          "height": 8.100006103515625
+        },
+        "segments": [
+          "0",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 296.1999816894531,
+            "y": 299.6999816894531,
+            "width": 8.100006103515625,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 369.2999572753906,
+            "y": 299.6999816894531,
+            "width": 8.100006103515625,
+            "height": 8.100006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 139.4499969482422,
+          "y": 312.4999694824219,
+          "width": 31.099197387695312,
+          "height": 6.600006103515625
+        },
+        "segments": [
+          "Diff.Basic"
+        ],
+        "segment_boxes": [
+          {
+            "x": 139.4499969482422,
+            "y": 312.4999694824219,
+            "width": 31.099197387695312,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 65.90005493164062,
+          "y": 321.75,
+          "width": 480.1708068847656,
+          "height": 9.8499755859375
+        },
+        "segments": [
+          "Op.",
+          "Cr.",
+          "Use",
+          "Bal",
+          "Diff.Arrear",
+          "FD BOND",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 65.90005493164062,
+            "y": 321.75,
+            "width": 10.085350036621094,
+            "height": 6.050000190734863
+          },
+          {
+            "x": 87.30005645751953,
+            "y": 321.75,
+            "width": 8.403450012207031,
+            "height": 6.050000190734863
+          },
+          {
+            "x": 104.35005187988281,
+            "y": 321.75,
+            "width": 11.095703125,
+            "height": 6.050000190734863
+          },
+          {
+            "x": 124.50005340576172,
+            "y": 321.75,
+            "width": 9.413795471191406,
+            "height": 6.050000190734863
+          },
+          {
+            "x": 139.4499969482422,
+            "y": 322.3499755859375,
+            "width": 40.62998962402344,
+            "height": 8.100006103515625
+          },
+          {
+            "x": 390.00006103515625,
+            "y": 324.9999694824219,
+            "width": 30.954010009765625,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 539.550048828125,
+            "y": 324.9999694824219,
+            "width": 6.52081298828125,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 46.50005340576172,
+          "y": 333.4499816894531,
+          "width": 124.96654510498047,
+          "height": 8.250030517578125
+        },
+        "segments": [
+          "PL",
+          "2.60",
+          "2.70  0.00  5.30",
+          "OverTime"
+        ],
+        "segment_boxes": [
+          {
+            "x": 46.50005340576172,
+            "y": 333.4499816894531,
+            "width": 7.643749237060547,
+            "height": 6.25
+          },
+          {
+            "x": 62.00005340576172,
+            "y": 333.4499816894531,
+            "width": 13.900001525878906,
+            "height": 6.25
+          },
+          {
+            "x": 81.70005798339844,
+            "y": 333.4499816894531,
+            "width": 52.09999084472656,
+            "height": 6.25
+          },
+          {
+            "x": 139.4499969482422,
+            "y": 335.1000061035156,
+            "width": 32.0166015625,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 47.900062561035156,
+          "y": 351.3499450683594,
+          "width": 498.1275939941406,
+          "height": 6.85003662109375
+        },
+        "segments": [
+          "TOTAL",
+          "31.00",
+          "Gross Income",
+          "45365",
+          "67207",
+          "Gross Ded.",
+          "2000"
+        ],
+        "segment_boxes": [
+          {
+            "x": 47.900062561035156,
+            "y": 351.5999755859375,
+            "width": 23.938201904296875,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 105.300048828125,
+            "y": 351.3499755859375,
+            "width": 21.51599884033203,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 139.60006713867188,
+            "y": 351.5999450683594,
+            "width": 51.33479309082031,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 268.9500427246094,
+            "y": 351.3499755859375,
+            "width": 25.72021484375,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 350.1000671386719,
+            "y": 351.3499450683594,
+            "width": 25.72021484375,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 390.00006103515625,
+            "y": 351.5999450683594,
+            "width": 40.108184814453125,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 525.0000610351562,
+            "y": 351.3499450683594,
+            "width": 21.027587890625,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 51.00006103515625,
+          "y": 368.3499755859375,
+          "width": 495.02783203125,
+          "height": 7.0
+        },
+        "segments": [
+          "Rupees",
+          "Sixty Five Thousand Two Hundred Seven Only.",
+          "Net Amount",
+          "Rs. 65207"
+        ],
+        "segment_boxes": [
+          {
+            "x": 51.00006103515625,
+            "y": 368.7499694824219,
+            "width": 24.083396911621094,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 87.65006256103516,
+            "y": 368.3499755859375,
+            "width": 137.03085327148438,
+            "height": 5.800000190734863
+          },
+          {
+            "x": 390.75006103515625,
+            "y": 368.74993896484375,
+            "width": 44.2860107421875,
+            "height": 6.600006103515625
+          },
+          {
+            "x": 508.8500671386719,
+            "y": 368.49993896484375,
+            "width": 37.177825927734375,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 386.949951171875,
+          "y": 386.4999694824219,
+          "width": 159.12078857421875,
+          "height": 6.600006103515625
+        },
+        "segments": [
+          "Loan Outstanding Balance :",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 386.949951171875,
+            "y": 386.79998779296875,
+            "width": 97.4573974609375,
+            "height": 5.800000190734863
+          },
+          {
+            "x": 539.5499267578125,
+            "y": 386.4999694824219,
+            "width": 6.52081298828125,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 49.549957275390625,
+          "y": 394.79998779296875,
+          "width": 244.30752563476562,
+          "height": 5.800000190734863
+        },
+        "segments": [
+          "This is computer generated statement hence does not require a signature ."
+        ],
+        "segment_boxes": [
+          {
+            "x": 49.549957275390625,
+            "y": 394.79998779296875,
+            "width": 244.30752563476562,
+            "height": 5.800000190734863
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 386.9499206542969,
+          "y": 401.5999755859375,
+          "width": 159.12081909179688,
+          "height": 6.600006103515625
+        },
+        "segments": [
+          "FD Outstanding Balance :",
+          "0"
+        ],
+        "segment_boxes": [
+          {
+            "x": 386.9499206542969,
+            "y": 401.8999938964844,
+            "width": 90.35818481445312,
+            "height": 5.800000190734863
+          },
+          {
+            "x": 539.5499267578125,
+            "y": 401.5999755859375,
+            "width": 6.52081298828125,
+            "height": 6.600006103515625
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 544.8499145507812,
+          "y": 814.8499145507812,
+          "width": 3.97540283203125,
+          "height": 7.1500244140625
+        },
+        "segments": [
+          "1"
+        ],
+        "segment_boxes": [
+          {
+            "x": 544.8499145507812,
+            "y": 814.8499145507812,
+            "width": 3.97540283203125,
+            "height": 7.1500244140625
+          }
+        ]
+      }
+    ],
+    "table": {
+      "columns": [
+        [
+          45.949989318847656,
+          293.85748291015625
+        ],
+        [
+          56.25000762939453,
+          128.46060180664062
+        ],
+        [
+          65.90005493164062,
+          75.98540496826172
+        ],
+        [
+          81.70005798339844,
+          224.680908203125
+        ],
+        [
+          104.35005187988281,
+          127.6684341430664
+        ],
+        [
+          112.34999084472656,
+          322.9570007324219
+        ],
+        [
+          124.50005340576172,
+          133.91384887695312
+        ],
+        [
+          139.4499969482422,
+          190.9348602294922
+        ],
+        [
+          222.85000610351562,
+          292.1368103027344
+        ],
+        [
+          241.85000610351562,
+          265.2272033691406
+        ],
+        [
+          268.9500427246094,
+          294.6702575683594
+        ],
+        [
+          279.3999938964844,
+          303.8500061035156
+        ],
+        [
+          296.1999816894531,
+          304.29998779296875
+        ],
+        [
+          325.70001220703125,
+          354.9049987792969
+        ],
+        [
+          339.1499938964844,
+          367.0523986816406
+        ],
+        [
+          350.1000671386719,
+          376.7999572753906
+        ],
+        [
+          356.6999816894531,
+          376.9499816894531
+        ],
+        [
+          369.2999572753906,
+          377.39996337890625
+        ],
+        [
+          384.1500244140625,
+          484.4073486328125
+        ],
+        [
+          390.75006103515625,
+          435.03607177734375
+        ],
+        [
+          426.54998779296875,
+          505.81597900390625
+        ],
+        [
+          433.45001220703125,
+          549.1600341796875
+        ],
+        [
+          466.6000061035156,
+          548.846435546875
+        ],
+        [
+          504.6000061035156,
+          551.6318359375
+        ],
+        [
+          517.0,
+          546.0465698242188
+        ],
+        [
+          525.0000610351562,
+          546.0635986328125
+        ],
+        [
+          531.1500244140625,
+          546.0660400390625
+        ],
+        [
+          539.5499267578125,
+          548.8253173828125
+        ]
+      ],
+      "rows": [
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Kutch Chemical Industries Limited",
+              "bbox": {
+                "x": 112.3499984741211,
+                "y": 23.749975204467773,
+                "width": 127.87500762939453,
+                "height": 6.600000381469727
+              },
+              "column": 5
+            },
+            {
+              "text": "For the Month of May - 2026",
+              "bbox": {
+                "x": 433.45001220703125,
+                "y": 22.8499755859375,
+                "width": 115.71002197265625,
+                "height": 8.75
+              },
+              "column": 21
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "165 166/2 166/3 167 168 &171/1 VILLAGE.-PADANA TA.GANDHIDHAM",
+              "bbox": {
+                "x": 112.35000610351562,
+                "y": 36.95000076293945,
+                "width": 210.60699462890625,
+                "height": 5.800000190734863
+              },
+              "column": 5
+            },
+            {
+              "text": "Salary Slip",
+              "bbox": {
+                "x": 504.6000061035156,
+                "y": 36.79999923706055,
+                "width": 47.031829833984375,
+                "height": 7.450000762939453
+              },
+              "column": 23
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "- KUTCH",
+              "bbox": {
+                "x": 112.34999084472656,
+                "y": 45.95000076293945,
+                "width": 24.843399047851562,
+                "height": 5.800000190734863
+              },
+              "column": 5
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Form IV B [ Rule 26(2) (b)",
+              "bbox": {
+                "x": 466.6000061035156,
+                "y": 52.499961853027344,
+                "width": 82.24642944335938,
+                "height": 7.150001525878906
+              },
+              "column": 22
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Emp.Id",
+              "bbox": {
+                "x": 45.949989318847656,
+                "y": 71.9999771118164,
+                "width": 23.997596740722656,
+                "height": 6.599999904632568
+              },
+              "column": 0
+            },
+            {
+              "text": ":",
+              "bbox": {
+                "x": 107.30000305175781,
+                "y": 71.9999771118164,
+                "width": 2.99639892578125,
+                "height": 6.599999904632568
+              },
+              "column": 4
+            },
+            {
+              "text": "22305",
+              "bbox": {
+                "x": 114.75,
+                "y": 71.7499771118164,
+                "width": 20.988006591796875,
+                "height": 6.599999904632568
+              },
+              "column": 5
+            },
+            {
+              "text": "P.F. No.",
+              "bbox": {
+                "x": 339.1499938964844,
+                "y": 71.7499771118164,
+                "width": 26.248199462890625,
+                "height": 6.599999904632568
+              },
+              "column": 14
+            },
+            {
+              "text": ":",
+              "bbox": {
+                "x": 384.1500244140625,
+                "y": 71.7499771118164,
+                "width": 2.99639892578125,
+                "height": 6.599999904632568
+              },
+              "column": 18
+            },
+            {
+              "text": "GJRAJ00437760000013238",
+              "bbox": {
+                "x": 390.0,
+                "y": 71.4999771118164,
+                "width": 91.58160400390625,
+                "height": 6.599999904632568
+              },
+              "column": 19
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Emp. Name",
+              "bbox": {
+                "x": 45.94999694824219,
+                "y": 87.04996490478516,
+                "width": 38.68920135498047,
+                "height": 6.599999904632568
+              },
+              "column": 0
+            },
+            {
+              "text": ":",
+              "bbox": {
+                "x": 107.30000305175781,
+                "y": 87.04996490478516,
+                "width": 2.99639892578125,
+                "height": 6.599999904632568
+              },
+              "column": 4
+            },
+            {
+              "text": "KHUNTI DIVYESH",
+              "bbox": {
+                "x": 114.75,
+                "y": 86.79996490478516,
+                "width": 65.63040161132812,
+                "height": 6.599999904632568
+              },
+              "column": 5
+            },
+            {
+              "text": "ESI. No.",
+              "bbox": {
+                "x": 339.1499938964844,
+                "y": 83.6500015258789,
+                "width": 27.535186767578125,
+                "height": 6.599999904632568
+              },
+              "column": 14
+            },
+            {
+              "text": ":",
+              "bbox": {
+                "x": 384.1500244140625,
+                "y": 83.6500015258789,
+                "width": 2.99639892578125,
+                "height": 6.599999904632568
+              },
+              "column": 18
+            },
+            {
+              "text": "N.A.",
+              "bbox": {
+                "x": 390.0,
+                "y": 83.4000015258789,
+                "width": 14.256011962890625,
+                "height": 6.599999904632568
+              },
+              "column": 19
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "UAN No.",
+              "bbox": {
+                "x": 339.1499938964844,
+                "y": 95.54996490478516,
+                "width": 27.90240478515625,
+                "height": 6.599999904632568
+              },
+              "column": 14
+            },
+            {
+              "text": ":",
+              "bbox": {
+                "x": 384.1500244140625,
+                "y": 95.54996490478516,
+                "width": 2.99639892578125,
+                "height": 6.599999904632568
+              },
+              "column": 18
+            },
+            {
+              "text": "101122757942",
+              "bbox": {
+                "x": 390.0,
+                "y": 95.29996490478516,
+                "width": 50.3712158203125,
+                "height": 6.599999904632568
+              },
+              "column": 19
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Designation",
+              "bbox": {
+                "x": 45.94999694824219,
+                "y": 102.0999526977539,
+                "width": 39.091796875,
+                "height": 6.599999904632568
+              },
+              "column": 0
+            },
+            {
+              "text": ":",
+              "bbox": {
+                "x": 106.30000305175781,
+                "y": 102.0999526977539,
+                "width": 2.99639892578125,
+                "height": 6.599999904632568
+              },
+              "column": 4
+            },
+            {
+              "text": "Shift-Incharge",
+              "bbox": {
+                "x": 113.75,
+                "y": 101.8499526977539,
+                "width": 47.810394287109375,
+                "height": 6.599999904632568
+              },
+              "column": 5
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Bank",
+              "bbox": {
+                "x": 339.1499938964844,
+                "y": 106.29996490478516,
+                "width": 16.579193115234375,
+                "height": 6.599999904632568
+              },
+              "column": 14
+            },
+            {
+              "text": ":",
+              "bbox": {
+                "x": 384.1500244140625,
+                "y": 106.29996490478516,
+                "width": 2.99639892578125,
+                "height": 6.599999904632568
+              },
+              "column": 18
+            },
+            {
+              "text": "BOB",
+              "bbox": {
+                "x": 390.0,
+                "y": 106.04996490478516,
+                "width": 14.2493896484375,
+                "height": 6.599999904632568
+              },
+              "column": 19
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Department",
+              "bbox": {
+                "x": 45.94999694824219,
+                "y": 117.1500015258789,
+                "width": 39.652801513671875,
+                "height": 6.599999904632568
+              },
+              "column": 0
+            },
+            {
+              "text": ":",
+              "bbox": {
+                "x": 107.30000305175781,
+                "y": 117.1500015258789,
+                "width": 2.99639892578125,
+                "height": 6.599999904632568
+              },
+              "column": 4
+            },
+            {
+              "text": "Production",
+              "bbox": {
+                "x": 113.75,
+                "y": 116.9000015258789,
+                "width": 35.11199951171875,
+                "height": 6.599999904632568
+              },
+              "column": 5
+            },
+            {
+              "text": "A/c No",
+              "bbox": {
+                "x": 339.1499938964844,
+                "y": 118.04996490478516,
+                "width": 22.215606689453125,
+                "height": 6.599999904632568
+              },
+              "column": 14
+            },
+            {
+              "text": ":",
+              "bbox": {
+                "x": 384.1500244140625,
+                "y": 118.04996490478516,
+                "width": 2.99639892578125,
+                "height": 6.599999904632568
+              },
+              "column": 18
+            },
+            {
+              "text": "10080100025517",
+              "bbox": {
+                "x": 390.0,
+                "y": 117.79996490478516,
+                "width": 58.76641845703125,
+                "height": 6.599999904632568
+              },
+              "column": 19
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Plant",
+              "bbox": {
+                "x": 45.94999694824219,
+                "y": 130.14999389648438,
+                "width": 28.13580322265625,
+                "height": 6.600006103515625
+              },
+              "column": 0
+            },
+            {
+              "text": ":",
+              "bbox": {
+                "x": 107.30000305175781,
+                "y": 130.14999389648438,
+                "width": 2.99639892578125,
+                "height": 6.600006103515625
+              },
+              "column": 4
+            },
+            {
+              "text": "CALCIUM CHLORIDE PLANT (CACL2)",
+              "bbox": {
+                "x": 114.75,
+                "y": 129.89999389648438,
+                "width": 121.17599487304688,
+                "height": 6.600006103515625
+              },
+              "column": 5
+            },
+            {
+              "text": "D.O.J",
+              "bbox": {
+                "x": 339.1499938964844,
+                "y": 130.14999389648438,
+                "width": 18.090606689453125,
+                "height": 6.600006103515625
+              },
+              "column": 14
+            },
+            {
+              "text": ": 01/04/2026",
+              "bbox": {
+                "x": 384.1500244140625,
+                "y": 129.89999389648438,
+                "width": 45.423614501953125,
+                "height": 6.600006103515625
+              },
+              "column": 18
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "WORKING DETAILS",
+              "bbox": {
+                "x": 56.25000762939453,
+                "y": 143.85000610351562,
+                "width": 72.2105941772461,
+                "height": 6.600006103515625
+              },
+              "column": 1
+            },
+            {
+              "text": "EARNING DETAILS",
+              "bbox": {
+                "x": 222.85000610351562,
+                "y": 143.85000610351562,
+                "width": 69.28680419921875,
+                "height": 6.600006103515625
+              },
+              "column": 8
+            },
+            {
+              "text": "DEDUCTION DETAILS",
+              "bbox": {
+                "x": 426.54998779296875,
+                "y": 143.85000610351562,
+                "width": 79.2659912109375,
+                "height": 6.600006103515625
+              },
+              "column": 20
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Earnings",
+              "bbox": {
+                "x": 139.60000610351562,
+                "y": 160.24996948242188,
+                "width": 32.379608154296875,
+                "height": 6.600006103515625
+              },
+              "column": 7
+            },
+            {
+              "text": "Actual",
+              "bbox": {
+                "x": 241.85000610351562,
+                "y": 159.05001831054688,
+                "width": 23.377197265625,
+                "height": 6.600006103515625
+              },
+              "column": 9
+            },
+            {
+              "text": "Payable",
+              "bbox": {
+                "x": 325.70001220703125,
+                "y": 160.24996948242188,
+                "width": 29.204986572265625,
+                "height": 6.600006103515625
+              },
+              "column": 13
+            },
+            {
+              "text": "Deduction",
+              "bbox": {
+                "x": 390.0,
+                "y": 160.24996948242188,
+                "width": 37.553985595703125,
+                "height": 6.600006103515625
+              },
+              "column": 19
+            },
+            {
+              "text": "Amount",
+              "bbox": {
+                "x": 517.0,
+                "y": 160.24996948242188,
+                "width": 29.04656982421875,
+                "height": 6.600006103515625
+              },
+              "column": 24
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "WD",
+              "bbox": {
+                "x": 51.00006103515625,
+                "y": 175.24996948242188,
+                "width": 11.61600112915039,
+                "height": 6.600006103515625
+              },
+              "column": 0
+            },
+            {
+              "text": "27.00",
+              "bbox": {
+                "x": 105.30006408691406,
+                "y": 174.99996948242188,
+                "width": 21.51599884033203,
+                "height": 6.600006103515625
+              },
+              "column": 4
+            },
+            {
+              "text": "Basic",
+              "bbox": {
+                "x": 139.4499969482422,
+                "y": 174.14999389648438,
+                "width": 8.5050048828125,
+                "height": 8.100006103515625
+              },
+              "column": 7
+            },
+            {
+              "text": "15878",
+              "bbox": {
+                "x": 279.3999938964844,
+                "y": 173.89999389648438,
+                "width": 24.29998779296875,
+                "height": 8.100006103515625
+              },
+              "column": 11
+            },
+            {
+              "text": "15878",
+              "bbox": {
+                "x": 352.4999694824219,
+                "y": 173.89999389648438,
+                "width": 24.29998779296875,
+                "height": 8.100006103515625
+              },
+              "column": 15
+            },
+            {
+              "text": "P.F",
+              "bbox": {
+                "x": 390.0000305175781,
+                "y": 175.24996948242188,
+                "width": 10.17718505859375,
+                "height": 6.600006103515625
+              },
+              "column": 19
+            },
+            {
+              "text": "1800",
+              "bbox": {
+                "x": 526.9500122070312,
+                "y": 174.99996948242188,
+                "width": 19.11358642578125,
+                "height": 6.600006103515625
+              },
+              "column": 25
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "WO",
+              "bbox": {
+                "x": 51.000064849853516,
+                "y": 186.14993286132812,
+                "width": 11.721599578857422,
+                "height": 6.600006103515625
+              },
+              "column": 0
+            },
+            {
+              "text": "4.00",
+              "bbox": {
+                "x": 109.50006103515625,
+                "y": 185.89993286132812,
+                "width": 17.318397521972656,
+                "height": 6.600006103515625
+              },
+              "column": 5
+            },
+            {
+              "text": "DA",
+              "bbox": {
+                "x": 139.59999084472656,
+                "y": 184.99996948242188,
+                "width": 9.602996826171875,
+                "height": 6.600006103515625
+              },
+              "column": 7
+            },
+            {
+              "text": "15878",
+              "bbox": {
+                "x": 279.3999938964844,
+                "y": 183.24996948242188,
+                "width": 24.29998779296875,
+                "height": 8.100006103515625
+              },
+              "column": 11
+            },
+            {
+              "text": "15878",
+              "bbox": {
+                "x": 352.4999694824219,
+                "y": 183.24996948242188,
+                "width": 24.29998779296875,
+                "height": 8.100006103515625
+              },
+              "column": 15
+            },
+            {
+              "text": "ESI",
+              "bbox": {
+                "x": 390.0000305175781,
+                "y": 186.14999389648438,
+                "width": 11.464202880859375,
+                "height": 6.600006103515625
+              },
+              "column": 19
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 539.550048828125,
+                "y": 185.89999389648438,
+                "width": 6.52081298828125,
+                "height": 6.600006103515625
+              },
+              "column": 27
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "HRA",
+              "bbox": {
+                "x": 139.4499969482422,
+                "y": 194.09994506835938,
+                "width": 14.057998657226562,
+                "height": 6.600006103515625
+              },
+              "column": 7
+            },
+            {
+              "text": "4537",
+              "bbox": {
+                "x": 283.6000061035156,
+                "y": 192.59994506835938,
+                "width": 20.25,
+                "height": 8.100006103515625
+              },
+              "column": 11
+            },
+            {
+              "text": "4537",
+              "bbox": {
+                "x": 356.6999816894531,
+                "y": 192.59994506835938,
+                "width": 20.25,
+                "height": 8.100006103515625
+              },
+              "column": 16
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "PH",
+              "bbox": {
+                "x": 51.00006103515625,
+                "y": 197.74996948242188,
+                "width": 8.9364013671875,
+                "height": 6.600006103515625
+              },
+              "column": 0
+            },
+            {
+              "text": "0.00",
+              "bbox": {
+                "x": 109.50006103515625,
+                "y": 197.49996948242188,
+                "width": 17.318397521972656,
+                "height": 6.600006103515625
+              },
+              "column": 5
+            },
+            {
+              "text": "P.T.",
+              "bbox": {
+                "x": 390.00006103515625,
+                "y": 197.74996948242188,
+                "width": 12.850189208984375,
+                "height": 6.600006103515625
+              },
+              "column": 19
+            },
+            {
+              "text": "200",
+              "bbox": {
+                "x": 531.1500244140625,
+                "y": 197.49996948242188,
+                "width": 14.916015625,
+                "height": 6.600006103515625
+              },
+              "column": 26
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Conv",
+              "bbox": {
+                "x": 139.4499969482422,
+                "y": 204.30001831054688,
+                "width": 16.5989990234375,
+                "height": 6.600006103515625
+              },
+              "column": 7
+            },
+            {
+              "text": "2268",
+              "bbox": {
+                "x": 283.6000061035156,
+                "y": 202.79995727539062,
+                "width": 20.25,
+                "height": 8.100006103515625
+              },
+              "column": 11
+            },
+            {
+              "text": "2268",
+              "bbox": {
+                "x": 356.6999816894531,
+                "y": 202.79995727539062,
+                "width": 20.25,
+                "height": 8.100006103515625
+              },
+              "column": 16
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "PD",
+              "bbox": {
+                "x": 51.00006103515625,
+                "y": 209.34994506835938,
+                "width": 9.068397521972656,
+                "height": 6.600006103515625
+              },
+              "column": 0
+            },
+            {
+              "text": "27.00",
+              "bbox": {
+                "x": 105.30006408691406,
+                "y": 209.09994506835938,
+                "width": 21.51599884033203,
+                "height": 6.600006103515625
+              },
+              "column": 4
+            },
+            {
+              "text": "2268",
+              "bbox": {
+                "x": 283.6000061035156,
+                "y": 212.14999389648438,
+                "width": 20.25,
+                "height": 8.100006103515625
+              },
+              "column": 11
+            },
+            {
+              "text": "2268",
+              "bbox": {
+                "x": 356.6999816894531,
+                "y": 212.14999389648438,
+                "width": 20.25,
+                "height": 8.100006103515625
+              },
+              "column": 16
+            },
+            {
+              "text": "TDS",
+              "bbox": {
+                "x": 390.00006103515625,
+                "y": 209.34994506835938,
+                "width": 13.668609619140625,
+                "height": 6.600006103515625
+              },
+              "column": 19
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 539.550048828125,
+                "y": 209.09994506835938,
+                "width": 6.52081298828125,
+                "height": 6.600006103515625
+              },
+              "column": 27
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "LTA",
+              "bbox": {
+                "x": 139.4499969482422,
+                "y": 213.64999389648438,
+                "width": 11.358596801757812,
+                "height": 6.600006103515625
+              },
+              "column": 7
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Coff",
+              "bbox": {
+                "x": 51.000038146972656,
+                "y": 220.94998168945312,
+                "width": 13.2593994140625,
+                "height": 6.600006103515625
+              },
+              "column": 0
+            },
+            {
+              "text": "0.00",
+              "bbox": {
+                "x": 110.35003662109375,
+                "y": 220.69998168945312,
+                "width": 17.318397521972656,
+                "height": 6.600006103515625
+              },
+              "column": 5
+            },
+            {
+              "text": "Milk.All",
+              "bbox": {
+                "x": 139.4499969482422,
+                "y": 223.84994506835938,
+                "width": 23.568603515625,
+                "height": 6.600006103515625
+              },
+              "column": 7
+            },
+            {
+              "text": "2268",
+              "bbox": {
+                "x": 283.6000061035156,
+                "y": 222.34994506835938,
+                "width": 20.25,
+                "height": 8.100006103515625
+              },
+              "column": 11
+            },
+            {
+              "text": "2268",
+              "bbox": {
+                "x": 356.6999816894531,
+                "y": 222.34994506835938,
+                "width": 20.25,
+                "height": 8.100006103515625
+              },
+              "column": 16
+            },
+            {
+              "text": "L.W.F",
+              "bbox": {
+                "x": 390.0000305175781,
+                "y": 220.94998168945312,
+                "width": 18.80340576171875,
+                "height": 6.600006103515625
+              },
+              "column": 19
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 539.550048828125,
+                "y": 220.69998168945312,
+                "width": 6.52081298828125,
+                "height": 6.600006103515625
+              },
+              "column": 27
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "OD",
+              "bbox": {
+                "x": 51.000038146972656,
+                "y": 232.54995727539062,
+                "width": 10.282798767089844,
+                "height": 6.600006103515625
+              },
+              "column": 0
+            },
+            {
+              "text": "0.00",
+              "bbox": {
+                "x": 110.35003662109375,
+                "y": 232.29995727539062,
+                "width": 17.318397521972656,
+                "height": 6.600006103515625
+              },
+              "column": 5
+            },
+            {
+              "text": "Washing.All",
+              "bbox": {
+                "x": 139.4499969482422,
+                "y": 232.34994506835938,
+                "width": 38.35261535644531,
+                "height": 6.600006103515625
+              },
+              "column": 7
+            },
+            {
+              "text": "2268",
+              "bbox": {
+                "x": 283.6000061035156,
+                "y": 230.84994506835938,
+                "width": 20.25,
+                "height": 8.100006103515625
+              },
+              "column": 11
+            },
+            {
+              "text": "2268",
+              "bbox": {
+                "x": 356.6999816894531,
+                "y": 230.84994506835938,
+                "width": 20.25,
+                "height": 8.100006103515625
+              },
+              "column": 16
+            },
+            {
+              "text": "Mob. Bill",
+              "bbox": {
+                "x": 390.00006103515625,
+                "y": 232.54995727539062,
+                "width": 28.320587158203125,
+                "height": 6.600006103515625
+              },
+              "column": 19
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 539.550048828125,
+                "y": 232.29995727539062,
+                "width": 6.52081298828125,
+                "height": 6.600006103515625
+              },
+              "column": 27
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "PL",
+              "bbox": {
+                "x": 51.00006103515625,
+                "y": 243.89999389648438,
+                "width": 7.655998229980469,
+                "height": 6.600006103515625
+              },
+              "column": 0
+            },
+            {
+              "text": "0.00",
+              "bbox": {
+                "x": 109.50006103515625,
+                "y": 243.89999389648438,
+                "width": 17.318397521972656,
+                "height": 6.600006103515625
+              },
+              "column": 5
+            },
+            {
+              "text": "INCEN",
+              "bbox": {
+                "x": 139.4499969482422,
+                "y": 241.69998168945312,
+                "width": 21.430206298828125,
+                "height": 6.600006103515625
+              },
+              "column": 7
+            },
+            {
+              "text": "Food",
+              "bbox": {
+                "x": 390.00006103515625,
+                "y": 244.14999389648438,
+                "width": 15.767425537109375,
+                "height": 6.600006103515625
+              },
+              "column": 19
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 539.550048828125,
+                "y": 243.89999389648438,
+                "width": 6.52081298828125,
+                "height": 6.600006103515625
+              },
+              "column": 27
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Meal.Amt",
+              "bbox": {
+                "x": 139.4499969482422,
+                "y": 251.05001831054688,
+                "width": 31.198196411132812,
+                "height": 6.600006103515625
+              },
+              "column": 7
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "ML",
+              "bbox": {
+                "x": 51.00006103515625,
+                "y": 255.49996948242188,
+                "width": 9.239997863769531,
+                "height": 6.600006103515625
+              },
+              "column": 0
+            },
+            {
+              "text": "Loan",
+              "bbox": {
+                "x": 390.00006103515625,
+                "y": 255.74996948242188,
+                "width": 15.826812744140625,
+                "height": 6.600006103515625
+              },
+              "column": 19
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 539.550048828125,
+                "y": 255.49996948242188,
+                "width": 6.52081298828125,
+                "height": 6.600006103515625
+              },
+              "column": 27
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Petrol Main",
+              "bbox": {
+                "x": 139.4499969482422,
+                "y": 261.2499694824219,
+                "width": 36.76200866699219,
+                "height": 6.600006103515625
+              },
+              "column": 7
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Prod.BON",
+              "bbox": {
+                "x": 139.59999084472656,
+                "y": 270.6000061035156,
+                "width": 31.977005004882812,
+                "height": 6.600006103515625
+              },
+              "column": 7
+            },
+            {
+              "text": "21842",
+              "bbox": {
+                "x": 352.4999694824219,
+                "y": 269.0999450683594,
+                "width": 24.29998779296875,
+                "height": 8.100006103515625
+              },
+              "column": 15
+            },
+            {
+              "text": "Advance",
+              "bbox": {
+                "x": 390.00006103515625,
+                "y": 267.3499450683594,
+                "width": 27.95098876953125,
+                "height": 6.600006103515625
+              },
+              "column": 19
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 539.550048828125,
+                "y": 267.0999450683594,
+                "width": 6.52081298828125,
+                "height": 6.600006103515625
+              },
+              "column": 27
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "FDBOND",
+              "bbox": {
+                "x": 139.4499969482422,
+                "y": 280.8000183105469,
+                "width": 28.63079833984375,
+                "height": 6.600006103515625
+              },
+              "column": 7
+            },
+            {
+              "text": "Oth.D",
+              "bbox": {
+                "x": 390.00006103515625,
+                "y": 278.9499816894531,
+                "width": 19.463409423828125,
+                "height": 6.600006103515625
+              },
+              "column": 19
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 539.550048828125,
+                "y": 278.6999816894531,
+                "width": 6.52081298828125,
+                "height": 6.600006103515625
+              },
+              "column": 27
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "0",
+              "bbox": {
+                "x": 296.1999816894531,
+                "y": 289.4999694824219,
+                "width": 8.100006103515625,
+                "height": 8.100006103515625
+              },
+              "column": 12
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 369.2999572753906,
+                "y": 289.4999694824219,
+                "width": 8.100006103515625,
+                "height": 8.100006103515625
+              },
+              "column": 17
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "0",
+              "bbox": {
+                "x": 296.1999816894531,
+                "y": 299.6999816894531,
+                "width": 8.100006103515625,
+                "height": 8.100006103515625
+              },
+              "column": 12
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 369.2999572753906,
+                "y": 299.6999816894531,
+                "width": 8.100006103515625,
+                "height": 8.100006103515625
+              },
+              "column": 17
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Diff.Basic",
+              "bbox": {
+                "x": 139.4499969482422,
+                "y": 312.4999694824219,
+                "width": 31.099197387695312,
+                "height": 6.600006103515625
+              },
+              "column": 7
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Op.",
+              "bbox": {
+                "x": 65.90005493164062,
+                "y": 321.75,
+                "width": 10.085350036621094,
+                "height": 6.050000190734863
+              },
+              "column": 2
+            },
+            {
+              "text": "Cr.",
+              "bbox": {
+                "x": 87.30005645751953,
+                "y": 321.75,
+                "width": 8.403450012207031,
+                "height": 6.050000190734863
+              },
+              "column": 3
+            },
+            {
+              "text": "Use",
+              "bbox": {
+                "x": 104.35005187988281,
+                "y": 321.75,
+                "width": 11.095703125,
+                "height": 6.050000190734863
+              },
+              "column": 4
+            },
+            {
+              "text": "Bal",
+              "bbox": {
+                "x": 124.50005340576172,
+                "y": 321.75,
+                "width": 9.413795471191406,
+                "height": 6.050000190734863
+              },
+              "column": 6
+            },
+            {
+              "text": "Diff.Arrear",
+              "bbox": {
+                "x": 139.4499969482422,
+                "y": 322.3499755859375,
+                "width": 40.62998962402344,
+                "height": 8.100006103515625
+              },
+              "column": 7
+            },
+            {
+              "text": "FD BOND",
+              "bbox": {
+                "x": 390.00006103515625,
+                "y": 324.9999694824219,
+                "width": 30.954010009765625,
+                "height": 6.600006103515625
+              },
+              "column": 19
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 539.550048828125,
+                "y": 324.9999694824219,
+                "width": 6.52081298828125,
+                "height": 6.600006103515625
+              },
+              "column": 27
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "PL",
+              "bbox": {
+                "x": 46.50005340576172,
+                "y": 333.4499816894531,
+                "width": 7.643749237060547,
+                "height": 6.25
+              },
+              "column": 0
+            },
+            {
+              "text": "2.60",
+              "bbox": {
+                "x": 62.00005340576172,
+                "y": 333.4499816894531,
+                "width": 13.900001525878906,
+                "height": 6.25
+              },
+              "column": 2
+            },
+            {
+              "text": "2.70  0.00  5.30",
+              "bbox": {
+                "x": 81.70005798339844,
+                "y": 333.4499816894531,
+                "width": 52.09999084472656,
+                "height": 6.25
+              },
+              "column": 3
+            },
+            {
+              "text": "OverTime",
+              "bbox": {
+                "x": 139.4499969482422,
+                "y": 335.1000061035156,
+                "width": 32.0166015625,
+                "height": 6.600006103515625
+              },
+              "column": 7
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "TOTAL",
+              "bbox": {
+                "x": 47.900062561035156,
+                "y": 351.5999755859375,
+                "width": 23.938201904296875,
+                "height": 6.600006103515625
+              },
+              "column": 0
+            },
+            {
+              "text": "31.00",
+              "bbox": {
+                "x": 105.300048828125,
+                "y": 351.3499755859375,
+                "width": 21.51599884033203,
+                "height": 6.600006103515625
+              },
+              "column": 4
+            },
+            {
+              "text": "Gross Income",
+              "bbox": {
+                "x": 139.60006713867188,
+                "y": 351.5999450683594,
+                "width": 51.33479309082031,
+                "height": 6.600006103515625
+              },
+              "column": 7
+            },
+            {
+              "text": "45365",
+              "bbox": {
+                "x": 268.9500427246094,
+                "y": 351.3499755859375,
+                "width": 25.72021484375,
+                "height": 6.600006103515625
+              },
+              "column": 10
+            },
+            {
+              "text": "67207",
+              "bbox": {
+                "x": 350.1000671386719,
+                "y": 351.3499450683594,
+                "width": 25.72021484375,
+                "height": 6.600006103515625
+              },
+              "column": 15
+            },
+            {
+              "text": "Gross Ded.",
+              "bbox": {
+                "x": 390.00006103515625,
+                "y": 351.5999450683594,
+                "width": 40.108184814453125,
+                "height": 6.600006103515625
+              },
+              "column": 19
+            },
+            {
+              "text": "2000",
+              "bbox": {
+                "x": 525.0000610351562,
+                "y": 351.3499450683594,
+                "width": 21.027587890625,
+                "height": 6.600006103515625
+              },
+              "column": 25
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Rupees",
+              "bbox": {
+                "x": 51.00006103515625,
+                "y": 368.7499694824219,
+                "width": 24.083396911621094,
+                "height": 6.600006103515625
+              },
+              "column": 0
+            },
+            {
+              "text": "Sixty Five Thousand Two Hundred Seven Only.",
+              "bbox": {
+                "x": 87.65006256103516,
+                "y": 368.3499755859375,
+                "width": 137.03085327148438,
+                "height": 5.800000190734863
+              },
+              "column": 3
+            },
+            {
+              "text": "Net Amount",
+              "bbox": {
+                "x": 390.75006103515625,
+                "y": 368.74993896484375,
+                "width": 44.2860107421875,
+                "height": 6.600006103515625
+              },
+              "column": 19
+            },
+            {
+              "text": "Rs. 65207",
+              "bbox": {
+                "x": 508.8500671386719,
+                "y": 368.49993896484375,
+                "width": 37.177825927734375,
+                "height": 6.600006103515625
+              },
+              "column": 23
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Loan Outstanding Balance :",
+              "bbox": {
+                "x": 386.949951171875,
+                "y": 386.79998779296875,
+                "width": 97.4573974609375,
+                "height": 5.800000190734863
+              },
+              "column": 18
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 539.5499267578125,
+                "y": 386.4999694824219,
+                "width": 6.52081298828125,
+                "height": 6.600006103515625
+              },
+              "column": 27
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "This is computer generated statement hence does not require a signature .",
+              "bbox": {
+                "x": 49.549957275390625,
+                "y": 394.79998779296875,
+                "width": 244.30752563476562,
+                "height": 5.800000190734863
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "FD Outstanding Balance :",
+              "bbox": {
+                "x": 386.9499206542969,
+                "y": 401.8999938964844,
+                "width": 90.35818481445312,
+                "height": 5.800000190734863
+              },
+              "column": 18
+            },
+            {
+              "text": "0",
+              "bbox": {
+                "x": 539.5499267578125,
+                "y": 401.5999755859375,
+                "width": 6.52081298828125,
+                "height": 6.600006103515625
+              },
+              "column": 27
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "1",
+              "bbox": {
+                "x": 544.8499145507812,
+                "y": 814.8499145507812,
+                "width": 3.97540283203125,
+                "height": 7.1500244140625
+              },
+              "column": 27
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

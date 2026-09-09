@@ -1,0 +1,1236 @@
+{
+  "schema_version": "2.0",
+  "metadata": {
+    "source_file": "PeopleFirst_Attachment_2026_07_16T15_31_45.pdf",
+    "page_count": 1,
+    "layout_signature": "generic-payslip",
+    "detected_locale": "IN",
+    "currency": "INR",
+    "extraction_confidence_overall": 0.95
+  },
+  "employer": {
+    "name": "Reliance Industries Ltd.",
+    "address": null,
+    "business_unit": null
+  },
+  "employee": {
+    "name": "Mr. Nishedhsinh Chavda",
+    "employee_id": "10064841                      NAME:  Mr.",
+    "designation": null,
+    "department": null,
+    "date_of_joining": null,
+    "pan": null,
+    "uan": "101125765559",
+    "pf_number": null,
+    "esi_number": null,
+    "bank_account": null,
+    "bank_name": null,
+    "ifsc_or_routing_code": null
+  },
+  "statements": [
+    {
+      "period": {
+        "period_type": "monthly",
+        "month": "June",
+        "year": 2026,
+        "financial_year": null,
+        "from_date": null,
+        "to_date": null,
+        "days_in_month": null,
+        "working_days": null,
+        "paid_days": null,
+        "lop_days": null,
+        "arrear_days": null
+      },
+      "earnings": {
+        "items": []
+      },
+      "deductions": {
+        "items": [
+          {
+            "raw_label": "Recovery of round off amt",
+            "canonical_category": "other_deduction",
+            "amount": {
+              "value": 0.06,
+              "currency": "INR",
+              "raw_label": "Recovery of round off amt",
+              "raw_value_string": "0.06",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "amount_actual": null,
+            "amount_payable": {
+              "value": 0.06,
+              "currency": "INR",
+              "raw_label": "Recovery of round off amt",
+              "raw_value_string": "0.06",
+              "match_method": "positional_heuristic",
+              "confidence": 1.0
+            },
+            "frequency": "monthly",
+            "page": 1
+          }
+        ]
+      },
+      "summary": {
+        "gross_salary": {
+          "value": 56503.94,
+          "currency": "INR",
+          "raw_label": "GROSS PAY",
+          "raw_value_string": "56,503.94",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "net_pay": {
+          "value": 48957.0,
+          "currency": "INR",
+          "raw_label": "NET PAY",
+          "raw_value_string": "48,957.00",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_deductions": {
+          "value": 7546.94,
+          "currency": "INR",
+          "raw_label": "TOTAL DEDUCTIONS",
+          "raw_value_string": "7546.94",
+          "match_method": "exact_alias",
+          "confidence": 1.0
+        },
+        "total_allowances": null,
+        "total_incentives_and_bonus": null,
+        "amount_in_words": null
+      },
+      "reconciliation": {
+        "gross_minus_deductions_matches_net": true,
+        "delta_vs_stated_net": 0.0,
+        "sum_of_earning_items_matches_stated_gross": false,
+        "sum_of_deduction_items_matches_stated_total": false,
+        "flags": []
+      }
+    }
+  ],
+  "raw": {
+    "page_count": 1,
+    "lines": [
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 42.29998779296875,
+          "width": 407.6999816894531,
+          "height": 9.0
+        },
+        "segments": [
+          "Reliance",
+          "Industries Ltd."
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 42.29998779296875,
+            "width": 283.5,
+            "height": 9.0
+          },
+          {
+            "x": 343.04998779296875,
+            "y": 42.29998779296875,
+            "width": 67.5,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 50.0999755859375,
+          "width": 428.3999938964844,
+          "height": 9.0
+        },
+        "segments": [
+          "PAYSLIP FOR",
+          "THE MONTH of June 2026"
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 50.0999755859375,
+            "width": 274.5,
+            "height": 9.0
+          },
+          {
+            "x": 332.25,
+            "y": 50.0999755859375,
+            "width": 99.0,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 65.70001220703125,
+          "width": 565.2000122070312,
+          "height": 9.0
+        },
+        "segments": [
+          "EMPLOYEE NO.:     10064841                      NAME:  Mr.",
+          "Nishedhsinh Chavda             PAYSLIP NO.:      1"
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 65.70001220703125,
+            "width": 283.5,
+            "height": 9.0
+          },
+          {
+            "x": 343.04998779296875,
+            "y": 65.70001220703125,
+            "width": 225.0,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 73.5,
+          "width": 588.6000366210938,
+          "height": 9.0
+        },
+        "segments": [
+          "PAYSLIP LOCATION: Jamnagar                      BANK:",
+          "STATE BANK OF INDIA             T  BANK A/C NO.: 20373003609"
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 73.5,
+            "width": 265.5,
+            "height": 9.0
+          },
+          {
+            "x": 321.45001220703125,
+            "y": 73.5,
+            "width": 270.0,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 89.10000610351562,
+          "width": 546.300048828125,
+          "height": 9.0
+        },
+        "segments": [
+          "LC/EG: 0.00              LWP - C/M:  P/M:    Shift Days -",
+          "A: 0.00   B: 0.00   C: 0.00     PH: 0.00 Denom:"
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 89.10000610351562,
+            "width": 279.0,
+            "height": 9.0
+          },
+          {
+            "x": 337.6499938964844,
+            "y": 89.10000610351562,
+            "width": 211.50003051757812,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 104.70001220703125,
+          "width": 551.7000122070312,
+          "height": 9.0
+        },
+        "segments": [
+          "BASIC/STIPEND: 24,102.00   OT - C/M:  P/M:",
+          "OTS - C/M:  P/M:               UAN:101125765559"
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 104.70001220703125,
+            "width": 283.5,
+            "height": 9.0
+          },
+          {
+            "x": 343.04998779296875,
+            "y": 104.70001220703125,
+            "width": 211.5,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 120.29998779296875,
+          "width": 687.6000366210938,
+          "height": 9.0
+        },
+        "segments": [
+          "EARNINGS                        This month (Rs)   Arrears",
+          "(Rs)  DEDUCTIONS                      This month(Rs)  Arrears",
+          "(Rs)"
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 120.29998779296875,
+            "width": 279.0,
+            "height": 9.0
+          },
+          {
+            "x": 337.6499938964844,
+            "y": 120.29998779296875,
+            "width": 279.0000305175781,
+            "height": 9.0
+          },
+          {
+            "x": 672.4500122070312,
+            "y": 120.29998779296875,
+            "width": 18.0,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 135.89999389648438,
+          "width": 553.5,
+          "height": 9.0
+        },
+        "segments": [
+          "Basic salary                         24,102.00",
+          "Ee PF contribution                   2,892.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 135.89999389648438,
+            "width": 225.0,
+            "height": 9.0
+          },
+          {
+            "x": 272.8500061035156,
+            "y": 135.89999389648438,
+            "width": 283.4999694824219,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 143.70001220703125,
+          "width": 553.5,
+          "height": 9.0
+        },
+        "segments": [
+          "Residual Choice Pay                  26,835.04",
+          "Prof Tax - Full period                 200.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 143.70001220703125,
+            "width": 225.0,
+            "height": 9.0
+          },
+          {
+            "x": 272.8500061035156,
+            "y": 143.70001220703125,
+            "width": 283.4999694824219,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 151.5,
+          "width": 562.5,
+          "height": 9.0
+        },
+        "segments": [
+          "Shift Allowance Sups- Arr",
+          "350.00  Voluntary Provident Fund             2,410.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 151.5,
+            "width": 270.0,
+            "height": 9.0
+          },
+          {
+            "x": 326.8500061035156,
+            "y": 151.5,
+            "width": 238.49996948242188,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 159.29998779296875,
+          "width": 611.1000366210938,
+          "height": 9.0
+        },
+        "segments": [
+          "Bonus - Monthly                       3,208.40",
+          "Recovery of round off amt",
+          "0.06-"
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 159.29998779296875,
+            "width": 225.0,
+            "height": 9.0
+          },
+          {
+            "x": 272.8500061035156,
+            "y": 159.29998779296875,
+            "width": 265.4999694824219,
+            "height": 9.0
+          },
+          {
+            "x": 591.4500122070312,
+            "y": 159.29998779296875,
+            "width": 22.5,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 167.10000610351562,
+          "width": 560.7000122070312,
+          "height": 9.0
+        },
+        "segments": [
+          "Comp off encashment                     803.40",
+          "1,205.10  Cable TV Recovery                      200.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 167.10000610351562,
+            "width": 261.0,
+            "height": 9.0
+          },
+          {
+            "x": 316.04998779296875,
+            "y": 167.10000610351562,
+            "width": 247.5,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 343.04998779296875,
+          "y": 174.89999389648438,
+          "width": 225.0,
+          "height": 9.0
+        },
+        "segments": [
+          "RSCC Membership Fees                   540.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 343.04998779296875,
+            "y": 174.89999389648438,
+            "width": 225.0,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 343.04998779296875,
+          "y": 182.70001220703125,
+          "width": 225.0,
+          "height": 9.0
+        },
+        "segments": [
+          "Society Conv Recovery                  160.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 343.04998779296875,
+            "y": 182.70001220703125,
+            "width": 225.0,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 343.04998779296875,
+          "y": 190.5,
+          "width": 225.0,
+          "height": 9.0
+        },
+        "segments": [
+          "Rcvry-Inc Exp-House Accom            1,145.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 343.04998779296875,
+            "y": 190.5,
+            "width": 225.0,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 369.8999938964844,
+          "width": 560.7000122070312,
+          "height": 9.0
+        },
+        "segments": [
+          "54,948.84",
+          "1,555.10                                       7,546.94"
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 369.8999938964844,
+            "width": 261.0,
+            "height": 9.0
+          },
+          {
+            "x": 316.04998779296875,
+            "y": 369.8999938964844,
+            "width": 247.5,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 385.5,
+          "width": 684.0,
+          "height": 9.0
+        },
+        "segments": [
+          "GROSS EARNINGS                   Rs.",
+          "56,503.94   TOTAL DEDUCTIONS               Rs.",
+          "7,546.94"
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 385.5,
+            "width": 256.5,
+            "height": 9.0
+          },
+          {
+            "x": 310.6499938964844,
+            "y": 385.5,
+            "width": 283.5000305175781,
+            "height": 9.0
+          },
+          {
+            "x": 650.8499755859375,
+            "y": 385.5,
+            "width": 36.0,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 343.04998779296875,
+          "y": 401.1000061035156,
+          "width": 353.70001220703125,
+          "height": 9.0
+        },
+        "segments": [
+          "NET PAYMENT                        Rs.",
+          "48,957.00"
+        ],
+        "segment_boxes": [
+          {
+            "x": 343.04998779296875,
+            "y": 401.1000061035156,
+            "width": 261.0,
+            "height": 9.0
+          },
+          {
+            "x": 656.25,
+            "y": 401.1000061035156,
+            "width": 40.5,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 343.04998779296875,
+          "y": 424.5,
+          "width": 94.5,
+          "height": 9.0
+        },
+        "segments": [
+          "DEAR SIR/MADAM,"
+        ],
+        "segment_boxes": [
+          {
+            "x": 343.04998779296875,
+            "y": 424.5,
+            "width": 94.5,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 440.1000061035156,
+          "width": 157.5,
+          "height": 9.0
+        },
+        "segments": [
+          "EMPLOYEE NO.:     10064841"
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 440.1000061035156,
+            "width": 157.5,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 447.8999938964844,
+          "width": 220.5,
+          "height": 9.0
+        },
+        "segments": [
+          "NAME:             Mr. Nishedhsinh Chavda"
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 447.8999938964844,
+            "width": 220.5,
+            "height": 9.0
+          }
+        ]
+      },
+      {
+        "page": 1,
+        "bbox": {
+          "x": 2.8499999046325684,
+          "y": 455.70001220703125,
+          "width": 157.5,
+          "height": 9.0
+        },
+        "segments": [
+          "PAYSLIP LOCATION: Jamnagar"
+        ],
+        "segment_boxes": [
+          {
+            "x": 2.8499999046325684,
+            "y": 455.70001220703125,
+            "width": 157.5,
+            "height": 9.0
+          }
+        ]
+      }
+    ],
+    "table": {
+      "columns": [
+        [
+          2.8499999046325684,
+          286.3500061035156
+        ],
+        [
+          272.8500061035156,
+          556.3499755859375
+        ],
+        [
+          310.6499938964844,
+          594.1500244140625
+        ],
+        [
+          321.45001220703125,
+          591.4500122070312
+        ],
+        [
+          332.25,
+          616.6500244140625
+        ],
+        [
+          343.04998779296875,
+          604.0499877929688
+        ],
+        [
+          591.4500122070312,
+          613.9500122070312
+        ],
+        [
+          650.8499755859375,
+          696.75
+        ],
+        [
+          672.4500122070312,
+          690.4500122070312
+        ]
+      ],
+      "rows": [
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Reliance",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 42.29998779296875,
+                "width": 283.5,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Industries Ltd.",
+              "bbox": {
+                "x": 343.04998779296875,
+                "y": 42.29998779296875,
+                "width": 67.5,
+                "height": 9.0
+              },
+              "column": 5
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "PAYSLIP FOR",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 50.0999755859375,
+                "width": 274.5,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "THE MONTH of June 2026",
+              "bbox": {
+                "x": 332.25,
+                "y": 50.0999755859375,
+                "width": 99.0,
+                "height": 9.0
+              },
+              "column": 4
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "EMPLOYEE NO.:     10064841                      NAME:  Mr.",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 65.70001220703125,
+                "width": 283.5,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Nishedhsinh Chavda             PAYSLIP NO.:      1",
+              "bbox": {
+                "x": 343.04998779296875,
+                "y": 65.70001220703125,
+                "width": 225.0,
+                "height": 9.0
+              },
+              "column": 5
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "PAYSLIP LOCATION: Jamnagar                      BANK:",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 73.5,
+                "width": 265.5,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "STATE BANK OF INDIA             T  BANK A/C NO.: 20373003609",
+              "bbox": {
+                "x": 321.45001220703125,
+                "y": 73.5,
+                "width": 270.0,
+                "height": 9.0
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "LC/EG: 0.00              LWP - C/M:  P/M:    Shift Days -",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 89.10000610351562,
+                "width": 279.0,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "A: 0.00   B: 0.00   C: 0.00     PH: 0.00 Denom:",
+              "bbox": {
+                "x": 337.6499938964844,
+                "y": 89.10000610351562,
+                "width": 211.50003051757812,
+                "height": 9.0
+              },
+              "column": 4
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "BASIC/STIPEND: 24,102.00   OT - C/M:  P/M:",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 104.70001220703125,
+                "width": 283.5,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "OTS - C/M:  P/M:               UAN:101125765559",
+              "bbox": {
+                "x": 343.04998779296875,
+                "y": 104.70001220703125,
+                "width": 211.5,
+                "height": 9.0
+              },
+              "column": 5
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "EARNINGS                        This month (Rs)   Arrears",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 120.29998779296875,
+                "width": 279.0,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "(Rs)  DEDUCTIONS                      This month(Rs)  Arrears",
+              "bbox": {
+                "x": 337.6499938964844,
+                "y": 120.29998779296875,
+                "width": 279.0000305175781,
+                "height": 9.0
+              },
+              "column": 4
+            },
+            {
+              "text": "(Rs)",
+              "bbox": {
+                "x": 672.4500122070312,
+                "y": 120.29998779296875,
+                "width": 18.0,
+                "height": 9.0
+              },
+              "column": 8
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Basic salary                         24,102.00",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 135.89999389648438,
+                "width": 225.0,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Ee PF contribution                   2,892.00",
+              "bbox": {
+                "x": 272.8500061035156,
+                "y": 135.89999389648438,
+                "width": 283.4999694824219,
+                "height": 9.0
+              },
+              "column": 1
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Residual Choice Pay                  26,835.04",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 143.70001220703125,
+                "width": 225.0,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Prof Tax - Full period                 200.00",
+              "bbox": {
+                "x": 272.8500061035156,
+                "y": 143.70001220703125,
+                "width": 283.4999694824219,
+                "height": 9.0
+              },
+              "column": 1
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Shift Allowance Sups- Arr",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 151.5,
+                "width": 270.0,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "350.00  Voluntary Provident Fund             2,410.00",
+              "bbox": {
+                "x": 326.8500061035156,
+                "y": 151.5,
+                "width": 238.49996948242188,
+                "height": 9.0
+              },
+              "column": 3
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Bonus - Monthly                       3,208.40",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 159.29998779296875,
+                "width": 225.0,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "Recovery of round off amt",
+              "bbox": {
+                "x": 272.8500061035156,
+                "y": 159.29998779296875,
+                "width": 265.4999694824219,
+                "height": 9.0
+              },
+              "column": 1
+            },
+            {
+              "text": "0.06-",
+              "bbox": {
+                "x": 591.4500122070312,
+                "y": 159.29998779296875,
+                "width": 22.5,
+                "height": 9.0
+              },
+              "column": 6
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Comp off encashment                     803.40",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 167.10000610351562,
+                "width": 261.0,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "1,205.10  Cable TV Recovery                      200.00",
+              "bbox": {
+                "x": 316.04998779296875,
+                "y": 167.10000610351562,
+                "width": 247.5,
+                "height": 9.0
+              },
+              "column": 2
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "RSCC Membership Fees                   540.00",
+              "bbox": {
+                "x": 343.04998779296875,
+                "y": 174.89999389648438,
+                "width": 225.0,
+                "height": 9.0
+              },
+              "column": 5
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Society Conv Recovery                  160.00",
+              "bbox": {
+                "x": 343.04998779296875,
+                "y": 182.70001220703125,
+                "width": 225.0,
+                "height": 9.0
+              },
+              "column": 5
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "Rcvry-Inc Exp-House Accom            1,145.00",
+              "bbox": {
+                "x": 343.04998779296875,
+                "y": 190.5,
+                "width": 225.0,
+                "height": 9.0
+              },
+              "column": 5
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "54,948.84",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 369.8999938964844,
+                "width": 261.0,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "1,555.10                                       7,546.94",
+              "bbox": {
+                "x": 316.04998779296875,
+                "y": 369.8999938964844,
+                "width": 247.5,
+                "height": 9.0
+              },
+              "column": 2
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "GROSS EARNINGS                   Rs.",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 385.5,
+                "width": 256.5,
+                "height": 9.0
+              },
+              "column": 0
+            },
+            {
+              "text": "56,503.94   TOTAL DEDUCTIONS               Rs.",
+              "bbox": {
+                "x": 310.6499938964844,
+                "y": 385.5,
+                "width": 283.5000305175781,
+                "height": 9.0
+              },
+              "column": 2
+            },
+            {
+              "text": "7,546.94",
+              "bbox": {
+                "x": 650.8499755859375,
+                "y": 385.5,
+                "width": 36.0,
+                "height": 9.0
+              },
+              "column": 7
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "NET PAYMENT                        Rs.",
+              "bbox": {
+                "x": 343.04998779296875,
+                "y": 401.1000061035156,
+                "width": 261.0,
+                "height": 9.0
+              },
+              "column": 5
+            },
+            {
+              "text": "48,957.00",
+              "bbox": {
+                "x": 656.25,
+                "y": 401.1000061035156,
+                "width": 40.5,
+                "height": 9.0
+              },
+              "column": 7
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "DEAR SIR/MADAM,",
+              "bbox": {
+                "x": 343.04998779296875,
+                "y": 424.5,
+                "width": 94.5,
+                "height": 9.0
+              },
+              "column": 5
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "EMPLOYEE NO.:     10064841",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 440.1000061035156,
+                "width": 157.5,
+                "height": 9.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "NAME:             Mr. Nishedhsinh Chavda",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 447.8999938964844,
+                "width": 220.5,
+                "height": 9.0
+              },
+              "column": 0
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "cells": [
+            {
+              "text": "PAYSLIP LOCATION: Jamnagar",
+              "bbox": {
+                "x": 2.8499999046325684,
+                "y": 455.70001220703125,
+                "width": 157.5,
+                "height": 9.0
+              },
+              "column": 0
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
