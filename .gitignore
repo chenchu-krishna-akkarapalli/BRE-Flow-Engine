@@ -56,3 +56,5 @@ cibil-pdf-scrapper/computation-of-income-copies-1/
 # OS-specific files
 .DS_Store
 Thumbs.db
+
+.env

@@ -76,11 +76,47 @@ class UASService:
         user_repo = UserRepository(db)
         user, tenant, role = await user_repo.get_user_with_context(username)
 
+        # 1. If user account is not found, check if this email belongs to a pending or rejected channel tenant
         if not user:
+            stmt_pending = select(TenantModel).where(
+                (TenantModel.contact_email == username.strip().lower())
+                | (TenantModel.code == username.strip().lower())
+            )
+            res_pending = await db.execute(stmt_pending)
+            pending_tenant = res_pending.scalars().first()
+            if pending_tenant:
+                if pending_tenant.status in ("pending", "under_review") or not pending_tenant.is_active:
+                    raise ForbiddenError(
+                        f"Channel partner account '{pending_tenant.name}' is currently pending Super Admin approval. "
+                        "You cannot log in until your channel has been approved. "
+                        "Once approved, you will receive an email with your credentials."
+                    )
+                elif pending_tenant.status == "rejected":
+                    raise ForbiddenError(
+                        f"Channel partner registration for '{pending_tenant.name}' was rejected."
+                    )
             raise UnauthorizedError(f"User account '{username}' was not found in the database.")
 
+        # 2. If user is deactivated or pending activation
         if not user.is_active:
-            raise ForbiddenError(f"User account '{username}' has been deactivated.")
+            if tenant and (tenant.status in ("pending", "under_review") or not tenant.is_active):
+                raise ForbiddenError(
+                    f"Channel partner account '{tenant.name}' is currently pending Super Admin approval. "
+                    "You cannot log in until your channel has been approved."
+                )
+            raise ForbiddenError(f"User account '{username}' is pending approval or has been deactivated.")
+
+        # 3. Check bound tenant status for non-platform users
+        if user.role != "SUPER_ADMIN" and tenant:
+            if tenant.status in ("pending", "under_review") or not tenant.is_active:
+                raise ForbiddenError(
+                    f"Channel partner account '{tenant.name}' is currently pending Super Admin approval. "
+                    "You cannot log in until your channel has been approved."
+                )
+            if tenant.status == "rejected":
+                raise ForbiddenError(
+                    f"Channel partner '{tenant.name}' application was rejected."
+                )
 
         salt = user.salt
         if not salt:
@@ -142,7 +178,17 @@ class UASService:
             raise UnauthorizedError(f"User account '{username}' was not found in the database.")
 
         if not user.is_active:
-            raise ForbiddenError("User account has been deactivated.")
+            raise ForbiddenError(f"User account '{username}' is pending approval or has been deactivated.")
+
+        if user.role != "SUPER_ADMIN" and tenant:
+            if tenant.status in ("pending", "under_review") or not tenant.is_active:
+                raise ForbiddenError(
+                    f"Channel partner account '{tenant.name}' is currently pending Super Admin approval."
+                )
+            if tenant.status == "rejected":
+                raise ForbiddenError(
+                    f"Channel partner '{tenant.name}' application was rejected."
+                )
 
         redis_key = f"nonce:{user.id}:{nonce_id}"
         expected_nonce: Optional[str] = None

@@ -62,6 +62,18 @@ class Settings(BaseSettings):
     SLA_CRUD_EVAL_MS: float = 80.0
     SLA_ZEN_RAM_EVAL_MS: float = 10.0
 
+    # Resend & Email Notification Settings
+    RESEND_API_KEY: str = ""
+    EMAIL_FROM: str = "FlowBRE Onboarding <onboarding@resend.dev>"
+    FRONTEND_LOGIN_URL: str = "http://localhost:3000/auth/login"
+
+    # SMTP Settings (e.g. Gmail SMTP)
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_USE_TLS: bool = True
+
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", case_sensitive=True, extra="ignore"
     )
