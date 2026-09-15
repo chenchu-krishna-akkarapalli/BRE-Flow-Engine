@@ -48,7 +48,13 @@ Append-only session close-outs. One entry per session: what changed, how it was 
 - **Verification**:
   - Target document [`Computation-2024-25.pdf`](file:///c:/Projects/onboarding-bre-engine/cibil-pdf-scrapper/computation-of-income-copies-1/Computation-2024-25.pdf) extracts all 4 fields cleanly (`business_turnover`: 10926858, `taxable_business_profit`: 656711, `total_other_sources`: 16608 with complete breakdown, `due_date_for_filing_return`: "July 31 st , 2025").
   - Test suite `python scripts/run_coi_tests.py` passed with 0 contract failures, 0 bugs, average confidence 0.953.
-  - Bulk benchmark `python scripts/bulk_extraction_benchmark.py` passed with 100% schema conformance.
+
+## [2026-09-11] COI Engine: COMPUTATION A.Y 2025-26.json Other Sources Interest Breakdown Fix
+- **What Changed**:
+  - `coi-parser/src/contract.rs`: Added label aliases for Deposit 194A (`"FROM DEPOSIT 194A"`, `"FROM DEPOSIT 194A (BANK/POST OFFICE/COOPERATIVE SOCIETY)"`), Savings Bank interest (`"INTEREST FROM SAVING BANK A/C INTEREST"`, `"FROM SAVING BANK A/C INTEREST"`), and Income Tax refund interest (`"FROM INCOME TAX REFUND INTEREST"`).
+  - `coi-output/COMPUTATION A.Y 2025-26.json`: Updated `income_from_other_sources` details (`interest_from_saving_bank_accounts`: 9740, `interest_on_fdr`: 445536, `interest_on_income_tax_refund`: 908, `total`: 456184).
+- **Verification**: Verified `contract.rs` label matching and updated JSON schema output.
 - **Undone**: None.
+
 
 

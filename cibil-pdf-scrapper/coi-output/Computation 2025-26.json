@@ -1,0 +1,337 @@
+{
+  "source": "Computation 2025-26.pdf",
+  "status": "OK",
+  "confidence_score": 0.96,
+  "confidence_breakdown": {
+    "assessee_info": 1.0,
+    "bank_details": 0.9624999999999999,
+    "return_details": 0.8875,
+    "computation": 1.0,
+    "tax_computation": 0.9624999999999999
+  },
+  "low_confidence_fields": [],
+  "schema_errors": [],
+  "data": {
+    "_meta": {
+      "ocr_used": false,
+      "source": "text_layer",
+      "confidence_score": 0.96,
+      "confidence_breakdown": {
+        "assessee_info": 1.0,
+        "bank_details": 0.9624999999999999,
+        "return_details": 0.8875,
+        "computation": 1.0,
+        "tax_computation": 0.9624999999999999
+      },
+      "low_confidence_fields": []
+    },
+    "summary": {
+      "assessee_name": "Shivam Singh",
+      "pan": "KNTPS1374B",
+      "assessment_year": "2025-2026",
+      "financial_year": "2024 - 2025",
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "gross_total_income": 606480,
+      "total_income": 606480,
+      "total_income_rounded": 606480,
+      "business_turnover": 2554663,
+      "taxable_business_profit": 605211,
+      "deemed_profit_44ad": 204373,
+      "deemed_profit_44ad_8pct": 204373,
+      "declared_profit_44ad": 605211,
+      "total_other_sources": 1269,
+      "total_deductions_chapter_6a": 0,
+      "total_tax_computed": 15324,
+      "rebate_87a": 15324,
+      "total_tds_tcs": 335,
+      "refundable_amount": 70,
+      "bank_account_no": "918010060694709",
+      "bank_name": "AXIS BANK"
+    },
+    "assessee_info": {
+      "name": "Shivam Singh",
+      "pan": "KNTPS1374B",
+      "father_name": "Lallan Singh Urf Balvant Singh",
+      "residential_address": "Alam Khod, Alam Khod, Basahari, Basahari, Banda, Uttar Pradesh, 210001",
+      "status": "Individual",
+      "assessment_year": "2025-2026",
+      "ward_no": "Year Ended",
+      "financial_year": "2024 - 2025",
+      "gender": "Male",
+      "date_of_birth": "05/08/1998",
+      "email": "shivamsingh70408@gmail.com",
+      "residential_status": "Resident"
+    },
+    "bank_details": {
+      "bank_name": "AXIS BANK",
+      "ifsc_code": null,
+      "account_no": "918010060694709",
+      "branch_address": "Alam Khod, Alam Khod, Basahari, Basahari, Banda, Uttar Pradesh, 210001"
+    },
+    "return_details": {
+      "tax_regime": "NEW_REGIME_115BAC",
+      "form_type": null,
+      "filing_status": null,
+      "filing_date": null,
+      "acknowledgement_no": "539192260010825"
+    },
+    "computation_of_total_income": {
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "assessment_year": "2025-2026",
+      "salaries": null,
+      "profits_and_gains_business_profession": {
+        "tiers": [
+          {
+            "presumptive_rate_pct": 8.0,
+            "deemed_base_turnover": 2554663,
+            "deemed_profit": 204373,
+            "declared_profit": 605211,
+            "profit_taken_higher_of_declared_or_deemed": 605211
+          }
+        ],
+        "section_total": 605211,
+        "deemed_profit_44ad": 204373,
+        "declared_profit_44ad": 605211,
+        "turnover_base_44ad": 2554663,
+        "taxable_business_profit": null
+      },
+      "income_declared_business_turnover": {
+        "due_date_for_filing_return": "July 31, 2025",
+        "due_date_extended_to": "16/09/2025",
+        "section": "44AD",
+        "gross_receipts_other_than_digital": null,
+        "gross_receipts_digital_mode": null,
+        "gross_receipts_cash": null,
+        "gross_receipts_total": 2554663,
+        "book_profit": {
+          "amount": 605211,
+          "rate_pct": 23.69
+        },
+        "deemed_profit_other_than_digital": null,
+        "deemed_profit_digital_mode": null,
+        "net_profit_declared": {
+          "amount": 605211,
+          "rate_pct": 23.69
+        },
+        "gross_receipts_turnover": 2554663,
+        "deemed_profit": {
+          "amount": 204373,
+          "rate_pct": 8.0
+        }
+      },
+      "income_from_business_or_profession": {
+        "chapter": "IV D",
+        "total": 605211,
+        "details": null
+      },
+      "income_from_capital_gain": {
+        "chapter": "IV E",
+        "total": null,
+        "short_term_capital_gain": {
+          "capital_gain_as_per_details_attached": null
+        },
+        "long_term_capital_gain": {
+          "threshold_limit": 125000,
+          "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
+          "brought_forward_long_term_capital_loss": null
+        }
+      },
+      "income_from_other_sources": {
+        "chapter": "IV F",
+        "total": 1269,
+        "details": {
+          "interest_from_saving_bank_accounts": 1269,
+          "interest_on_fdr": null,
+          "interest_from_time_deposit": null,
+          "interest_on_income_tax_refund": null,
+          "other_item": null,
+          "other_misc_income": null,
+          "income_from_job_work": null,
+          "rental_income": null,
+          "dividend_from_shares": null,
+          "dividend_from_companies": null,
+          "total": 1269
+        }
+      },
+      "gross_total_income": 606480,
+      "deductions": {
+        "chapter": "VI-A",
+        "total": 0
+      },
+      "total_income": {
+        "amount": 606480,
+        "round_off_u_s_288A": 606480,
+        "income_exempt_u_s_10": null,
+        "adjusted_total_income": 20,
+        "amt_applicable": false,
+        "amt_note": "Adjusted total income (ATI) is not more than Rs. 20 lakh hence AMT not applicable."
+      },
+      "total_income_rounded_288a": 606480,
+      "total_income_rounded_off_u_s_288a": 606480,
+      "exempt_income_sec_10": null,
+      "computation_of_tax_on_total_income": {
+        "tax_slabs": [],
+        "tax_on_total_income": null,
+        "tax_on_total_income_description": null,
+        "agriculture_tax_rebate": null,
+        "agriculture_tax_rebate_description": null,
+        "tax_after_agriculture_rebate": null,
+        "total_tax": 15324,
+        "rebate_u_s_87a": 15324,
+        "tax_after_rebate": 0,
+        "fee_payable_u_s_234f": null,
+        "self_assessment_tax_140a": null,
+        "self_assessment_tax_details": null
+      },
+      "tax_calculation": {
+        "tax_due_exemption_limit": 15324,
+        "short_term_capital_gain_tax": null,
+        "total_tax": 15324,
+        "rebate_u_s_87a": 15324,
+        "tax_after_rebate": 0,
+        "health_and_education_cess": {
+          "rate": 4.0,
+          "amount": null
+        },
+        "tax_after_cess": null,
+        "tds_tcs": 67,
+        "deposit_u_s_140A": null,
+        "refundable_round_off_u_s_288B": 70
+      },
+      "normal_income_tax_calculation": {
+        "normal_income": 606480,
+        "exemption_limit": 300000,
+        "taxable_normal_income": 306480,
+        "tax_rate": 5.0,
+        "tax_on_normal_income": 15324,
+        "total_tax": 15324
+      },
+      "tax_deducted_at_source_list": [
+        {
+          "section": "194",
+          "description": "H",
+          "amount": 3350
+        }
+      ],
+      "total_tds_tcs": 3350,
+      "refund": {
+        "amount": 70,
+        "tax_refundable_rounded_off_u_s_288b": 70
+      },
+      "special_rate_income_note": "Special Rate income has not been considered while calculating rebate u/s 87A, as per the changes made in the Income Tax Law on 05/07/2024."
+    },
+    "income_declared_business_turnover": {
+      "due_date_for_filing_return": "July 31, 2025",
+      "due_date_extended_to": "16/09/2025",
+      "section": "44AD",
+      "gross_receipts_other_than_digital": null,
+      "gross_receipts_digital_mode": null,
+      "gross_receipts_cash": null,
+      "gross_receipts_total": 2554663,
+      "book_profit": {
+        "amount": 605211,
+        "rate_pct": 23.69
+      },
+      "deemed_profit_other_than_digital": null,
+      "deemed_profit_digital_mode": null,
+      "net_profit_declared": {
+        "amount": 605211,
+        "rate_pct": 23.69
+      },
+      "gross_receipts_turnover": 2554663,
+      "deemed_profit": {
+        "amount": 204373,
+        "rate_pct": 8.0
+      }
+    },
+    "tax_computation": {
+      "slabs": [
+        {
+          "category": "Normal Income Slab @ 5%",
+          "description": "Tax on (6,06,480-3,00,000) =3,06,480 @5% = 15,324",
+          "slab_upper_limit_or_amount": null,
+          "tax": 0
+        }
+      ],
+      "rebate_of_tax_on_agriculture_income": null,
+      "rebate_87a": 15324,
+      "fee_payable_u_s_234f": null,
+      "refundable": 70,
+      "tds": []
+    },
+    "financial_particulars": {
+      "sundry_creditors": null,
+      "total_capital_and_liabilities": null,
+      "inventories": null,
+      "sundry_debtors": null,
+      "balance_with_banks": null,
+      "cash_in_hand": null,
+      "total_assets": null
+    },
+    "business_income_adjustments": {
+      "partnership_shares": [],
+      "income_44ad": 605211,
+      "profit_as_per_pnl": 605211,
+      "additions_salary_non_allowable": null,
+      "total_business_income": 605211,
+      "additions": [],
+      "deductions": [],
+      "net_business_income": 605211
+    },
+    "other_sources_breakdown": {
+      "savings_bank_interest": 1269,
+      "fdr_interest": null,
+      "commission_interest": null,
+      "total_other_sources": 1269
+    },
+    "tax_computation_extended": {
+      "total_tax_calculated": 15324,
+      "interest_234a": null,
+      "interest_234b": null,
+      "interest_234c": null,
+      "total_interest_234": null,
+      "tcs_amount": 67,
+      "deposit_140a_self_assessment": null,
+      "tax_payable": null
+    },
+    "ca_verification": {
+      "firm_name": null,
+      "ca_name": "CA REER FIXX LLP MRTF",
+      "membership_no": null
+    },
+    "annexures": {
+      "gst_turnover_details": [
+        {
+          "gstin": "09KNTPS1374B1ZE",
+          "turnover": 2554663
+        }
+      ],
+      "gst_turnover_total": 2554663,
+      "bank_interest_list": [
+        {
+          "serial_no": 1,
+          "particulars": "HDFC BANK LIMITED",
+          "amount": 1065
+        },
+        {
+          "serial_no": 2,
+          "particulars": "AXIS BANK LIMITED",
+          "amount": 204
+        }
+      ],
+      "bank_interest_total": 1269,
+      "fdr_interest_list": [],
+      "fdr_interest_total": 0,
+      "dividend_list": [],
+      "dividend_total": 0,
+      "tsd_non_salary_list": [
+        {
+          "serial_no": 1,
+          "particulars": "FUTURE TECH CAREER FIXX LLP",
+          "amount": 3350
+        }
+      ],
+      "tsd_non_salary_total": 3350
+    }
+  }
+}

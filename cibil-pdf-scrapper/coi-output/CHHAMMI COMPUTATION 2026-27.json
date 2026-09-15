@@ -1,0 +1,328 @@
+{
+  "source": "CHHAMMI COMPUTATION 2026-27.pdf",
+  "status": "OK",
+  "confidence_score": 0.99,
+  "confidence_breakdown": {
+    "assessee_info": 1.0,
+    "bank_details": 1.0,
+    "return_details": 1.0,
+    "computation": 1.0,
+    "tax_computation": 0.9249999999999999
+  },
+  "low_confidence_fields": [],
+  "schema_errors": [],
+  "data": {
+    "_meta": {
+      "ocr_used": false,
+      "source": "text_layer",
+      "confidence_score": 0.99,
+      "confidence_breakdown": {
+        "assessee_info": 1.0,
+        "bank_details": 1.0,
+        "return_details": 1.0,
+        "computation": 1.0,
+        "tax_computation": 0.9249999999999999
+      },
+      "low_confidence_fields": []
+    },
+    "summary": {
+      "assessee_name": "CHHAMMI YADAV",
+      "pan": "AHRPY6059K",
+      "assessment_year": "2026 - 2027",
+      "financial_year": "2025 - 2026",
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "gross_total_income": 866068,
+      "total_income": 866068,
+      "total_income_rounded": 866070,
+      "business_turnover": 1924506,
+      "taxable_business_profit": 866028,
+      "deemed_profit_44ad": 143990,
+      "deemed_profit_44ad_6pct": 29913,
+      "deemed_profit_44ad_8pct": 114077,
+      "declared_profit_44ad": 866028,
+      "total_other_sources": 40,
+      "total_deductions_chapter_6a": 0,
+      "total_tax_computed": 26607,
+      "rebate_87a": 26607,
+      "bank_account_no": "921010055137040",
+      "ifsc_code": "UTIB0003446",
+      "bank_name": "AXIS BANK"
+    },
+    "assessee_info": {
+      "name": "CHHAMMI YADAV",
+      "pan": "AHRPY6059K",
+      "father_name": "INDER SINGH YADAV",
+      "residential_address": "00, BAJNA, Raksa S.O, Bajna, UTTAR PRADESH-284419",
+      "status": "INDIVIDUAL",
+      "assessment_year": "2026 - 2027",
+      "ward_no": "ITO 2(2), GWL/",
+      "financial_year": "2025 - 2026",
+      "gender": "FEMALE",
+      "date_of_birth": "12/08/1994",
+      "email": "yadavsurendra00808@gmail.com",
+      "residential_status": "RESIDENT"
+    },
+    "bank_details": {
+      "bank_name": "AXIS BANK",
+      "ifsc_code": "UTIB0003446",
+      "account_no": "921010055137040",
+      "branch_address": "SIPRI JHANSI"
+    },
+    "return_details": {
+      "tax_regime": "NEW_REGIME_115BAC",
+      "form_type": "ITR-4",
+      "filing_status": "ORIGINAL",
+      "filing_date": "09/07/2026",
+      "acknowledgement_no": "281526830090726"
+    },
+    "computation_of_total_income": {
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "assessment_year": "2026-2027",
+      "salaries": null,
+      "profits_and_gains_business_profession": {
+        "tiers": [
+          {
+            "presumptive_rate_pct": 8.0,
+            "deemed_base_turnover": 1425958,
+            "deemed_profit": 114077,
+            "declared_profit": 641681,
+            "profit_taken_higher_of_declared_or_deemed": 641681
+          },
+          {
+            "presumptive_rate_pct": 6.0,
+            "deemed_base_turnover": 498548,
+            "deemed_profit": 29913,
+            "declared_profit": 224347,
+            "profit_taken_higher_of_declared_or_deemed": 224347
+          }
+        ],
+        "section_total": 866028,
+        "deemed_profit_44ad": 143990,
+        "declared_profit_44ad": 866028,
+        "turnover_base_44ad": 1924506,
+        "taxable_business_profit": 866028
+      },
+      "income_declared_business_turnover": {
+        "due_date_for_filing_return": null,
+        "due_date_extended_to": null,
+        "section": "44AD",
+        "gross_receipts_other_than_digital": null,
+        "gross_receipts_digital_mode": null,
+        "gross_receipts_cash": null,
+        "gross_receipts_total": null,
+        "book_profit": {
+          "amount": 866028,
+          "rate_pct": null
+        },
+        "deemed_profit_other_than_digital": null,
+        "deemed_profit_digital_mode": null,
+        "net_profit_declared": {
+          "amount": 866028,
+          "rate_pct": null
+        },
+        "gross_receipts_turnover": null,
+        "deemed_profit": null
+      },
+      "income_from_business_or_profession": {
+        "chapter": "IV D",
+        "total": 866028,
+        "details": null
+      },
+      "income_from_capital_gain": {
+        "chapter": "IV E",
+        "total": null,
+        "short_term_capital_gain": {
+          "capital_gain_as_per_details_attached": null
+        },
+        "long_term_capital_gain": {
+          "threshold_limit": 125000,
+          "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
+          "brought_forward_long_term_capital_loss": null
+        }
+      },
+      "income_from_other_sources": {
+        "chapter": "IV F",
+        "total": 40,
+        "details": {
+          "interest_from_saving_bank_accounts": 40,
+          "interest_on_fdr": null,
+          "interest_from_time_deposit": null,
+          "interest_on_income_tax_refund": null,
+          "other_item": null,
+          "other_misc_income": null,
+          "income_from_job_work": null,
+          "rental_income": null,
+          "dividend_from_shares": null,
+          "dividend_from_companies": null,
+          "total": 40
+        }
+      },
+      "gross_total_income": 866068,
+      "deductions": {
+        "chapter": "VI-A",
+        "total": 0
+      },
+      "total_income": {
+        "amount": 866068,
+        "round_off_u_s_288A": 866070,
+        "income_exempt_u_s_10": null,
+        "adjusted_total_income": 866068,
+        "amt_applicable": false,
+        "amt_note": "Adjusted total income (ATI) is not more than Rs. 20 lakh hence AMT not applicable."
+      },
+      "total_income_rounded_288a": 866070,
+      "total_income_rounded_off_u_s_288a": 866070,
+      "exempt_income_sec_10": null,
+      "computation_of_tax_on_total_income": {
+        "tax_slabs": [
+          {
+            "slab": "TAX ON RS. 4,00,000 (8,00,000 - 4,00,000)@ 5%",
+            "tax_amount": 20000
+          },
+          {
+            "slab": "TAX ON RS. 66,070 (8,66,070 - 8,00,000) @ 10%",
+            "tax_amount": 6607
+          }
+        ],
+        "tax_on_total_income": null,
+        "tax_on_total_income_description": null,
+        "agriculture_tax_rebate": null,
+        "agriculture_tax_rebate_description": null,
+        "tax_after_agriculture_rebate": null,
+        "total_tax": 26607,
+        "rebate_u_s_87a": 26607,
+        "tax_after_rebate": 0,
+        "fee_payable_u_s_234f": null,
+        "self_assessment_tax_140a": null,
+        "self_assessment_tax_details": null
+      },
+      "tax_calculation": {
+        "tax_due_exemption_limit": null,
+        "short_term_capital_gain_tax": null,
+        "total_tax": null,
+        "rebate_u_s_87a": 26607,
+        "tax_after_rebate": null,
+        "health_and_education_cess": {
+          "rate": 4.0,
+          "amount": null
+        },
+        "tax_after_cess": null,
+        "tds_tcs": null,
+        "deposit_u_s_140A": null,
+        "refundable_round_off_u_s_288B": null
+      },
+      "normal_income_tax_calculation": {
+        "normal_income": null,
+        "exemption_limit": 300000,
+        "taxable_normal_income": null,
+        "tax_rate": null,
+        "tax_on_normal_income": null,
+        "total_tax": null
+      },
+      "tax_deducted_at_source_list": [],
+      "total_tds_tcs": null,
+      "refund": null,
+      "special_rate_income_note": "Special Rate income has not been considered while calculating rebate u/s 87A, as per the changes made in the Income Tax Law on 05/07/2024."
+    },
+    "income_declared_business_turnover": {
+      "due_date_for_filing_return": null,
+      "due_date_extended_to": null,
+      "section": "44AD",
+      "gross_receipts_other_than_digital": null,
+      "gross_receipts_digital_mode": null,
+      "gross_receipts_cash": null,
+      "gross_receipts_total": null,
+      "book_profit": {
+        "amount": 866028,
+        "rate_pct": null
+      },
+      "deemed_profit_other_than_digital": null,
+      "deemed_profit_digital_mode": null,
+      "net_profit_declared": {
+        "amount": 866028,
+        "rate_pct": null
+      },
+      "gross_receipts_turnover": null,
+      "deemed_profit": null
+    },
+    "tax_computation": {
+      "slabs": [
+        {
+          "category": "Normal Income Slab @ 0%",
+          "description": "TAX ON RS. 4,00,000 NIL",
+          "slab_upper_limit_or_amount": 400000,
+          "tax": 0
+        },
+        {
+          "category": "Normal Income Slab @ 5%",
+          "description": "TAX ON RS. 4,00,000 (8,00,000 - 4,00,000)@ 5% 20,000",
+          "slab_upper_limit_or_amount": 400000,
+          "tax": 20000
+        },
+        {
+          "category": "Normal Income Slab @ 10%",
+          "description": "TAX ON RS. 66,070 (8,66,070 - 8,00,000) @ 10% 6,607",
+          "slab_upper_limit_or_amount": 66070,
+          "tax": 6607
+        }
+      ],
+      "rebate_of_tax_on_agriculture_income": null,
+      "rebate_87a": 26607,
+      "fee_payable_u_s_234f": null,
+      "refundable": null,
+      "tds": []
+    },
+    "financial_particulars": {
+      "sundry_creditors": 0,
+      "total_capital_and_liabilities": 0,
+      "inventories": 0,
+      "sundry_debtors": 0,
+      "balance_with_banks": 0,
+      "cash_in_hand": 99874,
+      "total_assets": 99874
+    },
+    "business_income_adjustments": {
+      "partnership_shares": [],
+      "income_44ad": 114077,
+      "profit_as_per_pnl": 866028,
+      "additions_salary_non_allowable": null,
+      "total_business_income": 866028,
+      "additions": [],
+      "deductions": [],
+      "net_business_income": 866028
+    },
+    "other_sources_breakdown": {
+      "savings_bank_interest": 40,
+      "fdr_interest": null,
+      "commission_interest": null,
+      "total_other_sources": 40
+    },
+    "tax_computation_extended": {
+      "total_tax_calculated": null,
+      "interest_234a": null,
+      "interest_234b": null,
+      "interest_234c": null,
+      "total_interest_234": null,
+      "tcs_amount": null,
+      "deposit_140a_self_assessment": null,
+      "tax_payable": 0
+    },
+    "ca_verification": {
+      "firm_name": null,
+      "ca_name": null,
+      "membership_no": null
+    },
+    "annexures": {
+      "gst_turnover_details": [],
+      "gst_turnover_total": 0,
+      "bank_interest_list": [],
+      "bank_interest_total": 0,
+      "fdr_interest_list": [],
+      "fdr_interest_total": 0,
+      "dividend_list": [],
+      "dividend_total": 0,
+      "tsd_non_salary_list": [],
+      "tsd_non_salary_total": 0
+    }
+  }
+}

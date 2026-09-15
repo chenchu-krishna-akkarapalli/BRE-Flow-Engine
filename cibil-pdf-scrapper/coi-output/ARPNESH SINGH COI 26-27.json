@@ -1,0 +1,335 @@
+{
+  "source": "ARPNESH SINGH COI 26-27.pdf",
+  "status": "OK",
+  "confidence_score": 0.95,
+  "confidence_breakdown": {
+    "assessee_info": 1.0,
+    "bank_details": 0.9624999999999999,
+    "return_details": 0.8875,
+    "computation": 1.0,
+    "tax_computation": 0.9249999999999999
+  },
+  "low_confidence_fields": [],
+  "schema_errors": [],
+  "data": {
+    "_meta": {
+      "ocr_used": false,
+      "source": "text_layer",
+      "confidence_score": 0.95,
+      "confidence_breakdown": {
+        "assessee_info": 1.0,
+        "bank_details": 0.9624999999999999,
+        "return_details": 0.8875,
+        "computation": 1.0,
+        "tax_computation": 0.9249999999999999
+      },
+      "low_confidence_fields": []
+    },
+    "summary": {
+      "assessee_name": "Arpnesh Singh",
+      "pan": "KMDPS0464P",
+      "assessment_year": "2026-2027",
+      "financial_year": "2025 - 2026",
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "gross_total_income": 752710,
+      "total_income": 752710,
+      "total_income_rounded": 752710,
+      "business_turnover": 1824568,
+      "taxable_business_profit": 752134,
+      "deemed_profit_44ad": 247873,
+      "deemed_profit_44ad_6pct": 85541,
+      "deemed_profit_44ad_8pct": 162332,
+      "declared_profit_44ad": 752134,
+      "total_other_sources": 576,
+      "total_deductions_chapter_6a": 0,
+      "total_tax_computed": 17636,
+      "rebate_87a": 17636,
+      "bank_account_no": "50459445389",
+      "bank_name": "INDIAN BANK"
+    },
+    "assessee_info": {
+      "name": "Arpnesh Singh",
+      "pan": "KMDPS0464P",
+      "father_name": "Triloki Singh",
+      "residential_address": "0, Dharwara B.o, Rampur, Azamgarh, Azamgarh, Uttar Pradesh, 276131",
+      "status": "Individual",
+      "assessment_year": "2026-2027",
+      "ward_no": "Year Ended",
+      "financial_year": "2025 - 2026",
+      "gender": "Male",
+      "date_of_birth": "09/07/2000",
+      "email": "rahulrajveer.singh8@gmail.com",
+      "residential_status": "Resident"
+    },
+    "bank_details": {
+      "bank_name": "INDIAN BANK",
+      "ifsc_code": null,
+      "account_no": "50459445389",
+      "branch_address": "0, Dharwara B.o, Rampur, Azamgarh, Azamgarh, Uttar Pradesh, 276131"
+    },
+    "return_details": {
+      "tax_regime": "NEW_REGIME_115BAC",
+      "form_type": null,
+      "filing_status": null,
+      "filing_date": null,
+      "acknowledgement_no": "851355590240825"
+    },
+    "computation_of_total_income": {
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "assessment_year": "2026-2027",
+      "salaries": null,
+      "profits_and_gains_business_profession": {
+        "tiers": [
+          {
+            "presumptive_rate_pct": 6.0,
+            "deemed_base_turnover": 1425686,
+            "deemed_profit": 85541,
+            "declared_profit": 752134,
+            "profit_taken_higher_of_declared_or_deemed": 752134
+          },
+          {
+            "presumptive_rate_pct": 8.0,
+            "deemed_base_turnover": 1824568,
+            "deemed_profit": 162332,
+            "declared_profit": 752134,
+            "profit_taken_higher_of_declared_or_deemed": 752134
+          }
+        ],
+        "section_total": 752134,
+        "deemed_profit_44ad": 162332,
+        "declared_profit_44ad": 752134,
+        "turnover_base_44ad": 1824568,
+        "taxable_business_profit": null
+      },
+      "income_declared_business_turnover": {
+        "due_date_for_filing_return": "August 31, 2026",
+        "due_date_extended_to": null,
+        "section": "44AD",
+        "gross_receipts_other_than_digital": 1824568,
+        "gross_receipts_digital_mode": 1425686,
+        "gross_receipts_cash": 204586,
+        "gross_receipts_total": 3454840,
+        "book_profit": {
+          "amount": 752134,
+          "rate_pct": 21.77
+        },
+        "deemed_profit_other_than_digital": {
+          "amount": 162332,
+          "rate_pct": 8.0
+        },
+        "deemed_profit_digital_mode": {
+          "amount": 85541,
+          "rate_pct": 6.0
+        },
+        "net_profit_declared": {
+          "amount": 752134,
+          "rate_pct": 21.77
+        },
+        "gross_receipts_turnover": 3454840,
+        "deemed_profit": {
+          "amount": 85541,
+          "rate_pct": 6.0
+        }
+      },
+      "income_from_business_or_profession": {
+        "chapter": "IV D",
+        "total": 752134,
+        "details": null
+      },
+      "income_from_capital_gain": {
+        "chapter": "IV E",
+        "total": null,
+        "short_term_capital_gain": {
+          "capital_gain_as_per_details_attached": null
+        },
+        "long_term_capital_gain": {
+          "threshold_limit": 125000,
+          "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
+          "brought_forward_long_term_capital_loss": null
+        }
+      },
+      "income_from_other_sources": {
+        "chapter": "IV F",
+        "total": 576,
+        "details": {
+          "interest_from_saving_bank_accounts": 576,
+          "interest_on_fdr": null,
+          "interest_from_time_deposit": null,
+          "interest_on_income_tax_refund": null,
+          "other_item": null,
+          "other_misc_income": null,
+          "income_from_job_work": null,
+          "rental_income": null,
+          "dividend_from_shares": null,
+          "dividend_from_companies": null,
+          "total": 576
+        }
+      },
+      "gross_total_income": 752710,
+      "deductions": {
+        "chapter": "VI-A",
+        "total": 0
+      },
+      "total_income": {
+        "amount": 752710,
+        "round_off_u_s_288A": 752710,
+        "income_exempt_u_s_10": null,
+        "adjusted_total_income": 20,
+        "amt_applicable": false,
+        "amt_note": "Adjusted total income (ATI) is not more than Rs. 20 lakh hence AMT not applicable."
+      },
+      "total_income_rounded_288a": 752710,
+      "total_income_rounded_off_u_s_288a": 752710,
+      "exempt_income_sec_10": null,
+      "computation_of_tax_on_total_income": {
+        "tax_slabs": [],
+        "tax_on_total_income": null,
+        "tax_on_total_income_description": null,
+        "agriculture_tax_rebate": null,
+        "agriculture_tax_rebate_description": null,
+        "tax_after_agriculture_rebate": null,
+        "total_tax": 17636,
+        "rebate_u_s_87a": 17636,
+        "tax_after_rebate": 0,
+        "fee_payable_u_s_234f": null,
+        "self_assessment_tax_140a": null,
+        "self_assessment_tax_details": null
+      },
+      "tax_calculation": {
+        "tax_due_exemption_limit": 17636,
+        "short_term_capital_gain_tax": null,
+        "total_tax": 17636,
+        "rebate_u_s_87a": 17636,
+        "tax_after_rebate": 0,
+        "health_and_education_cess": {
+          "rate": 4.0,
+          "amount": null
+        },
+        "tax_after_cess": null,
+        "tds_tcs": null,
+        "deposit_u_s_140A": null,
+        "refundable_round_off_u_s_288B": null
+      },
+      "normal_income_tax_calculation": {
+        "normal_income": 752710,
+        "exemption_limit": 400000,
+        "taxable_normal_income": 352710,
+        "tax_rate": 5.0,
+        "tax_on_normal_income": 17636,
+        "total_tax": 17636
+      },
+      "tax_deducted_at_source_list": [],
+      "total_tds_tcs": null,
+      "refund": null,
+      "special_rate_income_note": "Special Rate income has not been considered while calculating rebate u/s 87A, as per the changes made in the Income Tax Law on 05/07/2024."
+    },
+    "income_declared_business_turnover": {
+      "due_date_for_filing_return": "August 31, 2026",
+      "due_date_extended_to": null,
+      "section": "44AD",
+      "gross_receipts_other_than_digital": 1824568,
+      "gross_receipts_digital_mode": 1425686,
+      "gross_receipts_cash": 204586,
+      "gross_receipts_total": 3454840,
+      "book_profit": {
+        "amount": 752134,
+        "rate_pct": 21.77
+      },
+      "deemed_profit_other_than_digital": {
+        "amount": 162332,
+        "rate_pct": 8.0
+      },
+      "deemed_profit_digital_mode": {
+        "amount": 85541,
+        "rate_pct": 6.0
+      },
+      "net_profit_declared": {
+        "amount": 752134,
+        "rate_pct": 21.77
+      },
+      "gross_receipts_turnover": 3454840,
+      "deemed_profit": {
+        "amount": 85541,
+        "rate_pct": 6.0
+      }
+    },
+    "tax_computation": {
+      "slabs": [
+        {
+          "category": "Normal Income Slab @ 5%",
+          "description": "Tax on (7,52,710-4,00,000) =3,52,710 @5% = 17,636",
+          "slab_upper_limit_or_amount": null,
+          "tax": 0
+        }
+      ],
+      "rebate_of_tax_on_agriculture_income": null,
+      "rebate_87a": 17636,
+      "fee_payable_u_s_234f": null,
+      "refundable": null,
+      "tds": []
+    },
+    "financial_particulars": {
+      "sundry_creditors": 66548,
+      "total_capital_and_liabilities": null,
+      "inventories": 294586,
+      "sundry_debtors": 125648,
+      "balance_with_banks": 75468,
+      "cash_in_hand": 26458,
+      "total_assets": null
+    },
+    "business_income_adjustments": {
+      "partnership_shares": [],
+      "income_44ad": 752134,
+      "profit_as_per_pnl": 752134,
+      "additions_salary_non_allowable": null,
+      "total_business_income": 752134,
+      "additions": [],
+      "deductions": [],
+      "net_business_income": 752134
+    },
+    "other_sources_breakdown": {
+      "savings_bank_interest": 576,
+      "fdr_interest": null,
+      "commission_interest": null,
+      "total_other_sources": 576
+    },
+    "tax_computation_extended": {
+      "total_tax_calculated": 17636,
+      "interest_234a": null,
+      "interest_234b": null,
+      "interest_234c": null,
+      "total_interest_234": null,
+      "tcs_amount": null,
+      "deposit_140a_self_assessment": null,
+      "tax_payable": 0
+    },
+    "ca_verification": {
+      "firm_name": null,
+      "ca_name": "CA TEGORY DERIVED As Per Computation Difference",
+      "membership_no": null
+    },
+    "annexures": {
+      "gst_turnover_details": [],
+      "gst_turnover_total": 0,
+      "bank_interest_list": [
+        {
+          "serial_no": 1,
+          "particulars": "INDIAN BANK",
+          "amount": 466
+        },
+        {
+          "serial_no": 2,
+          "particulars": "HDFC BANK LIMITED",
+          "amount": 110
+        }
+      ],
+      "bank_interest_total": 576,
+      "fdr_interest_list": [],
+      "fdr_interest_total": 0,
+      "dividend_list": [],
+      "dividend_total": 0,
+      "tsd_non_salary_list": [],
+      "tsd_non_salary_total": 0
+    }
+  }
+}

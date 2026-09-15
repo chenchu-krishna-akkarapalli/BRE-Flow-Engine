@@ -1,0 +1,367 @@
+{
+  "source": "Mohit Tyagi Comp AY 2025-26.pdf",
+  "status": "OK",
+  "confidence_score": 0.95,
+  "confidence_breakdown": {
+    "assessee_info": 1.0,
+    "bank_details": 0.9624999999999999,
+    "return_details": 0.8875,
+    "computation": 1.0,
+    "tax_computation": 0.8875
+  },
+  "low_confidence_fields": [],
+  "schema_errors": [],
+  "data": {
+    "_meta": {
+      "ocr_used": false,
+      "source": "text_layer",
+      "confidence_score": 0.95,
+      "confidence_breakdown": {
+        "assessee_info": 1.0,
+        "bank_details": 0.9624999999999999,
+        "return_details": 0.8875,
+        "computation": 1.0,
+        "tax_computation": 0.8875
+      },
+      "low_confidence_fields": []
+    },
+    "summary": {
+      "assessee_name": "Mohit Tyagi",
+      "pan": "ARYPT1529N",
+      "assessment_year": "2025-2026",
+      "financial_year": "2024 - 2025",
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "gross_total_income": 1364442,
+      "total_income": 1364442,
+      "total_income_rounded": 1364440,
+      "taxable_business_profit": 360000,
+      "declared_profit_44ad": 360000,
+      "total_other_sources": 16495,
+      "total_deductions_chapter_6a": 0,
+      "total_tax_computed": 112888,
+      "total_tds_tcs": 445000,
+      "self_assessment_tax_140a": 80960,
+      "refundable_amount": 80960,
+      "bank_account_no": "3565902845",
+      "bank_name": "CENTRAL BANK OF INDIA"
+    },
+    "assessee_info": {
+      "name": "Mohit Tyagi",
+      "pan": "ARYPT1529N",
+      "father_name": "Sanjeev Kumar Tyagi",
+      "residential_address": "S-561, School Block, Laxmi Nagar S.o (east Delhi), Laxmi Nagar, East Delhi,",
+      "status": "Individual",
+      "assessment_year": "2025-2026",
+      "ward_no": "ward 34(1), Delhi",
+      "financial_year": "2024 - 2025",
+      "gender": "Male",
+      "date_of_birth": "08/09/1994",
+      "email": "SKPS192021@GMAIL.COM",
+      "residential_status": "Resident"
+    },
+    "bank_details": {
+      "bank_name": "CENTRAL BANK OF INDIA",
+      "ifsc_code": null,
+      "account_no": "3565902845",
+      "branch_address": "S-561, School Block, Laxmi Nagar S.o (east Delhi), Laxmi Nagar, East Delhi,"
+    },
+    "return_details": {
+      "tax_regime": "NEW_REGIME_115BAC",
+      "form_type": null,
+      "filing_status": null,
+      "filing_date": null,
+      "acknowledgement_no": "533322620150925"
+    },
+    "computation_of_total_income": {
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "assessment_year": "2025-2026",
+      "salaries": null,
+      "profits_and_gains_business_profession": {
+        "tiers": [
+          {
+            "presumptive_rate_pct": 8.0,
+            "deemed_base_turnover": null,
+            "deemed_profit": null,
+            "declared_profit": 360000,
+            "profit_taken_higher_of_declared_or_deemed": 360000
+          }
+        ],
+        "section_total": 360000,
+        "deemed_profit_44ad": null,
+        "declared_profit_44ad": 360000,
+        "turnover_base_44ad": null,
+        "taxable_business_profit": null
+      },
+      "income_declared_business_turnover": {
+        "due_date_for_filing_return": "July 31, 2025",
+        "due_date_extended_to": "16/09/2025",
+        "section": "44AD",
+        "gross_receipts_other_than_digital": null,
+        "gross_receipts_digital_mode": null,
+        "gross_receipts_cash": null,
+        "gross_receipts_total": null,
+        "book_profit": {
+          "amount": 360000,
+          "rate_pct": null
+        },
+        "deemed_profit_other_than_digital": null,
+        "deemed_profit_digital_mode": null,
+        "net_profit_declared": {
+          "amount": 360000,
+          "rate_pct": null
+        },
+        "gross_receipts_turnover": null,
+        "deemed_profit": null
+      },
+      "income_from_business_or_profession": {
+        "chapter": "IV D",
+        "total": 360000,
+        "details": null
+      },
+      "income_from_capital_gain": {
+        "chapter": "IV E",
+        "total": null,
+        "short_term_capital_gain": {
+          "capital_gain_as_per_details_attached": null
+        },
+        "long_term_capital_gain": {
+          "threshold_limit": 125000,
+          "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
+          "brought_forward_long_term_capital_loss": null
+        }
+      },
+      "income_from_other_sources": {
+        "chapter": "IV F",
+        "total": 16495,
+        "details": {
+          "interest_from_saving_bank_accounts": 14628,
+          "interest_on_fdr": 1867,
+          "interest_from_time_deposit": null,
+          "interest_on_income_tax_refund": null,
+          "other_item": null,
+          "other_misc_income": null,
+          "income_from_job_work": null,
+          "rental_income": null,
+          "dividend_from_shares": null,
+          "dividend_from_companies": null,
+          "total": 16495
+        }
+      },
+      "gross_total_income": 1364442,
+      "deductions": {
+        "chapter": "VI-A",
+        "total": 0
+      },
+      "total_income": {
+        "amount": 1364442,
+        "round_off_u_s_288A": 1364440,
+        "income_exempt_u_s_10": null,
+        "adjusted_total_income": 20,
+        "amt_applicable": false,
+        "amt_note": "Adjusted total income (ATI) is not more than Rs. 20 lakh hence AMT not applicable."
+      },
+      "total_income_rounded_288a": 1364440,
+      "total_income_rounded_off_u_s_288a": 1364440,
+      "exempt_income_sec_10": null,
+      "computation_of_tax_on_total_income": {
+        "tax_slabs": [],
+        "tax_on_total_income": null,
+        "tax_on_total_income_description": null,
+        "agriculture_tax_rebate": null,
+        "agriculture_tax_rebate_description": null,
+        "tax_after_agriculture_rebate": null,
+        "total_tax": 112888,
+        "rebate_u_s_87a": null,
+        "tax_after_rebate": 112888,
+        "fee_payable_u_s_234f": null,
+        "self_assessment_tax_140a": null,
+        "self_assessment_tax_details": null
+      },
+      "tax_calculation": {
+        "tax_due_exemption_limit": 112888,
+        "short_term_capital_gain_tax": null,
+        "total_tax": 112888,
+        "rebate_u_s_87a": null,
+        "tax_after_rebate": null,
+        "health_and_education_cess": {
+          "rate": 4.0,
+          "amount": 4516
+        },
+        "tax_after_cess": null,
+        "tds_tcs": 44500,
+        "deposit_u_s_140A": 80960,
+        "refundable_round_off_u_s_288B": 80960
+      },
+      "normal_income_tax_calculation": {
+        "normal_income": 1364440,
+        "exemption_limit": 300000,
+        "taxable_normal_income": null,
+        "tax_rate": null,
+        "tax_on_normal_income": 112888,
+        "total_tax": 112888
+      },
+      "tax_deducted_at_source_list": [
+        {
+          "section": "194I",
+          "description": "(b)",
+          "amount": 445000
+        }
+      ],
+      "total_tds_tcs": 445000,
+      "refund": {
+        "amount": 80960,
+        "tax_refundable_rounded_off_u_s_288b": 80960
+      },
+      "special_rate_income_note": "Special Rate income has not been considered while calculating rebate u/s 87A, as per the changes made in the Income Tax Law on 05/07/2024."
+    },
+    "income_declared_business_turnover": {
+      "due_date_for_filing_return": "July 31, 2025",
+      "due_date_extended_to": "16/09/2025",
+      "section": "44AD",
+      "gross_receipts_other_than_digital": null,
+      "gross_receipts_digital_mode": null,
+      "gross_receipts_cash": null,
+      "gross_receipts_total": null,
+      "book_profit": {
+        "amount": 360000,
+        "rate_pct": null
+      },
+      "deemed_profit_other_than_digital": null,
+      "deemed_profit_digital_mode": null,
+      "net_profit_declared": {
+        "amount": 360000,
+        "rate_pct": null
+      },
+      "gross_receipts_turnover": null,
+      "deemed_profit": null
+    },
+    "tax_computation": {
+      "slabs": [
+        {
+          "category": "Normal Income Slab @ 5%",
+          "description": "Tax on (7,00,000 -3,00,000) = 4,00,000 @5% = 20,000",
+          "slab_upper_limit_or_amount": null,
+          "tax": 0
+        },
+        {
+          "category": "Normal Income Slab @ 10%",
+          "description": "Tax on 7,00,001 To 10,00,000= 3,00,000 @10% = 30,000",
+          "slab_upper_limit_or_amount": 700001,
+          "tax": 0
+        },
+        {
+          "category": "Normal Income Slab @ 15%",
+          "description": "Tax on 10,00,001 To 12,00,000= 2,00,000 @15% = 30,000",
+          "slab_upper_limit_or_amount": 1000001,
+          "tax": 0
+        },
+        {
+          "category": "Normal Income Slab @ 20%",
+          "description": "Tax on 12,00,001 to 13,64,440= 1,64,440 @20% = 32,888",
+          "slab_upper_limit_or_amount": 1200001,
+          "tax": 0
+        }
+      ],
+      "rebate_of_tax_on_agriculture_income": null,
+      "rebate_87a": null,
+      "fee_payable_u_s_234f": null,
+      "refundable": null,
+      "tds": []
+    },
+    "financial_particulars": {
+      "sundry_creditors": null,
+      "total_capital_and_liabilities": null,
+      "inventories": null,
+      "sundry_debtors": null,
+      "balance_with_banks": null,
+      "cash_in_hand": null,
+      "total_assets": null
+    },
+    "business_income_adjustments": {
+      "partnership_shares": [],
+      "income_44ad": 360000,
+      "profit_as_per_pnl": 0,
+      "additions_salary_non_allowable": null,
+      "total_business_income": 360000,
+      "additions": [],
+      "deductions": [],
+      "net_business_income": 360000
+    },
+    "other_sources_breakdown": {
+      "savings_bank_interest": 14628,
+      "fdr_interest": 1867,
+      "commission_interest": null,
+      "total_other_sources": 16495
+    },
+    "tax_computation_extended": {
+      "total_tax_calculated": 112888,
+      "interest_234a": 8052,
+      "interest_234b": 4374,
+      "interest_234c": 2343678,
+      "total_interest_234": 2356104,
+      "tcs_amount": 4374,
+      "deposit_140a_self_assessment": 80960,
+      "tax_payable": 0
+    },
+    "ca_verification": {
+      "firm_name": null,
+      "ca_name": "CA TEGORY DERIVED As Per Computation Difference",
+      "membership_no": null
+    },
+    "annexures": {
+      "gst_turnover_details": [],
+      "gst_turnover_total": 0,
+      "bank_interest_list": [
+        {
+          "serial_no": 1,
+          "particulars": "BANK OF BARODA",
+          "amount": 4669
+        },
+        {
+          "serial_no": 2,
+          "particulars": "IDFC BANK LIMITED",
+          "amount": 4074
+        },
+        {
+          "serial_no": 3,
+          "particulars": "PUNJAB NATIONAL BANK",
+          "amount": 3725
+        },
+        {
+          "serial_no": 4,
+          "particulars": "CENTRAL BANK OF INDIA",
+          "amount": 2067
+        },
+        {
+          "serial_no": 5,
+          "particulars": "THE VAISH CO-OPERATIVE ADARSH BANK LIMITED",
+          "amount": 93
+        }
+      ],
+      "bank_interest_total": 14628,
+      "fdr_interest_list": [
+        {
+          "serial_no": 1,
+          "particulars": "IDFC BANK LIMITED (AADCI6523Q.AB806)",
+          "amount": 1867
+        }
+      ],
+      "fdr_interest_total": 1867,
+      "dividend_list": [],
+      "dividend_total": 0,
+      "tsd_non_salary_list": [
+        {
+          "serial_no": 1,
+          "particulars": "GUNJAN\"S IVF WORLD PRIVATE",
+          "amount": 270000
+        },
+        {
+          "serial_no": 2,
+          "particulars": "L AND T UTTARANCHAL",
+          "amount": 175000
+        }
+      ],
+      "tsd_non_salary_total": 445000
+    }
+  }
+}
