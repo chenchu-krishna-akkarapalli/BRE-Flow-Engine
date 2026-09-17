@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "ocr_used": false,
+    "source": "text_layer"
+  },
+  "assessee_info": {
+    "pan": "DDOPS7626N",
+    "name": "MUNIYAPPA SRINIVAS",
+    "address": "No.1093, 5Th, Cross, Weavers Colony, Near Ganesh Temple, Bangalore South, Bangalore , Bannerghatta Road S.O , 15-Karnataka, 91- INDIA, 560076",
+    "status": "Individual",
+    "assessment_year": "2024-25",
+    "financial_year": "2023-24"
+  },
+  "return_details": {
+    "form_number": "ITR-4",
+    "filed_u_s": "139(1)-On or before due date",
+    "acknowledgement_number": "808409400190724",
+    "date_of_filing": "19-Jul-2024"
+  },
+  "taxable_income_and_tax_details": {
+    "current_year_business_loss": 0,
+    "total_income": 695860,
+    "book_profit_under_mat": 0,
+    "adjusted_total_income_under_amt": 0,
+    "net_tax_payable": 0,
+    "interest_and_fee_payable": 0,
+    "total_tax_interest_and_fee_payable": 0,
+    "taxes_paid": 0,
+    "tax_payable_or_refundable": 0
+  },
+  "accreted_income_and_tax_details": {
+    "accreted_income_u_s_115td": 0,
+    "additional_tax_payable_u_s_115td": 0,
+    "interest_payable_u_s_115te": 0,
+    "additional_tax_and_interest_payable": 0,
+    "tax_and_interest_paid": 0,
+    "accreted_tax_payable_or_refundable": 0
+  },
+  "verification_details": {
+    "electronically_transmitted_on": "19-Jul-2024 22:01:09",
+    "ip_address": "49.37.161.73",
+    "verified_by": "MUNIYAPPA SRINIVAS",
+    "verifier_pan": "DDOPS7626N",
+    "verification_date": "19-Jul-2024",
+    "evc_code": "TUP93CN3II",
+    "verification_mode": "Aadhaar OTP",
+    "barcode_hash": "DDOPS7626N0480840940019072408146d29eee4d826003cf28ab022ffddc7a6731e"
+  }
+}

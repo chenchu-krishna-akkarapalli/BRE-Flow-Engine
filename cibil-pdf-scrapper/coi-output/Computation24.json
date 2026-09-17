@@ -1,0 +1,393 @@
+{
+  "source": "Computation24.pdf",
+  "status": "OK",
+  "confidence_score": 0.96,
+  "confidence_breakdown": {
+    "assessee_info": 1.0,
+    "bank_details": 0.9624999999999999,
+    "return_details": 0.8875,
+    "computation": 1.0,
+    "tax_computation": 0.9624999999999999
+  },
+  "low_confidence_fields": [],
+  "schema_errors": [],
+  "data": {
+    "_meta": {
+      "ocr_used": false,
+      "source": "text_layer",
+      "confidence_score": 0.96,
+      "confidence_breakdown": {
+        "assessee_info": 1.0,
+        "bank_details": 0.9624999999999999,
+        "return_details": 0.8875,
+        "computation": 1.0,
+        "tax_computation": 0.9624999999999999
+      },
+      "low_confidence_fields": []
+    },
+    "summary": {
+      "assessee_name": "Vaibhav Singh Rajawat",
+      "pan": "ATHPR0870M",
+      "assessment_year": "2024-2025",
+      "financial_year": "2023 - 2024",
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "gross_total_income": 722244,
+      "total_income": 722244,
+      "total_income_rounded": 722240,
+      "business_turnover": 5901044,
+      "taxable_business_profit": 720630,
+      "deemed_profit_44ad": 472083,
+      "deemed_profit_44ad_8pct": 472083,
+      "declared_profit_44ad": 720630,
+      "total_other_sources": 1614,
+      "total_deductions_chapter_6a": 0,
+      "total_tax_computed": 27224,
+      "rebate_87a": 4984,
+      "total_tds_tcs": 1067957,
+      "refundable_amount": 270,
+      "bank_account_no": "16711140002286",
+      "bank_name": "HDFC BANK"
+    },
+    "assessee_info": {
+      "name": "Vaibhav Singh Rajawat",
+      "pan": "ATHPR0870M",
+      "father_name": "Sanjay Singh Rajawat",
+      "residential_address": ".01, 2458, Raura House, Rajendra Nagar Orai, Orai, Orai, Jalaun, Uttar",
+      "status": "Individual",
+      "assessment_year": "2024-2025",
+      "ward_no": "WARD 2(1)(5), ORAI",
+      "financial_year": "2023 - 2024",
+      "gender": "Male",
+      "date_of_birth": "13/05/1992",
+      "email": "rajeshkushwah70@gmail.com",
+      "residential_status": "Resident"
+    },
+    "bank_details": {
+      "bank_name": "HDFC BANK",
+      "ifsc_code": null,
+      "account_no": "16711140002286",
+      "branch_address": ".01, 2458, Raura House, Rajendra Nagar Orai, Orai, Orai, Jalaun, Uttar"
+    },
+    "return_details": {
+      "tax_regime": "NEW_REGIME_115BAC",
+      "form_type": null,
+      "filing_status": null,
+      "filing_date": null,
+      "acknowledgement_no": "782712681281224"
+    },
+    "computation_of_total_income": {
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "assessment_year": "2024-2025",
+      "salaries": null,
+      "profits_and_gains_business_profession": {
+        "tiers": [
+          {
+            "presumptive_rate_pct": 8.0,
+            "deemed_base_turnover": 5901044,
+            "deemed_profit": 472083,
+            "declared_profit": 720630,
+            "profit_taken_higher_of_declared_or_deemed": 720630
+          }
+        ],
+        "section_total": 720630,
+        "deemed_profit_44ad": 472083,
+        "declared_profit_44ad": 720630,
+        "turnover_base_44ad": 5901044,
+        "taxable_business_profit": null
+      },
+      "income_declared_business_turnover": {
+        "due_date_for_filing_return": "July 31, 2024",
+        "due_date_extended_to": null,
+        "section": "44AD",
+        "gross_receipts_other_than_digital": null,
+        "gross_receipts_digital_mode": null,
+        "gross_receipts_cash": null,
+        "gross_receipts_total": 5901044,
+        "book_profit": {
+          "amount": 720630,
+          "rate_pct": 12.21
+        },
+        "deemed_profit_other_than_digital": null,
+        "deemed_profit_digital_mode": null,
+        "net_profit_declared": {
+          "amount": 720630,
+          "rate_pct": 12.21
+        },
+        "gross_receipts_turnover": 5901044,
+        "deemed_profit": {
+          "amount": 472083,
+          "rate_pct": 8.0
+        }
+      },
+      "income_from_business_or_profession": {
+        "chapter": "IV D",
+        "total": 720630,
+        "details": null
+      },
+      "income_from_capital_gain": {
+        "chapter": "IV E",
+        "total": null,
+        "short_term_capital_gain": {
+          "capital_gain_as_per_details_attached": null
+        },
+        "long_term_capital_gain": {
+          "threshold_limit": 125000,
+          "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
+          "brought_forward_long_term_capital_loss": null
+        }
+      },
+      "income_from_other_sources": {
+        "chapter": "IV F",
+        "total": 1614,
+        "details": {
+          "interest_from_saving_bank_accounts": 1270,
+          "interest_on_fdr": 344,
+          "interest_from_time_deposit": null,
+          "interest_on_income_tax_refund": null,
+          "other_item": null,
+          "other_misc_income": null,
+          "income_from_job_work": null,
+          "rental_income": null,
+          "dividend_from_shares": null,
+          "dividend_from_companies": null,
+          "total": 1614
+        }
+      },
+      "gross_total_income": 722244,
+      "deductions": {
+        "chapter": "VI-A",
+        "total": 0
+      },
+      "total_income": {
+        "amount": 722244,
+        "round_off_u_s_288A": 722240,
+        "income_exempt_u_s_10": null,
+        "adjusted_total_income": 20,
+        "amt_applicable": false,
+        "amt_note": "Adjusted total income (ATI) is not more than Rs. 20 lakh hence AMT not applicable."
+      },
+      "total_income_rounded_288a": 722240,
+      "total_income_rounded_off_u_s_288a": 722240,
+      "exempt_income_sec_10": null,
+      "computation_of_tax_on_total_income": {
+        "tax_slabs": [],
+        "tax_on_total_income": null,
+        "tax_on_total_income_description": null,
+        "agriculture_tax_rebate": null,
+        "agriculture_tax_rebate_description": null,
+        "tax_after_agriculture_rebate": null,
+        "total_tax": 27224,
+        "rebate_u_s_87a": 4984,
+        "tax_after_rebate": 22240,
+        "fee_payable_u_s_234f": null,
+        "self_assessment_tax_140a": null,
+        "self_assessment_tax_details": null
+      },
+      "tax_calculation": {
+        "tax_due_exemption_limit": 27224,
+        "short_term_capital_gain_tax": null,
+        "total_tax": 27224,
+        "rebate_u_s_87a": 4984,
+        "tax_after_rebate": 22240,
+        "health_and_education_cess": {
+          "rate": 4.0,
+          "amount": 890
+        },
+        "tax_after_cess": 23130,
+        "tds_tcs": 28400,
+        "deposit_u_s_140A": null,
+        "refundable_round_off_u_s_288B": 270
+      },
+      "normal_income_tax_calculation": {
+        "normal_income": 722240,
+        "exemption_limit": 300000,
+        "taxable_normal_income": null,
+        "tax_rate": null,
+        "tax_on_normal_income": 27224,
+        "total_tax": 27224
+      },
+      "tax_deducted_at_source_list": [
+        {
+          "section": "194",
+          "description": "C",
+          "amount": 57100
+        },
+        {
+          "section": "194",
+          "description": "H",
+          "amount": 428720
+        },
+        {
+          "section": "194",
+          "description": "O",
+          "amount": 582137
+        }
+      ],
+      "total_tds_tcs": 1067957,
+      "refund": {
+        "amount": 270,
+        "tax_refundable_rounded_off_u_s_288b": 270
+      },
+      "special_rate_income_note": "Special Rate income has not been considered while calculating rebate u/s 87A, as per the changes made in the Income Tax Law on 05/07/2024."
+    },
+    "income_declared_business_turnover": {
+      "due_date_for_filing_return": "July 31, 2024",
+      "due_date_extended_to": null,
+      "section": "44AD",
+      "gross_receipts_other_than_digital": null,
+      "gross_receipts_digital_mode": null,
+      "gross_receipts_cash": null,
+      "gross_receipts_total": 5901044,
+      "book_profit": {
+        "amount": 720630,
+        "rate_pct": 12.21
+      },
+      "deemed_profit_other_than_digital": null,
+      "deemed_profit_digital_mode": null,
+      "net_profit_declared": {
+        "amount": 720630,
+        "rate_pct": 12.21
+      },
+      "gross_receipts_turnover": 5901044,
+      "deemed_profit": {
+        "amount": 472083,
+        "rate_pct": 8.0
+      }
+    },
+    "tax_computation": {
+      "slabs": [
+        {
+          "category": "Normal Income Slab @ 5%",
+          "description": "Tax on (6,00,000 -3,00,000) = 3,00,000 @5% = 15,000",
+          "slab_upper_limit_or_amount": null,
+          "tax": 0
+        },
+        {
+          "category": "Normal Income Slab @ 10%",
+          "description": "Tax on 6,00,001 to 7,22,240= 1,22,240 @10% = 12,224",
+          "slab_upper_limit_or_amount": 600001,
+          "tax": 0
+        }
+      ],
+      "rebate_of_tax_on_agriculture_income": null,
+      "rebate_87a": 4984,
+      "fee_payable_u_s_234f": null,
+      "refundable": 270,
+      "tds": []
+    },
+    "financial_particulars": {
+      "sundry_creditors": 40250,
+      "total_capital_and_liabilities": null,
+      "inventories": 0,
+      "sundry_debtors": 112600,
+      "balance_with_banks": 414120,
+      "cash_in_hand": 38600,
+      "total_assets": null
+    },
+    "business_income_adjustments": {
+      "partnership_shares": [],
+      "income_44ad": 720630,
+      "profit_as_per_pnl": 0,
+      "additions_salary_non_allowable": null,
+      "total_business_income": 720630,
+      "additions": [],
+      "deductions": [],
+      "net_business_income": 720630
+    },
+    "other_sources_breakdown": {
+      "savings_bank_interest": 1270,
+      "fdr_interest": 344,
+      "commission_interest": null,
+      "total_other_sources": 1614
+    },
+    "tax_computation_extended": {
+      "total_tax_calculated": 27224,
+      "interest_234a": null,
+      "interest_234b": null,
+      "interest_234c": null,
+      "total_interest_234": null,
+      "tcs_amount": 28400,
+      "deposit_140a_self_assessment": null,
+      "tax_payable": null
+    },
+    "ca_verification": {
+      "firm_name": null,
+      "ca_name": "CA TEGORY DERIVED As Per Computation Difference",
+      "membership_no": null
+    },
+    "annexures": {
+      "gst_turnover_details": [
+        {
+          "gstin": "09ATHPR0870M1Z3",
+          "turnover": 4473980
+        },
+        {
+          "gstin": "09ATHPR0870M2Z2",
+          "turnover": 1427064
+        }
+      ],
+      "gst_turnover_total": 4390920,
+      "bank_interest_list": [
+        {
+          "serial_no": 1,
+          "particulars": "HDFC BANK LIMITED",
+          "amount": 1082
+        },
+        {
+          "serial_no": 2,
+          "particulars": "AXIS BANK LIMITED",
+          "amount": 188
+        }
+      ],
+      "bank_interest_total": 1270,
+      "fdr_interest_list": [
+        {
+          "serial_no": 1,
+          "particulars": "HDFC BANK LIMITED",
+          "amount": 344
+        },
+        {
+          "serial_no": null,
+          "particulars": "Page 2",
+          "amount": 2
+        }
+      ],
+      "fdr_interest_total": 344,
+      "dividend_list": [],
+      "dividend_total": 0,
+      "tsd_non_salary_list": [
+        {
+          "serial_no": 1,
+          "particulars": "BHARTI AIRTEL LIMITED",
+          "amount": 427966
+        },
+        {
+          "serial_no": 2,
+          "particulars": "EXECUTIVE OFFICER",
+          "amount": 28819
+        },
+        {
+          "serial_no": 3,
+          "particulars": "OFFICE OF THE ASSISTANT RGIONAL",
+          "amount": 22589
+        },
+        {
+          "serial_no": 4,
+          "particulars": "RAILTEL CORPORATION OF INDIA LTD",
+          "amount": 5692
+        },
+        {
+          "serial_no": 5,
+          "particulars": "RELIANCE RETAIL LIMITED",
+          "amount": 754
+        },
+        {
+          "serial_no": 6,
+          "particulars": "SWIGGY LIMITED",
+          "amount": 582137
+        }
+      ],
+      "tsd_non_salary_total": 1067957
+    }
+  }
+}

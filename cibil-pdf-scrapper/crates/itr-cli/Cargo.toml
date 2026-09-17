@@ -1,0 +1,18 @@
+[package]
+name = "itr-cli"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "itr-cli"
+path = "src/main.rs"
+
+[dependencies]
+itr-core = { path = "../itr-core" }
+itr-pdf = { path = "../itr-pdf" }
+itr-layout = { path = "../itr-layout" }
+itr-domain = { path = "../itr-domain" }
+itr-parser = { path = "../itr-parser" }
+itr-validation = { path = "../itr-validation" }
+serde = { workspace = true }
+serde_json = { workspace = true }

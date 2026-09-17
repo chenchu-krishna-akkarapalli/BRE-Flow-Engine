@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "ocr_used": false,
+    "source": "text_layer"
+  },
+  "assessee_info": {
+    "pan": "BZVPB4980P",
+    "name": "Smitha BijayAssessment Year:2025-26 PAN : BZVPB4980PPrevious Year:2024-25 6,76,268 2,131 6,78,399 Gross Total Income 6,78,399 Less - Deduction Chapter VI A 80G- - Taxable Income6,78,399 Taxable Income Rounded Off U/S 288A6,78,400 Tax on Taxable Income19,810 Less Rebate 19,516 Tax with Cess294 Add:Interest U/s234- Total Tax And Interest Payable 294 Less: tax paid TDS Claimes 283 294 Self",
+    "address": null,
+    "status": null,
+    "assessment_year": "2025-26",
+    "financial_year": "2024-25"
+  },
+  "return_details": {
+    "form_number": null,
+    "filed_u_s": null,
+    "acknowledgement_number": null,
+    "date_of_filing": null
+  },
+  "taxable_income_and_tax_details": {
+    "current_year_business_loss": 0,
+    "total_income": 678399,
+    "book_profit_under_mat": 0,
+    "adjusted_total_income_under_amt": 0,
+    "net_tax_payable": 0,
+    "interest_and_fee_payable": 0,
+    "total_tax_interest_and_fee_payable": 0,
+    "taxes_paid": 0,
+    "tax_payable_or_refundable": 0
+  },
+  "accreted_income_and_tax_details": {
+    "accreted_income_u_s_115td": 0,
+    "additional_tax_payable_u_s_115td": 0,
+    "interest_payable_u_s_115te": 0,
+    "additional_tax_and_interest_payable": 0,
+    "tax_and_interest_paid": 0,
+    "accreted_tax_payable_or_refundable": 0
+  },
+  "verification_details": {
+    "electronically_transmitted_on": null,
+    "ip_address": null,
+    "verified_by": null,
+    "verifier_pan": null,
+    "verification_date": null,
+    "evc_code": null,
+    "verification_mode": null,
+    "barcode_hash": null
+  }
+}

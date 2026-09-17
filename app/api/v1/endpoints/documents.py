@@ -57,6 +57,18 @@ async def extract_coi_document(
         tax_paid=65000.0,
     )
 
+# Extracts income tax return acknowledgement fields from uploaded ITR PDF
+@router.post("/itr/extract")
+async def extract_itr_document(
+    file: UploadFile = File(...),
+    tenant_id: str = Depends(get_current_tenant),
+    current_user: dict = Depends(get_current_user),
+):
+    from app.services.itr_service import process_itr_pdf
+    content = await file.read()
+    return await process_itr_pdf(content, file.filename or "itr.pdf", file.content_type)
+
+
 # Generic OCR extractor for identity cards and credentials
 @router.post("/{document_type}/extract", response_model=DocumentExtractionResponse)
 async def extract_generic_document(

@@ -1,0 +1,393 @@
+{
+  "source": "Comp_2025_MAA GAYATRI.pdf",
+  "status": "OK",
+  "confidence_score": 0.97,
+  "confidence_breakdown": {
+    "assessee_info": 0.9166666666666666,
+    "bank_details": 0.9624999999999999,
+    "return_details": 1.0,
+    "computation": 1.0,
+    "tax_computation": 0.9624999999999999
+  },
+  "low_confidence_fields": [],
+  "schema_errors": [],
+  "data": {
+    "_meta": {
+      "ocr_used": false,
+      "source": "text_layer",
+      "confidence_score": 0.97,
+      "confidence_breakdown": {
+        "assessee_info": 0.9166666666666666,
+        "bank_details": 0.9624999999999999,
+        "return_details": 1.0,
+        "computation": 1.0,
+        "tax_computation": 0.9624999999999999
+      },
+      "low_confidence_fields": []
+    },
+    "summary": {
+      "assessee_name": "JAGAT PRAKASH YADAV",
+      "pan": "ACQPY5099M",
+      "assessment_year": "2025 - 2026",
+      "financial_year": "2024 - 2025",
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "gross_total_income": 1347979,
+      "total_income": 1347979,
+      "total_income_rounded": 1347980,
+      "business_turnover": 2018152,
+      "taxable_business_profit": 161452,
+      "deemed_profit_44ad": 161453,
+      "deemed_profit_44ad_8pct": 161453,
+      "declared_profit_44ad": 161452,
+      "total_other_sources": 166526,
+      "total_deductions_chapter_6a": 0,
+      "total_tax_computed": 120576,
+      "rebate_87a": 3660,
+      "total_tds_tcs": 42482,
+      "self_assessment_tax_140a": 93210,
+      "refundable_amount": 93210,
+      "bank_account_no": "TYPE OF ACCOUNT",
+      "ifsc_code": "SBIN0001942",
+      "bank_name": "DETAILS OF BANK"
+    },
+    "assessee_info": {
+      "name": "JAGAT PRAKASH YADAV",
+      "pan": "ACQPY5099M",
+      "father_name": "RAM SWAROOP YADAV",
+      "residential_address": "766/11A, DADIYAPURA ,SHIVAJI NAGAR, JHANSI, UTTAR PRADESH-284003",
+      "status": "INDIVIDUAL",
+      "assessment_year": "2025 - 2026",
+      "ward_no": null,
+      "financial_year": "2024 - 2025",
+      "gender": "MALE",
+      "date_of_birth": "04/05/1974",
+      "email": "yadavjagatprakash@gmail.com",
+      "residential_status": "RESIDENT"
+    },
+    "bank_details": {
+      "bank_name": "DETAILS OF BANK",
+      "ifsc_code": "SBIN0001942",
+      "account_no": "TYPE OF ACCOUNT",
+      "branch_address": null
+    },
+    "return_details": {
+      "tax_regime": "NEW_REGIME_115BAC",
+      "form_type": "ITR-3",
+      "filing_status": "ORIGINAL",
+      "filing_date": "10/12/2025",
+      "acknowledgement_no": "827459180101225"
+    },
+    "computation_of_total_income": {
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "assessment_year": "2025-2026",
+      "salaries": null,
+      "profits_and_gains_business_profession": {
+        "tiers": [
+          {
+            "presumptive_rate_pct": 8.0,
+            "deemed_base_turnover": 2018152,
+            "deemed_profit": 161453,
+            "declared_profit": null,
+            "profit_taken_higher_of_declared_or_deemed": 161453
+          }
+        ],
+        "section_total": 161452,
+        "deemed_profit_44ad": 161453,
+        "declared_profit_44ad": 161452,
+        "turnover_base_44ad": 2018152,
+        "taxable_business_profit": 161452
+      },
+      "income_declared_business_turnover": {
+        "due_date_for_filing_return": null,
+        "due_date_extended_to": null,
+        "section": "44AD",
+        "gross_receipts_other_than_digital": null,
+        "gross_receipts_digital_mode": null,
+        "gross_receipts_cash": null,
+        "gross_receipts_total": 2018152,
+        "book_profit": {
+          "amount": 161453,
+          "rate_pct": null
+        },
+        "deemed_profit_other_than_digital": null,
+        "deemed_profit_digital_mode": null,
+        "net_profit_declared": {
+          "amount": 161453,
+          "rate_pct": null
+        },
+        "gross_receipts_turnover": 2018152,
+        "deemed_profit": null
+      },
+      "income_from_business_or_profession": {
+        "chapter": "IV D",
+        "total": 161453,
+        "details": null
+      },
+      "income_from_capital_gain": {
+        "chapter": "IV E",
+        "total": null,
+        "short_term_capital_gain": {
+          "capital_gain_as_per_details_attached": null
+        },
+        "long_term_capital_gain": {
+          "threshold_limit": 125000,
+          "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
+          "brought_forward_long_term_capital_loss": null
+        }
+      },
+      "income_from_other_sources": {
+        "chapter": "IV F",
+        "total": 166526,
+        "details": {
+          "interest_from_saving_bank_accounts": 4278,
+          "interest_on_fdr": null,
+          "interest_from_time_deposit": 19889,
+          "interest_on_income_tax_refund": null,
+          "other_item": 142359,
+          "other_misc_income": null,
+          "income_from_job_work": null,
+          "rental_income": null,
+          "dividend_from_shares": null,
+          "dividend_from_companies": null,
+          "total": 166526
+        }
+      },
+      "gross_total_income": 1347979,
+      "deductions": {
+        "chapter": "VI-A",
+        "total": 0
+      },
+      "total_income": {
+        "amount": 1347979,
+        "round_off_u_s_288A": 1347980,
+        "income_exempt_u_s_10": -228278,
+        "adjusted_total_income": 1347979,
+        "amt_applicable": false,
+        "amt_note": "Adjusted total income (ATI) is not more than Rs. 20 lakh hence AMT not applicable."
+      },
+      "total_income_rounded_288a": 1347980,
+      "total_income_rounded_off_u_s_288a": 1347980,
+      "exempt_income_sec_10": -228278,
+      "computation_of_tax_on_total_income": {
+        "tax_slabs": [
+          {
+            "slab": "TAX ON RS. 4,00,000 (7,00,000 - 3,00,000) @ 5%",
+            "tax_amount": 20000
+          },
+          {
+            "slab": "TAX ON RS. 3,00,000 (10,00,000 -7,00,000) @ 10%",
+            "tax_amount": 30000
+          },
+          {
+            "slab": "TAX ON RS. 2,00,000 (12,00,000 -10,00,000) @15%",
+            "tax_amount": 30000
+          },
+          {
+            "slab": "TAX ON RS. 2,21,180 (14,21,180 -12,00,000) @20%",
+            "tax_amount": 44236
+          }
+        ],
+        "tax_on_total_income": 124236,
+        "tax_on_total_income_description": "TAX ON TOTAL INCOME RS. (13,47,980 + 73,200 = 14,21,180)",
+        "agriculture_tax_rebate": 3660,
+        "agriculture_tax_rebate_description": "REBATE OF TAX ON AGRICULTURE INCOME RS. (3,00,000 + 73,200 =)",
+        "tax_after_agriculture_rebate": 120576,
+        "total_tax": 120576,
+        "rebate_u_s_87a": null,
+        "tax_after_rebate": 120576,
+        "fee_payable_u_s_234f": null,
+        "self_assessment_tax_140a": null,
+        "self_assessment_tax_details": null
+      },
+      "tax_calculation": {
+        "tax_due_exemption_limit": null,
+        "short_term_capital_gain_tax": null,
+        "total_tax": null,
+        "rebate_u_s_87a": null,
+        "tax_after_rebate": null,
+        "health_and_education_cess": {
+          "rate": 4.0,
+          "amount": 4823
+        },
+        "tax_after_cess": null,
+        "tds_tcs": null,
+        "deposit_u_s_140A": 93210,
+        "refundable_round_off_u_s_288B": null
+      },
+      "normal_income_tax_calculation": {
+        "normal_income": null,
+        "exemption_limit": 300000,
+        "taxable_normal_income": null,
+        "tax_rate": null,
+        "tax_on_normal_income": null,
+        "total_tax": null
+      },
+      "tax_deducted_at_source_list": [
+        {
+          "section": "206CH",
+          "description": "COLLECTION AT SOURCE FROM CONTRACTORS",
+          "amount": 24202
+        },
+        {
+          "section": "194C",
+          "description": "CONTRACTORS AND SUB-CONTRACTORS",
+          "amount": 2932
+        },
+        {
+          "section": "194A",
+          "description": "OTHER INTEREST",
+          "amount": 14240
+        },
+        {
+          "section": "206CR",
+          "description": "SECTION 206CR",
+          "amount": 1108
+        }
+      ],
+      "total_tds_tcs": 42482,
+      "refund": {
+        "amount": 93210,
+        "tax_refundable_rounded_off_u_s_288b": 93210
+      },
+      "special_rate_income_note": "Special Rate income has not been considered while calculating rebate u/s 87A, as per the changes made in the Income Tax Law on 05/07/2024."
+    },
+    "income_declared_business_turnover": {
+      "due_date_for_filing_return": null,
+      "due_date_extended_to": null,
+      "section": "44AD",
+      "gross_receipts_other_than_digital": null,
+      "gross_receipts_digital_mode": null,
+      "gross_receipts_cash": null,
+      "gross_receipts_total": 2018152,
+      "book_profit": {
+        "amount": 161453,
+        "rate_pct": null
+      },
+      "deemed_profit_other_than_digital": null,
+      "deemed_profit_digital_mode": null,
+      "net_profit_declared": {
+        "amount": 161453,
+        "rate_pct": null
+      },
+      "gross_receipts_turnover": 2018152,
+      "deemed_profit": null
+    },
+    "tax_computation": {
+      "slabs": [
+        {
+          "category": "Normal Income Slab @ 0%",
+          "description": "TAX ON RS. 3,00,000 NIL",
+          "slab_upper_limit_or_amount": 300000,
+          "tax": 0
+        },
+        {
+          "category": "Normal Income Slab @ 5%",
+          "description": "TAX ON RS. 4,00,000 (7,00,000 - 3,00,000) @ 5% 20,000",
+          "slab_upper_limit_or_amount": 400000,
+          "tax": 20000
+        },
+        {
+          "category": "Normal Income Slab @ 10%",
+          "description": "TAX ON RS. 3,00,000 (10,00,000 -7,00,000) @ 10% 30,000",
+          "slab_upper_limit_or_amount": 300000,
+          "tax": 30000
+        },
+        {
+          "category": "Normal Income Slab @ 15%",
+          "description": "TAX ON RS. 2,00,000 (12,00,000 -10,00,000) @15% 30,000",
+          "slab_upper_limit_or_amount": 200000,
+          "tax": 30000
+        },
+        {
+          "category": "Normal Income Slab @ 20%",
+          "description": "TAX ON RS. 2,21,180 (14,21,180 -12,00,000) @20% 44,236",
+          "slab_upper_limit_or_amount": 221180,
+          "tax": 44236
+        }
+      ],
+      "rebate_of_tax_on_agriculture_income": 3660,
+      "rebate_87a": 3660,
+      "fee_payable_u_s_234f": null,
+      "refundable": null,
+      "tds": [
+        {
+          "section": "206CH",
+          "description": "COLLECTION AT SOURCE FROM CONTRACTORS",
+          "amount": 24202
+        },
+        {
+          "section": "194C",
+          "description": "CONTRACTORS AND SUB-CONTRACTORS",
+          "amount": 2932
+        },
+        {
+          "section": "194A",
+          "description": "OTHER INTEREST",
+          "amount": 14240
+        },
+        {
+          "section": "206CR",
+          "description": "SECTION 206CR",
+          "amount": 1108
+        }
+      ]
+    },
+    "financial_particulars": {
+      "sundry_creditors": null,
+      "total_capital_and_liabilities": null,
+      "inventories": null,
+      "sundry_debtors": null,
+      "balance_with_banks": null,
+      "cash_in_hand": null,
+      "total_assets": null
+    },
+    "business_income_adjustments": {
+      "partnership_shares": [],
+      "income_44ad": 161453,
+      "profit_as_per_pnl": 161453,
+      "additions_salary_non_allowable": null,
+      "total_business_income": 161453,
+      "additions": [],
+      "deductions": [],
+      "net_business_income": 161453
+    },
+    "other_sources_breakdown": {
+      "savings_bank_interest": 4278,
+      "fdr_interest": 19889,
+      "commission_interest": null,
+      "total_other_sources": 166526
+    },
+    "tax_computation_extended": {
+      "total_tax_calculated": null,
+      "interest_234a": null,
+      "interest_234b": 7461,
+      "interest_234c": 2827,
+      "total_interest_234": 10288,
+      "tcs_amount": null,
+      "deposit_140a_self_assessment": 93210,
+      "tax_payable": 93210
+    },
+    "ca_verification": {
+      "firm_name": null,
+      "ca_name": "CA NARA BANK CNRB",
+      "membership_no": null
+    },
+    "annexures": {
+      "gst_turnover_details": [
+        {
+          "gstin": "23ACQPY5099M1ZH",
+          "turnover": null
+        }
+      ],
+      "gst_turnover_total": 0,
+      "bank_interest_list": [],
+      "bank_interest_total": 0,
+      "fdr_interest_list": [],
+      "fdr_interest_total": 0,
+      "dividend_list": [],
+      "dividend_total": 0,
+      "tsd_non_salary_list": [],
+      "tsd_non_salary_total": 0
+    }
+  }
+}

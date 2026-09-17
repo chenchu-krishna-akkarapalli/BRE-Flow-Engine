@@ -46,10 +46,7 @@ Working state for the current task. Kept here rather than in the context window 
 - [x] Rebuilt Docker frontend container (`docker compose build frontend; docker compose up -d frontend`), verifying production container is healthy and serving updated bundle.
 
 
-
-
-
-
 ## Open questions
 
 _none_
+

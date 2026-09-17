@@ -1,0 +1,299 @@
+{
+  "source": "Statement_of_Income_AKWPR7381R 2025-26.pdf",
+  "status": "OK",
+  "confidence_score": 0.79,
+  "confidence_breakdown": {
+    "assessee_info": 0.5,
+    "bank_details": 0.9624999999999999,
+    "return_details": 0.85,
+    "computation": 0.8,
+    "tax_computation": 0.85
+  },
+  "low_confidence_fields": [
+    "assessee_info.pan",
+    "assessee_info"
+  ],
+  "schema_errors": [],
+  "data": {
+    "_meta": {
+      "ocr_used": false,
+      "source": "text_layer",
+      "confidence_score": 0.79,
+      "confidence_breakdown": {
+        "assessee_info": 0.5,
+        "bank_details": 0.9624999999999999,
+        "return_details": 0.85,
+        "computation": 0.8,
+        "tax_computation": 0.85
+      },
+      "low_confidence_fields": [
+        "assessee_info.pan",
+        "assessee_info"
+      ]
+    },
+    "summary": {
+      "assessee_name": "PAN / Aadhaar",
+      "assessment_year": "2026-2027",
+      "financial_year": "2025 - 2026",
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "total_income": 1929805,
+      "total_income_rounded": 1929810,
+      "taxable_business_profit": 3,
+      "declared_profit_44ad": 3,
+      "total_other_sources": 123184,
+      "total_deductions_chapter_6a": 0,
+      "total_tds_tcs": 5,
+      "bank_account_no": "s",
+      "ifsc_code": "PUNB0136610",
+      "bank_name": "Name of the Bank"
+    },
+    "assessee_info": {
+      "name": "PAN / Aadhaar",
+      "pan": null,
+      "father_name": null,
+      "residential_address": "1/2 Aadhaar No. : [Aadhaar Redacted]",
+      "status": "Individual",
+      "assessment_year": "2026-2027",
+      "ward_no": null,
+      "financial_year": "2025 - 2026",
+      "gender": null,
+      "date_of_birth": "11-Aug-1987",
+      "email": null,
+      "residential_status": null
+    },
+    "bank_details": {
+      "bank_name": "Name of the Bank",
+      "ifsc_code": "PUNB0136610",
+      "account_no": "s",
+      "branch_address": null
+    },
+    "return_details": {
+      "tax_regime": "NEW_REGIME_115BAC",
+      "form_type": null,
+      "filing_status": null,
+      "filing_date": null,
+      "acknowledgement_no": null
+    },
+    "computation_of_total_income": {
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "assessment_year": "2026-2027",
+      "salaries": {
+        "gross_salary": null,
+        "standard_deduction_u_s_16_ia": 41940,
+        "taxable_salary": null
+      },
+      "profits_and_gains_business_profession": {
+        "tiers": [
+          {
+            "presumptive_rate_pct": 8.0,
+            "deemed_base_turnover": null,
+            "deemed_profit": null,
+            "declared_profit": 3,
+            "profit_taken_higher_of_declared_or_deemed": 3
+          }
+        ],
+        "section_total": 3,
+        "deemed_profit_44ad": null,
+        "declared_profit_44ad": 3,
+        "turnover_base_44ad": null,
+        "taxable_business_profit": null
+      },
+      "income_declared_business_turnover": {
+        "due_date_for_filing_return": null,
+        "due_date_extended_to": null,
+        "section": "44AD",
+        "gross_receipts_other_than_digital": null,
+        "gross_receipts_digital_mode": null,
+        "gross_receipts_cash": null,
+        "gross_receipts_total": null,
+        "book_profit": {
+          "amount": 3,
+          "rate_pct": null
+        },
+        "deemed_profit_other_than_digital": null,
+        "deemed_profit_digital_mode": null,
+        "net_profit_declared": {
+          "amount": 3,
+          "rate_pct": null
+        },
+        "gross_receipts_turnover": null,
+        "deemed_profit": null
+      },
+      "income_from_business_or_profession": {
+        "chapter": "IV D",
+        "total": 3,
+        "details": null
+      },
+      "income_from_capital_gain": {
+        "chapter": "IV E",
+        "total": null,
+        "short_term_capital_gain": {
+          "capital_gain_as_per_details_attached": null
+        },
+        "long_term_capital_gain": {
+          "threshold_limit": 125000,
+          "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
+          "brought_forward_long_term_capital_loss": null
+        }
+      },
+      "income_from_other_sources": {
+        "chapter": "IV F",
+        "total": 123184,
+        "details": {
+          "interest_from_saving_bank_accounts": null,
+          "interest_on_fdr": 123184,
+          "interest_from_time_deposit": null,
+          "interest_on_income_tax_refund": null,
+          "other_item": null,
+          "other_misc_income": null,
+          "income_from_job_work": null,
+          "rental_income": null,
+          "dividend_from_shares": null,
+          "dividend_from_companies": null,
+          "total": 123184
+        }
+      },
+      "gross_total_income": null,
+      "deductions": {
+        "chapter": "VI-A",
+        "total": 0
+      },
+      "total_income": {
+        "amount": 1929805,
+        "round_off_u_s_288A": 1929810,
+        "income_exempt_u_s_10": null,
+        "adjusted_total_income": 1929805,
+        "amt_applicable": false,
+        "amt_note": "Adjusted total income (ATI) is not more than Rs. 20 lakh hence AMT not applicable."
+      },
+      "total_income_rounded_288a": 1929810,
+      "total_income_rounded_off_u_s_288a": 1929810,
+      "exempt_income_sec_10": null,
+      "computation_of_tax_on_total_income": null,
+      "tax_calculation": {
+        "tax_due_exemption_limit": null,
+        "short_term_capital_gain_tax": null,
+        "total_tax": null,
+        "rebate_u_s_87a": null,
+        "tax_after_rebate": null,
+        "health_and_education_cess": {
+          "rate": 4.0,
+          "amount": null
+        },
+        "tax_after_cess": null,
+        "tds_tcs": 5,
+        "deposit_u_s_140A": null,
+        "refundable_round_off_u_s_288B": null
+      },
+      "normal_income_tax_calculation": {
+        "normal_income": null,
+        "exemption_limit": 300000,
+        "taxable_normal_income": null,
+        "tax_rate": null,
+        "tax_on_normal_income": null,
+        "total_tax": null
+      },
+      "tax_deducted_at_source_list": [],
+      "total_tds_tcs": 5,
+      "refund": null,
+      "special_rate_income_note": "Special Rate income has not been considered while calculating rebate u/s 87A, as per the changes made in the Income Tax Law on 05/07/2024."
+    },
+    "income_declared_business_turnover": {
+      "due_date_for_filing_return": null,
+      "due_date_extended_to": null,
+      "section": "44AD",
+      "gross_receipts_other_than_digital": null,
+      "gross_receipts_digital_mode": null,
+      "gross_receipts_cash": null,
+      "gross_receipts_total": null,
+      "book_profit": {
+        "amount": 3,
+        "rate_pct": null
+      },
+      "deemed_profit_other_than_digital": null,
+      "deemed_profit_digital_mode": null,
+      "net_profit_declared": {
+        "amount": 3,
+        "rate_pct": null
+      },
+      "gross_receipts_turnover": null,
+      "deemed_profit": null
+    },
+    "tax_computation": {
+      "slabs": [],
+      "rebate_of_tax_on_agriculture_income": null,
+      "rebate_87a": null,
+      "fee_payable_u_s_234f": null,
+      "refundable": null,
+      "tds": []
+    },
+    "financial_particulars": {
+      "sundry_creditors": null,
+      "total_capital_and_liabilities": null,
+      "inventories": null,
+      "sundry_debtors": null,
+      "balance_with_banks": null,
+      "cash_in_hand": 24500,
+      "total_assets": null
+    },
+    "business_income_adjustments": {
+      "partnership_shares": [],
+      "income_44ad": 1929810,
+      "profit_as_per_pnl": 3,
+      "additions_salary_non_allowable": null,
+      "total_business_income": 3,
+      "additions": [],
+      "deductions": [],
+      "net_business_income": 3
+    },
+    "other_sources_breakdown": {
+      "savings_bank_interest": null,
+      "fdr_interest": 123184,
+      "commission_interest": null,
+      "total_other_sources": 123184
+    },
+    "tax_computation_extended": {
+      "total_tax_calculated": null,
+      "interest_234a": null,
+      "interest_234b": 4555,
+      "interest_234c": 520,
+      "total_interest_234": 5075,
+      "tcs_amount": 5,
+      "deposit_140a_self_assessment": null,
+      "tax_payable": 96256
+    },
+    "ca_verification": {
+      "firm_name": null,
+      "ca_name": null,
+      "membership_no": null
+    },
+    "annexures": {
+      "gst_turnover_details": [],
+      "gst_turnover_total": 0,
+      "bank_interest_list": [
+        {
+          "serial_no": null,
+          "particulars": "Punjab National Bank",
+          "amount": 123184
+        },
+        {
+          "serial_no": null,
+          "particulars": "Punjab National Bank",
+          "amount": 29841
+        },
+        {
+          "serial_no": null,
+          "particulars": "Taxable Interest",
+          "amount": 153025
+        }
+      ],
+      "bank_interest_total": 306050,
+      "fdr_interest_list": [],
+      "fdr_interest_total": 0,
+      "dividend_list": [],
+      "dividend_total": 0,
+      "tsd_non_salary_list": [],
+      "tsd_non_salary_total": 0
+    }
+  }
+}

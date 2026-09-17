@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "ocr_used": false,
+    "source": "text_layer"
+  },
+  "assessee_info": {
+    "pan": "EPUPR9271B",
+    "name": "SHASHANK RAI",
+    "address": "00 , Bairampur B.O , Bairampur , 31-Uttar Pradesh, 91-India, 276206",
+    "status": "Individual",
+    "assessment_year": "2025-26",
+    "financial_year": "2024-25"
+  },
+  "return_details": {
+    "form_number": "ITR-3",
+    "filed_u_s": "139(1)- On or Before due date",
+    "acknowledgement_number": "678726540160925",
+    "date_of_filing": "16-Sep-2025"
+  },
+  "taxable_income_and_tax_details": {
+    "current_year_business_loss": 0,
+    "total_income": 640310,
+    "book_profit_under_mat": 0,
+    "adjusted_total_income_under_amt": 0,
+    "net_tax_payable": 1072,
+    "interest_and_fee_payable": 0,
+    "total_tax_interest_and_fee_payable": 1072,
+    "taxes_paid": 5851,
+    "tax_payable_or_refundable": -4780
+  },
+  "accreted_income_and_tax_details": {
+    "accreted_income_u_s_115td": 0,
+    "additional_tax_payable_u_s_115td": 0,
+    "interest_payable_u_s_115te": 0,
+    "additional_tax_and_interest_payable": 0,
+    "tax_and_interest_paid": 0,
+    "accreted_tax_payable_or_refundable": 0
+  },
+  "verification_details": {
+    "electronically_transmitted_on": "16-Sep-2025 21:46:27",
+    "ip_address": "223.233.66.113",
+    "verified_by": "SHASHANK RAI",
+    "verifier_pan": "EPUPR9271B",
+    "verification_date": "16-Sep-2025",
+    "evc_code": "ENR1T14WVI",
+    "verification_mode": "Aadhaar OTP",
+    "barcode_hash": "EPUPR9271B03678726540160925a9c617235f4433ecedc09ff3a6613f88df031d6b"
+  }
+}

@@ -176,7 +176,11 @@ pub struct OtherSourcesDetails {
     pub interest_from_time_deposit: Option<i64>,
     pub interest_on_income_tax_refund: Option<i64>,
     pub other_item: Option<i64>,
+    pub other_misc_income: Option<i64>,
+    pub income_from_job_work: Option<i64>,
+    pub rental_income: Option<i64>,
     pub dividend_from_shares: Option<i64>,
+    pub dividend_from_companies: Option<i64>,
     pub total: Option<i64>,
 }
 
