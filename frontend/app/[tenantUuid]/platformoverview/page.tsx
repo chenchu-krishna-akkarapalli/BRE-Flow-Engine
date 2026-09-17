@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import Link from "next/link";
 import {
   Activity,
@@ -31,132 +31,21 @@ import {
   X,
   Zap,
 } from "lucide-react";
+import {
+  INITIAL_TENANTS,
+  INITIAL_AUDIT_LOGS,
+  TenantRecord,
+  StatusAuditEntry,
+  TenantLifecycleStatus,
+} from "@/lib/tenants-data";
 
-export type TenantLifecycleStatus = "pending" | "under_review" | "active" | "suspended" | "rejected";
+export default function ScopedPlatformOverviewPage({
+  params,
+}: {
+  params: Promise<{ tenantUuid: string }>;
+}) {
+  const { tenantUuid } = use(params);
 
-export interface TenantRecord {
-  id: string;
-  name: string;
-  code: string;
-  tenant_uuid: string;
-  channel_type: string;
-  status: TenantLifecycleStatus;
-  cibil_overlay: number;
-  contact_email: string;
-  contact_phone: string;
-  evaluation_count_24h: number;
-  mean_latency_ms: number;
-  created_at: string;
-}
-
-export interface StatusAuditEntry {
-  id: string;
-  tenant_name: string;
-  tenant_uuid: string;
-  previous_status: string;
-  new_status: string;
-  changed_by: string;
-  reason: string;
-  timestamp: string;
-}
-
-const INITIAL_TENANTS: TenantRecord[] = [
-  {
-    id: "t-boi-01",
-    name: "Bank of India Channel",
-    code: "boi-channel-north",
-    tenant_uuid: "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f",
-    channel_type: "DSA",
-    status: "active",
-    cibil_overlay: 10,
-    contact_email: "ops@boi-dsa.in",
-    contact_phone: "+91 98765 43210",
-    evaluation_count_24h: 1482,
-    mean_latency_ms: 18.4,
-    created_at: "2026-08-10T10:00:00Z",
-  },
-  {
-    id: "t-hdfc-02",
-    name: "HDFC Apex Retail Channel",
-    code: "hdfc-apex-mumbai",
-    tenant_uuid: "b8a7c2d1-94e5-4f6a-8b1c-2d3e4f5a6b7c",
-    channel_type: "FINTECH_PARTNER",
-    status: "active",
-    cibil_overlay: 15,
-    contact_email: "partner@hdfc-apex.com",
-    contact_phone: "+91 98222 11100",
-    evaluation_count_24h: 3290,
-    mean_latency_ms: 14.1,
-    created_at: "2026-08-12T14:30:00Z",
-  },
-  {
-    id: "t-finsol-03",
-    name: "Finsol Western Partner Network",
-    code: "finsol-west-pune",
-    tenant_uuid: "c9d8e7f6-a5b4-4c3d-2e1f-0a9b8c7d6e5f",
-    channel_type: "DSA",
-    status: "pending",
-    cibil_overlay: 10,
-    contact_email: "admin@finsol-west.in",
-    contact_phone: "+91 97654 32190",
-    evaluation_count_24h: 0,
-    mean_latency_ms: 0,
-    created_at: "2026-08-18T18:20:00Z",
-  },
-  {
-    id: "t-axis-04",
-    name: "Axis Direct Fintech Connect",
-    code: "axis-fintech-delhi",
-    tenant_uuid: "f1e2d3c4-b5a6-4f7e-8d9c-0b1a2c3d4e5f",
-    channel_type: "BANK_BRANCH",
-    status: "under_review",
-    cibil_overlay: 20,
-    contact_email: "connect@axis-fintech.in",
-    contact_phone: "+91 99112 33445",
-    evaluation_count_24h: 0,
-    mean_latency_ms: 0,
-    created_at: "2026-08-17T11:15:00Z",
-  },
-  {
-    id: "t-icici-05",
-    name: "ICICI Regional Alliance",
-    code: "icici-alliance-south",
-    tenant_uuid: "a2b3c4d5-e6f7-4a8b-9c0d-1e2f3a4b5c6d",
-    channel_type: "DEALER_PARTNER",
-    status: "rejected",
-    cibil_overlay: 10,
-    contact_email: "dealer@icici-alliance.in",
-    contact_phone: "+91 98111 22334",
-    evaluation_count_24h: 0,
-    mean_latency_ms: 0,
-    created_at: "2026-08-15T09:00:00Z",
-  },
-];
-
-const INITIAL_AUDIT_LOGS: StatusAuditEntry[] = [
-  {
-    id: "aud-01",
-    tenant_name: "Axis Direct Fintech Connect",
-    tenant_uuid: "f1e2d3c4-b5a6-4f7e-8d9c-0b1a2c3d4e5f",
-    previous_status: "pending",
-    new_status: "under_review",
-    changed_by: "super.admin@flowbre.com",
-    reason: "Claimed for legal verification against MCA database.",
-    timestamp: "2026-08-18 19:40:12",
-  },
-  {
-    id: "aud-02",
-    tenant_name: "HDFC Apex Retail Channel",
-    tenant_uuid: "b8a7c2d1-94e5-4f6a-8b1c-2d3e4f5a6b7c",
-    previous_status: "under_review",
-    new_status: "active",
-    changed_by: "ops.head@flowbre.com",
-    reason: "Approved with +15 CIBIL overlay margin and provisioned 13 navigation nodes.",
-    timestamp: "2026-08-12 15:00:00",
-  },
-];
-
-export default function PlatformOverviewPage() {
   const [tenants, setTenants] = useState<TenantRecord[]>(INITIAL_TENANTS);
   const [auditLogs, setAuditLogs] = useState<StatusAuditEntry[]>(INITIAL_AUDIT_LOGS);
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
@@ -226,27 +115,20 @@ export default function PlatformOverviewPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 flex-wrap">
             <h1 className="text-2xl font-extrabold text-slate-900 font-display">
               Platform Master Overview &amp; Approval Queue
             </h1>
-            <span className="rounded-full bg-slate-900 px-2.5 py-0.5 text-[0.625rem] font-bold text-teal-400 border border-slate-800">
-              Platform Owner Scope
+            <span className="rounded-full bg-slate-900 px-2.5 py-0.5 text-[0.625rem] font-bold text-teal-400 border border-slate-800 font-mono">
+              Scope: {tenantUuid}
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
-            Full end-to-end tenant onboarding state machine, underwriting review queue, and automated navigation node provisioning.
+            Full end-to-end tenant onboarding state machine, underwriting review queue, and channel workspace inspection.
           </p>
         </div>
 
         <div className="flex items-center gap-2.5 self-start sm:self-auto">
-          <Link
-            href="/platform/modules"
-            className="flex items-center gap-1.5 rounded-xl border border-teal-300 bg-teal-50 px-3.5 py-2.5 text-xs font-bold text-teal-700 hover:bg-teal-100 transition-all"
-          >
-            <Sliders size={15} />
-            <span>Dynamic Module Studio</span>
-          </Link>
           <Link
             href="/new-channel"
             className="flex items-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-slate-900/10 hover:bg-slate-800 transition-all"
@@ -335,7 +217,7 @@ export default function PlatformOverviewPage() {
                   setStatusFilter("ALL");
                   setSearchQuery("");
                 }}
-                className="mt-2 text-xs font-bold text-teal-600 hover:text-teal-700"
+                className="mt-2 text-xs font-bold text-teal-600 hover:text-teal-700 cursor-pointer"
               >
                 Clear all filters
               </button>
@@ -367,7 +249,7 @@ export default function PlatformOverviewPage() {
                       <button
                         type="button"
                         onClick={() => handleCopyUuid(t.tenant_uuid)}
-                        className="group inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-2 py-1 font-mono text-[0.6875rem] text-slate-700 hover:bg-white hover:border-slate-300 transition-all"
+                        className="group inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-2 py-1 font-mono text-[0.6875rem] text-slate-700 hover:bg-white hover:border-slate-300 transition-all cursor-pointer"
                         title="Click to copy tenant UUID"
                       >
                         <span>/{t.tenant_uuid.slice(0, 10)}...</span>
@@ -425,7 +307,7 @@ export default function PlatformOverviewPage() {
                             <button
                               type="button"
                               onClick={() => handleTransition(t, "under_review", "Claimed by Super Admin for legal compliance review.")}
-                              className="inline-flex items-center gap-1 rounded-lg bg-indigo-600 px-2.5 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-indigo-700 transition-all"
+                              className="inline-flex items-center gap-1 rounded-lg bg-indigo-600 px-2.5 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-indigo-700 transition-all cursor-pointer"
                               title="Claim and transition to Under Review"
                             >
                               <Shield size={12} />
@@ -438,7 +320,7 @@ export default function PlatformOverviewPage() {
                                 setApprovalOverlay(t.cibil_overlay || 15);
                                 setActiveModal("APPROVE");
                               }}
-                              className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-2.5 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-emerald-700 transition-all"
+                              className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-2.5 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-emerald-700 transition-all cursor-pointer"
                               title="Directly approve and seed navigation nodes"
                             >
                               <Check size={12} />
@@ -450,7 +332,7 @@ export default function PlatformOverviewPage() {
                                 setSelectedTenant(t);
                                 setActiveModal("REJECT");
                               }}
-                              className="inline-flex items-center gap-1 rounded-lg bg-rose-600 px-2 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-rose-700 transition-all"
+                              className="inline-flex items-center gap-1 rounded-lg bg-rose-600 px-2 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-rose-700 transition-all cursor-pointer"
                               title="Reject registration"
                             >
                               <X size={12} />
@@ -469,7 +351,7 @@ export default function PlatformOverviewPage() {
                                 setApprovalOverlay(t.cibil_overlay || 15);
                                 setActiveModal("APPROVE");
                               }}
-                              className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-2.5 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-emerald-700 transition-all"
+                              className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-2.5 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-emerald-700 transition-all cursor-pointer"
                               title="Approve tenant and seed role navigation nodes"
                             >
                               <Check size={12} />
@@ -481,7 +363,7 @@ export default function PlatformOverviewPage() {
                                 setSelectedTenant(t);
                                 setActiveModal("REQUEST_INFO");
                               }}
-                              className="inline-flex items-center gap-1 rounded-lg bg-amber-500 px-2 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-amber-600 transition-all"
+                              className="inline-flex items-center gap-1 rounded-lg bg-amber-500 px-2 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-amber-600 transition-all cursor-pointer"
                               title="Request additional KYC / MCA documents"
                             >
                               <HelpCircle size={12} />
@@ -493,7 +375,7 @@ export default function PlatformOverviewPage() {
                                 setSelectedTenant(t);
                                 setActiveModal("REJECT");
                               }}
-                              className="inline-flex items-center gap-1 rounded-lg bg-rose-600 px-2 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-rose-700 transition-all"
+                              className="inline-flex items-center gap-1 rounded-lg bg-rose-600 px-2 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-rose-700 transition-all cursor-pointer"
                               title="Reject application"
                             >
                               <X size={12} />
@@ -502,11 +384,11 @@ export default function PlatformOverviewPage() {
                           </>
                         )}
 
-                        {/* 3. ACTIVE STAGE ACTIONS */}
+                        {/* 3. ACTIVE STAGE ACTIONS - HIERARCHICAL CHANNEL WORKSPACE LINK */}
                         {t.status === "active" && (
                           <>
                             <Link
-                              href={`/${t.tenant_uuid}/platformoverview/${t.tenant_uuid}/${t.code}/workspace`}
+                              href={`/${tenantUuid}/platformoverview/${t.tenant_uuid}/${t.code}/workspace`}
                               className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[0.6875rem] font-bold text-slate-800 shadow-xs hover:border-slate-400 hover:text-teal-700 transition-all"
                               title={`Open ${t.name} Channel Workspace`}
                             >
@@ -519,7 +401,7 @@ export default function PlatformOverviewPage() {
                                 setSelectedTenant(t);
                                 setActiveModal("SUSPEND");
                               }}
-                              className="inline-flex items-center gap-1 rounded-lg border border-rose-200 bg-rose-50 px-2 py-1 text-[0.6875rem] font-bold text-rose-700 hover:bg-rose-100 transition-all"
+                              className="inline-flex items-center gap-1 rounded-lg border border-rose-200 bg-rose-50 px-2 py-1 text-[0.6875rem] font-bold text-rose-700 hover:bg-rose-100 transition-all cursor-pointer"
                               title="Suspend tenant and revoke user tokens"
                             >
                               Suspend
@@ -533,7 +415,7 @@ export default function PlatformOverviewPage() {
                             <button
                               type="button"
                               onClick={() => handleTransition(t, "active", "Reinstated by platform administrator after audit clearance.")}
-                              className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-2.5 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-emerald-700 transition-all"
+                              className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-2.5 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-emerald-700 transition-all cursor-pointer"
                               title="Reactivate channel and restore access"
                             >
                               <RotateCcw size={12} />
@@ -545,7 +427,7 @@ export default function PlatformOverviewPage() {
                                 setSelectedTenant(t);
                                 setActiveModal("REJECT");
                               }}
-                              className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-100 px-2 py-1 text-[0.6875rem] font-bold text-slate-600 hover:bg-slate-200 transition-all"
+                              className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-100 px-2 py-1 text-[0.6875rem] font-bold text-slate-600 hover:bg-slate-200 transition-all cursor-pointer"
                               title="Decommission channel"
                             >
                               Archive
@@ -561,7 +443,7 @@ export default function PlatformOverviewPage() {
                               setSelectedTenant(t);
                               setActiveModal("REOPEN");
                             }}
-                            className="inline-flex items-center gap-1 rounded-lg bg-indigo-600 px-2.5 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-indigo-700 transition-all"
+                            className="inline-flex items-center gap-1 rounded-lg bg-indigo-600 px-2.5 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-indigo-700 transition-all cursor-pointer"
                             title="Reopen for underwriting reconsideration"
                           >
                             <RefreshCw size={11} />
@@ -628,7 +510,7 @@ export default function PlatformOverviewPage() {
               <button
                 type="button"
                 onClick={() => setActiveModal(null)}
-                className="text-slate-400 hover:text-slate-600 transition-colors"
+                className="text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
               >
                 <X size={18} />
               </button>
@@ -678,7 +560,7 @@ export default function PlatformOverviewPage() {
               <button
                 type="button"
                 onClick={() => setActiveModal(null)}
-                className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all"
+                className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all cursor-pointer"
               >
                 Cancel
               </button>
@@ -692,7 +574,7 @@ export default function PlatformOverviewPage() {
                     approvalOverlay
                   )
                 }
-                className="rounded-xl bg-emerald-600 px-5 py-2 text-xs font-bold text-white shadow-md hover:bg-emerald-700 transition-all"
+                className="rounded-xl bg-emerald-600 px-5 py-2 text-xs font-bold text-white shadow-md hover:bg-emerald-700 transition-all cursor-pointer"
               >
                 Confirm Approval &amp; Provision
               </button>
@@ -720,7 +602,7 @@ export default function PlatformOverviewPage() {
               <button
                 type="button"
                 onClick={() => setActiveModal(null)}
-                className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600"
+                className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600 cursor-pointer"
               >
                 Cancel
               </button>
@@ -733,7 +615,7 @@ export default function PlatformOverviewPage() {
                     actionReason || "Additional information requested from channel partner."
                   )
                 }
-                className="rounded-xl bg-amber-600 px-4 py-2 text-xs font-bold text-white"
+                className="rounded-xl bg-amber-600 px-4 py-2 text-xs font-bold text-white cursor-pointer"
               >
                 Send Request &amp; Log Audit
               </button>
@@ -759,7 +641,7 @@ export default function PlatformOverviewPage() {
               <button
                 type="button"
                 onClick={() => setActiveModal(null)}
-                className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600"
+                className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600 cursor-pointer"
               >
                 Cancel
               </button>
@@ -772,7 +654,7 @@ export default function PlatformOverviewPage() {
                     actionReason || "Tenant rejected during compliance review."
                   )
                 }
-                className="rounded-xl bg-rose-600 px-4 py-2 text-xs font-bold text-white"
+                className="rounded-xl bg-rose-600 px-4 py-2 text-xs font-bold text-white cursor-pointer"
               >
                 Confirm Rejection
               </button>
@@ -800,7 +682,7 @@ export default function PlatformOverviewPage() {
               <button
                 type="button"
                 onClick={() => setActiveModal(null)}
-                className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600"
+                className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600 cursor-pointer"
               >
                 Cancel
               </button>
@@ -810,10 +692,10 @@ export default function PlatformOverviewPage() {
                   handleTransition(
                     selectedTenant,
                     "suspended",
-                    actionReason || "Tenant suspended by platform admin."
+                    actionReason || "Channel suspended due to compliance review."
                   )
                 }
-                className="rounded-xl bg-rose-600 px-4 py-2 text-xs font-bold text-white"
+                className="rounded-xl bg-rose-600 px-4 py-2 text-xs font-bold text-white cursor-pointer"
               >
                 Confirm Suspension
               </button>
@@ -822,26 +704,26 @@ export default function PlatformOverviewPage() {
         </div>
       )}
 
-      {/* 5. Reopen Modal */}
+      {/* 5. Reopen Review Modal */}
       {activeModal === "REOPEN" && selectedTenant && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
           <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl animate-fade-in">
             <h3 className="text-base font-extrabold text-slate-900 font-display mb-2">Reopen Underwriting Review</h3>
             <p className="text-xs text-slate-500 mb-4">
-              Reopen {selectedTenant.name} for compliance review after receiving updated documents:
+              Reopening {selectedTenant.name} will return the channel to <code className="font-bold text-indigo-700">under_review</code> status.
             </p>
             <textarea
               rows={3}
               value={actionReason}
               onChange={(e) => setActionReason(e.target.value)}
-              placeholder="e.g. Channel submitted rectified GSTIN documents. Reopening for review."
+              placeholder="e.g. Fresh audited financial statements received."
               className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs text-slate-900 focus:border-slate-800 focus:outline-hidden mb-4"
             />
             <div className="flex items-center justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setActiveModal(null)}
-                className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600"
+                className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600 cursor-pointer"
               >
                 Cancel
               </button>
@@ -851,12 +733,12 @@ export default function PlatformOverviewPage() {
                   handleTransition(
                     selectedTenant,
                     "under_review",
-                    actionReason || "Review reopened by platform administrator."
+                    actionReason || "Application reopened for underwriting review."
                   )
                 }
-                className="rounded-xl bg-indigo-600 px-4 py-2 text-xs font-bold text-white"
+                className="rounded-xl bg-indigo-600 px-4 py-2 text-xs font-bold text-white cursor-pointer"
               >
-                Reopen &amp; Move to Review
+                Reopen Channel
               </button>
             </div>
           </div>
