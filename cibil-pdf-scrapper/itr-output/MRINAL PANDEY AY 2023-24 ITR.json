@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "ocr_used": false,
+    "source": "text_layer"
+  },
+  "assessee_info": {
+    "pan": "DBJPP8849B",
+    "name": "MRINAL PANDEY",
+    "address": "BAJRANG CHOWK , SUBHASH NAGAR, Mahoba S.O , Mahoba , 31-Uttar Pradesh, 91- INDIA, 210427",
+    "status": "Individual",
+    "assessment_year": "2023-24",
+    "financial_year": "2022-23"
+  },
+  "return_details": {
+    "form_number": "ITR-4",
+    "filed_u_s": "139(1)-On or before due date",
+    "acknowledgement_number": "639562230230723",
+    "date_of_filing": "23-Jul-2023"
+  },
+  "taxable_income_and_tax_details": {
+    "current_year_business_loss": 0,
+    "total_income": 404560,
+    "book_profit_under_mat": 0,
+    "adjusted_total_income_under_amt": 0,
+    "net_tax_payable": 0,
+    "interest_and_fee_payable": 0,
+    "total_tax_interest_and_fee_payable": 0,
+    "taxes_paid": 0,
+    "tax_payable_or_refundable": 0
+  },
+  "accreted_income_and_tax_details": {
+    "accreted_income_u_s_115td": 0,
+    "additional_tax_payable_u_s_115td": 0,
+    "interest_payable_u_s_115te": 0,
+    "additional_tax_and_interest_payable": 0,
+    "tax_and_interest_paid": 0,
+    "accreted_tax_payable_or_refundable": 0
+  },
+  "verification_details": {
+    "electronically_transmitted_on": "23-Jul-2023 21:01:02",
+    "ip_address": "223.236.182.73",
+    "verified_by": "MRINAL PANDEY",
+    "verifier_pan": "DBJPP8849B",
+    "verification_date": "23-Jul-2023",
+    "evc_code": "7UE8FLVLLI",
+    "verification_mode": "Aadhaar OTP",
+    "barcode_hash": "DBJPP8849B046395622302307235b50f150e8917ec62b38ccf7c13817dcb4faa132"
+  }
+}

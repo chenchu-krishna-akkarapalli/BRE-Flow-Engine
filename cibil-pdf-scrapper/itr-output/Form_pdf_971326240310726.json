@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "ocr_used": false,
+    "source": "text_layer"
+  },
+  "assessee_info": {
+    "pan": null,
+    "name": "HRITIK (A2) Middle Name (A3) Last Name DUA (A4) Permanent Account Number BALPH0477G (A5) Date of Birth/Formation (DD/MM/YYYY) 12/12/1999 Addresses to be provided for communication purposes: Primary",
+    "address": "(A6a) Flat/Door/Block No. PALWAL (A7a) Name of Premises/Building/Village (A8a) Road/Street/Post Office Palwal (A9a) Area/Locality FARIDABAD (A10a) Town/City/District FARIDABAD (A11a) State 12-Haryana (A12a) Country/Region 91- INDIA (A13a) PIN Code/ZIP Code 121102 Is the secondary address same as primary address? Yes No Secondary Address (A6b) Flat/Door/Block No. PALWAL (A7b) Name of Premises / Building / Village (A8b) Road/Street/Post Office Palwal (A9b) Area/ Locality FARIDABAD (A10b) Town/City/District FARIDABAD (A11b) State 12-Haryana (A12b) Country/Region 91-INDIA (A13b) PIN Code/ZIP Code 121102 (A14) Aadhaar Number(12 digits) 5xxx xxxx 5680 (A15)",
+    "status": "Individual",
+    "assessment_year": "2026-27",
+    "financial_year": "2025-26"
+  },
+  "return_details": {
+    "form_number": null,
+    "filed_u_s": "(Tick)[Please see instruction] (b) Or Filed in response to",
+    "acknowledgement_number": "971326240310726",
+    "date_of_filing": "31-Jul-2026"
+  },
+  "taxable_income_and_tax_details": {
+    "current_year_business_loss": 0,
+    "total_income": null,
+    "book_profit_under_mat": 0,
+    "adjusted_total_income_under_amt": 0,
+    "net_tax_payable": 0,
+    "interest_and_fee_payable": 0,
+    "total_tax_interest_and_fee_payable": 0,
+    "taxes_paid": 0,
+    "tax_payable_or_refundable": 0
+  },
+  "accreted_income_and_tax_details": {
+    "accreted_income_u_s_115td": 0,
+    "additional_tax_payable_u_s_115td": 0,
+    "interest_payable_u_s_115te": 0,
+    "additional_tax_and_interest_payable": 0,
+    "tax_and_interest_paid": 0,
+    "accreted_tax_payable_or_refundable": 0
+  },
+  "verification_details": {
+    "electronically_transmitted_on": null,
+    "ip_address": null,
+    "verified_by": null,
+    "verifier_pan": null,
+    "verification_date": null,
+    "evc_code": null,
+    "verification_mode": null,
+    "barcode_hash": null
+  }
+}

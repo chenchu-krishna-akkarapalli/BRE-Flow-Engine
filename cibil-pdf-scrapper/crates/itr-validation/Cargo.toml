@@ -1,0 +1,9 @@
+[package]
+name = "itr-validation"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+itr-core = { path = "../itr-core" }
+itr-domain = { path = "../itr-domain" }
+serde = { workspace = true }

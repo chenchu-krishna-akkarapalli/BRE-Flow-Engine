@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "ocr_used": false,
+    "source": "text_layer"
+  },
+  "assessee_info": {
+    "pan": "AAACL4949G",
+    "name": "LOGIN INFOTECH PRIVATE LIMITED",
+    "address": "No.63 , 1St Main, Seshadripuram, Bangalore , BANGALORE , 15-Karnataka, 91-INDIA, 560020",
+    "status": null,
+    "assessment_year": "2024-25",
+    "financial_year": "2023-24"
+  },
+  "return_details": {
+    "form_number": "ITR-6",
+    "filed_u_s": "139(1)-On or before due date",
+    "acknowledgement_number": "554854931300924",
+    "date_of_filing": "30-Sep-2024"
+  },
+  "taxable_income_and_tax_details": {
+    "current_year_business_loss": 0,
+    "total_income": 40823910,
+    "book_profit_under_mat": 0,
+    "adjusted_total_income_under_amt": 0,
+    "net_tax_payable": 9910109,
+    "interest_and_fee_payable": 124653,
+    "total_tax_interest_and_fee_payable": 10034762,
+    "taxes_paid": 10219164,
+    "tax_payable_or_refundable": -184400
+  },
+  "accreted_income_and_tax_details": {
+    "accreted_income_u_s_115td": 0,
+    "additional_tax_payable_u_s_115td": 0,
+    "interest_payable_u_s_115te": 0,
+    "additional_tax_and_interest_payable": 0,
+    "tax_and_interest_paid": 0,
+    "accreted_tax_payable_or_refundable": 0
+  },
+  "verification_details": {
+    "electronically_transmitted_on": null,
+    "ip_address": "152.58.232.169",
+    "verified_by": null,
+    "verifier_pan": "ANBPS7022E",
+    "verification_date": null,
+    "evc_code": null,
+    "verification_mode": null,
+    "barcode_hash": "AAACL4949G065548549313009243ca2c1a4599457248f16d437013144486bd6cd63"
+  }
+}
