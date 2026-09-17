@@ -94,6 +94,22 @@ pub fn is_slab_working(upper: &str) -> bool {
         || upper.contains("@30%")
 }
 
+/// True when a line belongs to an AIS/TIS (Taxpayer Information Summary) annexure table.
+pub fn is_ais_tis_annexure(upper: &str) -> bool {
+    if upper.contains("NOT IMPORTED") || upper.contains("CAUTION") {
+        return false;
+    }
+    upper.contains("DETAILS OF TAXPAYER INFORMATION SUMMARY")
+        || upper.contains("TAXPAYER INFORMATION SUMMARY")
+        || upper.contains("TAX PAYER INFORMATION SUMMARY")
+        || upper.contains("DETAILS OF AIS")
+        || upper.contains("DETAILS OF TIS")
+        || upper.contains("AIS REPORT")
+        || upper.contains("TIS REPORT")
+        || upper.contains("ANNEXURE: AIS")
+        || upper.contains("ANNEXURE: TIS")
+}
+
 /// True when a label matches any spelling for a field, ignoring inter-word gaps.
 pub fn matches_any(upper_label: &str, options: &[&str]) -> bool {
     let squashed = upper_label.replace(' ', "");

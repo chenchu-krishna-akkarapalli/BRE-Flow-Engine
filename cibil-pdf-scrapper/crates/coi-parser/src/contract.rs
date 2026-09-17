@@ -22,16 +22,21 @@ pub fn parse_document(
 ) -> Result<CoiDocument> {
     let computation = super::parser::parse_computation(source, format, runs, page_count)?;
     let lines = &computation.raw.lines;
+    let main_lines = if let Some(idx) = lines.iter().position(|l| crate::patterns::is_ais_tis_annexure(&l.upper())) {
+        &lines[..idx]
+    } else {
+        lines
+    };
     let pairs = label_value_pairs(lines);
     let text = computation.raw.full_text();
     let assessee_info = assessee_info(&pairs, &computation, &text);
     let bank_details = bank_details(&pairs, lines);
     let return_details = return_details(&text);
-    let computation_of_total_income = computation_of_total_income(lines, &computation);
+    let computation_of_total_income = computation_of_total_income(main_lines, &computation);
     let tax_computation = tax_computation(lines, &computation);
     let financial_particulars = financial_particulars(lines);
     let business_income_adjustments = business_income_adjustments(lines, &computation);
-    let other_sources_breakdown = other_sources_breakdown(lines, &computation);
+    let other_sources_breakdown = other_sources_breakdown(main_lines, &computation);
     let tax_computation_extended = tax_computation_extended(lines, &computation);
     let ca_verification = ca_verification(lines);
     let annexures = annexures(lines);
@@ -183,7 +188,7 @@ fn build_credit_summary(
 
     let total_salaries_gross = comp_tot.salaries.as_ref().and_then(|s| s.gross_salary);
     let taxable_salary = comp_tot.salaries.as_ref().and_then(|s| s.taxable_salary);
-    let total_other_sources = other_sources.total_other_sources.or_else(|| comp_tot.income_from_other_sources.as_ref().and_then(|o| o.total));
+    let total_other_sources = comp_tot.income_from_other_sources.as_ref().and_then(|o| o.total).or(other_sources.total_other_sources);
 
     let total_tax_computed = comp_tot
         .computation_of_tax_on_total_income
@@ -399,6 +404,12 @@ fn other_sources_breakdown(lines: &[Line], computation: &coi_domain::Computation
             "INTEREST ON SAVINGS ACCOUNT",
             "SAVINGS BANK INTEREST",
             "SAVING BANK INTEREST",
+            "INTEREST ON S.B.A/C.(S)",
+            "INTEREST ON S.B.A/C",
+            "INTEREST ON S.B. A/C.(S)",
+            "INTEREST ON S.B. A/C",
+            "INTEREST ON S.B. A/C (S)",
+            "INTEREST ON S.B.A/C (S)",
         ],
     );
     let fdr_interest = labelled_amount(
@@ -424,18 +435,30 @@ fn other_sources_breakdown(lines: &[Line], computation: &coi_domain::Computation
             "COMMISSION INCOME",
         ],
     );
-    let total_other_sources = labelled_amount(
+    let declared_total = labelled_amount(
         lines,
         &[
             "TOTAL OTHER SOURCES",
             "INCOME FROM OTHER SOURCES",
             "INCOME FROM OTHER SOURCE",
         ],
-    ).or_else(|| money_rupees(computation.heads.other_sources.as_ref()))
-     .or_else(|| {
-         let sum = savings_bank_interest.unwrap_or(0) + fdr_interest.unwrap_or(0) + commission_interest.unwrap_or(0);
-         if sum > 0 { Some(sum) } else { None }
-     });
+    ).or_else(|| money_rupees(computation.heads.other_sources.as_ref()));
+
+    if declared_total == Some(0) {
+        return OtherSourcesBreakdown {
+            savings_bank_interest: None,
+            fdr_interest: None,
+            commission_interest: None,
+            total_other_sources: None,
+        };
+    }
+
+    let spec_sum = savings_bank_interest.unwrap_or(0) + fdr_interest.unwrap_or(0) + commission_interest.unwrap_or(0);
+
+    let total_other_sources = declared_total
+        .filter(|&tot| tot >= spec_sum)
+        .or_else(|| if spec_sum > 0 { Some(spec_sum) } else { None })
+        .or(declared_total);
 
     OtherSourcesBreakdown {
         savings_bank_interest,
@@ -776,22 +799,44 @@ fn extract_tds_tax_amount(lines: &[Line]) -> Option<i64> {
 
 fn labelled_amount(lines: &[Line], labels: &[&str]) -> Option<i64> {
     let looking_for_tax = labels.iter().any(|l| l.contains("TAX PAYABLE"));
-    lines.iter().find_map(|line| {
+    let looking_for_deduction = labels
+        .iter()
+        .any(|l| l.contains("DEDUCTION") || l.contains("80") || l.contains("CHAPTER VI") || l.contains("CHAPTER VI-A"));
+    lines.iter().enumerate().find_map(|(idx, line)| {
         let upper = line.upper();
         if upper.contains("115BAC")
             || upper.contains("COMPUTATION OF TOTAL INCOME")
             || upper.contains("COMPUTATION OF TOTAL")
+            || crate::patterns::is_ais_tis_annexure(&upper)
         {
             return None;
         }
         if !looking_for_tax && (upper.contains("TAX PAYABLE") || upper.contains("TAX ON TOTAL INCOME")) {
             return None;
         }
+        if !looking_for_deduction
+            && (upper.contains("80TTA")
+                || upper.contains("80TTB")
+                || upper.contains("CHAPTER VI")
+                || upper.contains("CHAPTERVIA")
+                || upper.contains("DEDUCTION U/S")
+                || upper.contains("DEDUCTIONS U/S")
+                || upper.contains("DEDUCTION UNDER")
+                || upper.contains("DEDUCTIONS UNDER"))
+        {
+            return None;
+        }
         let squashed = upper.replace([' ', '"', '\''], "");
         labels.iter().any(|label| {
             let opt_squashed = label.replace([' ', '"', '\''], "");
-            upper.contains(label) || squashed.contains(&opt_squashed)
-        }).then(|| line_amount(line)).flatten()
+            (upper.contains(label) || squashed.contains(&opt_squashed))
+                && !(label.contains("DEPOSIT") && !label.contains("SAVING") && (upper.contains("SAVING") || upper.contains("SAVINGS")))
+                && !(label.contains("DEPOSIT") && !label.contains("TIME") && (upper.contains("TIME-DEPOSIT") || upper.contains("TIME DEPOSIT")))
+        }).then(|| {
+            line_amount(line).or_else(|| {
+                lines.iter().skip(idx + 1).take(1).find_map(|l| line_amount(l))
+            })
+        }).flatten()
     })
 }
 
@@ -1066,6 +1111,10 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         }),
     });
 
+    println!("DEBUG LINES FOR OTHER SOURCES:");
+    for l in lines {
+        println!("  LINE: {:?}", l.upper());
+    }
     let sav_int = labelled_amount(
         lines,
         &[
@@ -1084,6 +1133,18 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "INTEREST FROM SAVING BANK ACCOUNTS",
             "SAVINGS BANK INTEREST",
             "INTEREST FROM BANK",
+            "INTEREST ON BANK SAVINGS",
+            "BANK SAVINGS INTEREST",
+            "INTEREST ON BANK SAVING",
+            "INTEREST FROM SAVING BANK A/C INTEREST",
+            "SAVING BANK A/C INTEREST",
+            "SAVINGS BANK A/C INTEREST",
+            "INTEREST ON S.B.A/C.(S)",
+            "INTEREST ON S.B.A/C",
+            "INTEREST ON S.B. A/C.(S)",
+            "INTEREST ON S.B. A/C",
+            "INTEREST ON S.B. A/C (S)",
+            "INTEREST ON S.B.A/C (S)",
         ],
     );
     let fdr_int = labelled_amount(
@@ -1091,10 +1152,17 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         &[
             "INTEREST ON FDR",
             "INTEREST ON F.D.R.",
+            "INTEREST ON F.D.R.(AS PER ANNEXURE)",
+            "INTEREST ON FDR(AS PER ANNEXURE)",
+            "FDR INTEREST",
             "INTEREST FROM DEPOSIT",
             "INTEREST ON DEPOSIT",
             "INTEREST FROM DEPOSITS",
             "INTEREST ON DEPOSITS",
+            "FROM DEPOSIT 194A",
+            "DEPOSIT 194A",
+            "DEPOSIT 194A (BANK/POST OFFICE/COOPERATIVE SOCIETY)",
+            "INTEREST FROM DEPOSIT 194A",
         ],
     );
     let time_dep = labelled_amount(
@@ -1106,12 +1174,9 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "INTEREST ON TIME DEPOSIT",
             "TIME DEPOSIT INTEREST",
             "TIME-DEPOSIT INTEREST",
-            "INTEREST FROM DEPOSIT",
-            "INTEREST ON DEPOSIT",
-            "INTEREST FROM DEPOSITS",
-            "INTEREST ON DEPOSITS",
         ],
     );
+    let fdr_int = if fdr_int == time_dep { None } else { fdr_int };
     let tax_ref = labelled_amount(
         lines,
         &[
@@ -1119,18 +1184,60 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "INTEREST ON IT REFUND",
             "INTEREST FROM INCOME TAX REFUND",
             "INTEREST FROM IT REFUND",
+            "FROM INCOME TAX REFUND INTEREST",
+            "INCOME TAX REFUND INTEREST",
         ],
     );
-    let div_amt = labelled_amount(lines, &["DIVIDEND FROM SHARES", "DIVIDEND INCOME"]);
-    let oth_item = lines.iter().find_map(|line| {
+    let div_shares = labelled_amount(lines, &["DIVIDEND FROM SHARES", "DIVIDEND INCOME"]);
+    let div_companies = labelled_amount(
+        lines,
+        &[
+            "DIVIDEND FROM COMPANIES",
+            "DIVIDEND FROM COMPANY",
+            "DIVIDEND FROM SHARES/COMPANIES",
+        ],
+    );
+    let oth_misc = labelled_amount(
+        lines,
+        &[
+            "OTHER MISC INCOME",
+            "OTHER MISCELLANEOUS INCOME",
+            "MISC INCOME",
+            "MISCELLANEOUS INCOME",
+            "OTHER MISC. INCOME",
+        ],
+    );
+    let job_work = labelled_amount(
+        lines,
+        &[
+            "INCOME FROM JOB WORK",
+            "JOB WORK INCOME",
+            "INCOME FROM JOBWORK",
+            "JOBWORK INCOME",
+            "JOB WORK",
+        ],
+    );
+    let rental_inc = labelled_amount(
+        lines,
+        &[
+            "RENTAL INCOME",
+            "RENT INCOME",
+            "INCOME FROM RENT",
+            "RENT RECEIVED",
+        ],
+    );
+    let oth_item_sum: i64 = lines.iter().filter_map(|line| {
         let u = line.upper();
         let other_item_labels = [
             "OTHER INCOME",
+            "OTHER INCOEM",
             "COMMISSION INTEREST AND OTHER INCOME",
             "OTHER ITEM",
             "COMMISSION / INTEREST",
             "ANY OTHER INCOME",
-            "MISCELLANEOUS INCOME",
+            "OTHER INCOMES",
+            "INTEREST FROM OTHER",
+            "INTEREST ON OTHER",
         ];
         if (u.contains("INCOME FROM OTHER SOURCE") && !u.contains("INCOME FROM OTHER SOURCES"))
             || other_item_labels.iter().any(|lbl| u.contains(lbl))
@@ -1139,22 +1246,106 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         } else {
             None
         }
-    });
+    }).sum();
+    let oth_item = if oth_item_sum > 0 { Some(oth_item_sum) } else { None };
     let os_total = labelled_amount(lines, &["INCOME FROM OTHER SOURCES", "TOTAL OTHER SOURCES"])
         .or_else(|| money_rupees(computation.heads.other_sources.as_ref()));
 
-    let os_section = Some(OtherSourcesSection {
-        chapter: Some("IV F".to_string()),
-        total: os_total,
-        details: Some(OtherSourcesDetails {
+    let deposit_sum = match (time_dep, fdr_int) {
+        (Some(td), Some(fdr)) => td + fdr,
+        (Some(td), None) => td,
+        (None, Some(fdr)) => fdr,
+        (None, None) => 0,
+    };
+    let div_sum = match (div_shares, div_companies) {
+        (Some(s), Some(c)) => s + c,
+        (Some(s), None) => s,
+        (None, Some(c)) => c,
+        (None, None) => 0,
+    };
+    let spec_sum = sav_int.unwrap_or(0)
+        + deposit_sum
+        + tax_ref.unwrap_or(0)
+        + div_sum
+        + oth_misc.unwrap_or(0)
+        + job_work.unwrap_or(0)
+        + rental_inc.unwrap_or(0);
+
+    let calc_os_total = os_total
+        .filter(|&tot| tot >= spec_sum)
+        .or_else(|| if spec_sum > 0 { Some(spec_sum) } else { None })
+        .or(os_total);
+
+    let oth_item_final = oth_item.or_else(|| {
+        calc_os_total.and_then(|tot| if tot > spec_sum { Some(tot - spec_sum) } else { None })
+    });
+
+    let div_shares_final = div_shares.filter(|&div| {
+        if let Some(tot) = calc_os_total {
+            let other_sum = sav_int.unwrap_or(0)
+                + deposit_sum
+                + tax_ref.unwrap_or(0)
+                + oth_item_final.unwrap_or(0)
+                + oth_misc.unwrap_or(0)
+                + job_work.unwrap_or(0)
+                + rental_inc.unwrap_or(0)
+                + div_companies.unwrap_or(0);
+            other_sum + div <= tot
+        } else {
+            true
+        }
+    });
+
+    let div_companies_final = div_companies.filter(|&div| {
+        if let Some(tot) = calc_os_total {
+            let other_sum = sav_int.unwrap_or(0)
+                + deposit_sum
+                + tax_ref.unwrap_or(0)
+                + oth_item_final.unwrap_or(0)
+                + oth_misc.unwrap_or(0)
+                + job_work.unwrap_or(0)
+                + rental_inc.unwrap_or(0)
+                + div_shares_final.unwrap_or(0);
+            other_sum + div <= tot
+        } else {
+            true
+        }
+    });
+
+    let os_details = if calc_os_total.map_or(true, |t| t <= 0) {
+        Some(OtherSourcesDetails {
+            interest_from_saving_bank_accounts: None,
+            interest_from_time_deposit: None,
+            interest_on_fdr: None,
+            interest_on_income_tax_refund: None,
+            other_item: None,
+            other_misc_income: None,
+            income_from_job_work: None,
+            rental_income: None,
+            dividend_from_shares: None,
+            dividend_from_companies: None,
+            total: None,
+        })
+    } else {
+        Some(OtherSourcesDetails {
             interest_from_saving_bank_accounts: sav_int,
-            interest_from_time_deposit: time_dep.or(fdr_int),
+            interest_from_time_deposit: time_dep,
             interest_on_fdr: fdr_int,
             interest_on_income_tax_refund: tax_ref,
-            other_item: oth_item,
-            dividend_from_shares: div_amt,
-            total: os_total,
-        }),
+            other_item: oth_item_final,
+            other_misc_income: oth_misc,
+            income_from_job_work: job_work,
+            rental_income: rental_inc,
+            dividend_from_shares: div_shares_final,
+            dividend_from_companies: div_companies_final,
+            total: calc_os_total,
+        })
+    };
+
+    let os_section = Some(OtherSourcesSection {
+        chapter: Some("IV F".to_string()),
+        total: calc_os_total,
+        details: os_details,
     });
 
     let gti = labelled_amount(lines, &["GROSS TOTAL INCOME"]).or_else(|| money_rupees(computation.gross_total_income.as_ref()));

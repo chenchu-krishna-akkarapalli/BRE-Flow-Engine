@@ -1,0 +1,309 @@
+{
+  "source": "Computation 2024-25.pdf",
+  "status": "OK",
+  "confidence_score": 0.95,
+  "confidence_breakdown": {
+    "assessee_info": 1.0,
+    "bank_details": 0.9624999999999999,
+    "return_details": 0.85,
+    "computation": 1.0,
+    "tax_computation": 0.9249999999999999
+  },
+  "low_confidence_fields": [],
+  "schema_errors": [],
+  "data": {
+    "_meta": {
+      "ocr_used": false,
+      "source": "text_layer",
+      "confidence_score": 0.95,
+      "confidence_breakdown": {
+        "assessee_info": 1.0,
+        "bank_details": 0.9624999999999999,
+        "return_details": 0.85,
+        "computation": 1.0,
+        "tax_computation": 0.9249999999999999
+      },
+      "low_confidence_fields": []
+    },
+    "summary": {
+      "assessee_name": "LACHHIRAM KUSHWAHA",
+      "pan": "EGAPK0773C",
+      "assessment_year": "2024-2025",
+      "financial_year": "2023 - 2024",
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "gross_total_income": 426809,
+      "total_income": 426809,
+      "total_income_rounded": 426810,
+      "business_turnover": 1075842,
+      "taxable_business_profit": 425781,
+      "deemed_profit_44ad": 86067,
+      "deemed_profit_44ad_8pct": 86067,
+      "declared_profit_44ad": 425781,
+      "total_other_sources": 1028,
+      "total_deductions_chapter_6a": 0,
+      "total_tax_computed": 6341,
+      "rebate_87a": 6341,
+      "bank_account_no": "33291319597",
+      "bank_name": "STATE BANK OF INDIA"
+    },
+    "assessee_info": {
+      "name": "LACHHIRAM KUSHWAHA",
+      "pan": "EGAPK0773C",
+      "father_name": "SANTA",
+      "residential_address": "139,BHATIPURA,MAHOBA,MAHOBA,UTTAR PRADESH,210427",
+      "status": "Individual",
+      "assessment_year": "2024-2025",
+      "ward_no": "Year Ended",
+      "financial_year": "2023 - 2024",
+      "gender": "Male",
+      "date_of_birth": "01/01/1985",
+      "email": "vijaypratapsingh839@gmail.com",
+      "residential_status": "Resident"
+    },
+    "bank_details": {
+      "bank_name": "STATE BANK OF INDIA",
+      "ifsc_code": null,
+      "account_no": "33291319597",
+      "branch_address": "139,BHATIPURA,MAHOBA,MAHOBA,UTTAR PRADESH,210427"
+    },
+    "return_details": {
+      "tax_regime": "NEW_REGIME_115BAC",
+      "form_type": null,
+      "filing_status": null,
+      "filing_date": null,
+      "acknowledgement_no": null
+    },
+    "computation_of_total_income": {
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "assessment_year": "2024-2025",
+      "salaries": null,
+      "profits_and_gains_business_profession": {
+        "tiers": [
+          {
+            "presumptive_rate_pct": 8.0,
+            "deemed_base_turnover": 1075842,
+            "deemed_profit": 86067,
+            "declared_profit": 425781,
+            "profit_taken_higher_of_declared_or_deemed": 425781
+          }
+        ],
+        "section_total": 425781,
+        "deemed_profit_44ad": 86067,
+        "declared_profit_44ad": 425781,
+        "turnover_base_44ad": 1075842,
+        "taxable_business_profit": null
+      },
+      "income_declared_business_turnover": {
+        "due_date_for_filing_return": null,
+        "due_date_extended_to": null,
+        "section": "44AD",
+        "gross_receipts_other_than_digital": null,
+        "gross_receipts_digital_mode": null,
+        "gross_receipts_cash": null,
+        "gross_receipts_total": 1075842,
+        "book_profit": {
+          "amount": 425781,
+          "rate_pct": 39.58
+        },
+        "deemed_profit_other_than_digital": null,
+        "deemed_profit_digital_mode": null,
+        "net_profit_declared": {
+          "amount": 425781,
+          "rate_pct": 39.0
+        },
+        "gross_receipts_turnover": 1075842,
+        "deemed_profit": {
+          "amount": 86067,
+          "rate_pct": 8.0
+        }
+      },
+      "income_from_business_or_profession": {
+        "chapter": "IV D",
+        "total": 425781,
+        "details": null
+      },
+      "income_from_capital_gain": {
+        "chapter": "IV E",
+        "total": null,
+        "short_term_capital_gain": {
+          "capital_gain_as_per_details_attached": null
+        },
+        "long_term_capital_gain": {
+          "threshold_limit": 125000,
+          "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
+          "brought_forward_long_term_capital_loss": null
+        }
+      },
+      "income_from_other_sources": {
+        "chapter": "IV F",
+        "total": 1028,
+        "details": {
+          "interest_from_saving_bank_accounts": 1028,
+          "interest_on_fdr": null,
+          "interest_from_time_deposit": null,
+          "interest_on_income_tax_refund": null,
+          "other_item": null,
+          "other_misc_income": null,
+          "income_from_job_work": null,
+          "rental_income": null,
+          "dividend_from_shares": null,
+          "dividend_from_companies": null,
+          "total": 1028
+        }
+      },
+      "gross_total_income": 426809,
+      "deductions": {
+        "chapter": "VI-A",
+        "total": 0
+      },
+      "total_income": {
+        "amount": 426809,
+        "round_off_u_s_288A": 426810,
+        "income_exempt_u_s_10": null,
+        "adjusted_total_income": 20,
+        "amt_applicable": false,
+        "amt_note": "Adjusted total income (ATI) is not more than Rs. 20 lakh hence AMT not applicable."
+      },
+      "total_income_rounded_288a": 426810,
+      "total_income_rounded_off_u_s_288a": 426810,
+      "exempt_income_sec_10": null,
+      "computation_of_tax_on_total_income": {
+        "tax_slabs": [],
+        "tax_on_total_income": null,
+        "tax_on_total_income_description": null,
+        "agriculture_tax_rebate": null,
+        "agriculture_tax_rebate_description": null,
+        "tax_after_agriculture_rebate": null,
+        "total_tax": 6341,
+        "rebate_u_s_87a": 6341,
+        "tax_after_rebate": 0,
+        "fee_payable_u_s_234f": null,
+        "self_assessment_tax_140a": null,
+        "self_assessment_tax_details": null
+      },
+      "tax_calculation": {
+        "tax_due_exemption_limit": 6341,
+        "short_term_capital_gain_tax": null,
+        "total_tax": 6341,
+        "rebate_u_s_87a": 6341,
+        "tax_after_rebate": 0,
+        "health_and_education_cess": {
+          "rate": 4.0,
+          "amount": null
+        },
+        "tax_after_cess": null,
+        "tds_tcs": null,
+        "deposit_u_s_140A": null,
+        "refundable_round_off_u_s_288B": null
+      },
+      "normal_income_tax_calculation": {
+        "normal_income": 426810,
+        "exemption_limit": 300000,
+        "taxable_normal_income": null,
+        "tax_rate": null,
+        "tax_on_normal_income": 6341,
+        "total_tax": 6341
+      },
+      "tax_deducted_at_source_list": [],
+      "total_tds_tcs": null,
+      "refund": null,
+      "special_rate_income_note": "Special Rate income has not been considered while calculating rebate u/s 87A, as per the changes made in the Income Tax Law on 05/07/2024."
+    },
+    "income_declared_business_turnover": {
+      "due_date_for_filing_return": null,
+      "due_date_extended_to": null,
+      "section": "44AD",
+      "gross_receipts_other_than_digital": null,
+      "gross_receipts_digital_mode": null,
+      "gross_receipts_cash": null,
+      "gross_receipts_total": 1075842,
+      "book_profit": {
+        "amount": 425781,
+        "rate_pct": 39.58
+      },
+      "deemed_profit_other_than_digital": null,
+      "deemed_profit_digital_mode": null,
+      "net_profit_declared": {
+        "amount": 425781,
+        "rate_pct": 39.0
+      },
+      "gross_receipts_turnover": 1075842,
+      "deemed_profit": {
+        "amount": 86067,
+        "rate_pct": 8.0
+      }
+    },
+    "tax_computation": {
+      "slabs": [
+        {
+          "category": "Normal Income Slab @ 5%",
+          "description": "Tax on (4,26,810 -3,00,000) =1,26,810 @5% = 6,341",
+          "slab_upper_limit_or_amount": null,
+          "tax": 0
+        }
+      ],
+      "rebate_of_tax_on_agriculture_income": null,
+      "rebate_87a": 6341,
+      "fee_payable_u_s_234f": null,
+      "refundable": null,
+      "tds": []
+    },
+    "financial_particulars": {
+      "sundry_creditors": 257841,
+      "total_capital_and_liabilities": null,
+      "inventories": 358752,
+      "sundry_debtors": 55842,
+      "balance_with_banks": 12578,
+      "cash_in_hand": 7069,
+      "total_assets": null
+    },
+    "business_income_adjustments": {
+      "partnership_shares": [],
+      "income_44ad": 425781,
+      "profit_as_per_pnl": 425781,
+      "additions_salary_non_allowable": null,
+      "total_business_income": 425781,
+      "additions": [],
+      "deductions": [],
+      "net_business_income": 425781
+    },
+    "other_sources_breakdown": {
+      "savings_bank_interest": 1028,
+      "fdr_interest": null,
+      "commission_interest": null,
+      "total_other_sources": 1028
+    },
+    "tax_computation_extended": {
+      "total_tax_calculated": 6341,
+      "interest_234a": null,
+      "interest_234b": null,
+      "interest_234c": null,
+      "total_interest_234": null,
+      "tcs_amount": null,
+      "deposit_140a_self_assessment": null,
+      "tax_payable": 0
+    },
+    "ca_verification": {
+      "firm_name": null,
+      "ca_name": "CA TEGORY DERIVED As Per Computation Difference",
+      "membership_no": null
+    },
+    "annexures": {
+      "gst_turnover_details": [
+        {
+          "gstin": "09EGAPK0773C1ZN",
+          "turnover": 715304
+        }
+      ],
+      "gst_turnover_total": 715304,
+      "bank_interest_list": [],
+      "bank_interest_total": 0,
+      "fdr_interest_list": [],
+      "fdr_interest_total": 0,
+      "dividend_list": [],
+      "dividend_total": 0,
+      "tsd_non_salary_list": [],
+      "tsd_non_salary_total": 0
+    }
+  }
+}

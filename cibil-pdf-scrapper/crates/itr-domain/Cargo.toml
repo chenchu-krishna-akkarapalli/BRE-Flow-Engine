@@ -1,0 +1,10 @@
+[package]
+name = "itr-domain"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+itr-core = { path = "../itr-core" }
+itr-layout = { path = "../itr-layout" }
+serde = { workspace = true }
+regex = { workspace = true }

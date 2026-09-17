@@ -1,0 +1,310 @@
+{
+  "source": "ANOOP COM 2024-25.pdf",
+  "status": "OK",
+  "confidence_score": 0.99,
+  "confidence_breakdown": {
+    "assessee_info": 1.0,
+    "bank_details": 1.0,
+    "return_details": 1.0,
+    "computation": 1.0,
+    "tax_computation": 0.9249999999999999
+  },
+  "low_confidence_fields": [],
+  "schema_errors": [],
+  "data": {
+    "_meta": {
+      "ocr_used": false,
+      "source": "text_layer",
+      "confidence_score": 0.99,
+      "confidence_breakdown": {
+        "assessee_info": 1.0,
+        "bank_details": 1.0,
+        "return_details": 1.0,
+        "computation": 1.0,
+        "tax_computation": 0.9249999999999999
+      },
+      "low_confidence_fields": []
+    },
+    "summary": {
+      "assessee_name": "ANOOP KAROSIYA",
+      "pan": "BSWPA1957P",
+      "assessment_year": "2024 - 2025",
+      "financial_year": "2023 - 2024",
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "gross_total_income": 499556,
+      "total_income": 499556,
+      "total_income_rounded": 499560,
+      "business_turnover": 1785650,
+      "taxable_business_profit": 498565,
+      "deemed_profit_44ad": 142852,
+      "deemed_profit_44ad_8pct": 142852,
+      "declared_profit_44ad": 498565,
+      "total_other_sources": 991,
+      "total_deductions_chapter_6a": 0,
+      "total_tax_computed": 9978,
+      "rebate_87a": 9978,
+      "bank_account_no": "96040100009498",
+      "ifsc_code": "PUNB0SUPGB5",
+      "bank_name": "PUNJAB NATIONAL BANK"
+    },
+    "assessee_info": {
+      "name": "ANOOP KAROSIYA",
+      "pan": "BSWPA1957P",
+      "father_name": "OM PRAKASH",
+      "residential_address": "941, Maseeha ganj boddh nagar jhansi, Sipri Bazar S.O, Jhansi Khas, UTTAR",
+      "status": "INDIVIDUAL",
+      "assessment_year": "2024 - 2025",
+      "ward_no": "WARD 2(3)(1), JHANSI/",
+      "financial_year": "2023 - 2024",
+      "gender": "MALE",
+      "date_of_birth": "12/07/1992",
+      "email": "karosiyaanupkarosiya@gmail.com",
+      "residential_status": "RESIDENT"
+    },
+    "bank_details": {
+      "bank_name": "PUNJAB NATIONAL BANK",
+      "ifsc_code": "PUNB0SUPGB5",
+      "account_no": "96040100009498",
+      "branch_address": "SARVA U P GRAMIN BANK"
+    },
+    "return_details": {
+      "tax_regime": "NEW_REGIME_115BAC",
+      "form_type": "ITR-4",
+      "filing_status": "ORIGINAL",
+      "filing_date": "28/12/2024",
+      "acknowledgement_no": "782356520281224"
+    },
+    "computation_of_total_income": {
+      "tax_regime": "Section 115BAC - New Tax Regime",
+      "assessment_year": "2024-2025",
+      "salaries": null,
+      "profits_and_gains_business_profession": {
+        "tiers": [
+          {
+            "presumptive_rate_pct": 8.0,
+            "deemed_base_turnover": 1785650,
+            "deemed_profit": 142852,
+            "declared_profit": 498565,
+            "profit_taken_higher_of_declared_or_deemed": 498565
+          }
+        ],
+        "section_total": 498565,
+        "deemed_profit_44ad": 142852,
+        "declared_profit_44ad": 498565,
+        "turnover_base_44ad": 1785650,
+        "taxable_business_profit": 498565
+      },
+      "income_declared_business_turnover": {
+        "due_date_for_filing_return": null,
+        "due_date_extended_to": null,
+        "section": "44AD",
+        "gross_receipts_other_than_digital": null,
+        "gross_receipts_digital_mode": null,
+        "gross_receipts_cash": null,
+        "gross_receipts_total": null,
+        "book_profit": {
+          "amount": 499560,
+          "rate_pct": null
+        },
+        "deemed_profit_other_than_digital": null,
+        "deemed_profit_digital_mode": null,
+        "net_profit_declared": {
+          "amount": 499560,
+          "rate_pct": null
+        },
+        "gross_receipts_turnover": null,
+        "deemed_profit": null
+      },
+      "income_from_business_or_profession": {
+        "chapter": "IV D",
+        "total": 499560,
+        "details": null
+      },
+      "income_from_capital_gain": {
+        "chapter": "IV E",
+        "total": null,
+        "short_term_capital_gain": {
+          "capital_gain_as_per_details_attached": null
+        },
+        "long_term_capital_gain": {
+          "threshold_limit": 125000,
+          "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
+          "brought_forward_long_term_capital_loss": null
+        }
+      },
+      "income_from_other_sources": {
+        "chapter": "IV F",
+        "total": 991,
+        "details": {
+          "interest_from_saving_bank_accounts": 991,
+          "interest_on_fdr": null,
+          "interest_from_time_deposit": null,
+          "interest_on_income_tax_refund": null,
+          "other_item": null,
+          "other_misc_income": null,
+          "income_from_job_work": null,
+          "rental_income": null,
+          "dividend_from_shares": null,
+          "dividend_from_companies": null,
+          "total": 991
+        }
+      },
+      "gross_total_income": 499556,
+      "deductions": {
+        "chapter": "VI-A",
+        "total": 0
+      },
+      "total_income": {
+        "amount": 499556,
+        "round_off_u_s_288A": 499560,
+        "income_exempt_u_s_10": null,
+        "adjusted_total_income": 499556,
+        "amt_applicable": false,
+        "amt_note": "Adjusted total income (ATI) is not more than Rs. 20 lakh hence AMT not applicable."
+      },
+      "total_income_rounded_288a": 499560,
+      "total_income_rounded_off_u_s_288a": 499560,
+      "exempt_income_sec_10": null,
+      "computation_of_tax_on_total_income": {
+        "tax_slabs": [
+          {
+            "slab": "TAX ON RS. 1,99,560 (4,99,560 - 3,00,000)@ 5%",
+            "tax_amount": 9978
+          }
+        ],
+        "tax_on_total_income": null,
+        "tax_on_total_income_description": null,
+        "agriculture_tax_rebate": null,
+        "agriculture_tax_rebate_description": null,
+        "tax_after_agriculture_rebate": null,
+        "total_tax": 9978,
+        "rebate_u_s_87a": 9978,
+        "tax_after_rebate": 0,
+        "fee_payable_u_s_234f": 1000,
+        "self_assessment_tax_140a": null,
+        "self_assessment_tax_details": null
+      },
+      "tax_calculation": {
+        "tax_due_exemption_limit": null,
+        "short_term_capital_gain_tax": null,
+        "total_tax": null,
+        "rebate_u_s_87a": 9978,
+        "tax_after_rebate": null,
+        "health_and_education_cess": {
+          "rate": 4.0,
+          "amount": null
+        },
+        "tax_after_cess": null,
+        "tds_tcs": null,
+        "deposit_u_s_140A": null,
+        "refundable_round_off_u_s_288B": null
+      },
+      "normal_income_tax_calculation": {
+        "normal_income": null,
+        "exemption_limit": 300000,
+        "taxable_normal_income": null,
+        "tax_rate": null,
+        "tax_on_normal_income": null,
+        "total_tax": null
+      },
+      "tax_deducted_at_source_list": [],
+      "total_tds_tcs": null,
+      "refund": null,
+      "special_rate_income_note": "Special Rate income has not been considered while calculating rebate u/s 87A, as per the changes made in the Income Tax Law on 05/07/2024."
+    },
+    "income_declared_business_turnover": {
+      "due_date_for_filing_return": null,
+      "due_date_extended_to": null,
+      "section": "44AD",
+      "gross_receipts_other_than_digital": null,
+      "gross_receipts_digital_mode": null,
+      "gross_receipts_cash": null,
+      "gross_receipts_total": null,
+      "book_profit": {
+        "amount": 499560,
+        "rate_pct": null
+      },
+      "deemed_profit_other_than_digital": null,
+      "deemed_profit_digital_mode": null,
+      "net_profit_declared": {
+        "amount": 499560,
+        "rate_pct": null
+      },
+      "gross_receipts_turnover": null,
+      "deemed_profit": null
+    },
+    "tax_computation": {
+      "slabs": [
+        {
+          "category": "Normal Income Slab @ 0%",
+          "description": "TAX ON RS. 3,00,000 NIL",
+          "slab_upper_limit_or_amount": 300000,
+          "tax": 0
+        },
+        {
+          "category": "Normal Income Slab @ 5%",
+          "description": "TAX ON RS. 1,99,560 (4,99,560 - 3,00,000)@ 5% 9,978",
+          "slab_upper_limit_or_amount": 199560,
+          "tax": 9978
+        }
+      ],
+      "rebate_of_tax_on_agriculture_income": null,
+      "rebate_87a": 9978,
+      "fee_payable_u_s_234f": 1000,
+      "refundable": null,
+      "tds": []
+    },
+    "financial_particulars": {
+      "sundry_creditors": 0,
+      "total_capital_and_liabilities": 0,
+      "inventories": 0,
+      "sundry_debtors": 0,
+      "balance_with_banks": null,
+      "cash_in_hand": 32565,
+      "total_assets": 32565
+    },
+    "business_income_adjustments": {
+      "partnership_shares": [],
+      "income_44ad": 142852,
+      "profit_as_per_pnl": 498565,
+      "additions_salary_non_allowable": null,
+      "total_business_income": 498565,
+      "additions": [],
+      "deductions": [],
+      "net_business_income": 498565
+    },
+    "other_sources_breakdown": {
+      "savings_bank_interest": 991,
+      "fdr_interest": null,
+      "commission_interest": null,
+      "total_other_sources": 991
+    },
+    "tax_computation_extended": {
+      "total_tax_calculated": null,
+      "interest_234a": null,
+      "interest_234b": null,
+      "interest_234c": null,
+      "total_interest_234": null,
+      "tcs_amount": null,
+      "deposit_140a_self_assessment": null,
+      "tax_payable": 1000
+    },
+    "ca_verification": {
+      "firm_name": null,
+      "ca_name": null,
+      "membership_no": null
+    },
+    "annexures": {
+      "gst_turnover_details": [],
+      "gst_turnover_total": 0,
+      "bank_interest_list": [],
+      "bank_interest_total": 0,
+      "fdr_interest_list": [],
+      "fdr_interest_total": 0,
+      "dividend_list": [],
+      "dividend_total": 0,
+      "tsd_non_salary_list": [],
+      "tsd_non_salary_total": 0
+    }
+  }
+}

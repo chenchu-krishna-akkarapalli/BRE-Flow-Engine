@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "ocr_used": false,
+    "source": "text_layer"
+  },
+  "assessee_info": {
+    "pan": "FVKPK7079H",
+    "name": "ABHISHEK KUMAR",
+    "address": "0 , Jalalpur S.O (Ambedkar Nagar), Jalalpur Dehat , AMBEDKAR NAGAR , 31-Uttar Pradesh, 91- INDIA, 224149",
+    "status": "Individual",
+    "assessment_year": "2025-26",
+    "financial_year": "2024-25"
+  },
+  "return_details": {
+    "form_number": "ITR-4",
+    "filed_u_s": "139(1)-On or before due date",
+    "acknowledgement_number": "542774410150925",
+    "date_of_filing": "15-Sep-2025"
+  },
+  "taxable_income_and_tax_details": {
+    "current_year_business_loss": 0,
+    "total_income": 448610,
+    "book_profit_under_mat": 0,
+    "adjusted_total_income_under_amt": 0,
+    "net_tax_payable": 0,
+    "interest_and_fee_payable": 0,
+    "total_tax_interest_and_fee_payable": 0,
+    "taxes_paid": 0,
+    "tax_payable_or_refundable": 0
+  },
+  "accreted_income_and_tax_details": {
+    "accreted_income_u_s_115td": 0,
+    "additional_tax_payable_u_s_115td": 0,
+    "interest_payable_u_s_115te": 0,
+    "additional_tax_and_interest_payable": 0,
+    "tax_and_interest_paid": 0,
+    "accreted_tax_payable_or_refundable": 0
+  },
+  "verification_details": {
+    "electronically_transmitted_on": "15-Sep-2025 16:34:57",
+    "ip_address": "106.208.155.161",
+    "verified_by": "ABHISHEK KUMAR",
+    "verifier_pan": "FVKPK7079H",
+    "verification_date": "15-Sep-2025",
+    "evc_code": "EB21JMWWDI",
+    "verification_mode": "Aadhaar OTP",
+    "barcode_hash": "FVKPK7079H04542774410150925b2c7133c67dcd15cf22a2f878e7b3ec9823a1af9"
+  }
+}

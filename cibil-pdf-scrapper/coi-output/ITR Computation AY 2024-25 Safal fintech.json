@@ -1,0 +1,308 @@
+{
+  "source": "ITR Computation AY 2024-25 Safal fintech.pdf",
+  "status": "OK",
+  "confidence_score": 0.93,
+  "confidence_breakdown": {
+    "assessee_info": 0.6666666666666666,
+    "bank_details": 1.0,
+    "return_details": 1.0,
+    "computation": 1.0,
+    "tax_computation": 0.9624999999999999
+  },
+  "low_confidence_fields": [
+    "assessee_info"
+  ],
+  "schema_errors": [],
+  "data": {
+    "_meta": {
+      "ocr_used": false,
+      "source": "text_layer",
+      "confidence_score": 0.93,
+      "confidence_breakdown": {
+        "assessee_info": 0.6666666666666666,
+        "bank_details": 1.0,
+        "return_details": 1.0,
+        "computation": 1.0,
+        "tax_computation": 0.9624999999999999
+      },
+      "low_confidence_fields": [
+        "assessee_info"
+      ]
+    },
+    "summary": {
+      "assessee_name": "SAFAL FINTECH PRIVATE LIMITED",
+      "pan": "ABLCS0496H",
+      "assessment_year": "2024 - 2025",
+      "financial_year": "2023 - 2024",
+      "gross_total_income": 0,
+      "total_income": 0,
+      "total_income_rounded": 0,
+      "business_turnover": 0,
+      "taxable_business_profit": 0,
+      "deemed_profit_44ad": 0,
+      "deemed_profit_44ad_8pct": 0,
+      "declared_profit_44ad": 0,
+      "total_deductions_chapter_6a": 0,
+      "total_tds_tcs": 860,
+      "refundable_amount": -860,
+      "bank_account_no": "50200083551082",
+      "ifsc_code": "HDFC0001575",
+      "bank_name": "HDFC BANK"
+    },
+    "assessee_info": {
+      "name": "SAFAL FINTECH PRIVATE LIMITED",
+      "pan": "ABLCS0496H",
+      "father_name": null,
+      "residential_address": "SUBHAM PALACE",
+      "status": "PUB NOT INT (PRIVATE LTD)",
+      "assessment_year": "2024 - 2025",
+      "ward_no": "CIRCLE 15(3)(2), MUMBAI/",
+      "financial_year": "2023 - 2024",
+      "gender": null,
+      "date_of_birth": null,
+      "email": "priti.uppal@gmail.com",
+      "residential_status": null
+    },
+    "bank_details": {
+      "bank_name": "HDFC BANK",
+      "ifsc_code": "HDFC0001575",
+      "account_no": "50200083551082",
+      "branch_address": "SUBHAM PALACE"
+    },
+    "return_details": {
+      "tax_regime": null,
+      "form_type": "ITR-6",
+      "filing_status": "ORIGINAL",
+      "filing_date": "25/10/2024",
+      "acknowledgement_no": "643011681251024"
+    },
+    "computation_of_total_income": {
+      "tax_regime": null,
+      "assessment_year": "2024-2025",
+      "salaries": null,
+      "profits_and_gains_business_profession": {
+        "tiers": [
+          {
+            "presumptive_rate_pct": 8.0,
+            "deemed_base_turnover": 0,
+            "deemed_profit": null,
+            "declared_profit": 0,
+            "profit_taken_higher_of_declared_or_deemed": 0
+          }
+        ],
+        "section_total": 0,
+        "deemed_profit_44ad": null,
+        "declared_profit_44ad": 0,
+        "turnover_base_44ad": 0,
+        "taxable_business_profit": null
+      },
+      "income_declared_business_turnover": {
+        "due_date_for_filing_return": null,
+        "due_date_extended_to": null,
+        "section": "44AD",
+        "gross_receipts_other_than_digital": null,
+        "gross_receipts_digital_mode": null,
+        "gross_receipts_cash": null,
+        "gross_receipts_total": 0,
+        "book_profit": {
+          "amount": 0,
+          "rate_pct": null
+        },
+        "deemed_profit_other_than_digital": null,
+        "deemed_profit_digital_mode": null,
+        "net_profit_declared": {
+          "amount": 0,
+          "rate_pct": null
+        },
+        "gross_receipts_turnover": 0,
+        "deemed_profit": null
+      },
+      "income_from_business_or_profession": {
+        "chapter": "IV D",
+        "total": 0,
+        "details": null
+      },
+      "income_from_capital_gain": {
+        "chapter": "IV E",
+        "total": null,
+        "short_term_capital_gain": {
+          "capital_gain_as_per_details_attached": null
+        },
+        "long_term_capital_gain": {
+          "threshold_limit": 125000,
+          "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
+          "brought_forward_long_term_capital_loss": null
+        }
+      },
+      "income_from_other_sources": {
+        "chapter": "IV F",
+        "total": null,
+        "details": {
+          "interest_from_saving_bank_accounts": null,
+          "interest_on_fdr": null,
+          "interest_from_time_deposit": null,
+          "interest_on_income_tax_refund": null,
+          "other_item": null,
+          "other_misc_income": null,
+          "income_from_job_work": null,
+          "rental_income": null,
+          "dividend_from_shares": null,
+          "dividend_from_companies": null,
+          "total": null
+        }
+      },
+      "gross_total_income": 0,
+      "deductions": {
+        "chapter": "VI-A",
+        "total": 0
+      },
+      "total_income": {
+        "amount": 0,
+        "round_off_u_s_288A": 0,
+        "income_exempt_u_s_10": null,
+        "adjusted_total_income": 0,
+        "amt_applicable": false,
+        "amt_note": "Adjusted total income (ATI) is not more than Rs. 20 lakh hence AMT not applicable."
+      },
+      "total_income_rounded_288a": 0,
+      "total_income_rounded_off_u_s_288a": 0,
+      "exempt_income_sec_10": null,
+      "computation_of_tax_on_total_income": null,
+      "tax_calculation": {
+        "tax_due_exemption_limit": null,
+        "short_term_capital_gain_tax": null,
+        "total_tax": null,
+        "rebate_u_s_87a": null,
+        "tax_after_rebate": null,
+        "health_and_education_cess": {
+          "rate": 4.0,
+          "amount": null
+        },
+        "tax_after_cess": null,
+        "tds_tcs": null,
+        "deposit_u_s_140A": null,
+        "refundable_round_off_u_s_288B": null
+      },
+      "normal_income_tax_calculation": {
+        "normal_income": null,
+        "exemption_limit": 300000,
+        "taxable_normal_income": null,
+        "tax_rate": null,
+        "tax_on_normal_income": null,
+        "total_tax": null
+      },
+      "tax_deducted_at_source_list": [
+        {
+          "section": "194H",
+          "description": "COMMISSION OR BROKERAGE",
+          "amount": 860
+        }
+      ],
+      "total_tds_tcs": 860,
+      "refund": {
+        "amount": -860,
+        "tax_refundable_rounded_off_u_s_288b": -860
+      },
+      "special_rate_income_note": "Special Rate income has not been considered while calculating rebate u/s 87A, as per the changes made in the Income Tax Law on 05/07/2024."
+    },
+    "income_declared_business_turnover": {
+      "due_date_for_filing_return": null,
+      "due_date_extended_to": null,
+      "section": "44AD",
+      "gross_receipts_other_than_digital": null,
+      "gross_receipts_digital_mode": null,
+      "gross_receipts_cash": null,
+      "gross_receipts_total": 0,
+      "book_profit": {
+        "amount": 0,
+        "rate_pct": null
+      },
+      "deemed_profit_other_than_digital": null,
+      "deemed_profit_digital_mode": null,
+      "net_profit_declared": {
+        "amount": 0,
+        "rate_pct": null
+      },
+      "gross_receipts_turnover": 0,
+      "deemed_profit": null
+    },
+    "tax_computation": {
+      "slabs": [
+        {
+          "category": "Normal Income Slab @ 0%",
+          "description": "TAX ON RS. NIL (AS PER NORMAL PROVISIONS) NIL",
+          "slab_upper_limit_or_amount": null,
+          "tax": 0
+        }
+      ],
+      "rebate_of_tax_on_agriculture_income": null,
+      "rebate_87a": null,
+      "fee_payable_u_s_234f": null,
+      "refundable": -860,
+      "tds": [
+        {
+          "section": "194H",
+          "description": "COMMISSION OR BROKERAGE",
+          "amount": 860
+        }
+      ]
+    },
+    "financial_particulars": {
+      "sundry_creditors": null,
+      "total_capital_and_liabilities": null,
+      "inventories": null,
+      "sundry_debtors": null,
+      "balance_with_banks": null,
+      "cash_in_hand": null,
+      "total_assets": null
+    },
+    "business_income_adjustments": {
+      "partnership_shares": [],
+      "income_44ad": 0,
+      "profit_as_per_pnl": 0,
+      "additions_salary_non_allowable": null,
+      "total_business_income": 0,
+      "additions": [],
+      "deductions": [],
+      "net_business_income": 0
+    },
+    "other_sources_breakdown": {
+      "savings_bank_interest": null,
+      "fdr_interest": null,
+      "commission_interest": null,
+      "total_other_sources": null
+    },
+    "tax_computation_extended": {
+      "total_tax_calculated": null,
+      "interest_234a": null,
+      "interest_234b": null,
+      "interest_234c": null,
+      "total_interest_234": null,
+      "tcs_amount": null,
+      "deposit_140a_self_assessment": null,
+      "tax_payable": null
+    },
+    "ca_verification": {
+      "firm_name": null,
+      "ca_name": null,
+      "membership_no": null
+    },
+    "annexures": {
+      "gst_turnover_details": [
+        {
+          "gstin": "27ABLCS0496H1ZX",
+          "turnover": null
+        }
+      ],
+      "gst_turnover_total": 0,
+      "bank_interest_list": [],
+      "bank_interest_total": 0,
+      "fdr_interest_list": [],
+      "fdr_interest_total": 0,
+      "dividend_list": [],
+      "dividend_total": 0,
+      "tsd_non_salary_list": [],
+      "tsd_non_salary_total": 0
+    }
+  }
+}

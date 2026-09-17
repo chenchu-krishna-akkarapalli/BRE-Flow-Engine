@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "ocr_used": false,
+    "source": "text_layer"
+  },
+  "assessee_info": {
+    "pan": "AURPY3928J",
+    "name": "KANHAIYA YADAV",
+    "address": "MAKHADOOMPUR , DEVKALI TARAN, Mohammadabad Gohana Chowk S.O, Muhammadabad Gohna, 31-Uttar Pradesh, 91-INDIA, 276403",
+    "status": "Individual",
+    "assessment_year": "2024-25",
+    "financial_year": "2023-24"
+  },
+  "return_details": {
+    "form_number": "ITR-1",
+    "filed_u_s": "139(8A)-Updated return",
+    "acknowledgement_number": "608106150210826",
+    "date_of_filing": "21-Aug-2026"
+  },
+  "taxable_income_and_tax_details": {
+    "current_year_business_loss": 0,
+    "total_income": 413780,
+    "book_profit_under_mat": 0,
+    "adjusted_total_income_under_amt": 0,
+    "net_tax_payable": 0,
+    "interest_and_fee_payable": 0,
+    "total_tax_interest_and_fee_payable": 0,
+    "taxes_paid": 0,
+    "tax_payable_or_refundable": 0
+  },
+  "accreted_income_and_tax_details": {
+    "accreted_income_u_s_115td": 0,
+    "additional_tax_payable_u_s_115td": 0,
+    "interest_payable_u_s_115te": 0,
+    "additional_tax_and_interest_payable": 0,
+    "tax_and_interest_paid": 0,
+    "accreted_tax_payable_or_refundable": 0
+  },
+  "verification_details": {
+    "electronically_transmitted_on": "21-Aug-2026 16:50:45",
+    "ip_address": "122.160.98.109",
+    "verified_by": "KANHAIYA YADAV",
+    "verifier_pan": "AURPY3928J",
+    "verification_date": "21-Aug-2026",
+    "evc_code": null,
+    "verification_mode": "Aadhaar OTP",
+    "barcode_hash": "AURPY3928J01608106150210826886f58779e42496e96c7cdc6062432fa2b0e261d"
+  }
+}

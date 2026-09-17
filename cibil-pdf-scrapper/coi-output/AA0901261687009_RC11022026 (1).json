@@ -1,0 +1,227 @@
+{
+  "source": "AA0901261687009_RC11022026 (1).pdf",
+  "status": "OK",
+  "confidence_score": 0.72,
+  "confidence_breakdown": {
+    "assessee_info": 0.25,
+    "bank_details": 0.85,
+    "return_details": 0.85,
+    "computation": 0.8,
+    "tax_computation": 0.85
+  },
+  "low_confidence_fields": [
+    "assessee_info.pan",
+    "assessee_info.assessment_year",
+    "assessee_info"
+  ],
+  "schema_errors": [],
+  "data": {
+    "_meta": {
+      "ocr_used": false,
+      "source": "text_layer",
+      "confidence_score": 0.72,
+      "confidence_breakdown": {
+        "assessee_info": 0.25,
+        "bank_details": 0.85,
+        "return_details": 0.85,
+        "computation": 0.8,
+        "tax_computation": 0.85
+      },
+      "low_confidence_fields": [
+        "assessee_info.pan",
+        "assessee_info.assessment_year",
+        "assessee_info"
+      ]
+    },
+    "summary": {
+      "assessee_name": "Ravindra Kumar",
+      "total_deductions_chapter_6a": 0
+    },
+    "assessee_info": {
+      "name": "Ravindra Kumar",
+      "pan": null,
+      "father_name": null,
+      "residential_address": "of Principal Place of Building No./Flat No.: 0",
+      "status": "PROPRIETOR",
+      "assessment_year": null,
+      "ward_no": null,
+      "financial_year": null,
+      "gender": null,
+      "date_of_birth": null,
+      "email": null,
+      "residential_status": null
+    },
+    "bank_details": {
+      "bank_name": null,
+      "ifsc_code": null,
+      "account_no": null,
+      "branch_address": null
+    },
+    "return_details": {
+      "tax_regime": null,
+      "form_type": null,
+      "filing_status": null,
+      "filing_date": null,
+      "acknowledgement_no": null
+    },
+    "computation_of_total_income": {
+      "tax_regime": null,
+      "assessment_year": null,
+      "salaries": null,
+      "profits_and_gains_business_profession": null,
+      "income_declared_business_turnover": null,
+      "income_from_business_or_profession": {
+        "chapter": "IV D",
+        "total": null,
+        "details": null
+      },
+      "income_from_capital_gain": {
+        "chapter": "IV E",
+        "total": null,
+        "short_term_capital_gain": {
+          "capital_gain_as_per_details_attached": null
+        },
+        "long_term_capital_gain": {
+          "threshold_limit": 125000,
+          "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
+          "brought_forward_long_term_capital_loss": null
+        }
+      },
+      "income_from_other_sources": {
+        "chapter": "IV F",
+        "total": null,
+        "details": {
+          "interest_from_saving_bank_accounts": null,
+          "interest_on_fdr": null,
+          "interest_from_time_deposit": null,
+          "interest_on_income_tax_refund": null,
+          "other_item": null,
+          "other_misc_income": null,
+          "income_from_job_work": null,
+          "rental_income": null,
+          "dividend_from_shares": null,
+          "dividend_from_companies": null,
+          "total": null
+        }
+      },
+      "gross_total_income": null,
+      "deductions": {
+        "chapter": "VI-A",
+        "total": 0
+      },
+      "total_income": {
+        "amount": null,
+        "round_off_u_s_288A": null,
+        "income_exempt_u_s_10": null,
+        "adjusted_total_income": null,
+        "amt_applicable": false,
+        "amt_note": "Adjusted total income (ATI) is not more than Rs. 20 lakh hence AMT not applicable."
+      },
+      "total_income_rounded_288a": null,
+      "total_income_rounded_off_u_s_288a": null,
+      "exempt_income_sec_10": null,
+      "computation_of_tax_on_total_income": null,
+      "tax_calculation": {
+        "tax_due_exemption_limit": null,
+        "short_term_capital_gain_tax": null,
+        "total_tax": null,
+        "rebate_u_s_87a": null,
+        "tax_after_rebate": null,
+        "health_and_education_cess": {
+          "rate": 4.0,
+          "amount": null
+        },
+        "tax_after_cess": null,
+        "tds_tcs": null,
+        "deposit_u_s_140A": null,
+        "refundable_round_off_u_s_288B": null
+      },
+      "normal_income_tax_calculation": {
+        "normal_income": null,
+        "exemption_limit": 300000,
+        "taxable_normal_income": null,
+        "tax_rate": null,
+        "tax_on_normal_income": null,
+        "total_tax": null
+      },
+      "tax_deducted_at_source_list": [],
+      "total_tds_tcs": null,
+      "refund": null,
+      "special_rate_income_note": "Special Rate income has not been considered while calculating rebate u/s 87A, as per the changes made in the Income Tax Law on 05/07/2024."
+    },
+    "income_declared_business_turnover": null,
+    "tax_computation": {
+      "slabs": [],
+      "rebate_of_tax_on_agriculture_income": null,
+      "rebate_87a": null,
+      "fee_payable_u_s_234f": null,
+      "refundable": null,
+      "tds": []
+    },
+    "financial_particulars": {
+      "sundry_creditors": null,
+      "total_capital_and_liabilities": null,
+      "inventories": null,
+      "sundry_debtors": null,
+      "balance_with_banks": null,
+      "cash_in_hand": null,
+      "total_assets": null
+    },
+    "business_income_adjustments": {
+      "partnership_shares": [],
+      "income_44ad": null,
+      "profit_as_per_pnl": null,
+      "additions_salary_non_allowable": null,
+      "total_business_income": null,
+      "additions": [],
+      "deductions": [],
+      "net_business_income": null
+    },
+    "other_sources_breakdown": {
+      "savings_bank_interest": null,
+      "fdr_interest": null,
+      "commission_interest": null,
+      "total_other_sources": null
+    },
+    "tax_computation_extended": {
+      "total_tax_calculated": null,
+      "interest_234a": null,
+      "interest_234b": null,
+      "interest_234c": null,
+      "total_interest_234": null,
+      "tcs_amount": null,
+      "deposit_140a_self_assessment": null,
+      "tax_payable": null
+    },
+    "ca_verification": {
+      "firm_name": null,
+      "ca_name": null,
+      "membership_no": null
+    },
+    "annexures": {
+      "gst_turnover_details": [
+        {
+          "gstin": "09FVKPK7079H1ZU",
+          "turnover": null
+        },
+        {
+          "gstin": "09FVKPK7079H1ZU",
+          "turnover": null
+        },
+        {
+          "gstin": "09FVKPK7079H1ZU",
+          "turnover": null
+        }
+      ],
+      "gst_turnover_total": 0,
+      "bank_interest_list": [],
+      "bank_interest_total": 0,
+      "fdr_interest_list": [],
+      "fdr_interest_total": 0,
+      "dividend_list": [],
+      "dividend_total": 0,
+      "tsd_non_salary_list": [],
+      "tsd_non_salary_total": 0
+    }
+  }
+}
