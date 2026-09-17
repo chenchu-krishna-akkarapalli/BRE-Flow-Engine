@@ -1,22 +1,28 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Activity,
   BarChart3,
+  Bell,
   Building2,
   CheckCircle,
   CheckCircle2,
   CreditCard,
   Crown,
+  Database,
   DollarSign,
   FileText,
+  FolderLock,
   GitPullRequest,
+  Layers,
   LayoutDashboard,
+  Lock,
   LucideIcon,
   MapPin,
+  Settings,
   Shield,
   ShieldAlert,
   ShieldCheck,
@@ -27,6 +33,7 @@ import {
 } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useSidebarStore } from "@/store/useSidebarStore";
+import { useModuleStore } from "@/store/useModuleStore";
 
 const ICON_MAP: Record<string, LucideIcon> = {
   LayoutDashboard,
@@ -34,6 +41,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Users,
   BarChart3,
   Sliders,
+  Settings,
   GitPullRequest,
   CheckCircle,
   CheckCircle2,
@@ -46,6 +54,11 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Shield,
   Building2,
   Zap,
+  Bell,
+  Database,
+  FolderLock,
+  Layers,
+  Lock,
 };
 
 function BadgePill({
@@ -79,17 +92,29 @@ function BadgePill({
 
 function SidebarContent({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
-  const { role, tenantUuid, roleNodes, isAuthenticated } = useAuthStore();
+  const { role, tenantUuid, roleNodes } = useAuthStore();
+  const { sections, fetchModules } = useModuleStore();
 
   const homeHref = tenantUuid && tenantUuid !== "platform" ? `/${tenantUuid}` : "/";
   const isSuperAdmin = role === "SUPER_ADMIN" || role === "OPERATIONS_HEAD";
 
-  // Hydrate full 3-category navigation schema if roleNodes not yet loaded
+  // Dynamic modules hydration with role and tenant awareness
+  useEffect(() => {
+    fetchModules(role, tenantUuid);
+  }, [role, tenantUuid, fetchModules]);
+
+  // Use dynamic sections with fallback resilience
   const navSections = useMemo(() => {
+    if (sections && sections.length > 0) {
+      return sections;
+    }
     if (roleNodes && roleNodes.length > 0) {
       return roleNodes;
     }
     const prefix = tenantUuid && tenantUuid !== "platform" ? `/${tenantUuid}` : "";
+    const defaultPlatformUuid = "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f";
+    const platformUuid = tenantUuid && tenantUuid !== "platform" ? tenantUuid : defaultPlatformUuid;
+
     return [
       {
         title: "Portal Navigation",
@@ -98,7 +123,6 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
           { name: "Onboarding Wizard", href: prefix || "/", icon: "FileText", badge: "Steps 1–6", badgeType: "brand" as const },
           { name: "User Management", href: `${prefix}/assignments` || "/assignments", icon: "Users" },
           { name: "Analytics", href: `${prefix}/telemetry` || "/telemetry", icon: "BarChart3" },
-          { name: "Settings", href: `${prefix}/configurator` || "/configurator", icon: "Sliders" },
         ],
       },
       {
@@ -113,7 +137,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
       {
         title: "Platform Governance",
         items: [
-          { name: "Platform Overview", href: "/platform/dashboard", icon: "Crown", badge: "Owner", badgeType: "amber" as const },
+          { name: "Platform Overview", href: `/${platformUuid}/platformoverview`, icon: "Crown", badge: "Owner", badgeType: "amber" as const },
           { name: "Live Logs & Audit", href: `${prefix}/logs` || "/logs", icon: "Activity", badge: "Live", badgeType: "amber" as const },
           { name: "Database Health", href: "/platform/db-health", icon: "Activity" },
           { name: "Cyber Security Cell", href: "/platform/cyber-cell", icon: "ShieldAlert", badge: "SOC", badgeType: "rose" as const },
@@ -121,7 +145,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
         ],
       },
     ];
-  }, [roleNodes, tenantUuid]);
+  }, [sections, roleNodes, tenantUuid]);
 
   return (
     <div className="flex h-full flex-col overflow-hidden bg-white/95 backdrop-blur-2xl">

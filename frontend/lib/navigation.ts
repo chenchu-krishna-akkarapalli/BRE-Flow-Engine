@@ -95,12 +95,6 @@ export const PORTAL_NAVIGATION_SCHEMA: NavGroup[] = [
         icon: BarChart3,
         roles: ["SUPER_ADMIN", "REGIONAL_DIRECTOR", "OPERATIONS_HEAD", "ACCOUNTS_HEAD"],
       },
-      {
-        name: "Settings",
-        href: (uuid) => `/${uuid}/configurator`,
-        icon: Sliders,
-        roles: ["SUPER_ADMIN", "OPERATIONS_HEAD", "CHANNEL_ADMIN"],
-      },
     ],
   },
   {

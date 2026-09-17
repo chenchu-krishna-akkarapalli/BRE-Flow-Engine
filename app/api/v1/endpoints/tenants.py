@@ -370,3 +370,178 @@ async def get_tenant_by_uuid(
     if not tenant:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Tenant '{tenant_uuid}' not found.")
     return tenant
+
+# Tenant user schemas
+class TenantUserResponse(BaseModel):
+    id: str
+    tenant_id: str
+    name: str
+    email: str
+    role: str
+    status: str
+
+class CreateTenantUserPayload(BaseModel):
+    name: str
+    email: str
+    role: str = "CHANNEL_ADMIN"
+    status: str = "ACTIVE"
+
+class UpdateTenantUserPayload(BaseModel):
+    name: Optional[str] = None
+    role: Optional[str] = None
+    status: Optional[str] = None
+
+# Retrieves all real database employees bound to a specific channel partner
+@router.get("/{tenant_uuid}/users", response_model=List[TenantUserResponse])
+async def get_tenant_users(
+    tenant_uuid: str,
+    db: AsyncSession = Depends(get_db),
+):
+    stmt = select(TenantModel).where(
+        or_(
+            TenantModel.tenant_uuid == tenant_uuid,
+            TenantModel.id == tenant_uuid,
+            TenantModel.code == tenant_uuid,
+        )
+    )
+    res = await db.execute(stmt)
+    tenant = res.scalars().first()
+
+    tenant_ids = [tenant_uuid]
+    is_default = False
+    if tenant:
+        tenant_ids.extend([tenant.id, tenant.code])
+        if tenant.tenant_uuid:
+            tenant_ids.append(tenant.tenant_uuid)
+        is_default = (tenant.code == "default")
+
+    user_stmt = select(UserModel).where(UserModel.tenant_id.in_(tenant_ids))
+    user_res = await db.execute(user_stmt)
+    users = user_res.scalars().all()
+
+    # Filter out platform governance roles if channel is a specific tenant
+    results = []
+    for u in users:
+        if not is_default and u.role in ("SUPER_ADMIN", "ACCOUNTS_HEAD", "OPERATIONS_HEAD", "REGIONAL_DIRECTOR"):
+            continue
+        results.append(TenantUserResponse(
+            id=u.id,
+            tenant_id=tenant.tenant_uuid if tenant and tenant.tenant_uuid else (tenant.id if tenant else tenant_uuid),
+            name=u.full_name or (u.username.split("@")[0].replace(".", " ").title() if "@" in u.username else u.username),
+            email=u.email or u.username,
+            role=u.role,
+            status="ACTIVE" if u.is_active else "SUSPENDED",
+        ))
+    return results
+
+# Adds a new employee directly into the database for this channel partner
+@router.post("/{tenant_uuid}/users", response_model=TenantUserResponse)
+async def create_tenant_user(
+    tenant_uuid: str,
+    payload: CreateTenantUserPayload,
+    db: AsyncSession = Depends(get_db),
+):
+    stmt = select(TenantModel).where(
+        or_(
+            TenantModel.tenant_uuid == tenant_uuid,
+            TenantModel.id == tenant_uuid,
+            TenantModel.code == tenant_uuid,
+        )
+    )
+    res = await db.execute(stmt)
+    tenant = res.scalars().first()
+    target_tenant_id = tenant.id if tenant else tenant_uuid
+
+    email_clean = payload.email.strip().lower()
+    existing_stmt = select(UserModel).where(
+        or_(UserModel.username == email_clean, UserModel.email == email_clean)
+    )
+    existing_res = await db.execute(existing_stmt)
+    existing = existing_res.scalars().first()
+
+    user_salt = generate_salt(16)
+    pwd_hash = derive_password_hash("FlowBRE@2026!", user_salt)
+
+    if existing:
+        existing.tenant_id = target_tenant_id
+        existing.full_name = payload.name.strip()
+        existing.role = payload.role
+        existing.is_active = (payload.status == "ACTIVE")
+        await db.commit()
+        await db.refresh(existing)
+        target_user = existing
+    else:
+        new_user = UserModel(
+            username=email_clean,
+            email=email_clean,
+            full_name=payload.name.strip(),
+            role=payload.role,
+            tenant_id=target_tenant_id,
+            is_active=(payload.status == "ACTIVE"),
+            password_hash=pwd_hash,
+            salt=user_salt,
+        )
+        db.add(new_user)
+        await db.commit()
+        await db.refresh(new_user)
+        target_user = new_user
+
+    return TenantUserResponse(
+        id=target_user.id,
+        tenant_id=tenant_uuid,
+        name=target_user.full_name or target_user.username,
+        email=target_user.email or target_user.username,
+        role=target_user.role,
+        status="ACTIVE" if target_user.is_active else "SUSPENDED",
+    )
+
+# Updates an existing employee in the database
+@router.patch("/{tenant_uuid}/users/{user_id}", response_model=TenantUserResponse)
+async def update_tenant_user(
+    tenant_uuid: str,
+    user_id: str,
+    payload: UpdateTenantUserPayload,
+    db: AsyncSession = Depends(get_db),
+):
+    stmt = select(UserModel).where(UserModel.id == user_id)
+    res = await db.execute(stmt)
+    user = res.scalars().first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    if payload.name is not None:
+        user.full_name = payload.name.strip()
+    if payload.role is not None:
+        user.role = payload.role
+    if payload.status is not None:
+        user.is_active = (payload.status == "ACTIVE")
+
+    await db.commit()
+    await db.refresh(user)
+
+    return TenantUserResponse(
+        id=user.id,
+        tenant_id=tenant_uuid,
+        name=user.full_name or user.username,
+        email=user.email or user.username,
+        role=user.role,
+        status="ACTIVE" if user.is_active else "SUSPENDED",
+    )
+
+# Deletes or removes an employee from the channel
+@router.delete("/{tenant_uuid}/users/{user_id}")
+async def delete_tenant_user(
+    tenant_uuid: str,
+    user_id: str,
+    db: AsyncSession = Depends(get_db),
+):
+    stmt = select(UserModel).where(UserModel.id == user_id)
+    res = await db.execute(stmt)
+    user = res.scalars().first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    await db.delete(user)
+    await db.commit()
+    return {"success": True, "message": "User deleted successfully."}
+

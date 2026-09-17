@@ -16,6 +16,11 @@ from app.db.models.pipeline import PipelineLeadModel, ApprovalQueueModel
 from app.db.models.commission import CommissionLedgerModel
 from app.db.models.regional import RegionalBranchModel
 from app.db.models.document_record import DocumentRecordModel
+from app.db.models.module import (
+    ModuleCatalogModel,
+    TenantModuleEntitlementModel,
+    RoleModulePermissionModel,
+)
 
 # Exports all database entity models for metadata registration
 __all__ = [
@@ -39,4 +44,7 @@ __all__ = [
     "CommissionLedgerModel",
     "RegionalBranchModel",
     "DocumentRecordModel",
+    "ModuleCatalogModel",
+    "TenantModuleEntitlementModel",
+    "RoleModulePermissionModel",
 ]
