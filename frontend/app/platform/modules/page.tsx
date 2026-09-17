@@ -247,14 +247,6 @@ export default function DynamicModuleManagerPage() {
               <span>Save Changes</span>
             </button>
           )}
-
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-slate-800 transition-all"
-          >
-            <Plus size={14} />
-            <span>New Dynamic Module</span>
-          </button>
         </div>
       </div>
 

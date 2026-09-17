@@ -93,15 +93,10 @@ function BadgePill({
 function SidebarContent({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const { role, tenantUuid, roleNodes } = useAuthStore();
-  const { sections, fetchModules } = useModuleStore();
+  const sections = useModuleStore((s) => s.sections);
 
   const homeHref = tenantUuid && tenantUuid !== "platform" ? `/${tenantUuid}` : "/";
   const isSuperAdmin = role === "SUPER_ADMIN" || role === "OPERATIONS_HEAD";
-
-  // Dynamic modules hydration with role and tenant awareness
-  useEffect(() => {
-    fetchModules(role, tenantUuid);
-  }, [role, tenantUuid, fetchModules]);
 
   // Use dynamic sections with fallback resilience
   const navSections = useMemo(() => {
@@ -289,6 +284,13 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
 export function Sidebar() {
   const isDrawerOpen = useSidebarStore((s) => s.isDrawerOpen);
   const closeDrawer = useSidebarStore((s) => s.closeDrawer);
+  const { role, tenantUuid } = useAuthStore();
+  const fetchModules = useModuleStore((s) => s.fetchModules);
+
+  // Single parent-level dynamic modules hydration
+  useEffect(() => {
+    fetchModules(role, tenantUuid);
+  }, [role, tenantUuid, fetchModules]);
 
   return (
     <>

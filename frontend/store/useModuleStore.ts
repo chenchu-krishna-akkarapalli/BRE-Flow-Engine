@@ -63,7 +63,7 @@ interface ModuleStoreState {
   error: string | null;
 
   // Actions
-  fetchModules: (role: string | null, tenantUuid: string | null) => Promise<void>;
+  fetchModules: (role: string | null, tenantUuid: string | null, force?: boolean) => Promise<void>;
   fetchCatalog: () => Promise<void>;
   fetchMatrix: () => Promise<void>;
   fetchTenantEntitlements: (tenantId: string) => Promise<void>;
@@ -246,6 +246,11 @@ function getCanonicalSections(role: string | null, tenantUuid: string | null): D
   return sections;
 }
 
+// Module fetch state tracking for in-flight deduplication and session caching
+let activeFetchPromise: Promise<void> | null = null;
+let activeFetchKey: string | null = null;
+let lastFetchedKey: string | null = null;
+
 export const useModuleStore = create<ModuleStoreState>((set, get) => {
   return {
     sections: getCanonicalSections(null, null),
@@ -258,65 +263,87 @@ export const useModuleStore = create<ModuleStoreState>((set, get) => {
     isSaving: false,
     error: null,
 
-    fetchModules: async (role: string | null, tenantUuid: string | null) => {
-      set({ isLoading: true, error: null, activeRole: role, activeTenant: tenantUuid });
+    fetchModules: async (role: string | null, tenantUuid: string | null, force: boolean = false) => {
+      const requestKey = `${(role || "SUPER_ADMIN").toUpperCase()}:${tenantUuid || "default"}`;
 
-      try {
-        const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
-        const tenantParam = tenantUuid || "default";
-        const roleQuery = role ? `?role=${encodeURIComponent(role)}` : "";
-
-        const res = await fetch(`${apiBase}/api/v1/navigation/modules${roleQuery}`, {
-          headers: {
-            "X-Tenant-ID": tenantParam,
-          },
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          if (data.sections && Array.isArray(data.sections) && data.sections.length > 0) {
-            const dynamicSections: DynamicNavSection[] = data.sections.map((sec: any) => ({
-              title: sec.title,
-              sectionKey: sec.section_key,
-              items: sec.items.map((it: any) => ({
-                code: it.code,
-                name: it.name,
-                href: it.path,
-                icon: it.icon,
-                badge: it.badge,
-                badgeType: it.badge_type,
-                canCreate: it.can_create,
-                canEdit: it.can_edit,
-                canApprove: it.can_approve,
-              })),
-            }));
-
-            // If super admin, make sure dynamic module manager is in platform governance
-            if ((role || "SUPER_ADMIN").toUpperCase() === "SUPER_ADMIN") {
-              const govSection = dynamicSections.find((s) => s.sectionKey === "PLATFORM_GOVERNANCE");
-              if (govSection && !govSection.items.some((it) => it.code === "MODULE_MANAGER")) {
-                govSection.items.push({
-                  code: "MODULE_MANAGER",
-                  name: "Dynamic Module Manager",
-                  href: "/platform/modules",
-                  icon: "Sliders",
-                  badge: "Admin",
-                  badgeType: "brand",
-                });
-              }
-            }
-
-            set({ sections: dynamicSections, isLoading: false });
-            return;
-          }
-        }
-      } catch (err) {
-        console.warn("[useModuleStore] Dynamic API fetch skipped, using resolved fallback schema:", err);
+      // Skip redundant fetch if exact same role & tenant was already fetched and not forced
+      if (!force && lastFetchedKey === requestKey && get().sections.length > 0) {
+        return;
       }
 
-      // Safe fallback resolution
-      const fallback = getCanonicalSections(role, tenantUuid);
-      set({ sections: fallback, isLoading: false });
+      // In-flight singleflight deduplication: reuse running promise if same request is already pending
+      if (activeFetchPromise && activeFetchKey === requestKey) {
+        return activeFetchPromise;
+      }
+
+      activeFetchKey = requestKey;
+      activeFetchPromise = (async () => {
+        set({ isLoading: true, error: null, activeRole: role, activeTenant: tenantUuid });
+
+        try {
+          const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
+          const tenantParam = tenantUuid || "default";
+          const roleQuery = role ? `?role=${encodeURIComponent(role)}` : "";
+
+          const res = await fetch(`${apiBase}/api/v1/navigation/modules${roleQuery}`, {
+            headers: {
+              "X-Tenant-ID": tenantParam,
+            },
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            if (data.sections && Array.isArray(data.sections) && data.sections.length > 0) {
+              const dynamicSections: DynamicNavSection[] = data.sections.map((sec: any) => ({
+                title: sec.title,
+                sectionKey: sec.section_key,
+                items: sec.items.map((it: any) => ({
+                  code: it.code,
+                  name: it.name,
+                  href: it.path,
+                  icon: it.icon,
+                  badge: it.badge,
+                  badgeType: it.badge_type,
+                  canCreate: it.can_create,
+                  canEdit: it.can_edit,
+                  canApprove: it.can_approve,
+                })),
+              }));
+
+              // If super admin, make sure dynamic module manager is in platform governance
+              if ((role || "SUPER_ADMIN").toUpperCase() === "SUPER_ADMIN") {
+                const govSection = dynamicSections.find((s) => s.sectionKey === "PLATFORM_GOVERNANCE");
+                if (govSection && !govSection.items.some((it) => it.code === "MODULE_MANAGER")) {
+                  govSection.items.push({
+                    code: "MODULE_MANAGER",
+                    name: "Dynamic Module Manager",
+                    href: "/platform/modules",
+                    icon: "Sliders",
+                    badge: "Admin",
+                    badgeType: "brand",
+                  });
+                }
+              }
+
+              lastFetchedKey = requestKey;
+              set({ sections: dynamicSections, isLoading: false });
+              return;
+            }
+          }
+        } catch (err) {
+          console.warn("[useModuleStore] Dynamic API fetch skipped, using resolved fallback schema:", err);
+        }
+
+        // Safe fallback resolution
+        lastFetchedKey = requestKey;
+        const fallback = getCanonicalSections(role, tenantUuid);
+        set({ sections: fallback, isLoading: false });
+      })().finally(() => {
+        activeFetchPromise = null;
+        activeFetchKey = null;
+      });
+
+      return activeFetchPromise;
     },
 
     fetchCatalog: async () => {
@@ -371,7 +398,7 @@ export const useModuleStore = create<ModuleStoreState>((set, get) => {
           set({ matrix: permissions, isSaving: false });
           // Re-sync current navigation
           const { activeRole, activeTenant, fetchModules } = get();
-          await fetchModules(activeRole, activeTenant);
+          await fetchModules(activeRole, activeTenant, true);
           return true;
         }
       } catch (err) {
@@ -395,7 +422,7 @@ export const useModuleStore = create<ModuleStoreState>((set, get) => {
           const current = get().catalog;
           set({ catalog: [...current, created], isSaving: false });
           const { activeRole, activeTenant, fetchModules } = get();
-          await fetchModules(activeRole, activeTenant);
+          await fetchModules(activeRole, activeTenant, true);
           return true;
         }
       } catch (err) {
@@ -422,7 +449,7 @@ export const useModuleStore = create<ModuleStoreState>((set, get) => {
             isSaving: false,
           });
           const { activeRole, activeTenant, fetchModules } = get();
-          await fetchModules(activeRole, activeTenant);
+          await fetchModules(activeRole, activeTenant, true);
           return true;
         }
       } catch (err) {
@@ -446,7 +473,7 @@ export const useModuleStore = create<ModuleStoreState>((set, get) => {
             isSaving: false,
           });
           const { activeRole, activeTenant, fetchModules } = get();
-          await fetchModules(activeRole, activeTenant);
+          await fetchModules(activeRole, activeTenant, true);
           return true;
         }
       } catch (err) {
@@ -467,7 +494,7 @@ export const useModuleStore = create<ModuleStoreState>((set, get) => {
         if (res.ok) {
           const { fetchTenantEntitlements, activeRole, activeTenant, fetchModules } = get();
           await fetchTenantEntitlements(tenantId);
-          await fetchModules(activeRole, activeTenant);
+          await fetchModules(activeRole, activeTenant, true);
           return true;
         }
       } catch (err) {

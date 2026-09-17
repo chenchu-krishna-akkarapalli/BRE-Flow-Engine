@@ -34,8 +34,19 @@ Working state for the current task. Kept here rather than in the context window 
   - Removed `SETTINGS` from `getCanonicalSections` in `frontend/store/useModuleStore.ts`.
   - Removed `SETTINGS` from `MODULE_CATALOG` and default matrix generator in `app/api/v1/endpoints/navigation.py`.
   - Removed `Settings` from `RAW_NAVIGATION_SCHEMA` in `app/core/constants.py`.
-  - Updated `app/tests/test_dynamic_navigation.py` to assert `SETTINGS` is excluded.
   - Verified with 18/18 pytest tests passing and Next.js production build passing.
+- [x] Resolved Docker compose crash (`Can't locate revision identified by '0008'`):
+  - Rebuilt Docker images (`web`, `celery_worker`, `flower`) so that newly created migration file `alembic/versions/0008_dynamic_module_catalog.py` is present inside the container.
+  - Verified `flowbre_fastapi_app` starts up healthy and `alembic upgrade head` runs without errors.
+- [x] Resolved duplicate `modules?role=SUPER_ADMIN` network requests:
+  - Lifted `fetchModules` out of `SidebarContent` into root `Sidebar` parent component in `frontend/components/Sidebar.tsx`.
+  - Added singleflight promise deduplication and role/tenant key caching in `frontend/store/useModuleStore.ts`.
+  - Verified with `npm run build` (0 errors across all routes) and pytest (5/5 passing).
+- [x] Removed `+ New Dynamic Module` button from Dynamic Module Studio header in `frontend/app/platform/modules/page.tsx`.
+- [x] Rebuilt Docker frontend container (`docker compose build frontend; docker compose up -d frontend`), verifying production container is healthy and serving updated bundle.
+
+
+
 
 
 
