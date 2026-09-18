@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { CheckCircle2, Upload, X } from "lucide-react";
 import { ACCEPTED_UPLOAD_TYPES, MAX_UPLOAD_BYTES, extractDocument } from "@/lib/api";
 
@@ -8,14 +9,23 @@ import { ACCEPTED_UPLOAD_TYPES, MAX_UPLOAD_BYTES, extractDocument } from "@/lib/
 // The preview is a local object URL, so Review costs no round trip and the file
 // only leaves the browser when the applicant asks for Extract.
 export function DocumentUpload({
-  id, documentType, label, helper, onExtracted, onAttached,
+  id,
+  documentType,
+  label,
+  helper,
+  buttonClassName,
+  hideDone,
+  onExtracted,
+  onAttached,
 }: {
   id: string;
   // Omit to collect the file without reading it — an electricity bill or a
   // rental agreement carries no field worth extracting.
-  documentType?: "pan" | "aadhaar";
+  documentType?: "pan" | "aadhaar" | "itr";
   label: string;
   helper?: string;
+  buttonClassName?: string;
+  hideDone?: boolean;
   // Called with the OCR fields; the caller decides which to write into the form.
   onExtracted?: (fields: Record<string, string | null>) => void;
   // Fired once a valid file is attached, for the fields whose presence the API
@@ -23,6 +33,7 @@ export function DocumentUpload({
   onAttached?: (attached: boolean) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [mounted, setMounted] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
@@ -31,6 +42,10 @@ export function DocumentUpload({
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<string | null>(null);
   const [simulated, setSimulated] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!file) return;
@@ -45,6 +60,16 @@ export function DocumentUpload({
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  // Prevent background scrolling while modal is open
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
   }, [open]);
 
   function choose(selected: File | undefined) {
@@ -109,13 +134,19 @@ export function DocumentUpload({
       <div className="flex flex-wrap items-center gap-3">
         <button
           type="button"
-          onClick={() => inputRef.current?.click()}
-          className="flex min-h-[44px] items-center gap-2 rounded-md border border-line px-4 py-2 text-[0.875rem] text-ink transition-colors hover:border-line-strong"
+          onClick={() => {
+            if (inputRef.current) inputRef.current.value = "";
+            inputRef.current?.click();
+          }}
+          className={
+            buttonClassName ||
+            "flex min-h-[44px] items-center gap-2 rounded-md border border-line px-4 py-2 text-[0.875rem] text-ink transition-colors hover:border-line-strong cursor-pointer"
+          }
         >
           <Upload size={15} aria-hidden />
           {label}
         </button>
-        {done && (
+        {done && !hideDone && (
           <span
             className={`flex items-center gap-1.5 text-[0.8125rem] font-medium ${
               simulated ? "text-warning" : "text-success"
@@ -129,7 +160,7 @@ export function DocumentUpload({
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="min-h-[44px] text-[0.8125rem] text-brand-600 underline underline-offset-2"
+            className="min-h-[44px] text-[0.8125rem] text-brand-600 underline underline-offset-2 cursor-pointer"
           >
             Review or extract
           </button>
@@ -146,72 +177,77 @@ export function DocumentUpload({
       )}
       {error && <p className="text-[0.8125rem] font-medium text-danger">{error}</p>}
 
-      {open && file && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={`${label} — review or extract`}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-          onClick={() => setOpen(false)}
-        >
+      {mounted &&
+        typeof document !== "undefined" &&
+        open &&
+        file &&
+        createPortal(
           <div
-            className="flex w-full max-w-[560px] flex-col gap-4 rounded-lg bg-bg-surface p-6 shadow-float"
-            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${label} — review or extract`}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto"
+            onClick={() => setOpen(false)}
           >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h2 className="text-[1.125rem] font-semibold text-ink-muted">{label}</h2>
-                <p className="numeric mt-0.5 text-[0.8125rem] text-ink">
-                  {file.name} · {(file.size / 1024).toFixed(0)} KB
-                </p>
+            <div
+              className="relative my-auto flex w-full max-w-[560px] max-h-[90vh] overflow-y-auto flex-col gap-4 rounded-xl bg-white p-6 shadow-2xl border border-line"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h2 className="text-[1.125rem] font-semibold text-ink-muted">{label}</h2>
+                  <p className="numeric mt-0.5 text-[0.8125rem] text-ink">
+                    {file.name} · {(file.size / 1024).toFixed(0)} KB
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  aria-label="Close"
+                  className="min-h-[40px] min-w-[40px] rounded-lg p-2 text-ink-subtle hover:text-ink hover:bg-slate-100 transition-colors flex items-center justify-center cursor-pointer"
+                >
+                  <X size={18} aria-hidden />
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label="Close"
-                className="min-h-[44px] min-w-[44px] text-ink"
-              >
-                <X size={18} aria-hidden />
-              </button>
-            </div>
 
-            {reviewing && previewUrl && (
-              <div className="max-h-[50vh] overflow-auto rounded-md border border-line bg-bg-raised p-2">
-                {file.type === "application/pdf" ? (
-                  <object data={previewUrl} type="application/pdf" className="h-[45vh] w-full">
-                    <p className="p-4 text-[0.875rem] text-ink">
-                      This browser cannot preview PDFs inline.
-                    </p>
-                  </object>
-                ) : (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img src={previewUrl} alt={`Preview of ${file.name}`} className="mx-auto max-w-full" />
-                )}
+              {reviewing && previewUrl && (
+                <div className="max-h-[50vh] overflow-auto rounded-md border border-line bg-bg-raised p-2">
+                  {file.type === "application/pdf" ? (
+                    <object data={previewUrl} type="application/pdf" className="h-[45vh] w-full">
+                      <p className="p-4 text-[0.875rem] text-ink">
+                        This browser cannot preview PDFs inline.
+                      </p>
+                    </object>
+                  ) : (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img src={previewUrl} alt={`Preview of ${file.name}`} className="mx-auto max-w-full" />
+                  )}
+                </div>
+              )}
+
+              {error && <p className="text-[0.8125rem] font-medium text-danger">{error}</p>}
+
+              <div className="flex flex-wrap justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setReviewing((r) => !r)}
+                  className="min-h-[42px] rounded-lg border border-line px-5 py-2 text-[0.9375rem] text-ink transition-colors hover:border-line-strong cursor-pointer"
+                >
+                  {reviewing ? "Hide preview" : "Review"}
+                </button>
+                <button
+                  type="button"
+                  onClick={extract}
+                  disabled={busy}
+                  className="min-h-[42px] rounded-lg bg-brand-600 px-5 py-2 text-[0.9375rem] font-medium text-white transition-colors hover:bg-brand-700 disabled:opacity-60 cursor-pointer"
+                >
+                  {busy ? "Reading…" : documentType ? "Extract" : "Attach"}
+                </button>
               </div>
-            )}
-
-            {error && <p className="text-[0.8125rem] font-medium text-danger">{error}</p>}
-
-            <div className="flex flex-wrap justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => setReviewing((r) => !r)}
-                className="min-h-[44px] rounded-md border border-line px-5 py-2 text-[0.9375rem] text-ink transition-colors hover:border-line-strong"
-              >
-                {reviewing ? "Hide preview" : "Review"}
-              </button>
-              <button
-                type="button"
-                onClick={extract}
-                disabled={busy}
-                className="min-h-[44px] rounded-md bg-brand-600 px-5 py-2 text-[0.9375rem] font-medium text-white transition-colors hover:bg-brand-700 disabled:opacity-60"
-              >
-                {busy ? "Reading…" : documentType ? "Extract" : "Attach"}
-              </button>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
     </div>
   );
 }

@@ -38,6 +38,7 @@ from app.services.coi_service import CoiEngineError, extract_coi_report
 from app.services.export_service import build_excel, build_pdf
 from app.services.ocr_service import extract_aadhaar_card, extract_pan_card, validate_upload
 from app.services.payslip_service import PayslipEngineError, extract_payslip_report
+from app.services.itr_service import ItrEngineError, ItrDocumentError, process_itr_pdf
 from app.services.verification_service import send_otp, verify_otp
 
 router = APIRouter()
@@ -510,6 +511,31 @@ async def extract_coi_report_document(
         message=message,
         extracted=extracted,
     )
+
+
+@router.post("/documents/itr/extract")
+async def extract_itr_report_document(
+    file: UploadFile = File(..., description="ITR acknowledgement PDF, up to 5 MB."),
+    tenant_id: str = Depends(get_current_tenant),
+):
+    """Parse an ITR acknowledgement with the Rust engine and return structured extraction payload."""
+    content = await file.read()
+    filename = file.filename or "itr.pdf"
+
+    if len(content) > 5 * 1024 * 1024:
+        raise HTTPException(
+            status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            "Upload exceeds 5 MB limit.",
+        )
+
+    try:
+        return await process_itr_pdf(content, filename, file.content_type)
+    except ItrEngineError as exc:
+        logger.error(f"ITR engine unavailable for tenant '{tenant_id}': {exc}")
+        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, str(exc))
+    except ItrDocumentError as exc:
+        logger.warning(f"ITR document unreadable for tenant '{tenant_id}': {exc}")
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, str(exc))
 
 
 @router.post("/documents/{document_type}/extract", response_model=DocumentExtractionResponse)

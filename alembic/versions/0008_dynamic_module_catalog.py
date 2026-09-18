@@ -92,24 +92,6 @@ INITIAL_MODULES = [
         ],
     },
     {
-        "code": "SETTINGS",
-        "name": "Settings",
-        "route_template": "/{tenant}/configurator",
-        "icon_name": "Sliders",
-        "section_key": "PORTAL_NAV",
-        "section_title": "Portal Navigation",
-        "badge": None,
-        "badge_type": None,
-        "min_tier_level": 5,
-        "is_core": False,
-        "sort_order": 5,
-        "description": "Global configurations, policy matrices, CIBIL overlays, and scoring thresholds.",
-        "allowed_roles": [
-            "SUPER_ADMIN", "REGIONAL_DIRECTOR", "OPERATIONS_HEAD", "ACCOUNTS_HEAD",
-            "AREA_MANAGER", "CHANNEL_ADMIN"
-        ],
-    },
-    {
         "code": "PIPELINE",
         "name": "Sales Pipeline",
         "route_template": "/{tenant}/pipeline",

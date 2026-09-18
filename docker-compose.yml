@@ -63,6 +63,7 @@ services:
       - CIBIL_ENGINE_BINARY=/usr/local/bin/cibil-cli
       - PAYSLIP_ENGINE_BINARY=/usr/local/bin/payslip-cli
       - COI_ENGINE_BINARY=/usr/local/bin/coi-cli
+      - ITR_ENGINE_BINARY=/usr/local/bin/itr-cli
       - OCR_REQUIRE_REAL=${OCR_REQUIRE_REAL:-false}
       - SLA_ALERT_THRESHOLD_MS=${SLA_ALERT_THRESHOLD_MS:-400.0}
       - CELERY_BROKER_URL=redis://redis:6379/1
@@ -102,6 +103,7 @@ services:
       - CIBIL_ENGINE_BINARY=/usr/local/bin/cibil-cli
       - PAYSLIP_ENGINE_BINARY=/usr/local/bin/payslip-cli
       - COI_ENGINE_BINARY=/usr/local/bin/coi-cli
+      - ITR_ENGINE_BINARY=/usr/local/bin/itr-cli
       - OCR_REQUIRE_REAL=false
       - RESEND_API_KEY=${RESEND_API_KEY:-}
       - EMAIL_FROM=${EMAIL_FROM:-FlowBRE Onboarding <onboarding@resend.dev>}

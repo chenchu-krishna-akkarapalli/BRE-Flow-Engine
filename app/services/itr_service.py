@@ -117,5 +117,5 @@ async def process_itr_pdf(
 ) -> Dict[str, Any]:
     """Validate, inspect via PDF firewall, run engine, return extracted dict."""
     validate_upload(pdf_bytes, content_type, filename)
-    inspect(pdf_bytes)
+    inspect(pdf_bytes, filename=filename)
     return await _run_engine(pdf_bytes, doc_id)

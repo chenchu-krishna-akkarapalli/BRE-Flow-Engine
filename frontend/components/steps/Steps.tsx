@@ -50,28 +50,126 @@ function ItrField({
 }: {
   id: string; label: string; value: number | ""; onChange: (v: number | "") => void;
 }) {
-  const [verified, setVerified] = useState(false);
+  const itrRecord = useOnboardingStore((s) => s.itrRecords[id]);
+  const setItrRecord = useOnboardingStore((s) => s.setItrRecord);
+  const setField = useOnboardingStore((s) => s.setField);
+  const draft = useOnboardingStore((s) => s.draft);
+
+  const verified = itrRecord?.verified ?? false;
+  const taxFeePayable = itrRecord?.taxFeePayable ?? null;
+
+  function handleExtracted(fields: Record<string, string | null>) {
+    if (fields.total_income) {
+      const parsed = parseInt(fields.total_income, 10);
+      if (!isNaN(parsed) && parsed > 0) {
+        onChange(parsed);
+      }
+    }
+    let parsedTax = 0;
+    if (
+      fields.total_tax_interest_and_fee_payable !== undefined &&
+      fields.total_tax_interest_and_fee_payable !== null &&
+      fields.total_tax_interest_and_fee_payable !== ""
+    ) {
+      const val = parseInt(fields.total_tax_interest_and_fee_payable, 10);
+      parsedTax = isNaN(val) ? 0 : val;
+    }
+    if (fields.pan && !draft.pan) {
+      setField("pan", fields.pan);
+    }
+    if (fields.name && !draft.applicantName) {
+      setField("applicantName", fields.name);
+    }
+    setItrRecord(id, {
+      verified: true,
+      taxFeePayable: parsedTax,
+    });
+  }
+
+  function handleClear() {
+    setItrRecord(id, null);
+    onChange("");
+  }
+
   return (
     <Field label={label} htmlFor={id}>
       <div className="flex flex-col gap-3">
-        <TextInput
-          id={id}
-          type="number"
-          value={value}
-          onChange={(v) => { onChange(num(v)); setVerified(false); }}
-          placeholder="Amount in ₹"
-          numeric
-          verified={verified}
-        />
-        <div className="flex flex-wrap items-start gap-3">
-          <DocumentUpload id={`${id}Upload`} documentType="pan" label="Upload" />
-          <VerifyField
-            channel="email"
-            target={`${id}@document.verify`}
+        {/* Row 1: Total Income Box */}
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[0.75rem] font-semibold uppercase tracking-wider text-ink-subtle">
+              Total Income
+            </span>
+            {verified && (
+              <span className="text-[0.6875rem] font-medium text-success bg-success-bg px-2 py-0.5 rounded-full flex items-center gap-1">
+                ✓ Document Verified (Locked)
+              </span>
+            )}
+          </div>
+          <TextInput
+            id={id}
+            type="number"
+            value={value}
+            onChange={(v) => {
+              onChange(num(v));
+              if (verified) setItrRecord(id, null);
+            }}
+            placeholder="Amount in ₹"
+            numeric
             verified={verified}
-            onVerified={setVerified}
-            label="Verify"
+            readOnly={verified}
           />
+        </div>
+
+        {/* Row 2: Total Tax, Interest and Fee Payable Box */}
+        {verified && (
+          <div className="flex flex-col gap-1.5 rounded-xl border border-line bg-bg-raised p-3 animate-in fade-in duration-200">
+            <div className="flex items-center justify-between">
+              <label htmlFor={`${id}TaxFee`} className="text-[0.75rem] font-semibold uppercase tracking-wider text-ink-subtle">
+                Total Tax, Interest & Fee Payable
+              </label>
+              <span className="text-[0.6875rem] font-medium text-ink-subtle bg-white px-2 py-0.5 rounded-full border border-line">
+                Extracted from ITR
+              </span>
+            </div>
+            <output
+              id={`${id}TaxFee`}
+              className="flex min-h-[44px] items-center rounded-lg border border-line bg-slate-50/80 px-3.5 py-2 font-mono text-[0.9375rem] font-semibold text-ink shadow-xs select-text cursor-not-allowed"
+            >
+              ₹{Number(taxFeePayable ?? 0).toLocaleString("en-IN")}
+            </output>
+          </div>
+        )}
+
+        {/* Controls: Upload, Ack & Clear */}
+        <div className="flex flex-wrap items-center gap-3">
+          {!verified ? (
+            <DocumentUpload
+              id={`${id}Upload`}
+              documentType="itr"
+              label="Upload ITR"
+              onExtracted={handleExtracted}
+            />
+          ) : (
+            <div className="flex items-center gap-3">
+              <DocumentUpload
+                id={`${id}Reupload`}
+                documentType="itr"
+                label="Re-upload"
+                buttonClassName="flex min-h-[34px] items-center gap-1.5 rounded-lg border border-line bg-white px-3 py-1 text-[0.8125rem] font-medium text-ink transition-colors hover:border-line-strong hover:bg-slate-50 cursor-pointer shadow-2xs"
+                hideDone
+                onExtracted={handleExtracted}
+              />
+              <button
+                type="button"
+                onClick={handleClear}
+                className="text-[0.75rem] text-ink-subtle hover:text-danger underline underline-offset-2 transition-colors cursor-pointer"
+                title="Clear uploaded ITR and enter manually"
+              >
+                Clear
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </Field>

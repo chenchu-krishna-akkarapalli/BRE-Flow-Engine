@@ -1,6 +1,8 @@
+from typing import Optional
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 
-from app.api.deps import get_current_tenant, get_current_user
+from app.api.deps import get_current_tenant, get_current_user, get_current_user_optional
+from app.core.logging import logger
 from app.api.schemas.documents import (
     CibilExtractionResponse,
     CoiExtractionResponse,
@@ -62,11 +64,23 @@ async def extract_coi_document(
 async def extract_itr_document(
     file: UploadFile = File(...),
     tenant_id: str = Depends(get_current_tenant),
-    current_user: dict = Depends(get_current_user),
+    current_user: Optional[dict] = Depends(get_current_user_optional),
 ):
-    from app.services.itr_service import process_itr_pdf
+    from app.services.itr_service import (
+        process_itr_pdf,
+        ItrEngineError,
+        ItrDocumentError,
+    )
     content = await file.read()
-    return await process_itr_pdf(content, file.filename or "itr.pdf", file.content_type)
+    filename = file.filename or "itr.pdf"
+    try:
+        return await process_itr_pdf(content, filename, file.content_type)
+    except ItrEngineError as exc:
+        logger.error(f"ITR engine unavailable for tenant '{tenant_id}': {exc}")
+        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, str(exc))
+    except ItrDocumentError as exc:
+        logger.warning(f"ITR document unreadable for tenant '{tenant_id}': {exc}")
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, str(exc))
 
 
 # Generic OCR extractor for identity cards and credentials

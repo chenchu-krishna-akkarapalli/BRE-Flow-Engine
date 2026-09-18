@@ -72,6 +72,14 @@ def test_magic_bytes_beat_the_declared_content_type() -> None:
     assert exc.value.threat is Threat.NOT_A_PDF
 
 
+def test_preamble_before_magic_bytes_is_accepted() -> None:
+    """ISO 32000-1 §7.5.2: Up to 1024 bytes preamble before %PDF- is accepted."""
+    preamble = b"\xac\xed\x00\x05java_header_and_metadata" * 5
+    doc = preamble + _pdf([])
+    verdict = inspect(doc, "wrapped.pdf")
+    assert verdict.page_count == 1
+
+
 def test_truncated_pdf_is_rejected() -> None:
     with pytest.raises(FirewallRejection) as exc:
         inspect(_pdf([])[:120], "report.pdf")

@@ -51,6 +51,7 @@ export function TextInput({
   numeric = false,
   verified = false,
   disabled = false,
+  readOnly = false,
 }: {
   id: string;
   value: string | number;
@@ -61,6 +62,7 @@ export function TextInput({
   numeric?: boolean;
   verified?: boolean;
   disabled?: boolean;
+  readOnly?: boolean;
 }) {
   const state = error
     ? "border-danger focus:border-danger focus:shadow-none"
@@ -75,11 +77,12 @@ export function TextInput({
         value={value}
         placeholder={placeholder}
         disabled={disabled}
+        readOnly={readOnly}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => !readOnly && onChange(e.target.value)}
         onWheel={(e) => type === "number" && e.currentTarget.blur()}
-        className={`${CONTROL_BASE} ${numeric ? "numeric" : ""} ${state}`}
+        className={`${CONTROL_BASE} ${numeric ? "numeric" : ""} ${state} ${readOnly ? "cursor-not-allowed select-text bg-slate-50/80" : ""}`}
       />
       {verified && !error && (
         <Check

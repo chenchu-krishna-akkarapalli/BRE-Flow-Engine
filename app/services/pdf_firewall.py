@@ -92,7 +92,9 @@ def _assert_container(data: bytes, filename: str) -> None:
         )
     # Magic bytes, not the declared Content-Type or the extension: a client can
     # label anything application/pdf.
-    if not data[:1024].lstrip()[: len(PDF_MAGIC)].startswith(PDF_MAGIC):
+    # Per ISO 32000-1 §7.5.2, conforming PDF files may have up to 1024 bytes of
+    # preamble (e.g. UTF-8 BOM, Java/HTTP response headers, scanner metadata) preceding %PDF-.
+    if data[:1024].find(PDF_MAGIC) == -1:
         raise FirewallRejection(
             Threat.NOT_A_PDF, f"'{filename}' is not a PDF (missing the %PDF- signature)."
         )
