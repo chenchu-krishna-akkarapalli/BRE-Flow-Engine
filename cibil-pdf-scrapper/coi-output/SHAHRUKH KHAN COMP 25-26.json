@@ -1,6 +1,6 @@
 {
   "source": "SHAHRUKH KHAN COMP 25-26.pdf",
-  "status": "OK",
+  "status": "SCHEMA_ERROR",
   "confidence_score": 0.78,
   "confidence_breakdown": {
     "assessee_info": 0.5,
@@ -13,7 +13,9 @@
     "assessee_info.pan",
     "assessee_info"
   ],
-  "schema_errors": [],
+  "schema_errors": [
+    "/summary: Additional properties are not allowed ('total_capital_gains' was unexpected)"
+  ],
   "data": {
     "_meta": {
       "ocr_used": false,
@@ -40,6 +42,7 @@
       "total_income_rounded": 820650,
       "taxable_business_profit": 1,
       "declared_profit_44ad": 1,
+      "total_capital_gains": 820650,
       "total_deductions_chapter_6a": 0,
       "bank_account_no": "IFSC"
     },
@@ -120,13 +123,26 @@
         "chapter": "IV E",
         "total": 820650,
         "short_term_capital_gain": {
-          "capital_gain_as_per_details_attached": null
+          "capital_gain_as_per_details_attached": 0,
+          "stcg_111a_15pct": null,
+          "stcg_111a_20pct": null,
+          "stcg_listed_securities_stt_paid": null,
+          "stcg_other_than_111a": null,
+          "short_term_capital_loss_cf": null,
+          "total": 0
         },
         "long_term_capital_gain": {
           "threshold_limit": 125000,
           "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
-          "brought_forward_long_term_capital_loss": null
-        }
+          "brought_forward_long_term_capital_loss": null,
+          "ltcg_112a_10pct": null,
+          "ltcg_112a_12_5pct": null,
+          "ltcg_20pct": null,
+          "ltcg_other_than_112a": null,
+          "long_term_capital_loss_cf": null,
+          "total": null
+        },
+        "virtual_digital_assets_115bbh": null
       },
       "income_from_other_sources": {
         "chapter": "IV F",
@@ -140,6 +156,7 @@
           "other_misc_income": null,
           "income_from_job_work": null,
           "rental_income": null,
+          "commission_income": null,
           "dividend_from_shares": null,
           "dividend_from_companies": null,
           "total": null

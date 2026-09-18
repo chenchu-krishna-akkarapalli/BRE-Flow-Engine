@@ -34,8 +34,8 @@
       "gross_total_income": 578910,
       "total_income": 578910,
       "total_income_rounded": 578910,
-      "taxable_business_profit": 578910,
-      "declared_profit_44ad": 578910,
+      "taxable_business_profit": -13220,
+      "declared_profit_44ad": -13220,
       "total_salaries_gross": 651000,
       "taxable_salary": 576000,
       "total_other_sources": 2910,
@@ -89,13 +89,13 @@
             "presumptive_rate_pct": 8.0,
             "deemed_base_turnover": null,
             "deemed_profit": null,
-            "declared_profit": 578910,
-            "profit_taken_higher_of_declared_or_deemed": 578910
+            "declared_profit": -13220,
+            "profit_taken_higher_of_declared_or_deemed": -13220
           }
         ],
-        "section_total": 578910,
+        "section_total": -13220,
         "deemed_profit_44ad": null,
-        "declared_profit_44ad": 578910,
+        "declared_profit_44ad": -13220,
         "turnover_base_44ad": null,
         "taxable_business_profit": null
       },
@@ -108,13 +108,13 @@
         "gross_receipts_cash": null,
         "gross_receipts_total": null,
         "book_profit": {
-          "amount": 578910,
+          "amount": -13220,
           "rate_pct": null
         },
         "deemed_profit_other_than_digital": null,
         "deemed_profit_digital_mode": null,
         "net_profit_declared": {
-          "amount": 578910,
+          "amount": -13220,
           "rate_pct": null
         },
         "gross_receipts_turnover": null,
@@ -122,20 +122,33 @@
       },
       "income_from_business_or_profession": {
         "chapter": "IV D",
-        "total": 578910,
+        "total": -13220,
         "details": null
       },
       "income_from_capital_gain": {
         "chapter": "IV E",
         "total": null,
         "short_term_capital_gain": {
-          "capital_gain_as_per_details_attached": null
+          "capital_gain_as_per_details_attached": 0,
+          "stcg_111a_15pct": null,
+          "stcg_111a_20pct": null,
+          "stcg_listed_securities_stt_paid": null,
+          "stcg_other_than_111a": null,
+          "short_term_capital_loss_cf": null,
+          "total": 0
         },
         "long_term_capital_gain": {
           "threshold_limit": 125000,
           "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
-          "brought_forward_long_term_capital_loss": null
-        }
+          "brought_forward_long_term_capital_loss": null,
+          "ltcg_112a_10pct": null,
+          "ltcg_112a_12_5pct": null,
+          "ltcg_20pct": null,
+          "ltcg_other_than_112a": null,
+          "long_term_capital_loss_cf": null,
+          "total": null
+        },
+        "virtual_digital_assets_115bbh": null
       },
       "income_from_other_sources": {
         "chapter": "IV F",
@@ -149,6 +162,7 @@
           "other_misc_income": null,
           "income_from_job_work": null,
           "rental_income": null,
+          "commission_income": null,
           "dividend_from_shares": null,
           "dividend_from_companies": null,
           "total": 2910
@@ -235,13 +249,13 @@
       "gross_receipts_cash": null,
       "gross_receipts_total": null,
       "book_profit": {
-        "amount": 578910,
+        "amount": -13220,
         "rate_pct": null
       },
       "deemed_profit_other_than_digital": null,
       "deemed_profit_digital_mode": null,
       "net_profit_declared": {
-        "amount": 578910,
+        "amount": -13220,
         "rate_pct": null
       },
       "gross_receipts_turnover": null,

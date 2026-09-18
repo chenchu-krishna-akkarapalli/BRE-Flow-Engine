@@ -1,6 +1,6 @@
 {
   "source": "Computation_OldRegime MANOJ KHAKHAR 24-26.PDF",
-  "status": "OK",
+  "status": "SCHEMA_ERROR",
   "confidence_score": 0.92,
   "confidence_breakdown": {
     "assessee_info": 0.8333333333333334,
@@ -10,7 +10,9 @@
     "tax_computation": 0.9249999999999999
   },
   "low_confidence_fields": [],
-  "schema_errors": [],
+  "schema_errors": [
+    "/summary: Additional properties are not allowed ('total_capital_gains' was unexpected)"
+  ],
   "data": {
     "_meta": {
       "ocr_used": false,
@@ -37,7 +39,8 @@
       "taxable_business_profit": 765564,
       "declared_profit_44ad": 765564,
       "taxable_salary": 0,
-      "total_other_sources": 24067312,
+      "total_other_sources": 5288,
+      "total_capital_gains": 60355,
       "total_deductions_chapter_6a": 180288,
       "total_tax_computed": 423120,
       "rebate_87a": 12500,
@@ -128,17 +131,30 @@
         "chapter": "IV E",
         "total": 60355,
         "short_term_capital_gain": {
-          "capital_gain_as_per_details_attached": 0
+          "capital_gain_as_per_details_attached": 0,
+          "stcg_111a_15pct": null,
+          "stcg_111a_20pct": null,
+          "stcg_listed_securities_stt_paid": null,
+          "stcg_other_than_111a": null,
+          "short_term_capital_loss_cf": null,
+          "total": 0
         },
         "long_term_capital_gain": {
           "threshold_limit": 125000,
-          "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
-          "brought_forward_long_term_capital_loss": null
-        }
+          "long_term_capital_gain_u_s_112A_before_23_07_2024": 60355,
+          "brought_forward_long_term_capital_loss": null,
+          "ltcg_112a_10pct": 60355,
+          "ltcg_112a_12_5pct": null,
+          "ltcg_20pct": null,
+          "ltcg_other_than_112a": null,
+          "long_term_capital_loss_cf": null,
+          "total": 60355
+        },
+        "virtual_digital_assets_115bbh": null
       },
       "income_from_other_sources": {
         "chapter": "IV F",
-        "total": 24067312,
+        "total": 5288,
         "details": {
           "interest_from_saving_bank_accounts": 5288,
           "interest_on_fdr": null,
@@ -146,11 +162,12 @@
           "interest_on_income_tax_refund": null,
           "other_item": null,
           "other_misc_income": null,
-          "income_from_job_work": 24062024,
+          "income_from_job_work": null,
           "rental_income": null,
+          "commission_income": null,
           "dividend_from_shares": null,
           "dividend_from_companies": null,
-          "total": 24067312
+          "total": 5288
         }
       },
       "gross_total_income": 663763,

@@ -189,6 +189,7 @@ fn build_credit_summary(
     let total_salaries_gross = comp_tot.salaries.as_ref().and_then(|s| s.gross_salary);
     let taxable_salary = comp_tot.salaries.as_ref().and_then(|s| s.taxable_salary);
     let total_other_sources = comp_tot.income_from_other_sources.as_ref().and_then(|o| o.total).or(other_sources.total_other_sources);
+    let total_capital_gains = comp_tot.income_from_capital_gain.as_ref().and_then(|cg| cg.total);
 
     let total_tax_computed = comp_tot
         .computation_of_tax_on_total_income
@@ -244,6 +245,7 @@ fn build_credit_summary(
         total_salaries_gross,
         taxable_salary,
         total_other_sources,
+        total_capital_gains,
         total_deductions_chapter_6a,
         total_tax_computed,
         rebate_87a,
@@ -402,6 +404,10 @@ fn other_sources_breakdown(lines: &[Line], computation: &coi_domain::Computation
             "INTEREST FROM SAVING ACCOUNT",
             "INTEREST ON SAVINGS BANK ACCOUNT",
             "INTEREST ON SAVINGS ACCOUNT",
+            "INTEREST ON SAVINGS A/C",
+            "INTEREST ON SAVINGS A/C.",
+            "INTEREST ON SAVINGS AC",
+            "INTEREST ON SAVINGS",
             "SAVINGS BANK INTEREST",
             "SAVING BANK INTEREST",
             "INTEREST ON S.B.A/C.(S)",
@@ -420,6 +426,8 @@ fn other_sources_breakdown(lines: &[Line], computation: &coi_domain::Computation
             "FIXED DEPOSIT INTEREST",
             "INTEREST FROM TIME-DEPOSIT",
             "INTEREST FROM TIME DEPOSIT",
+            "INTEREST FROM DEPOSITS IN BANK, POST OFFICE OR CO-OP. SOCIETY",
+            "INTEREST FROM DEPOSITS IN BANK",
             "INTEREST FROM DEPOSIT",
             "INTEREST ON DEPOSIT",
             "INTEREST FROM DEPOSITS",
@@ -441,6 +449,12 @@ fn other_sources_breakdown(lines: &[Line], computation: &coi_domain::Computation
             "TOTAL OTHER SOURCES",
             "INCOME FROM OTHER SOURCES",
             "INCOME FROM OTHER SOURCE",
+            "TOTAL INCOME FROM OTHER SOURCES",
+            "OTHER SOURCE INCOME",
+            "OTHER SOURCES INCOME",
+            "INTEREST INCOME (OTHER THAN NSC/KVP INTEREST)",
+            "INTEREST INCOME",
+            "TAXABLE INTEREST",
         ],
     ).or_else(|| money_rupees(computation.heads.other_sources.as_ref()));
 
@@ -807,11 +821,17 @@ fn labelled_amount(lines: &[Line], labels: &[&str]) -> Option<i64> {
         if upper.contains("115BAC")
             || upper.contains("COMPUTATION OF TOTAL INCOME")
             || upper.contains("COMPUTATION OF TOTAL")
+            || upper.contains("NATURE OF BUSINESS")
+            || upper.contains("BUSINESS CODE")
             || crate::patterns::is_ais_tis_annexure(&upper)
         {
             return None;
         }
         if !looking_for_tax && (upper.contains("TAX PAYABLE") || upper.contains("TAX ON TOTAL INCOME")) {
+            return None;
+        }
+        let looking_for_capital_loss = labels.iter().any(|l| l.contains("CAPITAL LOSS") || l.contains("LTCL") || l.contains("STCL"));
+        if looking_for_capital_loss && (upper.contains("SPECULATION") || upper.contains("BUSINESS")) {
             return None;
         }
         if !looking_for_deduction
@@ -827,17 +847,65 @@ fn labelled_amount(lines: &[Line], labels: &[&str]) -> Option<i64> {
             return None;
         }
         let squashed = upper.replace([' ', '"', '\''], "");
-        labels.iter().any(|label| {
+        labels.iter().find_map(|label| {
+            let looking_for_total = label.contains("TOTAL");
+            if !looking_for_total
+                && (upper.starts_with("TOTAL ")
+                    || upper.contains("TOTAL LONG TERM")
+                    || upper.contains("TOTAL SHORT TERM")
+                    || upper.contains("TOTAL CAPITAL"))
+            {
+                return None;
+            }
             let opt_squashed = label.replace([' ', '"', '\''], "");
-            (upper.contains(label) || squashed.contains(&opt_squashed))
+            if (upper.contains(label) || squashed.contains(&opt_squashed))
                 && !(label.contains("DEPOSIT") && !label.contains("SAVING") && (upper.contains("SAVING") || upper.contains("SAVINGS")))
                 && !(label.contains("DEPOSIT") && !label.contains("TIME") && (upper.contains("TIME-DEPOSIT") || upper.contains("TIME DEPOSIT")))
-        }).then(|| {
-            line_amount(line).or_else(|| {
-                lines.iter().skip(idx + 1).take(1).find_map(|l| line_amount(l))
-            })
-        }).flatten()
+            {
+                line_amount(line)
+                    .or_else(|| inline_amount_after_label(line, label))
+                    .or_else(|| {
+                        let text_trim = line.text().trim().to_ascii_uppercase();
+                        if text_trim.ends_with("-") || text_trim.ends_with(" NIL") || text_trim == "NIL" {
+                            Some(0)
+                        } else {
+                            None
+                        }
+                    })
+                    .or_else(|| {
+                        let is_section_header = labels.iter().any(|l| l.contains("OTHER SOURCES") || l.contains("INTEREST INCOME"));
+                        let take_count = if is_section_header { 4 } else { 1 };
+                        let follow_lines: Vec<&Line> = lines.iter().skip(idx + 1).take(take_count).collect();
+                        if is_section_header {
+                            if let Some(standalone) = follow_lines.iter().find(|l| {
+                                l.segments.len() == 1 || !l.text().chars().any(|c| c.is_alphabetic())
+                            }) {
+                                if let Some(amt) = line_amount(standalone) {
+                                    return Some(amt);
+                                }
+                            }
+                        }
+                        follow_lines.iter().find_map(|l| {
+                            let u = l.upper();
+                            if is_section_header && (u.contains("INTEREST FROM") || u.contains("OTHER MISC") || u.contains("JOB WORK") || u.contains("RENTAL")) {
+                                None
+                            } else {
+                                line_amount(l)
+                            }
+                        })
+                    })
+            } else {
+                None
+            }
+        })
     })
+}
+
+fn inline_amount_after_label(line: &Line, label: &str) -> Option<i64> {
+    let upper = line.upper();
+    let label_upper = label.to_ascii_uppercase();
+    let after = upper.find(&label_upper).map(|i| i + label_upper.len()).unwrap_or(0);
+    coi_domain::Money::find_first_from(&line.text(), after).map(|m| m.paise / 100)
 }
 
 fn assessee_info(pairs: &[LabelValue], computation: &coi_domain::Computation, text: &str) -> AssesseeInfo {
@@ -1092,29 +1160,270 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         details: bus_details,
     });
 
+    // Short-Term Capital Gains (STCG)
+    let stcg_111a_15pct = labelled_amount(
+        lines,
+        &[
+            "SHORT TERM CAPITAL GAIN @ 15%",
+            "STCG @ 15%",
+            "SHORT-TERM CAPITAL GAIN @ 15%",
+            "STCG U/S 111A @ 15%",
+            "STCG U/S 111A (15%)",
+            "STCG 111A 15%",
+            "STCG (15%)",
+            "SHORT TERM CAPITAL GAIN U/S 111A @ 15%",
+            "STCG 111A @ 15%",
+        ],
+    );
+    let stcg_111a_20pct = labelled_amount(
+        lines,
+        &[
+            "SHORT TERM CAPITAL GAIN @ 20%",
+            "STCG @ 20%",
+            "SHORT-TERM CAPITAL GAIN @ 20%",
+            "STCG U/S 111A @ 20%",
+            "STCG U/S 111A (20%)",
+            "STCG 111A 20%",
+            "STCG (20%)",
+            "SHORT TERM CAPITAL GAIN U/S 111A @ 20%",
+            "STCG 111A @ 20%",
+        ],
+    );
+    let stcg_listed_securities_stt_paid = labelled_amount(
+        lines,
+        &[
+            "SHORT TERM CAPITAL GAIN ON LISTED SECURITIES ON WHICH STT PAID",
+            "SHORT TERM CAPITAL GAIN ON LISTED SECURITIES",
+            "STCG ON LISTED SECURITIES",
+            "STCG LISTED SECURITIES (STT PAID)",
+            "STCG LISTED SECURITIES",
+            "SHORT TERM CAPITAL GAIN LISTED SECURITIES",
+        ],
+    );
+    let stcg_other_than_111a = labelled_amount(
+        lines,
+        &[
+            "SHORT TERM CAPITAL GAIN OTHER THAN U/S - 111A",
+            "SHORT TERM CAPITAL GAIN OTHER THAN U/S 111A",
+            "SHORT TERM CAPITAL GAIN OTHER THAN SEC 111A",
+            "SHORT TERM CAPITAL GAIN OTHER THAN 111A",
+            "STCG OTHER THAN U/S - 111A",
+            "STCG OTHER THAN U/S 111A",
+            "STCG OTHER THAN SEC 111A",
+            "STCG OTHER THAN 111A",
+            "SHORT TERM CAPITAL GAINS OTHER THAN 111A",
+        ],
+    );
+    let short_term_capital_loss_cf = labelled_amount(
+        lines,
+        &[
+            "SHORT TERM CAPITAL LOSS C/F",
+            "STCL C/F",
+            "SHORT TERM CAPITAL LOSS CARRIED FORWARD",
+            "BALANCE STCL CARRIED FORWARD",
+            "STCL TO BE CARRIED FORWARD",
+            "SHORT TERM CAPITAL LOSS SET OFF C/F",
+            "STCL BROUGHT FORWARD & CARRIED FORWARD",
+        ],
+    );
     let stcg_amt = labelled_amount(lines, &["SHORT TERM CAPITAL GAIN", "STCG", "CAPITAL GAIN AS PER DETAILS ATTACHED"]);
-    let ltcg_112a = labelled_amount(lines, &["LONG TERM CAPITAL GAIN U/S 112A", "112A(2)(I)", "U/S 112A"]);
-    let ltcg_loss = labelled_amount(lines, &["BROUGHT FORWARD LONG TERM CAPITAL LOSS", "BROUGHT FORWARD LOSS"]);
-    let cg_total = labelled_amount(lines, &["CAPITAL GAINS", "INCOME FROM CAPITAL GAIN", "TOTAL CAPITAL GAIN"])
-        .or_else(|| money_rupees(computation.heads.capital_gains.as_ref()));
+    let stcg_total_printed = labelled_amount(lines, &["TOTAL SHORT TERM CAPITAL GAIN", "SHORT TERM CAPITAL GAIN TOTAL", "TOTAL STCG"]);
+
+    let stcg_sub_sum: i64 = [
+        stcg_111a_15pct,
+        stcg_111a_20pct,
+        stcg_listed_securities_stt_paid,
+        stcg_other_than_111a,
+    ]
+    .iter()
+    .filter_map(|&v| v)
+    .filter(|&v| v > 0)
+    .sum();
+
+    let total_stcg = stcg_total_printed
+        .or_else(|| if stcg_sub_sum > 0 { Some(stcg_sub_sum) } else { stcg_amt })
+        .or(Some(0));
+
+    let capital_gain_as_per_details_attached = stcg_amt
+        .or(stcg_111a_20pct)
+        .or(stcg_111a_15pct)
+        .or(stcg_listed_securities_stt_paid)
+        .or(Some(0));
+
+    // Long-Term Capital Gains (LTCG)
+    let ltcg_112a_10pct = labelled_amount(
+        lines,
+        &[
+            "LONG TERM CAPITAL GAIN @ 10%",
+            "LTCG @ 10%",
+            "LONG-TERM CAPITAL GAIN @ 10%",
+            "LTCG U/S 112A @ 10%",
+            "LTCG 112A 10%",
+            "LTCG SPECIAL RATE @ 10%",
+            "LTCG (10%)",
+            "LONG TERM CAPITAL GAIN U/S 112A @ 10%",
+            "LTCG 112A @ 10%",
+            "AS PER WORKING GIVEN (10% SPECIAL RATE)",
+            "10% SPECIAL RATE",
+            "AS PER WORKING GIVEN",
+            "(10% SPECIAL RATE)",
+            "SPECIAL RATE",
+        ],
+    );
+    let ltcg_112a_12_5pct = labelled_amount(
+        lines,
+        &[
+            "LONG TERM CAPITAL GAIN @ 12.5%",
+            "LTCG @ 12.5%",
+            "LONG-TERM CAPITAL GAIN @ 12.5%",
+            "LTCG U/S 112A @ 12.5%",
+            "LTCG 112A 12.5%",
+            "LTCG (12.5%)",
+            "LONG TERM CAPITAL GAIN U/S 112A @ 12.5%",
+            "LTCG 112A @ 12.5%",
+        ],
+    );
+    let ltcg_20pct = labelled_amount(
+        lines,
+        &[
+            "LONG TERM CAPITAL GAIN U/S - 112 20%",
+            "LONG TERM CAPITAL GAIN U/S 112 20%",
+            "LONG TERM CAPITAL GAIN U/S 112",
+            "LONG TERM CAPITAL GAIN @ 20%",
+            "LTCG @ 20%",
+            "LONG-TERM CAPITAL GAIN @ 20%",
+            "LTCG U/S 112 @ 20%",
+            "LTCG (20%)",
+            "LONG TERM CAPITAL GAIN U/S 112 @ 20%",
+            "LTCG 112 @ 20%",
+        ],
+    );
+    let ltcg_other_than_112a = labelled_amount(
+        lines,
+        &[
+            "LONG TERM CAPITAL GAIN OTHER THAN 112A",
+            "LTCG OTHER THAN 112A",
+            "LONG TERM CAPITAL GAINS OTHER THAN 112A",
+            "LTCG OTHER THAN SEC 112A",
+            "LONG TERM CAPITAL GAIN OTHER THAN SEC 112A",
+        ],
+    );
+    let long_term_capital_loss_cf = labelled_amount(
+        lines,
+        &[
+            "LONG TERM CAPITAL LOSS C/F",
+            "LTCL C/F",
+            "LONG TERM CAPITAL LOSS CARRIED FORWARD",
+            "BALANCE LTCL CARRIED FORWARD",
+            "LTCL TO BE CARRIED FORWARD",
+        ],
+    );
+    let ltcg_112a_printed = labelled_amount(
+        lines,
+        &[
+            "LONG TERM CAPITAL GAIN U/S - 112A",
+            "LONG TERM CAPITAL GAIN U/S 112A",
+            "LONG TERM CAPITAL GAIN",
+            "112A(2)(I)",
+            "U/S 112A",
+            "LTCG",
+        ],
+    );
+    let ltcg_112a = ltcg_112a_printed.or(ltcg_112a_10pct).or(ltcg_112a_12_5pct);
+
+    let ltcg_loss = labelled_amount(
+        lines,
+        &[
+            "BROUGHT FORWARD LONG TERM CAPITAL LOSS",
+            "BROUGHT FORWARD LTCL",
+            "B/F LONG TERM CAPITAL LOSS",
+            "B/F LTCL",
+        ],
+    );
+    let ltcg_total_printed = labelled_amount(lines, &["TOTAL LONG TERM CAPITAL GAIN", "LONG TERM CAPITAL GAIN TOTAL", "TOTAL LTCG"]);
+
+    let ltcg_specific_sub_sum: i64 = [
+        ltcg_112a_10pct,
+        ltcg_112a_12_5pct,
+        ltcg_20pct,
+        ltcg_other_than_112a,
+    ]
+    .iter()
+    .filter_map(|&v| v)
+    .filter(|&v| v > 0)
+    .sum();
+
+    let total_ltcg = ltcg_total_printed
+        .or_else(|| {
+            if ltcg_specific_sub_sum > 0 {
+                Some(ltcg_specific_sub_sum)
+            } else {
+                ltcg_112a
+            }
+        });
+
+    // Virtual Digital Assets u/s 115BBH
+    let virtual_digital_assets_115bbh = labelled_amount(
+        lines,
+        &[
+            "VIRTUAL DIGITAL ASSETS",
+            "VDA U/S 115BBH",
+            "INCOME FROM VIRTUAL DIGITAL ASSETS",
+            "VDA (115BBH)",
+            "INCOME U/S 115BBH",
+            "115BBH",
+            "VIRTUAL DIGITAL ASSET",
+        ],
+    );
+
+    let cg_total_printed = labelled_amount(
+        lines,
+        &[
+            "CAPITAL GAINS",
+            "INCOME FROM CAPITAL GAIN",
+            "INCOME FROM CAPITAL GAINS",
+            "TOTAL CAPITAL GAIN",
+            "TOTAL CAPITAL GAINS",
+        ],
+    )
+    .or_else(|| money_rupees(computation.heads.capital_gains.as_ref()));
+
+    let computed_cg_total = total_stcg.unwrap_or(0) + total_ltcg.unwrap_or(0) + virtual_digital_assets_115bbh.unwrap_or(0);
+
+    let cg_total = cg_total_printed.or_else(|| {
+        if computed_cg_total > 0 {
+            Some(computed_cg_total)
+        } else {
+            None
+        }
+    });
 
     let cg_section = Some(CapitalGainSection {
         chapter: Some("IV E".to_string()),
         total: cg_total,
         short_term_capital_gain: Some(ShortTermCapitalGainDetails {
-            capital_gain_as_per_details_attached: stcg_amt,
+            capital_gain_as_per_details_attached,
+            stcg_111a_15pct,
+            stcg_111a_20pct,
+            stcg_listed_securities_stt_paid,
+            stcg_other_than_111a,
+            short_term_capital_loss_cf,
+            total: total_stcg,
         }),
         long_term_capital_gain: Some(LongTermCapitalGainDetails {
-            long_term_capital_gain_u_s_112a_before_23_07_2024: ltcg_112a,
             threshold_limit: Some(125000),
+            long_term_capital_gain_u_s_112a_before_23_07_2024: ltcg_112a,
             brought_forward_long_term_capital_loss: ltcg_loss,
+            ltcg_112a_10pct,
+            ltcg_112a_12_5pct,
+            ltcg_20pct,
+            ltcg_other_than_112a,
+            long_term_capital_loss_cf,
+            total: total_ltcg,
         }),
+        virtual_digital_assets_115bbh,
     });
 
-    println!("DEBUG LINES FOR OTHER SOURCES:");
-    for l in lines {
-        println!("  LINE: {:?}", l.upper());
-    }
     let sav_int = labelled_amount(
         lines,
         &[
@@ -1145,6 +1454,10 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "INTEREST ON S.B. A/C",
             "INTEREST ON S.B. A/C (S)",
             "INTEREST ON S.B.A/C (S)",
+            "INTEREST ON SAVINGS A/C",
+            "INTEREST ON SAVINGS A/C.",
+            "INTEREST ON SAVINGS AC",
+            "INTEREST ON SAVINGS",
         ],
     );
     let fdr_int = labelled_amount(
@@ -1155,6 +1468,8 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "INTEREST ON F.D.R.(AS PER ANNEXURE)",
             "INTEREST ON FDR(AS PER ANNEXURE)",
             "FDR INTEREST",
+            "INTEREST FROM DEPOSITS IN BANK, POST OFFICE OR CO-OP. SOCIETY",
+            "INTEREST FROM DEPOSITS IN BANK",
             "INTEREST FROM DEPOSIT",
             "INTEREST ON DEPOSIT",
             "INTEREST FROM DEPOSITS",
@@ -1214,7 +1529,6 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "JOB WORK INCOME",
             "INCOME FROM JOBWORK",
             "JOBWORK INCOME",
-            "JOB WORK",
         ],
     );
     let rental_inc = labelled_amount(
@@ -1224,6 +1538,14 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "RENT INCOME",
             "INCOME FROM RENT",
             "RENT RECEIVED",
+        ],
+    );
+    let comm_inc = labelled_amount(
+        lines,
+        &[
+            "COMMISSION INCOME",
+            "INCOME FROM COMMISSION",
+            "COMMISSION RECEIVED",
         ],
     );
     let oth_item_sum: i64 = lines.iter().filter_map(|line| {
@@ -1248,8 +1570,32 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         }
     }).sum();
     let oth_item = if oth_item_sum > 0 { Some(oth_item_sum) } else { None };
-    let os_total = labelled_amount(lines, &["INCOME FROM OTHER SOURCES", "TOTAL OTHER SOURCES"])
-        .or_else(|| money_rupees(computation.heads.other_sources.as_ref()));
+    let os_total = labelled_amount(
+        lines,
+        &[
+            "INCOME FROM OTHER SOURCES",
+            "TOTAL OTHER SOURCES",
+            "TOTAL INCOME FROM OTHER SOURCES",
+            "OTHER SOURCE INCOME",
+            "OTHER SOURCES INCOME",
+            "INTEREST INCOME (OTHER THAN NSC/KVP INTEREST)",
+            "INTEREST INCOME",
+            "TAXABLE INTEREST",
+        ],
+    )
+    .or_else(|| money_rupees(computation.heads.other_sources.as_ref()));
+
+    let sav_int = sav_int.filter(|&s| os_total.map_or(true, |tot| tot <= 0 || s <= tot));
+    let fdr_int = fdr_int.filter(|&f| os_total.map_or(true, |tot| tot <= 0 || f <= tot));
+    let time_dep = time_dep.filter(|&t| os_total.map_or(true, |tot| tot <= 0 || t <= tot));
+    let tax_ref = tax_ref.filter(|&tr| os_total.map_or(true, |tot| tot <= 0 || tr <= tot));
+    let div_shares = div_shares.filter(|&ds| os_total.map_or(true, |tot| tot <= 0 || ds <= tot));
+    let div_companies = div_companies.filter(|&dc| os_total.map_or(true, |tot| tot <= 0 || dc <= tot));
+    let oth_misc = oth_misc.filter(|&om| os_total.map_or(true, |tot| tot <= 0 || om <= tot));
+    let job_work = job_work.filter(|&jw| os_total.map_or(true, |tot| tot <= 0 || jw <= tot));
+    let rental_inc = rental_inc.filter(|&r| os_total.map_or(true, |tot| tot <= 0 || r <= tot));
+    let comm_inc = comm_inc.filter(|&c| os_total.map_or(true, |tot| tot <= 0 || c <= tot));
+    let oth_item = oth_item.filter(|&oi| os_total.map_or(true, |tot| tot <= 0 || oi <= tot));
 
     let deposit_sum = match (time_dep, fdr_int) {
         (Some(td), Some(fdr)) => td + fdr,
@@ -1269,7 +1615,8 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         + div_sum
         + oth_misc.unwrap_or(0)
         + job_work.unwrap_or(0)
-        + rental_inc.unwrap_or(0);
+        + rental_inc.unwrap_or(0)
+        + comm_inc.unwrap_or(0);
 
     let calc_os_total = os_total
         .filter(|&tot| tot >= spec_sum)
@@ -1289,6 +1636,7 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
                 + oth_misc.unwrap_or(0)
                 + job_work.unwrap_or(0)
                 + rental_inc.unwrap_or(0)
+                + comm_inc.unwrap_or(0)
                 + div_companies.unwrap_or(0);
             other_sum + div <= tot
         } else {
@@ -1305,6 +1653,7 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
                 + oth_misc.unwrap_or(0)
                 + job_work.unwrap_or(0)
                 + rental_inc.unwrap_or(0)
+                + comm_inc.unwrap_or(0)
                 + div_shares_final.unwrap_or(0);
             other_sum + div <= tot
         } else {
@@ -1322,6 +1671,7 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             other_misc_income: None,
             income_from_job_work: None,
             rental_income: None,
+            commission_income: None,
             dividend_from_shares: None,
             dividend_from_companies: None,
             total: None,
@@ -1336,6 +1686,7 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             other_misc_income: oth_misc,
             income_from_job_work: job_work,
             rental_income: rental_inc,
+            commission_income: comm_inc,
             dividend_from_shares: div_shares_final,
             dividend_from_companies: div_companies_final,
             total: calc_os_total,
@@ -1406,7 +1757,7 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         ],
     )
     .or(tot_inc_amt);
-    let exempt_10 = labelled_amount(lines, &["INCOME EXEMPT U/S 10", "PROFIT EXEMPT U/S 10(2A)", "EXEMPT INCOME U/S 10"]);
+    let exempt_10 = labelled_amount(lines, &["INCOME EXEMPT U/S 10", "EXEMPT INCOME U/S 10"]).or_else(|| labelled_amount(lines, &["PROFIT EXEMPT U/S 10(2A)"]));
     let adj_tot_inc = labelled_amount(lines, &["ADJUSTED TOTAL INCOME"]).or(tot_inc_amt);
 
     let tot_inc_details = Some(TotalIncomeDetails {
@@ -2443,17 +2794,42 @@ pub fn parse_amount(text: &str) -> Option<i64> {
     }
 }
 
+fn get_leading_section_index(text: &str) -> Option<i64> {
+    let trimmed = text.trim();
+    if !trimmed.chars().any(|c| c.is_alphabetic()) {
+        return None;
+    }
+    let mut parts = trimmed.split_whitespace();
+    let first = parts.next()?;
+    let clean_first = first.trim_end_matches('.').trim_end_matches(':');
+    if let Ok(num) = clean_first.parse::<i64>() {
+        if num >= 1 && num <= 50 {
+            return Some(num);
+        }
+    }
+    None
+}
+
 fn line_amount(line: &Line) -> Option<i64> {
+    let leading_idx = get_leading_section_index(&line.text());
     line.segments.iter().rev().find_map(|segment| {
-        parse_amount(segment).or_else(|| parse_rupees(segment))
+        let amt = parse_amount(segment).or_else(|| parse_rupees(segment))?;
+        if let Some(idx) = leading_idx {
+            let seg_clean = segment.trim().trim_end_matches('.').trim_end_matches(':');
+            if amt == idx && seg_clean == idx.to_string() {
+                return None;
+            }
+        }
+        Some(amt)
     })
 }
 
 fn parse_rupees(text: &str) -> Option<i64> {
-    if let Some(amt) = parse_amount(text) {
+    let clean = text.trim().trim_end_matches("/-").trim_end_matches("/=").trim();
+    if let Some(amt) = parse_amount(clean) {
         return Some(amt);
     }
-    let amount = coi_domain::Money::parse(text.trim())?;
+    let amount = coi_domain::Money::parse(clean)?;
     Some(amount.paise / 100)
 }
 

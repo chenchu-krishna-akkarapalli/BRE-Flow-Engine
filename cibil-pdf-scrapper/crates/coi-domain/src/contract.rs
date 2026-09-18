@@ -83,6 +83,12 @@ pub struct BusinessIncomeSection {
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ShortTermCapitalGainDetails {
     pub capital_gain_as_per_details_attached: Option<i64>,
+    pub stcg_111a_15pct: Option<i64>,
+    pub stcg_111a_20pct: Option<i64>,
+    pub stcg_listed_securities_stt_paid: Option<i64>,
+    pub stcg_other_than_111a: Option<i64>,
+    pub short_term_capital_loss_cf: Option<i64>,
+    pub total: Option<i64>,
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
@@ -91,6 +97,12 @@ pub struct LongTermCapitalGainDetails {
     #[serde(rename = "long_term_capital_gain_u_s_112A_before_23_07_2024")]
     pub long_term_capital_gain_u_s_112a_before_23_07_2024: Option<i64>,
     pub brought_forward_long_term_capital_loss: Option<i64>,
+    pub ltcg_112a_10pct: Option<i64>,
+    pub ltcg_112a_12_5pct: Option<i64>,
+    pub ltcg_20pct: Option<i64>,
+    pub ltcg_other_than_112a: Option<i64>,
+    pub long_term_capital_loss_cf: Option<i64>,
+    pub total: Option<i64>,
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
@@ -99,6 +111,7 @@ pub struct CapitalGainSection {
     pub total: Option<i64>,
     pub short_term_capital_gain: Option<ShortTermCapitalGainDetails>,
     pub long_term_capital_gain: Option<LongTermCapitalGainDetails>,
+    pub virtual_digital_assets_115bbh: Option<i64>,
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
@@ -179,6 +192,7 @@ pub struct OtherSourcesDetails {
     pub other_misc_income: Option<i64>,
     pub income_from_job_work: Option<i64>,
     pub rental_income: Option<i64>,
+    pub commission_income: Option<i64>,
     pub dividend_from_shares: Option<i64>,
     pub dividend_from_companies: Option<i64>,
     pub total: Option<i64>,
@@ -455,6 +469,8 @@ pub struct CreditEngineSummary {
     pub taxable_salary: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub total_other_sources: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub total_capital_gains: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub total_deductions_chapter_6a: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]

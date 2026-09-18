@@ -48,6 +48,47 @@ Append-only session close-outs. One entry per session: what changed, how it was 
 - **Verification**:
   - Target document [`Computation-2024-25.pdf`](file:///c:/Projects/onboarding-bre-engine/cibil-pdf-scrapper/computation-of-income-copies-1/Computation-2024-25.pdf) extracts all 4 fields cleanly (`business_turnover`: 10926858, `taxable_business_profit`: 656711, `total_other_sources`: 16608 with complete breakdown, `due_date_for_filing_return`: "July 31 st , 2025").
 
+## [2026-09-17] COI Engine: Schema Extension & Commission Income Extraction Fix (`HEMANT COMPUTATION 2025-26.pdf`)
+- **What Changed**:
+  - `coi-domain/src/contract.rs`: Added `pub commission_income: Option<i64>` field to `OtherSourcesDetails`.
+  - `coi-parser/src/contract.rs`: Added `comm_inc` label aliases (`"COMMISSION INCOME"`, `"INCOME FROM COMMISSION"`, `"COMMISSION RECEIVED"`) and populated `commission_income` in `OtherSourcesDetails`.
+  - `coi-output/HEMANT COMPUTATION 2025-26.json`: Updated `income_from_other_sources.details` output (`interest_from_saving_bank_accounts`: 2762, `commission_income`: 187646, `other_item`: null, `total`: 190408).
+- **Verification**:
+  - `cargo test --workspace` passed 100% across all crates.
+  - Single-file run on `HEMANT COMPUTATION 2025-26.pdf` verified `commission_income: 187646` and `other_item: null`.
+- **Undone**: None.
+
+## [2026-09-17] COI Engine: Schedule 4 Interest Income Breakdown & Total Fix (`Statement_of_Income_AKWPR7381R 2025-26.pdf`)
+- **What Changed**:
+  - `coi-parser/src/patterns.rs`: Added `"INTEREST INCOME (OTHER THAN NSC/KVP INTEREST)"` and `"INTEREST INCOME"` to `OTHER_SOURCES` patterns.
+  - `coi-parser/src/contract.rs`: Added label aliases for savings interest (`"INTEREST ON SAVINGS A/C"`, `"INTEREST ON SAVINGS A/C."`, `"INTEREST ON SAVINGS AC"`, `"INTEREST ON SAVINGS"`) and deposit interest (`"INTEREST FROM DEPOSITS IN BANK, POST OFFICE OR CO-OP. SOCIETY"`).
+  - `coi-output/Statement_of_Income_AKWPR7381R 2025-26.json`: Updated `income_from_other_sources` output (`interest_from_saving_bank_accounts`: 29841, `interest_on_fdr`: 123184, `total`: 153025).
+- **Verification**:
+  - `cargo test --workspace` passed 100% across all crates.
+  - Verified JSON output on `Statement_of_Income_AKWPR7381R 2025-26.pdf` (`interest_from_saving_bank_accounts`: 29841, `interest_on_fdr`: 123184, `total`: 153025).
+- **Undone**: None.
+
+## [2026-09-17] COI Engine: False Positive `income_from_job_work` Leak Fix (`Computation_OldRegime MANOJ KHAKHAR 24-26.pdf`)
+- **What Changed**:
+  - `coi-parser/src/contract.rs`: Added `NATURE OF BUSINESS` line guard to `labelled_amount`, removed bare `"JOB WORK"` label alias, filtered sub-items exceeding `os_total`, and expanded section total labels (`"TOTAL INCOME FROM OTHER SOURCES"`, `"OTHER SOURCE INCOME"`).
+  - `coi-output/Computation_OldRegime MANOJ KHAKHAR 24-26.json`: Updated `income_from_other_sources` output (`interest_from_saving_bank_accounts`: 5288, `income_from_job_work`: null, `total`: 5288).
+- **Verification**:
+  - `cargo test --workspace` passed 100% across all crates.
+  - Verified JSON output on `Computation_OldRegime MANOJ KHAKHAR 24-26.pdf` (`income_from_job_work`: null, `interest_from_saving_bank_accounts`: 5288, `total`: 5288).
+- **Undone**: None.
+
+## [2026-09-17] COI Engine: Table Index Prefix Filtering & Other Sources Breakdown Fix (`Computation of Income for FY 2025-26_Kanhaiya.pdf`)
+- **What Changed**:
+  - `coi-parser/src/contract.rs`: Added `get_leading_section_index()` and filtered leading section numbers in `line_amount()`; updated `labelled_amount()` lookahead and `inline_amount_after_label()`; stripped trailing `/-` and `/=` in `parse_rupees()`.
+  - `coi-output/Computation of Income for FY 2025-26_Kanhaiya.json`: Updated `income_from_other_sources` output (`interest_from_saving_bank_accounts`: 215, `other_misc_income`: 452100, `other_item`: null, `total`: 452315).
+- **Verification**:
+  - `cargo test --workspace` passed 100% across all crates.
+  - Single-file run and batch output JSON verified (`interest_from_saving_bank_accounts`: 215, `other_misc_income`: 452100, `other_item`: null, `total`: 452315).
+- **Undone**: None.
+
+
+
+
 
 
 

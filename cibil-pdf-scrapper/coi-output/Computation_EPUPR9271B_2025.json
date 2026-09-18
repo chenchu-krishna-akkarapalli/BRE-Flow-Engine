@@ -1,6 +1,6 @@
 {
   "source": "Computation_EPUPR9271B_2025.pdf",
-  "status": "OK",
+  "status": "SCHEMA_ERROR",
   "confidence_score": 1.0,
   "confidence_breakdown": {
     "assessee_info": 1.0,
@@ -10,7 +10,9 @@
     "tax_computation": 1.0
   },
   "low_confidence_fields": [],
-  "schema_errors": [],
+  "schema_errors": [
+    "/summary: Additional properties are not allowed ('total_capital_gains' was unexpected)"
+  ],
   "data": {
     "_meta": {
       "ocr_used": false,
@@ -33,13 +35,14 @@
       "tax_regime": "Section 115BAC - New Tax Regime",
       "gross_total_income": 640309,
       "total_income": 640309,
-      "total_income_rounded": 640310,
+      "total_income_rounded": 640309,
       "business_turnover": 2575665,
       "taxable_business_profit": 576598,
       "deemed_profit_44ad": 154540,
       "deemed_profit_44ad_6pct": 154540,
       "declared_profit_44ad": 576598,
       "total_other_sources": 58321,
+      "total_capital_gains": 5484,
       "total_deductions_chapter_6a": 0,
       "total_tax_computed": 16741,
       "rebate_87a": 16741,
@@ -105,13 +108,13 @@
         "gross_receipts_cash": null,
         "gross_receipts_total": 9927114,
         "book_profit": {
-          "amount": 640310,
+          "amount": -4780,
           "rate_pct": null
         },
         "deemed_profit_other_than_digital": null,
         "deemed_profit_digital_mode": null,
         "net_profit_declared": {
-          "amount": 640310,
+          "amount": -4780,
           "rate_pct": null
         },
         "gross_receipts_turnover": 9927114,
@@ -119,20 +122,33 @@
       },
       "income_from_business_or_profession": {
         "chapter": "IV D",
-        "total": 640310,
+        "total": -4780,
         "details": null
       },
       "income_from_capital_gain": {
         "chapter": "IV E",
         "total": 5484,
         "short_term_capital_gain": {
-          "capital_gain_as_per_details_attached": 4170
+          "capital_gain_as_per_details_attached": 4170,
+          "stcg_111a_15pct": 1314,
+          "stcg_111a_20pct": 4170,
+          "stcg_listed_securities_stt_paid": null,
+          "stcg_other_than_111a": null,
+          "short_term_capital_loss_cf": null,
+          "total": 5484
         },
         "long_term_capital_gain": {
           "threshold_limit": 125000,
           "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
-          "brought_forward_long_term_capital_loss": -94
-        }
+          "brought_forward_long_term_capital_loss": null,
+          "ltcg_112a_10pct": null,
+          "ltcg_112a_12_5pct": null,
+          "ltcg_20pct": null,
+          "ltcg_other_than_112a": null,
+          "long_term_capital_loss_cf": null,
+          "total": null
+        },
+        "virtual_digital_assets_115bbh": null
       },
       "income_from_other_sources": {
         "chapter": "IV F",
@@ -146,6 +162,7 @@
           "other_misc_income": null,
           "income_from_job_work": null,
           "rental_income": null,
+          "commission_income": null,
           "dividend_from_shares": null,
           "dividend_from_companies": 186,
           "total": 58321
@@ -158,14 +175,14 @@
       },
       "total_income": {
         "amount": 640309,
-        "round_off_u_s_288A": 640310,
+        "round_off_u_s_288A": 640309,
         "income_exempt_u_s_10": null,
         "adjusted_total_income": 640309,
         "amt_applicable": false,
         "amt_note": "Adjusted total income (ATI) is not more than Rs. 20 lakh hence AMT not applicable."
       },
-      "total_income_rounded_288a": 640310,
-      "total_income_rounded_off_u_s_288a": 640310,
+      "total_income_rounded_288a": 640309,
+      "total_income_rounded_off_u_s_288a": 640309,
       "exempt_income_sec_10": null,
       "computation_of_tax_on_total_income": {
         "tax_slabs": [
@@ -237,13 +254,13 @@
       "gross_receipts_cash": null,
       "gross_receipts_total": 9927114,
       "book_profit": {
-        "amount": 640310,
+        "amount": -4780,
         "rate_pct": null
       },
       "deemed_profit_other_than_digital": null,
       "deemed_profit_digital_mode": null,
       "net_profit_declared": {
-        "amount": 640310,
+        "amount": -4780,
         "rate_pct": null
       },
       "gross_receipts_turnover": 9927114,
