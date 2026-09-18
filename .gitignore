@@ -41,6 +41,7 @@ frontend/next-env.d.ts
 
 # AI Agent & RepoGraph Indexes/Memories
 .repograph/
+.myrepograph-agent/
 .myrepograph-agent/memory/
 .myrepograph-agent/memory.md
 
