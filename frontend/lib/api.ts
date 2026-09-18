@@ -105,7 +105,7 @@ export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 export const ACCEPTED_UPLOAD_TYPES = ["image/jpeg", "image/png", "application/pdf"];
 
 export interface DocumentExtraction {
-  document_type: "pan" | "aadhaar";
+  document_type: "pan" | "aadhaar" | "itr";
   filename: string;
   size_bytes: number;
   extracted: Record<string, string | null>;
@@ -117,9 +117,32 @@ export interface DocumentExtraction {
 
 // The file is posted, read and discarded; nothing is stored server-side.
 export async function extractDocument(
-  documentType: "pan" | "aadhaar",
+  documentType: "pan" | "aadhaar" | "itr",
   file: File,
 ): Promise<DocumentExtraction> {
+  if (documentType === "itr") {
+    const itrRes = await extractItrDocument(file);
+    const income = itrRes.data?.taxable_income_and_tax_details?.total_income;
+    const taxAndFee = itrRes.data?.taxable_income_and_tax_details?.total_tax_interest_and_fee_payable;
+    const pan = itrRes.data?.assessee_info?.pan;
+    const name = itrRes.data?.assessee_info?.name;
+    const ack = itrRes.data?.return_details?.acknowledgement_number;
+    return {
+      document_type: "itr",
+      filename: file.name,
+      size_bytes: file.size,
+      populated: true,
+      simulated: false,
+      extracted: {
+        total_income: income !== undefined && income !== null ? String(income) : "",
+        total_tax_interest_and_fee_payable: taxAndFee !== undefined && taxAndFee !== null ? String(taxAndFee) : "",
+        pan: pan ?? "",
+        name: name ?? "",
+        acknowledgement_number: ack ?? "",
+      },
+    };
+  }
+
   const form = new FormData();
   form.append("file", file);
 
@@ -207,6 +230,56 @@ export async function extractCoiReport(file: File): Promise<CoiExtraction> {
     throw new ApiError(response.status, body?.detail ?? `COI parsing failed (${response.status}).`);
   }
   return (await response.json()) as CoiExtraction;
+}
+
+export interface ItrExtraction {
+  status: string;
+  data: {
+    _meta?: { ocr_used: boolean; source: string };
+    assessee_info?: {
+      pan?: string;
+      name?: string;
+      address?: string;
+      status?: string;
+      assessment_year?: string;
+      financial_year?: string;
+    };
+    return_details?: {
+      form_number?: string;
+      filed_u_s?: string;
+      acknowledgement_number?: string;
+      date_of_filing?: string;
+    };
+    taxable_income_and_tax_details?: {
+      current_year_business_loss?: number;
+      total_income?: number;
+      book_profit_under_mat?: number;
+      adjusted_total_income_under_amt?: number;
+      net_tax_payable?: number;
+      interest_and_fee_payable?: number;
+      total_tax_interest_and_fee_payable?: number;
+      taxes_paid?: number;
+      tax_payable_or_refundable?: number;
+    };
+    accreted_income_and_tax_details?: Record<string, unknown>;
+    verification_details?: Record<string, unknown>;
+  };
+}
+
+export async function extractItrDocument(file: File): Promise<ItrExtraction> {
+  const form = new FormData();
+  form.append("file", file);
+
+  const response = await fetch(`${API_BASE}/api/v1/onboarding/documents/itr/extract`, {
+    method: "POST",
+    headers: { "X-Tenant-ID": TENANT_ID },
+    body: form,
+  });
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new ApiError(response.status, body?.detail ?? `ITR parsing failed (${response.status}).`);
+  }
+  return (await response.json()) as ItrExtraction;
 }
 
 export interface OtpChallenge {

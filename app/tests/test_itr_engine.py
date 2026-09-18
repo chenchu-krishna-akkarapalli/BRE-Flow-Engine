@@ -20,3 +20,16 @@ def test_itr_service_component_check():
     # Check that missing_component returns message or None
     msg = missing_component()
     assert msg is None or "itr-cli engine binary was not found" in msg
+
+
+def test_itr_extract_endpoint_validation():
+    from fastapi.testclient import TestClient
+    from app.main import app
+    client = TestClient(app)
+    response = client.post(
+        "/api/v1/onboarding/documents/itr/extract",
+        files={"file": ("notes.txt", b"plain text", "text/plain")},
+        headers={"X-Tenant-ID": "tenant_alpha"},
+    )
+    assert response.status_code == 422
+    assert "upload the ITR document as a PDF" in response.text
