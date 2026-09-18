@@ -1,6 +1,6 @@
 {
   "source": "Computation_DTDPA1605L-2026.pdf",
-  "status": "OK",
+  "status": "SCHEMA_ERROR",
   "confidence_score": 0.99,
   "confidence_breakdown": {
     "assessee_info": 1.0,
@@ -10,7 +10,9 @@
     "tax_computation": 0.9624999999999999
   },
   "low_confidence_fields": [],
-  "schema_errors": [],
+  "schema_errors": [
+    "/summary: Additional properties are not allowed ('total_capital_gains' was unexpected)"
+  ],
   "data": {
     "_meta": {
       "ocr_used": false,
@@ -33,13 +35,14 @@
       "tax_regime": "Section 115BAC - New Tax Regime",
       "gross_total_income": 1047227,
       "total_income": 1047227,
-      "total_income_rounded": 1047230,
+      "total_income_rounded": 1047227,
       "business_turnover": 3148340,
       "taxable_business_profit": 255016,
       "deemed_profit_44ad": 251867,
       "deemed_profit_44ad_8pct": 251867,
       "declared_profit_44ad": 255016,
       "total_other_sources": 791502,
+      "total_capital_gains": 709,
       "total_deductions_chapter_6a": 0,
       "total_tax_computed": 44652,
       "rebate_87a": 44652,
@@ -127,13 +130,26 @@
         "chapter": "IV E",
         "total": 709,
         "short_term_capital_gain": {
-          "capital_gain_as_per_details_attached": null
+          "capital_gain_as_per_details_attached": 0,
+          "stcg_111a_15pct": null,
+          "stcg_111a_20pct": null,
+          "stcg_listed_securities_stt_paid": null,
+          "stcg_other_than_111a": null,
+          "short_term_capital_loss_cf": null,
+          "total": 0
         },
         "long_term_capital_gain": {
           "threshold_limit": 125000,
           "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
-          "brought_forward_long_term_capital_loss": null
-        }
+          "brought_forward_long_term_capital_loss": null,
+          "ltcg_112a_10pct": null,
+          "ltcg_112a_12_5pct": null,
+          "ltcg_20pct": null,
+          "ltcg_other_than_112a": null,
+          "long_term_capital_loss_cf": null,
+          "total": null
+        },
+        "virtual_digital_assets_115bbh": 709
       },
       "income_from_other_sources": {
         "chapter": "IV F",
@@ -147,6 +163,7 @@
           "other_misc_income": null,
           "income_from_job_work": 790936,
           "rental_income": null,
+          "commission_income": null,
           "dividend_from_shares": null,
           "dividend_from_companies": 34,
           "total": 791502
@@ -159,14 +176,14 @@
       },
       "total_income": {
         "amount": 1047227,
-        "round_off_u_s_288A": 1047230,
+        "round_off_u_s_288A": 1047227,
         "income_exempt_u_s_10": null,
         "adjusted_total_income": 1047227,
         "amt_applicable": false,
         "amt_note": "Adjusted total income (ATI) is not more than Rs. 20 lakh hence AMT not applicable."
       },
-      "total_income_rounded_288a": 1047230,
-      "total_income_rounded_off_u_s_288a": 1047230,
+      "total_income_rounded_288a": 1047227,
+      "total_income_rounded_off_u_s_288a": 1047227,
       "exempt_income_sec_10": null,
       "computation_of_tax_on_total_income": {
         "tax_slabs": [

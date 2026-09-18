@@ -48,7 +48,8 @@ pub const CAPITAL_GAINS: &[&str] = &[
 
 pub const OTHER_SOURCES: &[&str] = &[
     "INCOME FROM OTHER SOURCES", "INCOME FROM OTHER SOURCE", "OTHER SOURCES (CHAPTER IV F)",
-    "CHAPTER IV F", "U/S 14", "U/S-14",
+    "CHAPTER IV F", "U/S 14", "U/S-14", "INTEREST INCOME (OTHER THAN NSC/KVP INTEREST)",
+    "INTEREST INCOME",
     // Bare heading dialect. Safe as a last entry: the head takes the first line
     // carrying an amount, and the annexure headings below carry none.
     "OTHER SOURCES",

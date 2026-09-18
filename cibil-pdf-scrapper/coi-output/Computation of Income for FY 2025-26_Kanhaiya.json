@@ -120,13 +120,26 @@
         "chapter": "IV E",
         "total": null,
         "short_term_capital_gain": {
-          "capital_gain_as_per_details_attached": null
+          "capital_gain_as_per_details_attached": 0,
+          "stcg_111a_15pct": null,
+          "stcg_111a_20pct": null,
+          "stcg_listed_securities_stt_paid": null,
+          "stcg_other_than_111a": null,
+          "short_term_capital_loss_cf": null,
+          "total": 0
         },
         "long_term_capital_gain": {
           "threshold_limit": 125000,
           "long_term_capital_gain_u_s_112A_before_23_07_2024": null,
-          "brought_forward_long_term_capital_loss": null
-        }
+          "brought_forward_long_term_capital_loss": null,
+          "ltcg_112a_10pct": null,
+          "ltcg_112a_12_5pct": null,
+          "ltcg_20pct": null,
+          "ltcg_other_than_112a": null,
+          "long_term_capital_loss_cf": null,
+          "total": null
+        },
+        "virtual_digital_assets_115bbh": null
       },
       "income_from_other_sources": {
         "chapter": "IV F",
@@ -140,6 +153,7 @@
           "other_misc_income": 452100,
           "income_from_job_work": null,
           "rental_income": null,
+          "commission_income": null,
           "dividend_from_shares": null,
           "dividend_from_companies": null,
           "total": 452315
@@ -239,7 +253,7 @@
       "savings_bank_interest": 215,
       "fdr_interest": null,
       "commission_interest": null,
-      "total_other_sources": 215
+      "total_other_sources": 452315
     },
     "tax_computation_extended": {
       "total_tax_calculated": null,

@@ -48,25 +48,7 @@ Append-only session close-outs. One entry per session: what changed, how it was 
 - **Verification**:
   - Target document [`Computation-2024-25.pdf`](file:///c:/Projects/onboarding-bre-engine/cibil-pdf-scrapper/computation-of-income-copies-1/Computation-2024-25.pdf) extracts all 4 fields cleanly (`business_turnover`: 10926858, `taxable_business_profit`: 656711, `total_other_sources`: 16608 with complete breakdown, `due_date_for_filing_return`: "July 31 st , 2025").
 
-## [2026-09-17] Docker Container Image Rebuild & Alembic Sync
-- **What Changed**:
-  - Rebuilt Docker images `bre-flow-engine-web`, `bre-flow-engine-celery_worker`, and `bre-flow-engine-flower` to package newly created migration `alembic/versions/0008_dynamic_module_catalog.py` and new dynamic navigation modules.
-  - Re-launched `flowbre_fastapi_app` container via `docker compose up -d web`.
-- **Verification**:
-  - Checked `docker logs flowbre_fastapi_app`: Alembic migration executed cleanly and Gunicorn/Uvicorn started successfully.
-  - Health check verification: `Invoke-RestMethod http://127.0.0.1:8000/api/v1/health` returned `healthy` (0.001ms).
-  - Navigation check: `Invoke-RestMethod http://127.0.0.1:8000/api/v1/navigation/modules?role=SUPER_ADMIN` returned clean list without `Updated Docs Portal` and without `Settings`.
-- **Undone**: None.
 
-## [2026-09-17] Deduplicate Navigation Module Network Requests
-- **What Changed**:
-  - Lifted module hydration `useEffect` from child `<SidebarContent />` to parent `<Sidebar />` in [Sidebar.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/components/Sidebar.tsx), eliminating the dual-mount trigger between the hidden desktop container and the active mobile drawer.
-  - Implemented in-flight singleflight deduplication (`activeFetchPromise`) and cache key matching (`${role}:${tenantUuid}`) in [useModuleStore.ts](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/store/useModuleStore.ts), preventing duplicate concurrent network requests.
-  - Added explicit cache bypass (`force = true`) for catalog, matrix, and entitlement mutations.
-- **Verification**:
-  - `npm run build` compiled with 0 errors across all 23 routes in 6.8s.
-  - `pytest app/tests/test_dynamic_navigation.py` passed 5/5 tests.
-- **Undone**: None.
 
 ## [2026-09-17] Remove New Dynamic Module Button & Deploy Container
 - **What Changed**:
