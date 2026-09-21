@@ -17,7 +17,10 @@ class TenantRateLimiterMiddleware(BaseHTTPMiddleware):
         self.requests_per_minute = requests_per_minute
 
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
-        # Skip rate limiting for static/health endpoints
+        # Skip rate limiting for static/health endpoints and preflight OPTIONS requests
+        if request.method == "OPTIONS":
+            return await call_next(request)
+
         path = request.url.path
         if path.startswith("/docs") or path.startswith("/openapi.json") or "/health" in path:
             return await call_next(request)

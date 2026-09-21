@@ -121,6 +121,7 @@ async def evaluate_onboarding_application(
             evaluation_report_json=evaluation["evaluation_report"],
         )
         db.add(exec_record)
+        await db.commit()
     except Exception as e:
         await db.rollback()
         logger.warning(f"DB persistence bypassed for evaluation due to schema / connection state: {e}")
@@ -275,6 +276,7 @@ async def _persist_form_evaluation(
                 },
             )
         )
+        await db.commit()
         return app_record.id, True
     except Exception as e:
         await db.rollback()

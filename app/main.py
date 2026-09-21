@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from app.api.router import api_router
 from app.core.config import settings
@@ -52,22 +53,40 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS Middleware Setup
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Custom Pipeline Interceptor Middlewares
+# Custom Pipeline Interceptor Middlewares (LIFO: registered first, executed innermost)
 app.add_middleware(SWRCacheHeadersMiddleware)
 app.add_middleware(TenantRateLimiterMiddleware)
 app.add_middleware(TenantContextMiddleware)
 
+# CORS Middleware Setup (MUST be added LAST so it executes FIRST as the outermost wrapper)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.CORS_ORIGINS,
+    allow_origin_regex=settings.CORS_ORIGIN_REGEX,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*", "X-Tenant-ID", "Content-Disposition"],
+)
+
 # Custom Exception Handlers
 app.add_exception_handler(FlowBREException, flowbre_exception_handler)
+
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    logger.exception(f"Unhandled exception on {request.method} {request.url.path}: {exc}")
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={
+            "success": False,
+            "error": {
+                "code": "INTERNAL_SERVER_ERROR",
+                "message": str(exc) or "An unexpected server error occurred.",
+                "details": f"{type(exc).__name__}: {str(exc)}",
+            },
+        },
+    )
 
 # Include API Router
 app.include_router(api_router, prefix=settings.API_V1_STR)

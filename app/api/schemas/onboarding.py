@@ -1082,7 +1082,12 @@ class OnboardingFormRequest(FormModel):
             self.occupation.office_address_type,
             self.occupation.office_premises_status,
         )
-        return PROPERTY_STATUS_MATRIX[key]
+        return PROPERTY_STATUS_MATRIX.get(
+            key,
+            PropertyStatus.RENTED
+            if self.address.resident_details == ResidentDetails.RENTED_HOUSE
+            else PropertyStatus.OWNED,
+        )
 
     def to_engine_payload(self) -> Dict[str, Any]:
         """Flatten the wizard submission into the bank-matrix input vocabulary.
@@ -1200,12 +1205,15 @@ class RuleOutcomeDetail(BaseModel):
     parameter_name: str
     category: str
     status: Literal["PASS", "FAIL"]
-    user_value: str
-    limit_value: str
-    description: str
+    user_value: Any = ""
+    limit_value: Any = ""
+    description: str = ""
+
+    model_config = ConfigDict(extra="ignore")
 
 
 class BankFoirDetail(BaseModel):
+    bank_code: Optional[str] = None
     is_eligible: bool
     foir_percentage: float
     max_allowable_emi: float
@@ -1219,12 +1227,16 @@ class BankFoirDetail(BaseModel):
     rule_type: str = "percentage"
     notes: str = ""
 
+    model_config = ConfigDict(extra="ignore")
+
 
 class BankEvaluationReport(BaseModel):
     is_eligible: bool
-    passed_rules: List[RuleOutcomeDetail]
-    failed_rules: List[RuleOutcomeDetail]
+    passed_rules: List[RuleOutcomeDetail] = Field(default_factory=list)
+    failed_rules: List[RuleOutcomeDetail] = Field(default_factory=list)
     foir: Optional[BankFoirDetail] = None
+
+    model_config = ConfigDict(extra="ignore")
 
 
 class OnboardingEvaluationResponse(BaseModel):
