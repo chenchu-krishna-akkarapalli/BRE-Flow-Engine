@@ -15,6 +15,7 @@ import {
 import { CibilUpload } from "@/components/CibilUpload";
 import { DocumentUpload } from "@/components/DocumentUpload";
 import { PayslipUpload } from "@/components/PayslipUpload";
+import { CoiUploadSection } from "@/components/CoiUploadSection";
 import { VerifyField } from "@/components/VerifyField";
 import {
   CO_APPLICANT_ITR_THRESHOLD, LOAN_TENOR_YEARS, RENTAL_DOC_IN_BANK, RENTAL_DOC_WITH_ITR,
@@ -220,20 +221,26 @@ function RentalIncomeBranch() {
       </Field>
 
       {withItr && (
-        <div className="grid gap-6 sm:grid-cols-2">
-          <ItrField
-            id="rentalCurrentYearItr"
-            label="Current Year ITR"
-            value={draft.rentalCurrentYearItr}
-            onChange={(v) => set("rentalCurrentYearItr", v)}
+        <>
+          <div className="grid gap-6 sm:grid-cols-2">
+            <ItrField
+              id="rentalCurrentYearItr"
+              label="Current Year ITR"
+              value={draft.rentalCurrentYearItr}
+              onChange={(v) => set("rentalCurrentYearItr", v)}
+            />
+            <ItrField
+              id="rentalPreviousYearItr"
+              label="Previous Year ITR"
+              value={draft.rentalPreviousYearItr}
+              onChange={(v) => set("rentalPreviousYearItr", v)}
+            />
+          </div>
+          <CoiUploadSection
+            currentItrFieldId="rentalCurrentYearItr"
+            prevItrFieldId="rentalPreviousYearItr"
           />
-          <ItrField
-            id="rentalPreviousYearItr"
-            label="Previous Year ITR"
-            value={draft.rentalPreviousYearItr}
-            onChange={(v) => set("rentalPreviousYearItr", v)}
-          />
-        </div>
+        </>
       )}
 
       {inBank && (
@@ -350,6 +357,11 @@ function TradeBusinessBranch() {
         />
       </div>
 
+      <CoiUploadSection
+        currentItrFieldId="currentITRAmount"
+        prevItrFieldId="prevITRAmount"
+      />
+
       <Field label="For how many years have you filed tax returns?" htmlFor="businessItrYears">
         <TextInput id="businessItrYears" type="number" value={draft.businessItrYears} onChange={(v) => set("businessItrYears", num(v))} numeric />
       </Field>
@@ -411,6 +423,10 @@ function AgricultureBranch() {
                   onChange={(v) => set("prevITRAmount", v)}
                 />
               </div>
+              <CoiUploadSection
+                currentItrFieldId="currentITRAmount"
+                prevItrFieldId="prevITRAmount"
+              />
               <Field label="For how many years have you filed tax returns?" htmlFor="businessItrYears">
                 <TextInput id="businessItrYears" type="number" value={draft.businessItrYears} onChange={(v) => set("businessItrYears", num(v))} numeric />
               </Field>
@@ -918,20 +934,26 @@ export function Step3Occupation() {
           )}
 
           {draft.form16Status === "ITR" && (
-            <div className="grid gap-6 sm:grid-cols-2">
-              <ItrField
-                id="salariedCurrentYearItr"
-                label="Current Year ITR"
-                value={draft.salariedCurrentYearItr}
-                onChange={(v) => set("salariedCurrentYearItr", v)}
+            <>
+              <div className="grid gap-6 sm:grid-cols-2">
+                <ItrField
+                  id="salariedCurrentYearItr"
+                  label="Current Year ITR"
+                  value={draft.salariedCurrentYearItr}
+                  onChange={(v) => set("salariedCurrentYearItr", v)}
+                />
+                <ItrField
+                  id="salariedPreviousYearItr"
+                  label="Previous Year ITR"
+                  value={draft.salariedPreviousYearItr}
+                  onChange={(v) => set("salariedPreviousYearItr", v)}
+                />
+              </div>
+              <CoiUploadSection
+                currentItrFieldId="salariedCurrentYearItr"
+                prevItrFieldId="salariedPreviousYearItr"
               />
-              <ItrField
-                id="salariedPreviousYearItr"
-                label="Previous Year ITR"
-                value={draft.salariedPreviousYearItr}
-                onChange={(v) => set("salariedPreviousYearItr", v)}
-              />
-            </div>
+            </>
           )}
 
           {/* add-on.md §2: residency is asked here, and only of salaried
@@ -1000,6 +1022,14 @@ export function Step3Occupation() {
               <TextInput id="businessItrYearsCompany" type="number" value={draft.businessItrYearsCompany} onChange={(v) => set("businessItrYearsCompany", num(v))} numeric />
             </Field>
           </div>
+
+          <CoiUploadSection
+            currentItrFieldId="companyCurrentITRAmount"
+            currentYearLabel="Company Current Year COI"
+            prevItrFieldId="companyPrevITRAmount"
+            prevYearLabel="Company Previous Year COI"
+            title="Company Computation of Income (COI) Verification"
+          />
         </>
       )}
 
@@ -1191,6 +1221,14 @@ function IncomeCoApplicant() {
               onChange={(v) => set("coApplicantPreviousItr", v)}
             />
           </div>
+
+          <CoiUploadSection
+            currentItrFieldId="coApplicantCurrentItr"
+            currentYearLabel="Co-Applicant Current Year COI"
+            prevItrFieldId="coApplicantPreviousItr"
+            prevYearLabel="Co-Applicant Previous Year COI"
+            title="Co-Applicant Computation of Income (COI) Verification"
+          />
 
           <p className="rounded-md bg-bg-raised p-3 text-[0.8125rem] text-ink-muted">
             Combined for the banks:

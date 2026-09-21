@@ -609,6 +609,14 @@ export interface ItrRecord {
   taxFeePayable: number | null;
 }
 
+export interface CoiRecord {
+  verified: boolean;
+  filename: string;
+  totalIncome: number | null;
+  grossTotalIncome: number | null;
+  evidence: Record<string, unknown>;
+}
+
 interface OnboardingState {
   draft: Draft;
   stepId: number;
@@ -622,6 +630,7 @@ interface OnboardingState {
   coiVerified: { filename: string; evidence: Record<string, unknown> } | null;
   itrVerified: { filename: string; evidence: Record<string, unknown> } | null;
   itrRecords: Record<string, ItrRecord>;
+  coiRecords: Record<string, CoiRecord>;
 
   setField: <K extends keyof Draft>(key: K, value: Draft[K]) => void;
   // Bureau fields read off an uploaded CIBIL report. Set together so the
@@ -635,6 +644,7 @@ interface OnboardingState {
   applyItrExtraction: (data: Record<string, unknown>, filename: string) => void;
   clearItrExtraction: () => void;
   setItrRecord: (id: string, record: ItrRecord | null) => void;
+  setCoiRecord: (id: string, record: CoiRecord | null) => void;
   goTo: (stepId: number) => void;
   next: () => void;
   prev: () => void;
@@ -653,6 +663,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   coiVerified: null,
   itrVerified: null,
   itrRecords: {},
+  coiRecords: {},
 
   setField: (key, value) =>
     set((state) => {
@@ -790,6 +801,17 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       return { itrRecords: nextRecords };
     }),
 
+  setCoiRecord: (id, record) =>
+    set((state) => {
+      const nextRecords = { ...state.coiRecords };
+      if (record) {
+        nextRecords[id] = record;
+      } else {
+        delete nextRecords[id];
+      }
+      return { coiRecords: nextRecords };
+    }),
+
   goTo: (stepId) => set({ stepId }),
 
   next: () => {
@@ -844,5 +866,6 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       coiVerified: null,
       itrVerified: null,
       itrRecords: {},
+      coiRecords: {},
     }),
 }));

@@ -106,3 +106,25 @@ def test_sanitize_coi_payload_44ad_and_rounded_total_income():
     assert sanitized["summary"]["deemed_profit_44ad_6pct"] == 0
     assert sanitized["summary"]["deemed_profit_44ad_8pct"] == 199010
 
+
+@pytest.mark.asyncio
+async def test_run_engine_recovers_json_with_log_prefixes(monkeypatch):
+    import json
+    from unittest.mock import AsyncMock, MagicMock
+    import app.services.coi_service as cs
+
+    mock_proc = MagicMock()
+    mock_proc.returncode = 0
+    raw_json = json.dumps({
+        "summary": {"total_income": 500000, "assessee_name": "Test User"},
+    })
+    stdout_with_logs = f"DEBUG LOG LINE 1\n  LINE: 'some text'\n{raw_json}\n".encode("utf-8")
+    mock_proc.communicate = AsyncMock(return_value=(stdout_with_logs, b""))
+
+    monkeypatch.setattr(cs, "_binary_path", lambda: "/usr/local/bin/coi-cli")
+    monkeypatch.setattr("asyncio.create_subprocess_exec", AsyncMock(return_value=mock_proc))
+
+    result = await cs._run_engine(b"%PDF-1.4...", "doc_test")
+    assert result["summary"]["total_income"] == 500000
+    assert result["summary"]["assessee_name"] == "Test User"
+

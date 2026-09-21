@@ -103,14 +103,29 @@ async def _run_engine(pdf_bytes: bytes, doc_id: str) -> Dict[str, Any]:
         ) from exc
 
     if stdout:
+        out_str = stdout.decode("utf-8", errors="replace").strip()
         try:
-            parsed = json.loads(stdout)
+            parsed = json.loads(out_str)
             if isinstance(parsed, dict) and ("summary" in parsed or "computation_of_total_income" in parsed or "_meta" in parsed):
                 return parsed
             if isinstance(parsed, dict) and "data" in parsed and isinstance(parsed["data"], dict):
                 return parsed["data"]
         except json.JSONDecodeError:
             pass
+
+        # Fallback: extract JSON substring if debug/info lines precede or follow the JSON payload
+        first_brace = out_str.find("{")
+        last_brace = out_str.rfind("}")
+        if first_brace != -1 and last_brace != -1 and last_brace > first_brace:
+            try:
+                candidate = out_str[first_brace : last_brace + 1]
+                parsed = json.loads(candidate)
+                if isinstance(parsed, dict) and ("summary" in parsed or "computation_of_total_income" in parsed or "_meta" in parsed):
+                    return parsed
+                if isinstance(parsed, dict) and "data" in parsed and isinstance(parsed["data"], dict):
+                    return parsed["data"]
+            except json.JSONDecodeError:
+                pass
 
     if proc.returncode != 0:
         logger.error(f"coi-cli exit={proc.returncode} stderr={redact_pii(stderr[:512].decode('utf-8', 'replace'))}")
