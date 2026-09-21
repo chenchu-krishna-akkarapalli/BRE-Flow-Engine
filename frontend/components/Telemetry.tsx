@@ -111,7 +111,12 @@ export function BankMatrix({ result }: { result: EvaluationResponse | null }) {
               </div>
 
               {/* Right: High-visibility state indicator */}
-              <div className="shrink-0 flex items-center">
+              <div className="shrink-0 flex items-center gap-1.5">
+                {isEligible && result?.bank_loan_eligibility?.[code] !== undefined && result.bank_loan_eligibility[code] > 0 && (
+                  <span className="font-mono text-[0.6875rem] font-extrabold text-emerald-700 bg-emerald-100 border border-emerald-300 px-1.5 py-0.5 rounded">
+                    ₹{(result.bank_loan_eligibility[code] / 100000).toFixed(1)}L
+                  </span>
+                )}
                 {!evaluated ? (
                   <span className="flex items-center gap-1 font-mono text-[0.625rem] font-bold text-ink-subtle bg-bg-raised px-1.5 py-0.5 rounded border border-line/60">
                     <span className="h-1.5 w-1.5 rounded-full bg-slate-300" />
@@ -235,6 +240,48 @@ export function DecisionPanel({ result }: { result: EvaluationResponse }) {
           ? `Application approved with ${BANK_LABELS[result.selected_bank]}. Parameters meet all risk threshold limits.`
           : `Application does not meet the eligibility limits for ${BANK_LABELS[result.selected_bank]}.`}
       </p>
+
+      {/* FOIR & Loan Sanction Summary */}
+      {result.foir_detail && (
+        <div className="mt-4 rounded-xl border border-line bg-white/90 p-4 shadow-xs">
+          <div className="flex items-center justify-between border-b border-line/60 pb-2 mb-3">
+            <span className="text-xs font-extrabold uppercase tracking-wider text-ink font-display">
+              Loan Sanction & Debt Capacity
+            </span>
+            {result.foir_detail.dgm_approval_required && (
+              <span className="rounded-md bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 text-[0.6875rem] font-bold">
+                DGM Approval Required
+              </span>
+            )}
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div>
+              <div className="text-[0.6875rem] text-ink-muted font-medium">Max Sanction Limit</div>
+              <div className="text-base font-extrabold text-emerald-700 font-mono">
+                ₹{result.foir_detail.max_eligible_loan_amount.toLocaleString("en-IN")}
+              </div>
+            </div>
+            <div>
+              <div className="text-[0.6875rem] text-ink-muted font-medium">Max Allowable EMI</div>
+              <div className="text-base font-extrabold text-ink font-mono">
+                ₹{result.foir_detail.max_allowable_emi.toLocaleString("en-IN")}
+              </div>
+            </div>
+            <div>
+              <div className="text-[0.6875rem] text-ink-muted font-medium">Eligible EMI Capacity</div>
+              <div className="text-base font-extrabold text-brand-600 font-mono">
+                ₹{result.foir_detail.eligible_emi_capacity.toLocaleString("en-IN")}
+              </div>
+            </div>
+            <div>
+              <div className="text-[0.6875rem] text-ink-muted font-medium">FOIR Applied</div>
+              <div className="text-base font-extrabold text-ink font-mono">
+                {result.foir_detail.foir_percentage > 0 ? `${(result.foir_detail.foir_percentage * 100).toFixed(0)}%` : "Flat Deduct"}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {!result.persisted && (
         <div className="mt-3 rounded-xl border border-warning/30 bg-warning-bg p-3 text-xs font-semibold text-warning">

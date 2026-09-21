@@ -145,12 +145,25 @@ export interface CoApplicantStep {
   coApplicantPreviousItr?: number;
 }
 
+export interface FoirStep {
+  requestedLoanAmount?: number;
+  loanTenureMonths?: number;
+  existingMonthlyEmi: number;
+  netMonthlySalary?: number;
+  interestRate?: number;
+  otherInterestIncome?: number;
+  interestOnPartnersCapital?: number;
+  partnerRemuneration?: number;
+  capitalGains?: number;
+}
+
 export interface OnboardingFormRequest {
   identity: Identity;
   address?: AddressStep;
   occupation: Occupation;
   banking: BankingStep;
   coApplicant?: CoApplicantStep;
+  foir?: FoirStep;
 }
 
 export interface RejectionReason {
@@ -169,10 +182,27 @@ export interface RuleOutcome {
   description: string;
 }
 
+export interface BankFoirDetail {
+  bank_code: string;
+  is_eligible: boolean;
+  foir_percentage: number;
+  max_allowable_emi: number;
+  eligible_emi_capacity: number;
+  max_eligible_loan_amount: number;
+  requested_loan_amount?: number;
+  loan_amount_approved: number;
+  proposed_emi: number;
+  existing_monthly_emi: number;
+  dgm_approval_required: boolean;
+  rule_type: string;
+  notes: string;
+}
+
 export interface BankEvaluationReport {
   is_eligible: boolean;
   passed_rules: RuleOutcome[];
   failed_rules: RuleOutcome[];
+  foir?: BankFoirDetail;
 }
 
 export interface EvaluationResponse {
@@ -183,6 +213,8 @@ export interface EvaluationResponse {
   execution_time_ms: number;
   rejection_reasons: RejectionReason[];
   bank_eligibility: Record<BankCode, boolean>;
+  bank_loan_eligibility?: Record<BankCode, number>;
+  foir_detail?: BankFoirDetail;
   evaluation_report: Record<BankCode, BankEvaluationReport>;
   application_id: string | null;
   entity_type: EntityType;
