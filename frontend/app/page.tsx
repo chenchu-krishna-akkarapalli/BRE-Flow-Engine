@@ -9,7 +9,7 @@ import { ReviewCard } from "@/components/ReviewCard";
 import { Stepper } from "@/components/Stepper";
 import { BankMatrix, DecisionPanel } from "@/components/Telemetry";
 import {
-  Step1Identity, Step2Address, Step3Occupation, Step4Banking, Step5CoApplicant,
+  Step1Identity, Step2Address, Step3Occupation, Step4Banking, Step5CoApplicant, Step6Foir,
 } from "@/components/steps/Steps";
 import { STEP_PLAN } from "@/lib/form-schema";
 import { terminationReason, useOnboardingStore } from "@/store/useOnboardingStore";
@@ -23,6 +23,7 @@ const STEP_COMPONENTS: Record<number, () => JSX.Element> = {
   3: Step3Occupation,
   4: Step4Banking,
   5: Step5CoApplicant,
+  6: Step6Foir,
 };
 
 function isStepCompleted(stepNum: number, draft: Draft): boolean {
@@ -63,6 +64,9 @@ function isStepCompleted(stepNum: number, draft: Draft): boolean {
   if (stepNum === 5) {
     return true; // Optional co-applicant
   }
+  if (stepNum === 6) {
+    return true; // FOIR details has defaults
+  }
   return false;
 }
 
@@ -72,7 +76,7 @@ function isStepAccessible(
   plan: number[],
   result: any
 ): boolean {
-  if (targetStep === 6) {
+  if (targetStep === 7) {
     return !!result;
   }
   if (!plan.includes(targetStep)) {
@@ -145,7 +149,7 @@ function OnboardingWizardContent() {
         lastStepIdRef.current = stepId;
       } else {
         // URL changed (via browser back/forward buttons, direct manual input)
-        const isValid = urlStep === 6 ? !!result : plan.includes(urlStep);
+        const isValid = urlStep === 7 ? !!result : plan.includes(urlStep);
         const isAccessible = isValid && isStepAccessible(urlStep, draft, plan, result);
 
         if (isAccessible) {
@@ -161,7 +165,7 @@ function OnboardingWizardContent() {
               break;
             }
           }
-          const fallbackStep = result ? 6 : lastAccessible;
+          const fallbackStep = result ? 7 : lastAccessible;
           router.replace(`?step=${fallbackStep}`);
           goTo(fallbackStep);
           lastStepIdRef.current = fallbackStep;
@@ -185,7 +189,7 @@ function OnboardingWizardContent() {
   };
 
   const handleJump = (id: number) => {
-    if (id === 6 && !result) return;
+    if (id === 7 && !result) return;
     goTo(id);
   };
 
@@ -196,7 +200,7 @@ function OnboardingWizardContent() {
       // Simulate submission loading time for visual indicator and preventing duplicate clicks
       await new Promise((resolve) => setTimeout(resolve, 800));
       setShowSummary(false);
-      goTo(6); // Navigate to Step 6
+      goTo(7); // Navigate to Step 7 Results
     } finally {
       setSubmittingApplication(false);
     }
@@ -211,8 +215,8 @@ function OnboardingWizardContent() {
     <div className="flex w-full flex-1 flex-col justify-between">
       {/* Main Wizard Content Shell */}
       <div className="mx-auto flex w-full max-w-[var(--shell-max)] flex-1 flex-col gap-8 px-4 sm:px-6 pt-6 pb-8 lg:flex-row lg:items-start animate-fade-in">
-        {stepId === 6 ? (
-          /* Step 6 Content - Side-by-side layout on large screens */
+        {stepId === 7 ? (
+          /* Step 7 Content - Side-by-side layout on large screens */
           <div className={`flex w-full flex-col gap-8 lg:flex-row lg:items-start max-w-[var(--shell-max)] mx-auto ${animationClass}`}>
             {/* Left Column: Full Audit Trail */}
             <div className="flex w-full flex-col gap-6 lg:max-w-[var(--form-col)]">
@@ -241,7 +245,7 @@ function OnboardingWizardContent() {
             </aside>
           </div>
         ) : (
-          /* Normal Onboarding Steps 1 to 5 */
+          /* Normal Onboarding Steps 1 to 6 */
           <>
             {/* Left Form Wizard Column */}
             <div className="flex w-full flex-col gap-6 lg:max-w-[var(--form-col)]">

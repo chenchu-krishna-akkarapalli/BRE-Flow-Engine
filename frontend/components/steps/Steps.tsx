@@ -1283,3 +1283,241 @@ export function Step5CoApplicant() {
     </div>
   );
 }
+
+const TENURE_OPTIONS = [
+  { value: "12", label: "12 Months (1 Year)" },
+  { value: "24", label: "24 Months (2 Years)" },
+  { value: "36", label: "36 Months (3 Years)" },
+  { value: "48", label: "48 Months (4 Years)" },
+  { value: "60", label: "60 Months (5 Years)" },
+  { value: "84", label: "84 Months (7 Years - Standard Auto)" },
+  { value: "120", label: "120 Months (10 Years)" },
+  { value: "240", label: "240 Months (20 Years - Home Loan)" },
+];
+
+export function Step6Foir() {
+  const { draft, set } = useField();
+  const k = <K extends keyof Draft>(key: K) => (v: Draft[K]) => set(key, v);
+
+  const loanAmount = Number(draft.requestedLoanAmount || 0);
+  const tenureMonths = Number(draft.loanTenureMonths || 84);
+  const existingEmi = Number(draft.existingMonthlyEmi || 0);
+  const rate = Number(draft.interestRate || 9.5);
+
+  // Live EMI calculation
+  const r = (rate / 100) / 12;
+  const n = tenureMonths;
+  const proposedEmi = (loanAmount > 0 && n > 0)
+    ? Math.round((loanAmount * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1))
+    : 0;
+
+  const totalMonthlyDebt = proposedEmi + existingEmi;
+
+  // Monthly income baseline
+  let monthlyIncome = 0;
+  let incomeSourceLabel = "";
+  if (draft.entityType === "Individual") {
+    if (draft.occupation === "Salaried") {
+      monthlyIncome = Number(draft.grossSalary || 0);
+      incomeSourceLabel = "Monthly Gross Salary";
+    } else if (draft.occupation === "Self-Employed") {
+      const cItr = Number(draft.currentITRAmount || 0);
+      const pItr = Number(draft.prevITRAmount || 0);
+      monthlyIncome = Math.round(((cItr + pItr) / 2) / 12);
+      incomeSourceLabel = "Estimated Monthly Income (2-yr ITR Average)";
+    } else if (draft.occupation === "Rental Income") {
+      monthlyIncome = Number(draft.rentalIncomeAmount || 0);
+      incomeSourceLabel = "Declared Monthly Rental Credit";
+    }
+  } else {
+    const cItr = Number(draft.companyCurrentITRAmount || 0);
+    const pItr = Number(draft.companyPrevITRAmount || 0);
+    monthlyIncome = Math.round(((cItr + pItr) / 2) / 12);
+    incomeSourceLabel = "Company Monthly Normalized Income";
+  }
+
+  const foirRatio = monthlyIncome > 0 ? Math.round((totalMonthlyDebt / monthlyIncome) * 100) : 0;
+
+  return (
+    <div className="flex flex-col gap-8">
+      {/* 1. Header Overview Banner */}
+      <div className="rounded-2xl border border-brand-500/20 bg-gradient-to-br from-brand-500/5 via-indigo-500/5 to-purple-500/5 p-5 sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-600">
+              <span className="inline-block h-2 w-2 rounded-full bg-brand-500 animate-pulse" />
+              Affordability & Debt Obligation Assessment
+            </div>
+            <h2 className="mt-1 text-lg sm:text-xl font-extrabold text-ink font-display">
+              Loan Request & Monthly Obligations
+            </h2>
+            <p className="mt-1 text-sm text-ink-muted">
+              Configure your desired loan principal and active EMI commitments. The BRE engine evaluates these against each bank&apos;s FOIR matrices to sanction your maximum eligible loan.
+            </p>
+          </div>
+          {monthlyIncome > 0 && (
+            <div className="rounded-xl border border-line bg-white/80 p-3.5 shadow-xs backdrop-blur-xs">
+              <div className="text-[0.6875rem] font-bold text-ink-muted uppercase">{incomeSourceLabel}</div>
+              <div className="text-lg font-extrabold text-ink font-mono">
+                ₹{monthlyIncome.toLocaleString("en-IN")}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 2. Core Inputs Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Requested Loan Amount */}
+        <div className="flex flex-col gap-2">
+          <Field label="Requested Loan Amount (₹)" htmlFor="requestedLoanAmount">
+            <TextInput
+              id="requestedLoanAmount"
+              type="number"
+              value={draft.requestedLoanAmount}
+              onChange={(v) => k("requestedLoanAmount")(num(v))}
+              placeholder="e.g. 1000000"
+            />
+          </Field>
+          {/* Quick presets */}
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {[500000, 1000000, 1500000, 2500000, 5000000].map((amt) => (
+              <button
+                key={amt}
+                type="button"
+                onClick={() => k("requestedLoanAmount")(amt)}
+                className={`rounded-lg px-2.5 py-1 text-xs font-bold transition-all ${
+                  draft.requestedLoanAmount === amt
+                    ? "bg-brand-500 text-white shadow-xs"
+                    : "border border-line bg-bg-surface hover:bg-bg-raised text-ink"
+                }`}
+              >
+                ₹{(amt / 100000).toFixed(amt % 100000 === 0 ? 0 : 1)}L
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Loan Tenure */}
+        <Field label="Loan Repayment Tenure" htmlFor="loanTenureMonths">
+          <Select
+            id="loanTenureMonths"
+            value={String(draft.loanTenureMonths || 84)}
+            onChange={(v) => k("loanTenureMonths")(Number(v))}
+            options={TENURE_OPTIONS}
+          />
+        </Field>
+
+        {/* Existing Monthly EMIs */}
+        <div className="flex flex-col gap-1.5">
+          <Field
+            label="Total Existing Monthly EMIs (₹)"
+            htmlFor="existingMonthlyEmi"
+          >
+            <TextInput
+              id="existingMonthlyEmi"
+              type="number"
+              value={draft.existingMonthlyEmi}
+              onChange={(v) => k("existingMonthlyEmi")(num(v))}
+              placeholder="0"
+            />
+          </Field>
+          <span className="text-xs text-ink-muted">
+            Total active monthly payments across auto, personal, or home loans.
+          </span>
+        </div>
+
+        {/* Net Monthly Salary (if Salaried) or Interest Rate Benchmark */}
+        {draft.occupation === "Salaried" && draft.entityType === "Individual" ? (
+          <div className="flex flex-col gap-1.5">
+            <Field
+              label="Net Monthly In-Hand Salary (₹) (Optional)"
+              htmlFor="netMonthlySalary"
+            >
+              <TextInput
+                id="netMonthlySalary"
+                type="number"
+                value={draft.netMonthlySalary}
+                onChange={(v) => k("netMonthlySalary")(num(v))}
+                placeholder={draft.grossSalary ? String(Math.round(Number(draft.grossSalary) * 0.85)) : "e.g. 65000"}
+              />
+            </Field>
+            <span className="text-xs text-ink-muted">
+              Used for exact Bank of Baroda & Indian Bank net salary FOIR deduction.
+            </span>
+          </div>
+        ) : (
+          <Field
+            label="Benchmark Interest Rate (%)"
+            htmlFor="interestRate"
+          >
+            <TextInput
+              id="interestRate"
+              type="number"
+              value={draft.interestRate}
+              onChange={(v) => k("interestRate")(num(v))}
+              placeholder="9.5"
+            />
+          </Field>
+        )}
+      </div>
+
+      {/* 3. Live Affordability Preview Card */}
+      <div className="rounded-2xl border border-line bg-bg-surface p-5 sm:p-6 shadow-xs">
+        <h3 className="text-sm font-extrabold uppercase tracking-wider text-ink font-display">
+          Estimated Affordability & EMI Projection
+        </h3>
+        <p className="mt-0.5 text-xs text-ink-muted">
+          Based on standard {rate}% benchmark interest rate across partner banks.
+        </p>
+
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="rounded-xl border border-line bg-white p-4">
+            <div className="text-xs font-semibold text-ink-muted">Estimated New EMI</div>
+            <div className="mt-1 text-xl font-extrabold text-brand-600 font-mono">
+              ₹{proposedEmi.toLocaleString("en-IN")}
+              <span className="text-xs font-normal text-ink-muted"> / mo</span>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-line bg-white p-4">
+            <div className="text-xs font-semibold text-ink-muted">Total Monthly Debt Burden</div>
+            <div className="mt-1 text-xl font-extrabold text-ink font-mono">
+              ₹{totalMonthlyDebt.toLocaleString("en-IN")}
+              <span className="text-xs font-normal text-ink-muted"> / mo</span>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-line bg-white p-4">
+            <div className="text-xs font-semibold text-ink-muted">Projected FOIR Ratio</div>
+            <div className="mt-1 flex items-baseline gap-2">
+              <span className={`text-xl font-extrabold font-mono ${
+                foirRatio <= 60
+                  ? "text-emerald-600"
+                  : foirRatio <= 75
+                  ? "text-amber-600"
+                  : "text-rose-600"
+              }`}>
+                {foirRatio}%
+              </span>
+              <span className="text-[0.6875rem] font-bold text-ink-muted">
+                {foirRatio <= 60
+                  ? "Prime Affordability"
+                  : foirRatio <= 75
+                  ? "Moderate Affordability"
+                  : "High Leverage"}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 flex items-center gap-2 rounded-xl bg-blue-50 border border-blue-200/60 p-3 text-xs text-blue-900">
+          <span className="font-bold">Next:</span>
+          <span>
+            Clicking <strong>Evaluate Application</strong> will run the full 62-column BRE matrix plus bank-specific FOIR formulas (BOB, BOM, BOI, Indian Bank, IOB) to calculate your exact approved sanction limit.
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}

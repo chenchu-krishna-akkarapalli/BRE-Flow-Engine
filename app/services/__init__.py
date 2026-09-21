@@ -3,10 +3,12 @@ from app.services.bre_engine import BREEngineService, bre_engine_service
 from app.services.cibil_service import extract_cibil_report, map_to_bureau_fields
 from app.services.coi_service import CoiEngineError, extract_coi_report
 from app.services.export_service import build_excel, build_pdf
+from app.services.foir_service import FoirService, foir_service
 from app.services.notification_service import NotificationService, notification_service
 from app.services.ocr_service import extract_aadhaar_card, extract_pan_card, ocr_available, validate_upload
 from app.services.payslip_service import extract_payslip_report, map_to_payslip_fields
 from app.services.pdf_firewall import inspect
+from app.services.pre_foir_service import PreFoirService, pre_foir_service
 from app.services.tenant_service import TenantService, tenant_service
 from app.services.uas_service import UASService, uas_service
 from app.services.verification_service import send_otp, verify_otp
@@ -35,4 +37,8 @@ __all__ = [
     "notification_service",
     "TenantService",
     "tenant_service",
+    "FoirService",
+    "foir_service",
+    "PreFoirService",
+    "pre_foir_service",
 ]

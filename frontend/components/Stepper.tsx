@@ -21,11 +21,11 @@ interface StepperProps {
 export function Stepper({ entityType, stepId, onJump }: StepperProps) {
   const plan = STEP_PLAN[entityType];
   const isCorporate = workflowFor(entityType) === "COMPANY";
-  const activePlanSteps = [...plan, 6];
+  const activePlanSteps = [...plan, 7];
 
   const totalStepsCount = plan.length;
   const currentStepNumber =
-    stepId === 6 ? totalStepsCount : plan.indexOf(stepId) + 1;
+    stepId === 7 ? totalStepsCount : plan.indexOf(stepId) + 1;
 
   return (
     <nav
@@ -37,7 +37,7 @@ export function Stepper({ entityType, stepId, onJump }: StepperProps) {
         <div className="flex items-center gap-2.5 min-w-0">
           <span className="shrink-0 rounded-lg bg-brand-500/10 px-2.5 py-1 text-xs font-extrabold uppercase tracking-wider text-brand-600 border border-brand-500/20 flex items-center gap-1 font-mono">
             <Sparkles size={13} className="text-brand-500" />
-            {stepId === 6 ? "Verdict" : `Step ${currentStepNumber} of ${totalStepsCount}`}
+            {stepId === 7 ? "Verdict" : `Step ${currentStepNumber} of ${totalStepsCount}`}
           </span>
           <h1 className="truncate text-base sm:text-lg font-extrabold tracking-tight text-ink font-display">
             {STEP_TITLES[stepId]}
@@ -68,18 +68,18 @@ export function Stepper({ entityType, stepId, onJump }: StepperProps) {
         aria-valuemax={totalStepsCount}
       >
         {activePlanSteps.map((id) => {
-          const isStep6 = id === 6;
+          const isStep7 = id === 7;
           const isActive = id === stepId;
           const isDone =
-            stepId === 6 ? id !== 6 : plan.indexOf(id) < plan.indexOf(stepId);
-          const stepNumber = isStep6 ? totalStepsCount + 1 : plan.indexOf(id) + 1;
-          const stepLabel = isStep6 ? "Results & Audit" : STEP_TITLES[id];
+            stepId === 7 ? id !== 7 : plan.indexOf(id) < plan.indexOf(stepId);
+          const stepNumber = isStep7 ? totalStepsCount + 1 : plan.indexOf(id) + 1;
+          const stepLabel = isStep7 ? "Results & Sanction" : STEP_TITLES[id];
 
           return (
             <div key={id} className="relative flex-1 group">
               {/* Tooltip Overlay on Hover */}
               <div className="pointer-events-none absolute bottom-full left-1/2 mb-2.5 -translate-x-1/2 opacity-0 transition-all duration-200 group-hover:opacity-100 z-30 whitespace-nowrap rounded-lg bg-ink px-2.5 py-1 text-[0.6875rem] font-bold text-white shadow-lg after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-ink">
-                {isStep6 ? stepLabel : `Step ${stepNumber}: ${stepLabel}`}
+                {isStep7 ? stepLabel : `Step ${stepNumber}: ${stepLabel}`}
               </div>
 
               {/* Segment Button */}
@@ -87,7 +87,7 @@ export function Stepper({ entityType, stepId, onJump }: StepperProps) {
                 type="button"
                 onClick={() => onJump(id)}
                 aria-current={isActive ? "step" : undefined}
-                aria-label={`Jump to ${isStep6 ? stepLabel : `Step ${stepNumber}: ${stepLabel}`}`}
+                aria-label={`Jump to ${isStep7 ? stepLabel : `Step ${stepNumber}: ${stepLabel}`}`}
                 className={`h-2.5 sm:h-3 w-full rounded-full transition-all duration-300 cursor-pointer ${
                   isDone
                     ? "bg-gradient-to-r from-brand-500 via-brand-indigo to-brand-violet hover:opacity-90 shadow-xs"
