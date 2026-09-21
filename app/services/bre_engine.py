@@ -683,10 +683,11 @@ def _evaluate_bank(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> Li
                   inp["age_emi_sal"], f"<= {policy['max_age_emi_salaried']}",
                   f"Age at final EMI maturity ({inp['age_emi_sal']}) exceeds {code} limit of {policy['max_age_emi_salaried']} yrs.")
     elif inp["occupation"] == "Salaried" and "min_salary" in policy:
+        sal = float(inp.get("salary") if inp.get("salary") is not None else 0.0)
         check("EMP-SAL-202", "Minimum Salary", "Employment - Salaried",
-              inp["salary"] >= policy["min_salary"],
-              f"Rs {inp['salary']:,.2f}", f">= Rs {policy['min_salary']:,.0f}",
-              f"Monthly net salary (Rs {inp['salary']:,.2f}) is below the minimum floor (Rs {policy['min_salary']:,.0f}).")
+              sal >= policy["min_salary"],
+              f"Rs {sal:,.2f}", f">= Rs {policy['min_salary']:,.0f}",
+              f"Monthly net salary (Rs {sal:,.2f}) is below the minimum floor (Rs {policy['min_salary']:,.0f}).")
         check("EMP-SAL-203", "Salary Payment Mode", "Employment - Salaried",
               inp["salary_mode"] not in ("CASH", "Salary payment mode-Cash"),
               inp["salary_mode"], "Bank Credit",
@@ -694,14 +695,16 @@ def _evaluate_bank(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> Li
         # add-on §4: government service is not scored on tenure at all. Recorded
         # as not-applicable rather than as a pass — the bank verified nothing.
         if not inp["government_employee"]:
+            work_exp = float(inp.get("work_exp_years") if inp.get("work_exp_years") is not None else 0.0)
             check("EMP-SAL-204", "Total Work Experience", "Employment - Salaried",
-                  inp["work_exp_years"] >= policy["min_total_experience_years"],
-                  inp["work_exp_years"], f">= {policy['min_total_experience_years']} yrs",
-                  f"Total work experience ({inp['work_exp_years']} yrs) is below {code} minimum ({policy['min_total_experience_years']} yrs).")
+                  work_exp >= policy["min_total_experience_years"],
+                  work_exp, f">= {policy['min_total_experience_years']} yrs",
+                  f"Total work experience ({work_exp} yrs) is below {code} minimum ({policy['min_total_experience_years']} yrs).")
+            cur_comp_years = float(inp.get("current_company_years") if inp.get("current_company_years") is not None else 0.0)
             check("EMP-SAL-205", "Current Company Tenure", "Employment - Salaried",
-                  inp["current_company_years"] >= policy["min_current_company_tenure_years"],
-                  f"{inp['current_company_years']:.2f} yrs", f">= {policy['min_current_company_tenure_years']} yrs",
-                  f"Current-company tenure ({inp['current_company_years']:.2f} yrs) is below {code} minimum ({policy['min_current_company_tenure_years']} yrs).")
+                  cur_comp_years >= policy["min_current_company_tenure_years"],
+                  f"{cur_comp_years:.2f} yrs", f">= {policy['min_current_company_tenure_years']} yrs",
+                  f"Current-company tenure ({cur_comp_years:.2f} yrs) is below {code} minimum ({policy['min_current_company_tenure_years']} yrs).")
         if inp["no_income_proof"]:
             # No-income-proof segment: rejected unless the bank permits it; when
             # permitted, the Form-16 history requirement does not apply.
@@ -709,22 +712,25 @@ def _evaluate_bank(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> Li
                   policy["allow_no_income_proof"], "No Income Proof", policy["allow_no_income_proof"],
                   f"{code} requires valid income proof; no-income-proof profile is not accepted.")
         elif inp["income_proof"] != "ITR":
+            f16_years = float(inp.get("form_16_years") if inp.get("form_16_years") is not None else 0.0)
             check("EMP-SAL-206", "Form-16 History", "Employment - Salaried",
-                  inp["form_16_years"] >= policy["form16_years_required"],
-                  f"{inp['form_16_years']} yrs", f">= {policy['form16_years_required']} yrs",
-                  f"Form-16 history ({inp['form_16_years']} yrs) is below {code} requirement ({policy['form16_years_required']} yrs).")
+                  f16_years >= policy["form16_years_required"],
+                  f"{f16_years} yrs", f">= {policy['form16_years_required']} yrs",
+                  f"Form-16 history ({f16_years} yrs) is below {code} requirement ({policy['form16_years_required']} yrs).")
         if "max_age_emi_salaried" in policy:
+            age_sal = float(inp.get("age_emi_sal") if inp.get("age_emi_sal") is not None else inp.get("age", 30))
             check("DEM-102", "Age at Last EMI (Salaried)", "Demographics",
-                  inp["age_emi_sal"] <= policy["max_age_emi_salaried"],
-                  inp["age_emi_sal"], f"<= {policy['max_age_emi_salaried']}",
-                  f"Age at final EMI maturity ({inp['age_emi_sal']}) exceeds {code} limit of {policy['max_age_emi_salaried']} yrs for salaried applicants.")
+                  age_sal <= policy["max_age_emi_salaried"],
+                  age_sal, f"<= {policy['max_age_emi_salaried']}",
+                  f"Age at final EMI maturity ({age_sal}) exceeds {code} limit of {policy['max_age_emi_salaried']} yrs for salaried applicants.")
     else:
         # Col 47 "Business ITR Years" counts YEARS OF FILED RETURNS, not the
         # age of the business.
+        biz_itr_yrs = float(inp.get("business_itr_years") if inp.get("business_itr_years") is not None else 0.0)
         check("EMP-SE-301", "Business ITR Years", "Self-Employed",
-              inp["business_itr_years"] >= policy["min_business_itr_years"],
-              f"{inp['business_itr_years']} yrs", f">= {policy['min_business_itr_years']} yrs",
-              f"Filed business ITR history ({inp['business_itr_years']} yrs) is below "
+              biz_itr_yrs >= policy["min_business_itr_years"],
+              f"{biz_itr_yrs} yrs", f">= {policy['min_business_itr_years']} yrs",
+              f"Filed business ITR history ({biz_itr_yrs} yrs) is below "
               f"{code} minimum ({policy['min_business_itr_years']} yrs).")
         if not inp["itr_filed"]:
             # Banks carrying "ITR Not Filed" == True (col 46) underwrite this
@@ -739,31 +745,36 @@ def _evaluate_bank(inp: Dict[str, Any], code: str, policy: Dict[str, Any]) -> Li
             # ONLY income floor here — the per-year minimum does not also
             # apply, or a qualifying applicant would be rejected for the very
             # shortfall the combined test exists to absorb.
-            combined = inp["se_current_itr"] + inp["se_prev_itr"]
+            curr_itr = float(inp.get("se_current_itr") if inp.get("se_current_itr") is not None else 0.0)
+            prev_itr = float(inp.get("se_prev_itr") if inp.get("se_prev_itr") is not None else 0.0)
+            combined = curr_itr + prev_itr
             check("EMP-SE-303", "Combined ITR", "Self-Employed",
                   combined >= COMBINED_ITR_FLOOR, f"Rs {combined:,.0f}",
                   f">= Rs {COMBINED_ITR_FLOOR:,.0f}",
                   f"Combined current+previous ITR (Rs {combined:,.0f}) is below "
                   f"{code} minimum (Rs {COMBINED_ITR_FLOOR:,.0f}).")
         else:
+            curr_itr = float(inp.get("se_current_itr") if inp.get("se_current_itr") is not None else 0.0)
+            prev_itr = float(inp.get("se_prev_itr") if inp.get("se_prev_itr") is not None else 0.0)
             check("EMP-SE-302", "Current-Year ITR", "Self-Employed",
-                  inp["se_current_itr"] >= policy["se_min_current_itr"],
-                  f"Rs {inp['se_current_itr']:,.0f}", f">= Rs {policy['se_min_current_itr']:,.0f}",
-                  f"Current-year ITR (Rs {inp['se_current_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_current_itr']:,.0f}).")
+                  curr_itr >= policy["se_min_current_itr"],
+                  f"Rs {curr_itr:,.0f}", f">= Rs {policy['se_min_current_itr']:,.0f}",
+                  f"Current-year ITR (Rs {curr_itr:,.0f}) is below {code} minimum (Rs {policy['se_min_current_itr']:,.0f}).")
             check("EMP-SE-303", "Previous-Year ITR", "Self-Employed",
-                  inp["se_prev_itr"] >= policy["se_min_prev_itr"],
-                  f"Rs {inp['se_prev_itr']:,.0f}", f">= Rs {policy['se_min_prev_itr']:,.0f}",
-                  f"Previous-year ITR (Rs {inp['se_prev_itr']:,.0f}) is below {code} minimum (Rs {policy['se_min_prev_itr']:,.0f}).")
+                  prev_itr >= policy["se_min_prev_itr"],
+                  f"Rs {prev_itr:,.0f}", f">= Rs {policy['se_min_prev_itr']:,.0f}",
+                  f"Previous-year ITR (Rs {prev_itr:,.0f}) is below {code} minimum (Rs {policy['se_min_prev_itr']:,.0f}).")
         # Col 48 "Business Proof" is Mandatory at every bank.
         check("BUS-302", "Business Proof", "Business Proof",
               bool(inp["business_proof"]), bool(inp["business_proof"]), "Mandatory",
               "A valid business proof or registration number (GSTIN / Udyam) "
               "is mandatory for self-employed applicants.")
         if "max_age_emi_self_employed" in policy:
+            age_se = float(inp.get("age_emi_se") if inp.get("age_emi_se") is not None else inp.get("age", 30))
             check("DEM-103", "Age at Last EMI (Self-Employed)", "Demographics",
-                  inp["age_emi_se"] <= policy["max_age_emi_self_employed"],
-                  inp["age_emi_se"], f"<= {policy['max_age_emi_self_employed']}",
-                  f"Age at final EMI maturity ({inp['age_emi_se']}) exceeds {code} limit of {policy['max_age_emi_self_employed']} yrs for self-employed applicants.")
+                  age_se <= policy["max_age_emi_self_employed"],
+                  age_se, f"<= {policy['max_age_emi_self_employed']}",
+                  f"Age at final EMI maturity ({age_se}) exceeds {code} limit of {policy['max_age_emi_self_employed']} yrs for self-employed applicants.")
 
     # --- Residence / guarantor ----------------------------------------------
     if inp["property_status"] in GUARANTOR_PROPERTY_STATUSES and "allow_with_guarantor" in policy:
@@ -950,11 +961,18 @@ class BREEngineService:
             bureau = {}
 
         max_dpd_value = max(_normalize_dpd_history(bureau.get("dpd_history", [])), default=0)
-        cibil_score = bureau.get("cibil_score", payload.get("cibil_score", 750))
+        cibil_score_raw = bureau.get("cibil_score", payload.get("cibil_score", 750))
+        cibil_score = int(cibil_score_raw) if cibil_score_raw is not None else 750
         # None when the applicant did not supply one; a bank with a PL floor
         # then falls back to the headline score alone rather than passing free.
         cibil_pl_score = bureau.get("cibil_pl_score", payload.get("cibil_pl_score"))
-        write_off_amount = bureau.get("write_off_amount", payload.get("write_off_amount", 0.0))
+        if cibil_pl_score is not None:
+            try:
+                cibil_pl_score = int(cibil_pl_score)
+            except (ValueError, TypeError):
+                cibil_pl_score = None
+        write_off_raw = bureau.get("write_off_amount", payload.get("write_off_amount", 0.0))
+        write_off_amount = float(write_off_raw) if write_off_raw is not None else 0.0
 
         # Resolve write-off product type -> policy flag key (None = unclassified)
         write_off_type_raw = str(bureau.get("write_off_type") or "").strip().upper()
@@ -983,7 +1001,59 @@ class BREEngineService:
             except (TypeError, ValueError):
                 raise InvalidPayloadError(f"{field_name} must be numeric")
 
-        age = payload.get("age", 30)
+        age_raw = payload.get("age", 30)
+        age = int(age_raw) if age_raw is not None else 30
+
+        salary_raw = payload.get("net_monthly_salary")
+        if salary_raw is None:
+            salary_raw = payload.get("gross_salary")
+        try:
+            salary_val = float(salary_raw) if salary_raw is not None else 30000.0
+        except (ValueError, TypeError):
+            salary_val = 30000.0
+
+        tenure_months_raw = payload.get("current_company_tenure_months")
+        try:
+            tenure_months = float(tenure_months_raw) if tenure_months_raw is not None else 99999.0
+        except (ValueError, TypeError):
+            tenure_months = 99999.0
+
+        form_16_raw = payload.get("form_16_years")
+        try:
+            form_16_years = float(form_16_raw) if form_16_raw is not None else 2.0
+        except (ValueError, TypeError):
+            form_16_years = 2.0
+
+        age_emi_sal_raw = payload.get("age_at_last_emi_salaried")
+        try:
+            age_emi_sal = int(age_emi_sal_raw) if age_emi_sal_raw is not None else age
+        except (ValueError, TypeError):
+            age_emi_sal = age
+
+        age_emi_se_raw = payload.get("age_at_last_emi_self_employed")
+        try:
+            age_emi_se = int(age_emi_se_raw) if age_emi_se_raw is not None else age
+        except (ValueError, TypeError):
+            age_emi_se = age
+
+        se_curr_raw = payload.get("current_itr")
+        try:
+            se_current_itr = float(se_curr_raw) if se_curr_raw is not None else 10_000_000.0
+        except (ValueError, TypeError):
+            se_current_itr = 10_000_000.0
+
+        se_prev_raw = payload.get("previous_itr")
+        try:
+            se_prev_itr = float(se_prev_raw) if se_prev_raw is not None else 10_000_000.0
+        except (ValueError, TypeError):
+            se_prev_itr = 10_000_000.0
+
+        biz_years_raw = payload.get("business_itr_years") or payload.get("business_experience_years")
+        try:
+            business_itr_years = float(biz_years_raw) if biz_years_raw is not None else 99.0
+        except (ValueError, TypeError):
+            business_itr_years = 99.0
+
         # Absent optional fields default to values that PASS, so a minimal
         # payload is approved rather than spuriously rejected.
         inp: Dict[str, Any] = {
@@ -998,33 +1068,31 @@ class BREEngineService:
             "write_off_amount": write_off_amount,
             "write_off_type_raw": write_off_type_raw,
             "write_off_flag_key": write_off_flag_key,
-            "salary": payload.get("net_monthly_salary", 30000),
+            "salary": salary_val,
             "salary_mode": payload.get("salary_payment_mode", "BANK_TRANSFER"),
             # Computed here from raw facts, not consumed pre-truncated: the
             # prior-employment span only reaches the rule if the engine owns
             # the arithmetic (Bug-2).
             "work_exp_years": _resolved_work_experience(payload),
-            "current_company_years": payload.get("current_company_tenure_months", 99999) / 12.0,
+            "current_company_years": tenure_months / 12.0,
             "no_income_proof": payload.get("no_income_proof_segment", False),
             "government_employee": payload.get("government_employee", False),
-            "form_16_years": payload.get("form_16_years", 2),
+            "form_16_years": form_16_years,
             # "Form 16" | "ITR" | "No Income Proof". An ITR proves income
             # without a Form-16 history, so col 55 does not apply to it.
             "income_proof": payload.get("income_proof", "Form 16"),
             # Which lender the car loan runs with, not merely that one exists:
             # EXB-702 is bank-specific, so an unnamed lender binds nobody.
             "car_loan_bank": payload.get("existing_car_loan_bank") or None,
-            "age_emi_sal": payload.get("age_at_last_emi_salaried", age),
-            "age_emi_se": payload.get("age_at_last_emi_self_employed", age),
-            "se_current_itr": payload.get("current_itr", 10_000_000),
-            "se_prev_itr": payload.get("previous_itr", 10_000_000),
+            "age_emi_sal": age_emi_sal,
+            "age_emi_se": age_emi_se,
+            "se_current_itr": se_current_itr,
+            "se_prev_itr": se_prev_itr,
             "itr_filed": payload.get("itr_filed", True),
             "business_proof": payload.get("business_proof", True),
             # Years of filed business ITRs. Falls back to business age when the
             # branch collects no explicit count (HUF), so the rule still binds.
-            "business_itr_years": payload.get(
-                "business_itr_years", payload.get("business_experience_years", 99)
-            ),
+            "business_itr_years": business_itr_years,
             "property_status": str(payload.get("property_status", "OWNED")).upper(),
             "guarantor_provided": payload.get("guarantor_provided", False),
             # Yes/no on the wizard; the flat contract still carries a count.

@@ -1126,15 +1126,24 @@ class OnboardingFormRequest(FormModel):
             payload["city"] = self.address.city_name
             payload["state"] = self.address.state_name
         if self.foir is not None:
-            payload["requested_loan_amount"] = self.foir.requested_loan_amount
-            payload["loan_tenure_months"] = self.foir.loan_tenure_months or 84
-            payload["existing_monthly_emi"] = self.foir.existing_monthly_emi
-            payload["net_monthly_salary"] = self.foir.net_monthly_salary
-            payload["custom_interest_rate"] = self.foir.interest_rate
-            payload["foir_other_interest_income"] = self.foir.other_interest_income
-            payload["foir_interest_on_partners_capital"] = self.foir.interest_on_partners_capital
-            payload["foir_partner_remuneration"] = self.foir.partner_remuneration
-            payload["foir_capital_gains"] = self.foir.capital_gains
+            if self.foir.requested_loan_amount is not None:
+                payload["requested_loan_amount"] = self.foir.requested_loan_amount
+            if self.foir.loan_tenure_months is not None:
+                payload["loan_tenure_months"] = self.foir.loan_tenure_months
+            if self.foir.existing_monthly_emi is not None:
+                payload["existing_monthly_emi"] = self.foir.existing_monthly_emi
+            if self.foir.net_monthly_salary is not None:
+                payload["net_monthly_salary"] = self.foir.net_monthly_salary
+            if self.foir.interest_rate is not None:
+                payload["custom_interest_rate"] = self.foir.interest_rate
+            if self.foir.other_interest_income is not None:
+                payload["foir_other_interest_income"] = self.foir.other_interest_income
+            if self.foir.interest_on_partners_capital is not None:
+                payload["foir_interest_on_partners_capital"] = self.foir.interest_on_partners_capital
+            if self.foir.partner_remuneration is not None:
+                payload["foir_partner_remuneration"] = self.foir.partner_remuneration
+            if self.foir.capital_gains is not None:
+                payload["foir_capital_gains"] = self.foir.capital_gains
         return payload
 
     model_config = ConfigDict(

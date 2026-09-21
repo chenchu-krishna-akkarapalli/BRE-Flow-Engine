@@ -7,7 +7,7 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_current_tenant
+from app.api.deps import get_current_tenant, get_db
 from app.api.schemas.onboarding import (
     CibilExtractionResponse,
     CoiExtractionResponse,
@@ -26,7 +26,6 @@ from app.api.schemas.onboarding import (
     PayslipExtractionResponse,
     RejectionReasonDetail,
 )
-from app.core.database import get_db
 from app.core.logging import logger, redact_pan, redact_pii
 from app.db.models.application import ApplicationModel
 from app.db.models.audit_log import AuditLogModel
