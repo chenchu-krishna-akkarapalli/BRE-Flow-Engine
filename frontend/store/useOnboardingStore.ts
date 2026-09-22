@@ -131,17 +131,6 @@ export interface Draft {
   // add-on.md §8: clubbed with the applicant's before the ITR floors score.
   coApplicantCurrentItr: number | "";
   coApplicantPreviousItr: number | "";
-
-  // Step 6 — FOIR & loan details
-  requestedLoanAmount: number | "";
-  loanTenureMonths: number | "";
-  existingMonthlyEmi: number | "";
-  netMonthlySalary: number | "";
-  interestRate: number | "";
-  otherInterestIncome: number | "";
-  interestOnPartnersCapital: number | "";
-  partnerRemuneration: number | "";
-  capitalGains: number | "";
 }
 
 const INITIAL_DRAFT: Draft = {
@@ -189,16 +178,6 @@ const INITIAL_DRAFT: Draft = {
   coAppAgeRelation: "None", coAppIncomeRelation: "None",
   coApplicantName: "", coApplicantDob: "", coApplicantOccupation: "",
   coApplicantCurrentItr: "", coApplicantPreviousItr: "",
-
-  requestedLoanAmount: 1000000,
-  loanTenureMonths: 84,
-  existingMonthlyEmi: 0,
-  netMonthlySalary: "",
-  interestRate: 9.5,
-  otherInterestIncome: 0,
-  interestOnPartnersCapital: 0,
-  partnerRemuneration: 0,
-  capitalGains: 0,
 };
 
 // Empty string -> undefined so JSON.stringify drops the key; the API forbids inapplicable fields, not absent ones.
@@ -622,17 +601,6 @@ export function buildPayload(d: Draft): OnboardingFormRequest {
     occupation: buildOccupation(d),
     banking: buildBanking(d),
     coApplicant: isCompany ? undefined : buildCoApplicant(d),
-    foir: {
-      requestedLoanAmount: d.requestedLoanAmount === "" ? undefined : Number(d.requestedLoanAmount),
-      loanTenureMonths: d.loanTenureMonths === "" ? 84 : Number(d.loanTenureMonths),
-      existingMonthlyEmi: d.existingMonthlyEmi === "" ? 0 : Number(d.existingMonthlyEmi),
-      netMonthlySalary: d.netMonthlySalary === "" ? undefined : Number(d.netMonthlySalary),
-      interestRate: d.interestRate === "" ? undefined : Number(d.interestRate),
-      otherInterestIncome: Number(d.otherInterestIncome || 0),
-      interestOnPartnersCapital: Number(d.interestOnPartnersCapital || 0),
-      partnerRemuneration: Number(d.partnerRemuneration || 0),
-      capitalGains: Number(d.capitalGains || 0),
-    },
   };
 }
 
@@ -871,7 +839,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
         // Navigate to the step that owns the rejected field.
         const section = err.section;
         const sectionStep: Record<string, number> = {
-          identity: 1, address: 2, occupation: 3, banking: 4, coApplicant: 5, foir: 6,
+          identity: 1, address: 2, occupation: 3, banking: 4, coApplicant: 5,
         };
         set({
           error: err.message,

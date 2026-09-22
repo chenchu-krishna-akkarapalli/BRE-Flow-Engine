@@ -157,8 +157,8 @@ export const WRITE_OFF_FLAGS = [
 
 // Steps per entity type. Company skips Address (2) and Co-Applicant (5), which the API rejects if sent.
 export const STEP_PLAN: Record<EntityType, number[]> = {
-  Individual: [1, 2, 3, 4, 5, 6],
-  Company: [1, 3, 4, 6],
+  Individual: [1, 2, 3, 4, 5],
+  Company: [1, 3, 4],
 };
 
 export const STEP_TITLES: Record<number, string> = {
@@ -167,8 +167,7 @@ export const STEP_TITLES: Record<number, string> = {
   3: "Your work and income",
   4: "Your banking and credit history",
   5: "Anyone applying with you",
-  6: "Loan & Obligation Details",
-  7: "Results & Sanction",
+  6: "Results & Audit",
 };
 
 export function progressFor(entity: EntityType, stepId: number): number {

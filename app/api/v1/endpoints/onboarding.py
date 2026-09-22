@@ -174,11 +174,8 @@ def _build_application_record(
             "co_applicant": (
                 form.co_applicant.model_dump(mode="json", by_alias=True) if form.co_applicant else None
             ),
-            "foir": form.foir.model_dump(mode="json", by_alias=True) if form.foir else None,
         }
     )
-
-    foir_detail = evaluation.get("foir_detail") or {}
 
     return ApplicationModel(
         tenant_id=tenant_row_id,
@@ -218,11 +215,6 @@ def _build_application_record(
         co_applicant_income_relation=(
             form.co_applicant.income_relation.value if form.co_applicant else None
         ),
-        requested_loan_amount=engine_payload.get("requested_loan_amount"),
-        loan_tenure_months=engine_payload.get("loan_tenure_months"),
-        existing_monthly_emi=engine_payload.get("existing_monthly_emi"),
-        max_eligible_loan_amount=foir_detail.get("max_eligible_loan_amount"),
-        max_allowable_emi=foir_detail.get("max_allowable_emi"),
         status=evaluation["status"],
         overall_eligible=evaluation["overall_eligible"],
         entity_detail_json=entity_detail,
@@ -324,8 +316,6 @@ async def evaluate_onboarding_form(
         execution_time_ms=total_time_ms,
         rejection_reasons=_rejection_details(evaluation),
         bank_eligibility=evaluation["bank_eligibility"],
-        bank_loan_eligibility=evaluation.get("bank_loan_eligibility", {}),
-        foir_detail=evaluation.get("foir_detail"),
         # The per-bank audit trail the review screen's collapsible cards and the
         # PDF/Excel exports render. It was being persisted but never returned,
         # so the wizard's audit cards had nothing to open.

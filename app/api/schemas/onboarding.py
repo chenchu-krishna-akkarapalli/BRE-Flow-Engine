@@ -974,38 +974,11 @@ class CoApplicantStep(FormModel):
         )
 
 
-# --- Step 6: FOIR & Loan Parameters (pre-evaluation) ---------------------- #
-
-
-class FoirStep(FormModel):
-    requested_loan_amount: Optional[float] = Field(
-        default=None, alias="requestedLoanAmount", ge=0.0, description="Requested principal amount in INR."
-    )
-    loan_tenure_months: Optional[int] = Field(
-        default=84, alias="loanTenureMonths", ge=6, le=360, description="Repayment tenure in months."
-    )
-    existing_monthly_emi: float = Field(
-        default=0.0, alias="existingMonthlyEmi", ge=0.0, description="Total ongoing monthly obligations across all lenders."
-    )
-    net_monthly_salary: Optional[float] = Field(
-        default=None, alias="netMonthlySalary", ge=0.0, description="Net take-home monthly salary (if salaried)."
-    )
-    interest_rate: Optional[float] = Field(
-        default=None, alias="interestRate", ge=1.0, le=50.0, description="Annual interest rate percentage benchmark."
-    )
-
-    # Granular pre-FOIR line items from ITR/COI
-    other_interest_income: float = Field(default=0.0, alias="otherInterestIncome", ge=0.0)
-    interest_on_partners_capital: float = Field(default=0.0, alias="interestOnPartnersCapital", ge=0.0)
-    partner_remuneration: float = Field(default=0.0, alias="partnerRemuneration", ge=0.0)
-    capital_gains: float = Field(default=0.0, alias="capitalGains", ge=0.0)
-
-
 # --- Root wizard request --------------------------------------------------- #
 
 
 class OnboardingFormRequest(FormModel):
-    """Full 5/6-step onboarding submission, polymorphic on ``entityType``.
+    """Full 5-step onboarding submission, polymorphic on ``entityType``.
 
     Step 2 (Address) and step 5 (Co-Applicant) are skipped for Company
     applicants and rejected outright if supplied, matching the wizard's own
@@ -1018,7 +991,6 @@ class OnboardingFormRequest(FormModel):
     occupation: OccupationStep
     banking: BankingBureauStep
     co_applicant: Optional[CoApplicantStep] = Field(default=None, alias="coApplicant")
-    foir: Optional[FoirStep] = None
 
     @model_validator(mode="after")
     def _validate_entity_branching(self) -> "OnboardingFormRequest":
@@ -1125,25 +1097,6 @@ class OnboardingFormRequest(FormModel):
             payload["pincode"] = self.address.pincode
             payload["city"] = self.address.city_name
             payload["state"] = self.address.state_name
-        if self.foir is not None:
-            if self.foir.requested_loan_amount is not None:
-                payload["requested_loan_amount"] = self.foir.requested_loan_amount
-            if self.foir.loan_tenure_months is not None:
-                payload["loan_tenure_months"] = self.foir.loan_tenure_months
-            if self.foir.existing_monthly_emi is not None:
-                payload["existing_monthly_emi"] = self.foir.existing_monthly_emi
-            if self.foir.net_monthly_salary is not None:
-                payload["net_monthly_salary"] = self.foir.net_monthly_salary
-            if self.foir.interest_rate is not None:
-                payload["custom_interest_rate"] = self.foir.interest_rate
-            if self.foir.other_interest_income is not None:
-                payload["foir_other_interest_income"] = self.foir.other_interest_income
-            if self.foir.interest_on_partners_capital is not None:
-                payload["foir_interest_on_partners_capital"] = self.foir.interest_on_partners_capital
-            if self.foir.partner_remuneration is not None:
-                payload["foir_partner_remuneration"] = self.foir.partner_remuneration
-            if self.foir.capital_gains is not None:
-                payload["foir_capital_gains"] = self.foir.capital_gains
         return payload
 
     model_config = ConfigDict(
@@ -1221,29 +1174,10 @@ class RuleOutcomeDetail(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
 
-class BankFoirDetail(BaseModel):
-    bank_code: Optional[str] = None
-    is_eligible: bool
-    foir_percentage: float
-    max_allowable_emi: float
-    eligible_emi_capacity: float
-    max_eligible_loan_amount: float
-    requested_loan_amount: Optional[float] = None
-    loan_amount_approved: float = 0.0
-    proposed_emi: float = 0.0
-    existing_monthly_emi: float = 0.0
-    dgm_approval_required: bool = False
-    rule_type: str = "percentage"
-    notes: str = ""
-
-    model_config = ConfigDict(extra="ignore")
-
-
 class BankEvaluationReport(BaseModel):
     is_eligible: bool
     passed_rules: List[RuleOutcomeDetail] = Field(default_factory=list)
     failed_rules: List[RuleOutcomeDetail] = Field(default_factory=list)
-    foir: Optional[BankFoirDetail] = None
 
     model_config = ConfigDict(extra="ignore")
 
@@ -1256,10 +1190,6 @@ class OnboardingEvaluationResponse(BaseModel):
     execution_time_ms: float
     rejection_reasons: List[RejectionReasonDetail]
     bank_eligibility: Dict[str, bool]
-    # Per-bank loan amount eligibility map
-    bank_loan_eligibility: Dict[str, float] = Field(default_factory=dict)
-    # Selected bank FOIR details
-    foir_detail: Optional[BankFoirDetail] = None
     # Per-bank audit trail: every rule evaluated, passed and failed.
     evaluation_report: Dict[str, BankEvaluationReport] = Field(default_factory=dict)
 

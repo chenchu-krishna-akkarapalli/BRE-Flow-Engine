@@ -150,21 +150,11 @@ export function ReviewCard({
               : []),
           ] as [string, string][],
         }]),
-    {
-      step: 6,
-      title: "Loan & Obligation Details",
-      rows: [
-        ["Requested Loan Amount", draft.requestedLoanAmount ? `₹${Number(draft.requestedLoanAmount).toLocaleString("en-IN")}` : "—"],
-        ["Loan Tenure", `${draft.loanTenureMonths || 84} Months`],
-        ["Existing Monthly EMIs", `₹${Number(draft.existingMonthlyEmi || 0).toLocaleString("en-IN")}`],
-        ...(draft.netMonthlySalary ? [["Net Monthly Salary", `₹${Number(draft.netMonthlySalary).toLocaleString("en-IN")}`] as [string, string]] : []),
-      ] as [string, string][],
-    },
     ...(result
       ? [
           {
-            step: 7,
-            title: "Engine Decision & Loan Sanction",
+            step: 6,
+            title: "Engine Decision",
             rows: [
               ["Overall Status", result.status],
               [
@@ -173,17 +163,10 @@ export function ReviewCard({
                   ? `Application approved with ${BANK_LABELS[result.selected_bank]}. Parameters meet all risk threshold limits.`
                   : `Application does not meet the eligibility limits for ${BANK_LABELS[result.selected_bank]}.`,
               ],
-              ...(result.foir_detail
-                ? [
-                    ["Max Loan Sanction Limit", `₹${result.foir_detail.max_eligible_loan_amount.toLocaleString("en-IN")}`],
-                    ["Eligible Monthly EMI Capacity", `₹${result.foir_detail.eligible_emi_capacity.toLocaleString("en-IN")}`],
-                    ["FOIR Percentage Applied", result.foir_detail.foir_percentage > 0 ? `${(result.foir_detail.foir_percentage * 100).toFixed(0)}%` : "Flat Deduct"],
-                  ] as [string, string][]
-                : []),
             ] as [string, string][],
           },
           {
-            step: 8,
+            step: 7,
             title: "Reference ID",
             rows: [["Application Reference ID", result.application_id || "—"]] as [string, string][],
           },

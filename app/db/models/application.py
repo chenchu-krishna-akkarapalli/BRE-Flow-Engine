@@ -69,13 +69,6 @@ class ApplicationModel(Base):
     co_applicant_age_relation: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
     co_applicant_income_relation: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
 
-    # --- FOIR & Loan Sanction (step 6) ---------------------------------------
-    requested_loan_amount: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    loan_tenure_months: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    existing_monthly_emi: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    max_eligible_loan_amount: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    max_allowable_emi: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-
     # --- Verdict & polymorphic detail ----------------------------------------
     status: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
     overall_eligible: Mapped[Optional[bool]] = mapped_column(Boolean, nullable=True)

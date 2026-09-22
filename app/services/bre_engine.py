@@ -7,8 +7,6 @@ from app.constants.limits import MIN_SELF_EMPLOYED_COMBINED_ITR as COMBINED_ITR_
 from app.constants.limits import MIN_SALARIED_MONTHLY_SALARY, TENANT_CIBIL_OVERLAY
 from app.core.exceptions import InvalidPayloadError
 from app.core.logging import logger, redact_pii
-from app.services.foir_service import foir_service
-from app.services.pre_foir_service import pre_foir_service
 
 # Bureau cells that represent a clean / on-time (0-day) status. The parser maps work 
 # any of these to a 0 DPD value; every other cell must be numerically coercible.
@@ -1160,83 +1158,6 @@ class BREEngineService:
             for code, outcomes in bank_outcomes.items()
         }
 
-        # --- Pre-FOIR Income Normalization (CRE-docs/before_FOIR.md) ---------
-        is_self_employed = (inp.get("occupation") == "Self-Employed")
-        if is_self_employed:
-            pre_foir_res = pre_foir_service.compute_self_employed_income(
-                fallback_current_itr=float(inp.get("se_current_itr") or 0.0),
-                fallback_prev_itr=float(inp.get("se_prev_itr") or 0.0),
-            )
-            annual_income = pre_foir_res.two_year_average_annual_income
-            gross_monthly_income = pre_foir_res.monthly_equivalent_income
-            net_monthly_income = gross_monthly_income
-        else:
-            gross_monthly_income = float(payload.get("gross_salary") or inp.get("salary") or 30000.0)
-            net_monthly_income = float(payload.get("net_monthly_salary") or gross_monthly_income)
-            annual_income = gross_monthly_income * 12.0
-
-        existing_monthly_emi = float(payload.get("existing_monthly_emi", 0.0))
-        requested_loan = payload.get("requested_loan_amount")
-        requested_loan_amount = float(requested_loan) if requested_loan is not None else None
-        loan_tenure_months = int(payload.get("loan_tenure_months", 84))
-        loan_type = str(payload.get("loan_type", "Auto Loan"))
-        custom_rate = payload.get("custom_interest_rate")
-
-        # --- FOIR & Loan Sanction Calculation Across All Banks ---------------
-        bank_loan_eligibility: Dict[str, float] = {}
-        bank_foir_results: Dict[str, Any] = {}
-
-        for code in entity_matrix.keys():
-            foir_eval = foir_service.evaluate_bank_foir(
-                bank_code=code,
-                occupation=inp.get("occupation", "Salaried"),
-                gross_monthly_income=gross_monthly_income,
-                net_monthly_income=net_monthly_income,
-                annual_income=annual_income,
-                existing_monthly_emi=existing_monthly_emi,
-                requested_loan_amount=requested_loan_amount,
-                loan_tenure_months=loan_tenure_months,
-                loan_type=loan_type,
-                custom_interest_rate=custom_rate,
-            )
-            bank_foir_results[code] = foir_eval.model_dump()
-            bank_loan_eligibility[code] = foir_eval.loan_amount_approved if bank_eligibility.get(code, False) else 0.0
-
-            if code in evaluation_report:
-                evaluation_report[code]["foir"] = foir_eval.model_dump()
-                foir_rule = {
-                    "rule_id": "FOIR-001",
-                    "parameter_name": "FOIR Monthly Debt Capacity",
-                    "category": "Affordability & FOIR",
-                    "status": "PASS" if foir_eval.is_eligible else "FAIL",
-                    "user_value": f"Rs {foir_eval.eligible_emi_capacity:,.0f} / mo",
-                    "limit_value": f">= 0 ({foir_eval.foir_percentage * 100:.0f}% FOIR)",
-                    "description": (
-                        f"Cleared with Rs {foir_eval.eligible_emi_capacity:,.0f} net EMI capacity. "
-                        f"Max allowable EMI Rs {foir_eval.max_allowable_emi:,.0f} less existing EMI Rs {foir_eval.existing_monthly_emi:,.0f}. "
-                        f"Eligible loan sanction: Rs {foir_eval.max_eligible_loan_amount:,.0f}."
-                        if foir_eval.is_eligible else
-                        f"Existing obligations (Rs {foir_eval.existing_monthly_emi:,.0f}) exceed max allowable FOIR EMI (Rs {foir_eval.max_allowable_emi:,.0f})."
-                    ),
-                }
-                if foir_eval.is_eligible:
-                    evaluation_report[code]["passed_rules"].append(foir_rule)
-                else:
-                    evaluation_report[code]["failed_rules"].append(foir_rule)
-
-                if foir_eval.dgm_approval_required:
-                    evaluation_report[code]["passed_rules"].append({
-                        "rule_id": "FOIR-002",
-                        "parameter_name": "DGM Approval Mandate",
-                        "category": "Workflow Escalation",
-                        "status": "PASS",
-                        "user_value": "Monthly Income >= Rs 1 Lakh",
-                        "limit_value": "DGM Concurrence",
-                        "description": "Applicant qualifies for higher 70% FOIR slab subject to zonal DGM administrative concurrence.",
-                    })
-
-        selected_foir = bank_foir_results.get(selected_bank)
-
         execution_time_ms = round((time.perf_counter() - start_time) * 1000, 3)
         del safe_log_payload  # 5-stage lifecycle: sweep transient PII dict
 
@@ -1247,8 +1168,6 @@ class BREEngineService:
             "execution_time_ms": execution_time_ms,
             "rejection_reasons": rejection_reasons,
             "bank_eligibility": bank_eligibility,
-            "bank_loan_eligibility": bank_loan_eligibility,
-            "foir_detail": selected_foir,
             "evaluation_report": evaluation_report,
         }
 
