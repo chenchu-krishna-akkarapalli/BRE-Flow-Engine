@@ -104,9 +104,16 @@ Working state for the current task. Kept here rather than in the context window 
   - Connected `ItrField` in `frontend/components/steps/Steps.tsx` to ITR extraction, auto-filling income and displaying verification badge.
   - Verified with 10/10 passing pytest tests and 0 errors in TypeScript `npx tsc --noEmit`.
 - [x] Added locked read-only row for "Total Tax, Interest & Fee Payable" in `frontend/components/steps/Steps.tsx` under Total Income when verified from uploaded ITR.
-
+- [x] Implemented Phase 1: 2-Year Document-Based Income Assessment engine (`app/services/cre/phase1_income.py`, `app/schemas/cre.py`, and `POST /api/v1/onboarding/income/phase1-calculate`).
+- [x] Added dedicated Step 6 ("Phase 1: Income Assessment") to frontend wizard with `Phase1IncomeCard.tsx`, interactive 4-step audit table, and server sync.
+- [x] Generated 15 verified, completely unique test sets under `test files/test 1` to `test 15` with `current/` and `prev/` folders (60 unique files, 0 duplicates) and comprehensive documentation in `test files/README.md`.
+- [x] Implemented CRE Phase 2 Bank FOIR calculation engine (`app/services/foir_service.py`) per `CRE_docs/FOIR Calculation (2).xlsx`.
+- [x] Integrated interactive Existing EMI input field into Step 6 and computed `final_processed_income = foir_based_income - existing_emi`.
+- [x] Rendered Bank-Wise Processed Income preview in Step 6 and expandable Phase 2 FOIR cards in Step 7 Audit Cards.
+- [x] All 27 backend tests passing, frontend typechecked with 0 errors, Docker stack running healthy.
 
 ## Open questions
 
 _none_
+
 

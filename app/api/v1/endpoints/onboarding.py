@@ -39,11 +39,15 @@ from app.services.ocr_service import extract_aadhaar_card, extract_pan_card, val
 from app.services.payslip_service import PayslipEngineError, extract_payslip_report
 from app.services.itr_service import ItrEngineError, ItrDocumentError, process_itr_pdf
 from app.services.income_service import income_service
+from app.services.foir_service import foir_service
 from app.services.verification_service import send_otp, verify_otp
 from app.api.schemas.income import (
     Phase1IncomeCalculationRequest,
     Phase1IncomeCalculationResponse,
+    Phase2FoirCalculationRequest,
+    Phase2FoirCalculationResponse,
 )
+
 
 router = APIRouter()
 
@@ -311,6 +315,27 @@ async def evaluate_onboarding_form(
         db, form, engine_payload, evaluation, tenant_id
     )
 
+    # Compute Phase 2 bank-specific FOIR and processed income assessment
+    profile_type = getattr(form.occupation, "profile_type", "Self-Employed")
+    if profile_type == "Salaried":
+        monthly_salary = float(getattr(form.occupation, "gross_salary", 0.0) or 0.0)
+        annual_inc = monthly_salary * 12.0
+    elif profile_type == "Company":
+        cy = float(getattr(form.occupation, "company_current_itr_amount", 0.0) or 0.0)
+        py = float(getattr(form.occupation, "company_prev_itr_amount", 0.0) or 0.0)
+        annual_inc = (cy + py) / 2.0 if (cy + py) > 0 else max(cy, py)
+    else:
+        cy = float(getattr(form.occupation, "current_itr_amount", 0.0) or 0.0)
+        py = float(getattr(form.occupation, "previous_itr_amount", 0.0) or 0.0)
+        annual_inc = (cy + py) / 2.0 if (cy + py) > 0 else max(cy, py)
+
+    existing_emi = float(getattr(form.banking, "existing_emi", 0.0) or 0.0)
+    foir_result = foir_service.calculate_phase2_foir(
+        average_income=annual_inc,
+        occupation=profile_type,
+        existing_emi=existing_emi,
+    )
+
     total_time_ms = round((time.perf_counter() - start_time) * 1000, 3)
 
     return OnboardingFormEvaluationResponse(
@@ -325,11 +350,13 @@ async def evaluate_onboarding_form(
         # PDF/Excel exports render. It was being persisted but never returned,
         # so the wizard's audit cards had nothing to open.
         evaluation_report=evaluation["evaluation_report"],
+        foir_assessment=foir_result.bank_foir_results,
         application_id=application_id,
         entity_type=form.identity.entity_type,
         selected_bank=form.banking.selected_bank,
         persisted=persisted,
     )
+
 
 
 # --------------------------------------------------------------------------- #
@@ -556,6 +583,25 @@ async def calculate_phase1_income(
     """Compute Current Year & Previous Year net incomes from ITR & COI values,
     and calculate 2-Year Average Income according to Phase 1 rules."""
     return income_service.calculate_phase1_income(payload)
+
+
+@router.post(
+    "/income/phase2-foir",
+    response_model=Phase2FoirCalculationResponse,
+    summary="Phase 2 Bank FOIR & Processed Income Calculation",
+)
+async def calculate_phase2_foir(
+    payload: Phase2FoirCalculationRequest,
+    tenant_id: str = Depends(get_current_tenant),
+):
+    """Compute bank-specific FOIR percentages and Final Processed Income according
+    to the FOIR Calculation policy sheet."""
+    return foir_service.calculate_phase2_foir(
+        average_income=payload.average_income,
+        occupation=payload.occupation,
+        existing_emi=payload.existing_emi,
+    )
+
 
 
 @router.post("/documents/{document_type}/extract", response_model=DocumentExtractionResponse)

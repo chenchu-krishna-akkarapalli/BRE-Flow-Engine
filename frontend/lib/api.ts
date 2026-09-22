@@ -4,8 +4,10 @@ import type {
   OnboardingFormRequest,
   Phase1IncomeCalculationRequest,
   Phase1IncomeCalculationResponse,
+  Phase2FoirCalculationResponse,
   ValidationErrorItem,
 } from "./types";
+
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://127.0.0.1:8000";
 const TENANT_ID = process.env.NEXT_PUBLIC_TENANT_ID ?? "default";
@@ -341,4 +343,28 @@ export async function calculatePhase1Income(
   }
   return (await response.json()) as Phase1IncomeCalculationResponse;
 }
+
+export async function calculatePhase2Foir(params: {
+  average_income: number;
+  occupation: string;
+  existing_emi: number;
+}): Promise<Phase2FoirCalculationResponse> {
+  const response = await fetch(`${API_BASE}/api/v1/onboarding/income/phase2-foir`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Tenant-ID": TENANT_ID,
+    },
+    body: JSON.stringify(params),
+  });
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new ApiError(
+      response.status,
+      body?.detail ?? `Phase 2 FOIR calculation failed (${response.status}).`,
+    );
+  }
+  return (await response.json()) as Phase2FoirCalculationResponse;
+}
+
 

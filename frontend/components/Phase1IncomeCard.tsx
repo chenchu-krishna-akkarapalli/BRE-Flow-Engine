@@ -35,6 +35,9 @@ export function Phase1IncomeCard() {
   const updatePhase1DocData = useOnboardingStore((s) => s.updatePhase1DocData);
   const setField = useOnboardingStore((s) => s.setField);
   const draft = useOnboardingStore((s) => s.draft);
+  const phase2FoirResult = useOnboardingStore((s) => s.phase2FoirResult);
+  const setExistingEmi = useOnboardingStore((s) => s.setExistingEmi);
+
 
   const [showAdjustments, setShowAdjustments] = useState(false);
   const [serverVerifying, setServerVerifying] = useState(false);
@@ -187,8 +190,119 @@ export function Phase1IncomeCard() {
         </div>
       </div>
 
+      {/* Phase 2: Existing Obligations & FOIR Eligibility */}
+      <div className="rounded-xl border border-brand-200 bg-white p-4 sm:p-5 shadow-2xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-line pb-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-brand-600 text-white text-xs">
+                <Calculator size={14} />
+              </span>
+              <h4 className="text-sm font-bold text-ink">
+                Phase 2: Existing Obligations & Bank FOIR Assessment
+              </h4>
+              <span className="rounded-full bg-brand-100 px-2 py-0.5 text-[0.625rem] font-bold text-brand-700">
+                FOIR Policy
+              </span>
+            </div>
+            <p className="text-xs text-ink-subtle mt-0.5">
+              FOIR tiers are evaluated for each partner bank based on assessed income. Deducting existing EMI calculates your final processed repayment capacity.
+            </p>
+          </div>
+        </div>
+
+        {/* Existing EMI Input Box */}
+        <div className="rounded-xl border border-brand-100 bg-brand-50/40 p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="max-w-md">
+            <label htmlFor="step6ExistingEmi" className="text-xs font-bold text-ink block">
+              Existing Monthly Loan EMI (₹)
+            </label>
+            <span className="text-[0.6875rem] text-ink-subtle block mt-0.5">
+              Enter applicant's total ongoing monthly loan EMI obligations (personal, car, or home loans).
+            </span>
+          </div>
+          <div className="relative min-w-[200px] sm:max-w-[240px] w-full">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-ink-muted text-sm font-semibold">
+              ₹
+            </div>
+            <input
+              id="step6ExistingEmi"
+              type="number"
+              min="0"
+              value={draft.existingEmi || ""}
+              onChange={(e) =>
+                setExistingEmi(e.target.value === "" ? "" : Math.max(0, parseFloat(e.target.value)))
+              }
+              placeholder="e.g. 15000"
+              className="w-full rounded-xl border border-line bg-white pl-8 pr-3 py-2 text-sm font-mono font-bold text-ink shadow-2xs outline-none transition-all focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+            />
+          </div>
+        </div>
+
+        {/* Bank FOIR & Processed Income Live Preview Matrix */}
+        {phase2FoirResult && phase2FoirResult.bank_foir_results && (
+          <div className="overflow-hidden rounded-xl border border-line bg-slate-50/50">
+            <div className="bg-slate-100/70 px-3.5 py-2.5 border-b border-line flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-ink">
+                Bank-Wise Processed Income Preview
+              </span>
+              <span className="text-[0.6875rem] font-mono text-ink-subtle">
+                Formula: FOIR-Based Capacity - Existing EMI
+              </span>
+            </div>
+
+            <div className="divide-y divide-line text-xs bg-white">
+              {/* Header */}
+              <div className="grid grid-cols-12 bg-slate-50/70 p-3 font-semibold text-ink-subtle text-[0.6875rem] uppercase tracking-wider">
+                <div className="col-span-4 sm:col-span-3">Partner Bank</div>
+                <div className="col-span-3 sm:col-span-2 text-right">FOIR %</div>
+                <div className="hidden sm:block sm:col-span-3 text-right">FOIR Capacity</div>
+                <div className="col-span-5 sm:col-span-4 text-right">Final Processed Income</div>
+              </div>
+
+              {/* Rows */}
+              {Object.values(phase2FoirResult.bank_foir_results).map((item) => (
+                <div
+                  key={item.bank_code}
+                  className="grid grid-cols-12 items-center p-3 hover:bg-slate-50/80 transition-colors"
+                >
+                  <div className="col-span-4 sm:col-span-3">
+                    <div className="font-bold text-ink">{item.bank_name}</div>
+                    <div className="text-[0.625rem] text-ink-subtle truncate" title={item.bracket_description}>
+                      {item.bracket_description}
+                    </div>
+                  </div>
+                  <div className="col-span-3 sm:col-span-2 text-right">
+                    <span className="inline-block rounded-md bg-brand-100/80 px-2 py-0.5 font-mono text-xs font-bold text-brand-700">
+                      {Math.round(item.foir_percentage * 100)}%
+                    </span>
+                  </div>
+                  <div className="hidden sm:block sm:col-span-3 text-right font-mono text-ink-subtle">
+                    {formatCurrency(item.foir_based_income)}
+                    <span className="text-[0.625rem] text-ink-muted ml-0.5">
+                      {item.work_type === "Salaried" ? "/mo" : "/yr"}
+                    </span>
+                  </div>
+                  <div className="col-span-5 sm:col-span-4 text-right">
+                    <div className="font-mono text-xs sm:text-sm font-black text-emerald-950">
+                      {formatCurrency(item.final_processed_income)}
+                    </div>
+                    {Number(item.existing_emi) > 0 && (
+                      <div className="text-[0.625rem] text-danger font-mono">
+                        (-{formatCurrency(item.existing_emi)} EMI)
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Side-by-Side Step-by-Step Calculation Audit Table */}
       <div className="overflow-hidden rounded-xl border border-line bg-white shadow-2xs">
+
         <div className="bg-slate-50/80 px-4 py-3 border-b border-line">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-ink">

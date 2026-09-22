@@ -58,6 +58,9 @@ from app.constants.form_mappings import (
     SIBLING_RELATIONS,
     LOAN_TENOR_YEARS,
     SALARY_MODE_TO_ENGINE_MODE,
+)
+from app.api.schemas.income import BankFoirDetail
+from app.constants.form_mappings import (
     TENURE_BAND_TO_MONTHS,
     WRITE_OFF_FLAG_PRECEDENCE,
 )
@@ -847,6 +850,7 @@ class BankingBureauStep(FormModel):
     auto_write_off: bool = Field(default=False, alias="bureauFlagAuto")
     cc_write_off: bool = Field(default=False, alias="bureauFlagCC")
     write_off_amount: float = Field(default=0.0, alias="bureauWriteOffAmount", ge=0.0)
+    existing_emi: float = Field(default=0.0, alias="existingEmi", ge=0.0)
 
     @model_validator(mode="after")
     def _require_conditional_bureau_fields(self) -> "BankingBureauStep":
@@ -1192,6 +1196,8 @@ class OnboardingEvaluationResponse(BaseModel):
     bank_eligibility: Dict[str, bool]
     # Per-bank audit trail: every rule evaluated, passed and failed.
     evaluation_report: Dict[str, BankEvaluationReport] = Field(default_factory=dict)
+    # Phase 2: Per-bank FOIR and final processed income assessment
+    foir_assessment: Optional[Dict[str, BankFoirDetail]] = None
 
 
 class OnboardingFormEvaluationResponse(OnboardingEvaluationResponse):

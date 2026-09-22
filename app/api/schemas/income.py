@@ -82,3 +82,63 @@ class Phase1IncomeCalculationResponse(BaseModel):
     average_income: float
 
     model_config = ConfigDict(extra="ignore")
+
+
+# --------------------------------------------------------------------------- #
+# Phase 2: FOIR & Final Processed Income Schemas
+# --------------------------------------------------------------------------- #
+
+
+class BankFoirDetail(BaseModel):
+    """Detailed FOIR assessment for a specific bank."""
+
+    bank_code: str
+    bank_name: str
+    work_type: str = Field(description="Salaried or Self-Employed")
+    base_income: float = Field(
+        description="Base income used: monthly income for Salaried, annual income for Self-Employed"
+    )
+    foir_percentage: float = Field(description="FOIR ratio applied (e.g. 0.60 for 60%)")
+    foir_based_income: float = Field(
+        description="Income capacity under FOIR: base_income * foir_percentage"
+    )
+    existing_emi: float = Field(default=0.0, description="Existing EMI amount deducted")
+    final_processed_income: float = Field(
+        description="Final processed income: foir_based_income - existing_emi"
+    )
+    bracket_description: str = Field(
+        description="Policy tier matched from FOIR Calculation sheet"
+    )
+    notes: Optional[str] = None
+
+    model_config = ConfigDict(extra="ignore")
+
+
+class Phase2FoirCalculationRequest(BaseModel):
+    """Request for Phase 2 Bank-specific FOIR calculation."""
+
+    average_income: float = Field(
+        ge=0.0, description="2-Year Average Income derived from Phase 1"
+    )
+    occupation: str = Field(
+        default="Self-Employed",
+        description="Applicant profile: 'Salaried' or 'Self-Employed'",
+    )
+    existing_emi: float = Field(
+        default=0.0, ge=0.0, description="Existing monthly/annual EMI obligations"
+    )
+
+    model_config = ConfigDict(extra="ignore")
+
+
+class Phase2FoirCalculationResponse(BaseModel):
+    """Response containing Phase 2 FOIR calculations for all partner banks."""
+
+    average_income: float
+    average_monthly_income: float
+    occupation: str
+    existing_emi: float
+    bank_foir_results: Dict[str, BankFoirDetail]
+
+    model_config = ConfigDict(extra="ignore")
+

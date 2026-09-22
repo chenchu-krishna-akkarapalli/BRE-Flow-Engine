@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { evaluateOnboardingForm, FormValidationError } from "@/lib/api";
 import { GOVERNMENT_SECTOR, STEP_PLAN } from "@/lib/form-schema";
 import type {
+  BankFoirDetail,
   BankingStep,
   CoApplicantStep,
   EntityType,
@@ -12,10 +13,12 @@ import type {
   Occupation,
   OnboardingFormRequest,
   Phase1IncomeCalculationResponse,
+  Phase2FoirCalculationResponse,
   ProfileType,
   YearlyIncomeBreakdown,
   YearlyIncomeInput,
 } from "@/lib/types";
+
 
 // Flat draft of all five steps; buildPayload() projects it into the API's discriminated union at submit.
 export interface Draft {
@@ -124,6 +127,7 @@ export interface Draft {
   bureauFlagAuto: boolean;
   bureauFlagCC: boolean;
   bureauWriteOffAmount: number | "";
+  existingEmi: number | "";
 
   // Step 5 — co-applicant
   coAppAgeRelation: string;
@@ -177,8 +181,10 @@ const INITIAL_DRAFT: Draft = {
   hasWriteOff: false, bureauFlagPL: false, bureauFlagHome: false, bureauFlagConsumer: false,
   bureauFlagAgri: false, bureauFlagMSME: false, bureauFlagAuto: false,
   bureauFlagCC: false, bureauWriteOffAmount: "",
+  existingEmi: "",
 
   coAppAgeRelation: "None", coAppIncomeRelation: "None",
+
   coApplicantName: "", coApplicantDob: "", coApplicantOccupation: "",
   coApplicantCurrentItr: "", coApplicantPreviousItr: "",
 };
@@ -563,8 +569,10 @@ function buildBanking(d: Draft): BankingStep {
     bureauFlagAuto: d.bureauFlagAuto,
     bureauFlagCC: d.bureauFlagCC,
     bureauWriteOffAmount: Number(d.bureauWriteOffAmount),
+    existingEmi: Number(d.existingEmi || 0),
   };
 }
+
 
 function buildCoApplicant(d: Draft): CoApplicantStep {
   // Income is pooled only while the question is actually being asked. Editing
@@ -674,6 +682,121 @@ export function computePhase1IncomeResult(
   };
 }
 
+export function getBankFoirRatioClient(
+  bankCode: string,
+  workType: string,
+  averageIncome: number,
+): { foirPct: number; desc: string; notes?: string } {
+  const code = bankCode.toUpperCase();
+  const isSalaried = workType.toLowerCase().includes("salaried");
+  const gmi = Math.round((averageIncome / 12) * 100) / 100;
+
+  if (code === "BOB") {
+    if (isSalaried) {
+      if (gmi <= 50000) return { foirPct: 0.6, desc: "GMI ≤ ₹50,000 (60%)" };
+      if (gmi <= 150000) return { foirPct: 0.7, desc: "GMI ₹50,000 – ₹1,50,000 (70%)" };
+      return { foirPct: 0.8, desc: "GMI > ₹1,50,000 (80%)" };
+    } else {
+      if (averageIncome < 600000) return { foirPct: 0.6, desc: "Avg Annual Income < ₹6 Lakh (60%)" };
+      return { foirPct: 0.8, desc: "Avg Annual Income ≥ ₹6 Lakh (80%)" };
+    }
+  } else if (code === "BOM") {
+    if (isSalaried) {
+      if (gmi <= 50000) return { foirPct: 0.6, desc: "GMI ≤ ₹50,000 (60%)" };
+      if (gmi <= 100000) return { foirPct: 0.65, desc: "GMI ₹50,000 – ₹1,00,000 (65%)" };
+      if (gmi <= 200000) return { foirPct: 0.7, desc: "GMI ₹1,00,000 – ₹2,00,000 (70%)" };
+      if (gmi <= 500000) return { foirPct: 0.75, desc: "GMI ₹2,00,000 – ₹5,00,000 (75%)" };
+      return { foirPct: 0.8, desc: "GMI > ₹5,00,000 (80%)" };
+    } else {
+      if (averageIncome < 600000) return { foirPct: 0.6, desc: "Avg Annual Income < ₹6 Lakh (60%)" };
+      if (averageIncome < 1200000) return { foirPct: 0.65, desc: "Avg Annual Income ₹6L – ₹12L (65%)" };
+      if (averageIncome < 2400000) return { foirPct: 0.7, desc: "Avg Annual Income ₹12L – ₹24L (70%)" };
+      if (averageIncome < 6000000) return { foirPct: 0.75, desc: "Avg Annual Income ₹24L – ₹60L (75%)" };
+      return { foirPct: 0.8, desc: "Avg Annual Income ≥ ₹60 Lakh (80%)" };
+    }
+  } else if (code === "BOI") {
+    if (isSalaried) {
+      if (gmi < 100000) return { foirPct: 0.6, desc: "GMI < ₹1 Lakh (60%)" };
+      if (gmi <= 500000) return { foirPct: 0.7, desc: "GMI ₹1 Lakh – ₹5 Lakh (70%)" };
+      return { foirPct: 0.75, desc: "GMI > ₹5 Lakh (75%)" };
+    } else {
+      if (gmi < 100000) return { foirPct: 0.6, desc: "Converted GMI < ₹1 Lakh (60%)", notes: "Evaluated on converted monthly income" };
+      if (gmi <= 500000) return { foirPct: 0.7, desc: "Converted GMI ₹1L – ₹5L (70%)", notes: "Evaluated on converted monthly income" };
+      return { foirPct: 0.75, desc: "Converted GMI > ₹5 Lakh (75%)", notes: "Evaluated on converted monthly income" };
+    }
+  } else if (code === "IOB") {
+    if (isSalaried) {
+      if (gmi <= 100000) return { foirPct: 0.6, desc: "GMI ≤ ₹1 Lakh (60%)" };
+      return { foirPct: 0.7, desc: "GMI > ₹1 Lakh (70%)", notes: "Requires DGM Approval" };
+    } else {
+      if (gmi <= 100000) return { foirPct: 0.6, desc: "Converted GMI ≤ ₹1 Lakh (60%)", notes: "Evaluated on converted monthly income" };
+      return { foirPct: 0.7, desc: "Converted GMI > ₹1 Lakh (70%)", notes: "Requires DGM Approval" };
+    }
+  } else if (code === "INDIAN" || code === "INDIAN_BANK") {
+    const ref = (isSalaried && averageIncome > 15000000) ? gmi : averageIncome;
+    if (ref < 1500000) return { foirPct: 0.6, desc: "Income < ₹15 Lakhs (60%)" };
+    return { foirPct: 0.7, desc: "Income ≥ ₹15 Lakhs (70%)", notes: "Subject to ₹50,000 minimum net take-home surplus condition" };
+  } else {
+    // Default (HDFC, AXIS, KOTAK)
+    if (isSalaried) return { foirPct: 0.5, desc: "Standard Salaried Benchmark (50%)", notes: "Default benchmark" };
+    return { foirPct: 0.6, desc: "Standard Self-Employed Benchmark (60%)", notes: "Default benchmark" };
+  }
+}
+
+export function computePhase2FoirResult(
+  averageIncome: number,
+  occupation: string,
+  existingEmi: number,
+): Phase2FoirCalculationResponse {
+  const isSalaried = occupation.toLowerCase().includes("salaried");
+  const workType = isSalaried ? "Salaried" : "Self-Employed";
+  const averageMonthly = Math.round((averageIncome / 12) * 100) / 100;
+  const baseIncome = isSalaried ? averageMonthly : Math.round(averageIncome * 100) / 100;
+  const emi = Math.max(0, Number(existingEmi) || 0);
+
+  const bankNames: Record<string, string> = {
+    BOB: "Bank of Baroda",
+    BOM: "Bank of Maharashtra",
+    BOI: "Bank of India",
+    IOB: "Indian Overseas Bank",
+    INDIAN_BANK: "Indian Bank",
+    HDFC: "HDFC Bank",
+    AXIS: "Axis Bank",
+    KOTAK: "Kotak Mahindra Bank",
+  };
+
+  const allBanks = ["BOB", "BOM", "BOI", "IOB", "INDIAN_BANK", "HDFC", "AXIS", "KOTAK"];
+  const results: Record<string, BankFoirDetail> = {};
+
+  for (const code of allBanks) {
+    const { foirPct, desc, notes } = getBankFoirRatioClient(code, workType, averageIncome);
+    const foirBasedIncome = Math.round(baseIncome * foirPct * 100) / 100;
+    const finalProcessed = Math.round((foirBasedIncome - emi) * 100) / 100;
+
+    results[code] = {
+      bank_code: code,
+      bank_name: bankNames[code] || code,
+      work_type: workType,
+      base_income: baseIncome,
+      foir_percentage: foirPct,
+      foir_based_income: foirBasedIncome,
+      existing_emi: emi,
+      final_processed_income: finalProcessed,
+      bracket_description: desc,
+      notes,
+    };
+  }
+
+  return {
+    average_income: averageIncome,
+    average_monthly_income: averageMonthly,
+    occupation: workType,
+    existing_emi: emi,
+    bank_foir_results: results,
+  };
+}
+
+
 interface OnboardingState {
   draft: Draft;
   stepId: number;
@@ -693,6 +816,10 @@ interface OnboardingState {
   currentYearDocData: YearlyIncomeInput;
   prevYearDocData: YearlyIncomeInput;
   phase1IncomeResult: Phase1IncomeCalculationResponse;
+
+  // Phase 2: Bank FOIR & Processed Income Data
+  phase2FoirResult: Phase2FoirCalculationResponse;
+  setExistingEmi: (amount: number | "") => void;
 
   setField: <K extends keyof Draft>(key: K, value: Draft[K]) => void;
   updatePhase1DocData: (year: "current" | "previous", patch: Partial<YearlyIncomeInput>) => void;
@@ -731,16 +858,31 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   currentYearDocData: INITIAL_YEARLY_INCOME,
   prevYearDocData: INITIAL_YEARLY_INCOME,
   phase1IncomeResult: computePhase1IncomeResult(INITIAL_YEARLY_INCOME, INITIAL_YEARLY_INCOME),
+  phase2FoirResult: computePhase2FoirResult(0, "Self-Employed", 0),
+
+  setExistingEmi: (amount) =>
+    set((state) => {
+      const draft = { ...state.draft, existingEmi: amount };
+      const occupation = profileTypeFor(draft);
+      const emi = Number(amount || 0);
+      const avgIncome = state.phase1IncomeResult.average_income;
+      const phase2FoirResult = computePhase2FoirResult(avgIncome, occupation, emi);
+      return { draft, phase2FoirResult };
+    }),
 
   updatePhase1DocData: (year, patch) =>
     set((state) => {
       const current = year === "current" ? { ...state.currentYearDocData, ...patch } : state.currentYearDocData;
       const prev = year === "previous" ? { ...state.prevYearDocData, ...patch } : state.prevYearDocData;
       const phase1IncomeResult = computePhase1IncomeResult(current, prev);
+      const occupation = profileTypeFor(state.draft);
+      const emi = Number(state.draft.existingEmi || 0);
+      const phase2FoirResult = computePhase2FoirResult(phase1IncomeResult.average_income, occupation, emi);
       return {
         currentYearDocData: current,
         prevYearDocData: prev,
         phase1IncomeResult,
+        phase2FoirResult,
       };
     }),
 
@@ -777,8 +919,15 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       if (key === "addressProofType") {
         draft.aadhaarNumber = "";
       }
-      return { draft, error: null };
+      let phase2FoirResult = state.phase2FoirResult;
+      if (key === "existingEmi" || key === "occupation" || key === "entityType") {
+        const occupation = profileTypeFor(draft);
+        const emi = Number(draft.existingEmi || 0);
+        phase2FoirResult = computePhase2FoirResult(state.phase1IncomeResult.average_income, occupation, emi);
+      }
+      return { draft, phase2FoirResult, error: null };
     }),
+
 
   applyCibilExtraction: (fields, filename) =>
     set((state) => {
@@ -946,5 +1095,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       itrVerified: null,
       itrRecords: {},
       coiRecords: {},
+      phase2FoirResult: computePhase2FoirResult(0, "Self-Employed", 0),
     }),
+
 }));

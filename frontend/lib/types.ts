@@ -133,7 +133,9 @@ export interface BankingStep {
   bureauFlagAuto: boolean;
   bureauFlagCC: boolean;
   bureauWriteOffAmount: number;
+  existingEmi?: number;
 }
+
 
 export interface CoApplicantStep {
   coAppAgeRelation: "None" | "Brother" | "Sister";
@@ -184,11 +186,13 @@ export interface EvaluationResponse {
   rejection_reasons: RejectionReason[];
   bank_eligibility: Record<BankCode, boolean>;
   evaluation_report: Record<BankCode, BankEvaluationReport>;
+  foir_assessment?: Record<string, BankFoirDetail>;
   application_id: string | null;
   entity_type: EntityType;
   selected_bank: BankCode;
   persisted: boolean;
 }
+
 
 // FastAPI 422 body: {"detail": [{loc, msg, type}, ...]}
 export interface ValidationErrorItem {
@@ -230,5 +234,26 @@ export interface Phase1IncomeCalculationResponse {
   income_current_year: number;
   income_previous_year: number;
   average_income: number;
+}
+
+export interface BankFoirDetail {
+  bank_code: string;
+  bank_name: string;
+  work_type: "Salaried" | "Self-Employed";
+  base_income: number;
+  foir_percentage: number;
+  foir_based_income: number;
+  existing_emi: number;
+  final_processed_income: number;
+  bracket_description: string;
+  notes?: string | null;
+}
+
+export interface Phase2FoirCalculationResponse {
+  average_income: number;
+  average_monthly_income: number;
+  occupation: string;
+  existing_emi: number;
+  bank_foir_results: Record<string, BankFoirDetail>;
 }
 

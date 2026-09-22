@@ -153,13 +153,15 @@ export function ReviewCard({
         }]),
     {
       step: 6,
-      title: "Phase 1 Income Assessment",
+      title: "Phase 1 & 2 Income Assessment",
       rows: [
         ["Current Year Assessed Income", `₹${Math.round(phase1Result.income_current_year).toLocaleString("en-IN")}`],
         ["Previous Year Assessed Income", `₹${Math.round(phase1Result.income_previous_year).toLocaleString("en-IN")}`],
         ["Assessed 2-Year Average Income", `₹${Math.round(phase1Result.average_income).toLocaleString("en-IN")}`],
+        ["Existing Monthly EMI", draft.existingEmi ? `₹${Number(draft.existingEmi).toLocaleString("en-IN")}` : "₹0"],
       ],
     },
+
     ...(result
       ? [
           {

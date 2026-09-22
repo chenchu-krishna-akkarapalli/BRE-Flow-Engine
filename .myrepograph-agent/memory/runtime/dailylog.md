@@ -159,3 +159,33 @@ Append-only session close-outs. One entry per session: what changed, how it was 
   - Restarted containers (`flowbre_fastapi_app` and `flowbre_frontend`) via `docker compose up -d web frontend`.
   - Tested live against running Docker container with real ITR documents (`ITR ACKMT FOR_A.Y-2024-25.pdf`, `2025-26.pdf`): Returned `200 OK` with full parsed payload (`total_income`, `pan`, `name`, `acknowledgement_number`, etc.).
 - **Undone**: None.
+
+## [2026-09-22] Phase 1 Income Assessment Engine & 15-Set Unique Test Matrix
+- **What Changed**:
+  - Implemented Phase 1 2-year document-based income calculation engine in `app/services/cre/phase1_income.py` and endpoint `POST /api/v1/onboarding/income/phase1-calculate`.
+  - Added dedicated Step 6 ("Phase 1: Income Assessment") in onboarding wizard with `frontend/components/Phase1IncomeCard.tsx`, interactive 4-step audit table, and server calculation sync. Shifted Final Verdict to Step 7.
+  - Created 15 unique test sets under `test files/` (`test 1` to `test 15`), each with `current/` (1 ITR + 1 COI) and `prev/` (1 ITR + 1 COI).
+  - Ensured 100% uniqueness across all 60 PDF files (30 ITRs and 30 COIs) with 0 duplicated documents.
+  - Authored comprehensive test guide and test set directory map in `test files/README.md`.
+- **Verification**:
+  - Python sha256 uniqueness verification: 60/60 files unique, 0 duplicate files.
+  - Tested endpoint calculation against matched user filing (`Shashank Rai`): accurately computed assessed 2-year average income of ₹4,48,922.50.
+  - Rebuilt Docker frontend container (`flowbre_frontend`) and verified HTTP 200 OK.
+- **Undone**: None.
+
+## [2026-09-22] CRE Phase 2: Bank FOIR Calculation & Step 6 EMI Integration
+- **What Changed**:
+  - `app/services/foir_service.py`: Implemented bank FOIR service conforming to `CRE_docs/FOIR Calculation (2).xlsx` for BOB, BOM, BOI, IOB, Indian Bank, and defaults for HDFC, AXIS, KOTAK.
+  - `app/api/schemas/income.py` & `app/api/schemas/onboarding.py`: Added `BankFoirDetail`, `Phase2FoirCalculationRequest`, `Phase2FoirCalculationResponse`, and `existing_emi` in `BankingBureauStep`.
+  - `app/api/v1/endpoints/onboarding.py`: Added `POST /api/v1/onboarding/income/phase2-foir` and attached `foir_assessment` to form evaluation response.
+  - `frontend/lib/types.ts` & `frontend/lib/api.ts`: Added types and `calculatePhase2Foir` API caller.
+  - `frontend/store/useOnboardingStore.ts`: Added `existingEmi`, `phase2FoirResult`, and reactive calculations on income/EMI changes.
+  - `frontend/components/Phase1IncomeCard.tsx`: Added interactive Existing Monthly EMI input field and bank-wise processed income preview matrix.
+  - `frontend/components/AuditCards.tsx`: Rendered Phase 2 FOIR breakdown card with processed income upon expanding each bank card.
+- **Verification**:
+  - Pytest `test_foir_service.py`: 6/6 tests passed.
+  - Pytest `test_income_service.py test_onboarding_form.py`: 21/21 passed.
+  - Live API testing: Verified Self-Employed (₹4,48,922.50 income, ₹15,000 EMI -> BOB 60% -> ₹2,54,353.50) and Salaried (₹9,60,000 income, ₹20,000 EMI -> BOB 70% -> ₹36,000.00).
+  - TypeScript typecheck `npx tsc --noEmit`: 0 errors.
+  - Docker containers `flowbre_fastapi_app` and `flowbre_frontend` healthy and responding HTTP 200.
+- **Undone**: None.

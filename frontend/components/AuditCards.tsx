@@ -2,12 +2,22 @@
 
 import { useState } from "react";
 import {
-  CheckCircle2, ChevronDown, ChevronRight, Download, FileSpreadsheet, ShieldAlert, XCircle,
+  Calculator,
+  CheckCircle2,
+  ChevronDown,
+  ChevronRight,
+  Download,
+  FileSpreadsheet,
+  ShieldAlert,
+  TrendingUp,
+  XCircle,
 } from "lucide-react";
 import { downloadApplicationExport } from "@/lib/api";
 import { BANK_LABELS } from "@/lib/form-schema";
 import { BANK_CODES } from "@/lib/types";
 import type { BankCode, EvaluationResponse, RuleOutcome } from "@/lib/types";
+import { useOnboardingStore } from "@/store/useOnboardingStore";
+
 
 function RuleTable({ rules, passed }: { rules: RuleOutcome[]; passed: boolean }) {
   if (rules.length === 0) return null;
@@ -64,6 +74,9 @@ function BankCard({ bank, result }: { bank: BankCode; result: EvaluationResponse
   const passedCount = report?.passed_rules.length ?? 0;
   const failedCount = report?.failed_rules.length ?? 0;
 
+  const clientFoir = useOnboardingStore((s) => s.phase2FoirResult?.bank_foir_results?.[bank]);
+  const foirDetail = result.foir_assessment?.[bank] ?? clientFoir;
+
   return (
     <li className="glass-card rounded-xl border border-line overflow-hidden shadow-xs">
       <button
@@ -76,7 +89,12 @@ function BankCard({ bank, result }: { bank: BankCode; result: EvaluationResponse
           {open ? <ChevronDown size={18} className="text-brand-600" /> : <ChevronRight size={18} className="text-ink-subtle" />}
           <span className="text-sm font-bold text-ink">{BANK_LABELS[bank]}</span>
         </span>
-        <span className="flex items-center gap-4">
+        <span className="flex items-center gap-3">
+          {foirDetail && (
+            <span className="hidden sm:inline-flex items-center gap-1 numeric text-xs font-mono font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
+              Processed: ₹{Number(foirDetail.final_processed_income).toLocaleString("en-IN")}
+            </span>
+          )}
           <span className="numeric text-xs font-mono text-ink-subtle bg-bg-raised px-2 py-1 rounded-md border border-line">
             {passedCount}✓ {failedCount}✕
           </span>
@@ -91,15 +109,89 @@ function BankCard({ bank, result }: { bank: BankCode; result: EvaluationResponse
         </span>
       </button>
 
-      {open && report && (
-        <div className="border-t border-line bg-white p-4">
-          <RuleTable rules={report.failed_rules} passed={false} />
-          <RuleTable rules={report.passed_rules} passed />
+      {open && (
+        <div className="border-t border-line bg-white p-4 space-y-4">
+          {/* Phase 2: Bank FOIR & Final Processed Income Highlight Card */}
+          {foirDetail && (
+            <div className="rounded-xl border border-brand-200 bg-gradient-to-r from-brand-50/60 via-white to-emerald-50/40 p-4 shadow-2xs">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-brand-100 pb-2.5">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-brand-600 text-white text-xs shadow-2xs">
+                    <Calculator size={13} />
+                  </div>
+                  <span className="text-xs font-bold uppercase tracking-wider text-brand-800">
+                    Phase 2: Bank FOIR & Final Processed Income
+                  </span>
+                </div>
+                <span className="rounded-full bg-brand-100 px-2.5 py-0.5 text-[0.6875rem] font-bold text-brand-700">
+                  {foirDetail.work_type} • FOIR {Math.round(foirDetail.foir_percentage * 100)}%
+                </span>
+              </div>
+
+              <div className="mt-3 grid gap-3 sm:grid-cols-4">
+                <div className="rounded-lg bg-white p-2.5 border border-line shadow-2xs">
+                  <span className="text-[0.6875rem] text-ink-subtle font-medium block">
+                    Base Assessed Income
+                  </span>
+                  <span className="font-mono text-xs font-bold text-ink">
+                    ₹{Number(foirDetail.base_income).toLocaleString("en-IN")}
+                    <span className="text-[0.625rem] text-ink-muted ml-1">
+                      {foirDetail.work_type === "Salaried" ? "/mo" : "/yr"}
+                    </span>
+                  </span>
+                </div>
+
+                <div className="rounded-lg bg-white p-2.5 border border-line shadow-2xs">
+                  <span className="text-[0.6875rem] text-ink-subtle font-medium block">
+                    FOIR Capacity ({Math.round(foirDetail.foir_percentage * 100)}%)
+                  </span>
+                  <span className="font-mono text-xs font-bold text-brand-700">
+                    ₹{Number(foirDetail.foir_based_income).toLocaleString("en-IN")}
+                  </span>
+                </div>
+
+                <div className="rounded-lg bg-white p-2.5 border border-line shadow-2xs">
+                  <span className="text-[0.6875rem] text-ink-subtle font-medium block">
+                    Less: Existing EMI
+                  </span>
+                  <span className="font-mono text-xs font-bold text-danger">
+                    - ₹{Number(foirDetail.existing_emi).toLocaleString("en-IN")}
+                  </span>
+                </div>
+
+                <div className="rounded-lg bg-emerald-50/80 p-2.5 border border-emerald-200 shadow-2xs">
+                  <span className="text-[0.6875rem] text-emerald-800 font-bold block">
+                    Final Processed Income
+                  </span>
+                  <span className="font-mono text-sm font-black text-emerald-950">
+                    ₹{Number(foirDetail.final_processed_income).toLocaleString("en-IN")}
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-2.5 text-[0.6875rem] text-ink-subtle flex flex-wrap items-center justify-between gap-1 pt-1 border-t border-brand-100/50">
+                <span><strong>Policy Tier:</strong> {foirDetail.bracket_description}</span>
+                {foirDetail.notes && (
+                  <span className="text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium border border-amber-200">
+                    ⚠️ {foirDetail.notes}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {report && (
+            <>
+              <RuleTable rules={report.failed_rules} passed={false} />
+              <RuleTable rules={report.passed_rules} passed />
+            </>
+          )}
         </div>
       )}
     </li>
   );
 }
+
 
 /** Per-bank audit cards plus the document export actions. */
 export function AuditCards({ result }: { result: EvaluationResponse }) {
