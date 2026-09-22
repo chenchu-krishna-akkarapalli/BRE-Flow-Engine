@@ -2,6 +2,8 @@ import { redactPii } from "./redact";
 import type {
   EvaluationResponse,
   OnboardingFormRequest,
+  Phase1IncomeCalculationRequest,
+  Phase1IncomeCalculationResponse,
   ValidationErrorItem,
 } from "./types";
 
@@ -318,3 +320,25 @@ export async function verifyOtp(
   }
   return (await response.json()) as { verified: boolean; attempts_remaining: number };
 }
+
+export async function calculatePhase1Income(
+  payload: Phase1IncomeCalculationRequest,
+): Promise<Phase1IncomeCalculationResponse> {
+  const response = await fetch(`${API_BASE}/api/v1/onboarding/income/phase1-calculate`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Tenant-ID": TENANT_ID,
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new ApiError(
+      response.status,
+      body?.detail ?? `Phase 1 income calculation failed (${response.status}).`,
+    );
+  }
+  return (await response.json()) as Phase1IncomeCalculationResponse;
+}
+

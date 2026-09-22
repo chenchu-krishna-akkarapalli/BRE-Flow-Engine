@@ -38,7 +38,12 @@ from app.services.export_service import build_excel, build_pdf
 from app.services.ocr_service import extract_aadhaar_card, extract_pan_card, validate_upload
 from app.services.payslip_service import PayslipEngineError, extract_payslip_report
 from app.services.itr_service import ItrEngineError, ItrDocumentError, process_itr_pdf
+from app.services.income_service import income_service
 from app.services.verification_service import send_otp, verify_otp
+from app.api.schemas.income import (
+    Phase1IncomeCalculationRequest,
+    Phase1IncomeCalculationResponse,
+)
 
 router = APIRouter()
 
@@ -537,6 +542,20 @@ async def extract_itr_report_document(
     except ItrDocumentError as exc:
         logger.warning(f"ITR document unreadable for tenant '{tenant_id}': {exc}")
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, str(exc))
+
+
+@router.post(
+    "/income/phase1-calculate",
+    response_model=Phase1IncomeCalculationResponse,
+    summary="Phase 1 Document-Based Income Calculation",
+)
+async def calculate_phase1_income(
+    payload: Phase1IncomeCalculationRequest,
+    tenant_id: str = Depends(get_current_tenant),
+):
+    """Compute Current Year & Previous Year net incomes from ITR & COI values,
+    and calculate 2-Year Average Income according to Phase 1 rules."""
+    return income_service.calculate_phase1_income(payload)
 
 
 @router.post("/documents/{document_type}/extract", response_model=DocumentExtractionResponse)

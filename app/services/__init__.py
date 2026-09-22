@@ -3,6 +3,7 @@ from app.services.bre_engine import BREEngineService, bre_engine_service
 from app.services.cibil_service import extract_cibil_report, map_to_bureau_fields
 from app.services.coi_service import CoiEngineError, extract_coi_report
 from app.services.export_service import build_excel, build_pdf
+from app.services.income_service import IncomeService, income_service
 from app.services.notification_service import NotificationService, notification_service
 from app.services.ocr_service import extract_aadhaar_card, extract_pan_card, ocr_available, validate_upload
 from app.services.payslip_service import extract_payslip_report, map_to_payslip_fields
@@ -16,6 +17,8 @@ __all__ = [
     "bre_engine_service",
     "UASService",
     "uas_service",
+    "IncomeService",
+    "income_service",
     "extract_cibil_report",
     "map_to_bureau_fields",
     "extract_payslip_report",

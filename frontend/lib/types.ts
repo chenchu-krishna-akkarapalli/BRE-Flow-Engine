@@ -196,3 +196,39 @@ export interface ValidationErrorItem {
   msg: string;
   type: string;
 }
+
+export interface YearlyIncomeInput {
+  total_income: number;
+  total_tax_interest_and_fee_payable: number;
+  total_other_interest_income: number;
+  interest_on_partners_capital: number;
+  partner_remuneration: number;
+  income_from_capital_gain: number;
+}
+
+export interface YearlyIncomeBreakdown {
+  total_income: number;
+  total_tax_interest_and_fee_payable: number;
+  income_from_calc: number;
+  total_other_interest_income: number;
+  interest_on_partners_capital: number;
+  partner_remuneration: number;
+  income_from_other_sources: number;
+  income_from_capital_gain: number;
+  total_passive_deductions: number;
+  final_yearly_income: number;
+}
+
+export interface Phase1IncomeCalculationRequest {
+  current_year: YearlyIncomeInput;
+  previous_year: YearlyIncomeInput;
+}
+
+export interface Phase1IncomeCalculationResponse {
+  current_year_breakdown: YearlyIncomeBreakdown;
+  previous_year_breakdown: YearlyIncomeBreakdown;
+  income_current_year: number;
+  income_previous_year: number;
+  average_income: number;
+}
+

@@ -11,7 +11,10 @@ import type {
   Identity,
   Occupation,
   OnboardingFormRequest,
+  Phase1IncomeCalculationResponse,
   ProfileType,
+  YearlyIncomeBreakdown,
+  YearlyIncomeInput,
 } from "@/lib/types";
 
 // Flat draft of all five steps; buildPayload() projects it into the API's discriminated union at submit.
@@ -617,6 +620,60 @@ export interface CoiRecord {
   evidence: Record<string, unknown>;
 }
 
+export const INITIAL_YEARLY_INCOME: YearlyIncomeInput = {
+  total_income: 0,
+  total_tax_interest_and_fee_payable: 0,
+  total_other_interest_income: 0,
+  interest_on_partners_capital: 0,
+  partner_remuneration: 0,
+  income_from_capital_gain: 0,
+};
+
+export function computeYearlyIncomeBreakdown(d: YearlyIncomeInput): YearlyIncomeBreakdown {
+  const total_income = Number(d.total_income) || 0;
+  const total_tax = Number(d.total_tax_interest_and_fee_payable) || 0;
+  const income_from_calc = Math.round((total_income - total_tax) * 100) / 100;
+  const other_interest = Number(d.total_other_interest_income) || 0;
+  const partner_interest = Number(d.interest_on_partners_capital) || 0;
+  const partner_remun = Number(d.partner_remuneration) || 0;
+  const income_from_other_sources = Math.round(Math.max(0, other_interest - (partner_interest + partner_remun)) * 100) / 100;
+  const capital_gain = Number(d.income_from_capital_gain) || 0;
+  const total_passive_deductions = Math.round((income_from_other_sources + capital_gain) * 100) / 100;
+  const final_yearly_income = Math.round((income_from_calc - total_passive_deductions) * 100) / 100;
+
+  return {
+    total_income,
+    total_tax_interest_and_fee_payable: total_tax,
+    income_from_calc,
+    total_other_interest_income: other_interest,
+    interest_on_partners_capital: partner_interest,
+    partner_remuneration: partner_remun,
+    income_from_other_sources,
+    income_from_capital_gain: capital_gain,
+    total_passive_deductions,
+    final_yearly_income,
+  };
+}
+
+export function computePhase1IncomeResult(
+  cy: YearlyIncomeInput,
+  py: YearlyIncomeInput,
+): Phase1IncomeCalculationResponse {
+  const current_year_breakdown = computeYearlyIncomeBreakdown(cy);
+  const previous_year_breakdown = computeYearlyIncomeBreakdown(py);
+  const income_current_year = current_year_breakdown.final_yearly_income;
+  const income_previous_year = previous_year_breakdown.final_yearly_income;
+  const average_income = Math.round(((income_current_year + income_previous_year) / 2) * 100) / 100;
+
+  return {
+    current_year_breakdown,
+    previous_year_breakdown,
+    income_current_year,
+    income_previous_year,
+    average_income,
+  };
+}
+
 interface OnboardingState {
   draft: Draft;
   stepId: number;
@@ -632,7 +689,13 @@ interface OnboardingState {
   itrRecords: Record<string, ItrRecord>;
   coiRecords: Record<string, CoiRecord>;
 
+  // Phase 1: 2-Year Document-Based Income Data
+  currentYearDocData: YearlyIncomeInput;
+  prevYearDocData: YearlyIncomeInput;
+  phase1IncomeResult: Phase1IncomeCalculationResponse;
+
   setField: <K extends keyof Draft>(key: K, value: Draft[K]) => void;
+  updatePhase1DocData: (year: "current" | "previous", patch: Partial<YearlyIncomeInput>) => void;
   // Bureau fields read off an uploaded CIBIL report. Set together so the
   // verified badge and the locked inputs can never disagree about their source.
   applyCibilExtraction: (fields: Record<string, unknown>, filename: string) => void;
@@ -664,6 +727,22 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   itrVerified: null,
   itrRecords: {},
   coiRecords: {},
+
+  currentYearDocData: INITIAL_YEARLY_INCOME,
+  prevYearDocData: INITIAL_YEARLY_INCOME,
+  phase1IncomeResult: computePhase1IncomeResult(INITIAL_YEARLY_INCOME, INITIAL_YEARLY_INCOME),
+
+  updatePhase1DocData: (year, patch) =>
+    set((state) => {
+      const current = year === "current" ? { ...state.currentYearDocData, ...patch } : state.currentYearDocData;
+      const prev = year === "previous" ? { ...state.prevYearDocData, ...patch } : state.prevYearDocData;
+      const phase1IncomeResult = computePhase1IncomeResult(current, prev);
+      return {
+        currentYearDocData: current,
+        prevYearDocData: prev,
+        phase1IncomeResult,
+      };
+    }),
 
   setField: (key, value) =>
     set((state) => {

@@ -6,7 +6,7 @@ import { downloadApplicationExport } from "@/lib/api";
 import { redactDob, redactPan } from "@/lib/redact";
 import { STEP_PLAN, BANK_LABELS } from "@/lib/form-schema";
 import type { Draft } from "@/store/useOnboardingStore";
-import { clubbedCurrentItr, clubbedPreviousItr, isAgriculture, profileTypeFor } from "@/store/useOnboardingStore";
+import { clubbedCurrentItr, clubbedPreviousItr, isAgriculture, profileTypeFor, useOnboardingStore } from "@/store/useOnboardingStore";
 import type { EvaluationResponse } from "@/lib/types";
 
 function missedPaymentSummary(draft: Draft): string {
@@ -39,6 +39,7 @@ export function ReviewCard({
   const profile = profileTypeFor(draft);
   const isCompany = draft.entityType === "Company";
   const plan = STEP_PLAN[draft.entityType];
+  const phase1Result = useOnboardingStore((s) => s.phase1IncomeResult);
 
   const pan = isCompany ? draft.companyPan : draft.pan;
   const name = isCompany ? draft.companyName : draft.applicantName;
@@ -150,10 +151,19 @@ export function ReviewCard({
               : []),
           ] as [string, string][],
         }]),
+    {
+      step: 6,
+      title: "Phase 1 Income Assessment",
+      rows: [
+        ["Current Year Assessed Income", `₹${Math.round(phase1Result.income_current_year).toLocaleString("en-IN")}`],
+        ["Previous Year Assessed Income", `₹${Math.round(phase1Result.income_previous_year).toLocaleString("en-IN")}`],
+        ["Assessed 2-Year Average Income", `₹${Math.round(phase1Result.average_income).toLocaleString("en-IN")}`],
+      ],
+    },
     ...(result
       ? [
           {
-            step: 6,
+            step: 7,
             title: "Engine Decision",
             rows: [
               ["Overall Status", result.status],

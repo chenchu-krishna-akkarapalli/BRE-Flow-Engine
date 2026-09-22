@@ -119,6 +119,51 @@ function CoiYearCard({
         evidence: raw,
       };
 
+      const otherSourcesSection = (computation.income_from_other_sources as Record<string, any>) ?? (raw.income_from_other_sources as Record<string, any>) ?? {};
+      const otherSourcesTotal =
+        otherSourcesSection.total ??
+        summary.total_other_sources ??
+        otherSourcesSection.details?.total_other_sources ??
+        0;
+
+      const capitalGainsSection = (computation.income_from_capital_gain as Record<string, any>) ?? (raw.income_from_capital_gain as Record<string, any>) ?? {};
+      const capitalGainsTotal =
+        capitalGainsSection.total ??
+        summary.total_capital_gains ??
+        ((Number(capitalGainsSection.short_term_capital_gain?.total) || 0) + (Number(capitalGainsSection.long_term_capital_gain?.total) || 0));
+
+      const partnerInterestVal = Number(
+        otherSourcesSection.interest_on_partners_capital ??
+        otherSourcesSection.details?.interest_on_partners_capital ??
+        computation.interest_on_partners_capital ??
+        0
+      );
+      const partnerRemunVal = Number(
+        otherSourcesSection.partner_remuneration ??
+        otherSourcesSection.details?.partner_remuneration ??
+        computation.partner_remuneration ??
+        0
+      );
+
+      const isCurrent = fieldId.toLowerCase().includes("current");
+      const isPrev = fieldId.toLowerCase().includes("prev");
+      const updatePhase1 = useOnboardingStore.getState().updatePhase1DocData;
+      if (isCurrent) {
+        updatePhase1("current", {
+          total_other_interest_income: Number(otherSourcesTotal) || 0,
+          income_from_capital_gain: Number(capitalGainsTotal) || 0,
+          interest_on_partners_capital: partnerInterestVal,
+          partner_remuneration: partnerRemunVal,
+        });
+      } else if (isPrev) {
+        updatePhase1("previous", {
+          total_other_interest_income: Number(otherSourcesTotal) || 0,
+          income_from_capital_gain: Number(capitalGainsTotal) || 0,
+          interest_on_partners_capital: partnerInterestVal,
+          partner_remuneration: partnerRemunVal,
+        });
+      }
+
       setCoiRecord(scopeId, newRecord);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to parse COI report.");
@@ -131,6 +176,24 @@ function CoiYearCard({
   function handleClear() {
     setCoiRecord(scopeId, null);
     setError(null);
+    const isCurrent = fieldId.toLowerCase().includes("current");
+    const isPrev = fieldId.toLowerCase().includes("prev");
+    const updatePhase1 = useOnboardingStore.getState().updatePhase1DocData;
+    if (isCurrent) {
+      updatePhase1("current", {
+        total_other_interest_income: 0,
+        income_from_capital_gain: 0,
+        interest_on_partners_capital: 0,
+        partner_remuneration: 0,
+      });
+    } else if (isPrev) {
+      updatePhase1("previous", {
+        total_other_interest_income: 0,
+        income_from_capital_gain: 0,
+        interest_on_partners_capital: 0,
+        partner_remuneration: 0,
+      });
+    }
   }
 
   return (
