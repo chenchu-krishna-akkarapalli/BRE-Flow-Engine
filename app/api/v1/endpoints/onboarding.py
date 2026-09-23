@@ -318,7 +318,11 @@ async def evaluate_onboarding_form(
     # Compute Phase 2 bank-specific FOIR and processed income assessment
     profile_type = getattr(form.occupation, "profile_type", "Self-Employed")
     if profile_type == "Salaried":
-        monthly_salary = float(getattr(form.occupation, "gross_salary", 0.0) or 0.0)
+        avg_monthly = getattr(form.occupation, "average_monthly_income", None)
+        if avg_monthly is not None and avg_monthly > 0:
+            monthly_salary = float(avg_monthly)
+        else:
+            monthly_salary = float(getattr(form.occupation, "gross_salary", 0.0) or 0.0)
         annual_inc = monthly_salary * 12.0
     elif profile_type == "Company":
         cy = float(getattr(form.occupation, "company_current_itr_amount", 0.0) or 0.0)

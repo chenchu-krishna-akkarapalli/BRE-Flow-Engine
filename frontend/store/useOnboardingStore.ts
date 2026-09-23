@@ -487,7 +487,7 @@ function buildAgriculture(d: Draft): Occupation {
   }
 }
 
-function buildOccupation(d: Draft): Occupation {
+function buildOccupation(d: Draft, avgIncome = 0): Occupation {
   const profile = profileTypeFor(d);
 
   if (profile === "Rental Income") return buildRentalIncome(d);
@@ -530,6 +530,10 @@ function buildOccupation(d: Draft): Occupation {
   // add-on.md §4: government service is exempt from the tenure floors, so the
   // API rejects a prior employer sent alongside it.
   const collectsPrevEmployer = !isGovernmentEmployee(d) && d.tenureBand !== "2y+";
+  const avgMonthly = avgIncome > 0
+    ? Math.round((avgIncome / 12) * 100) / 100
+    : (d.grossSalary !== "" ? Number(d.grossSalary) : 0);
+
   return {
     profileType: "Salaried",
     employerType: opt(d.employerType),
@@ -537,7 +541,8 @@ function buildOccupation(d: Draft): Occupation {
     // Prior employment is required below 2 years and rejected at 2y+.
     prevCompanyName: collectsPrevEmployer ? d.prevCompanyName : undefined,
     prevCompanyJoining: collectsPrevEmployer ? d.prevCompanyJoining : undefined,
-    grossSalary: Number(d.grossSalary),
+    grossSalary: avgMonthly,
+    averageMonthlyIncome: avgMonthly,
     salaryMode: d.salaryMode as never,
     form16Status: d.form16Status as never,
     // Only accepted when Form 16 is claimed; the API rejects it otherwise.
@@ -596,7 +601,7 @@ function buildCoApplicant(d: Draft): CoApplicantStep {
 }
 
 // Project the draft into the request body; Company omits address and co-applicant, which the API rejects outright.
-export function buildPayload(d: Draft): OnboardingFormRequest {
+export function buildPayload(d: Draft, avgIncome = 0): OnboardingFormRequest {
   const isCompany = d.entityType === "Company";
   return {
     identity: buildIdentity(d),
@@ -606,10 +611,10 @@ export function buildPayload(d: Draft): OnboardingFormRequest {
           pincode: d.pincode,
           cityName: opt(d.cityName),
           stateName: opt(d.stateName),
-              residentDetails: d.residentDetails as "Owned House" | "Rented House",
+          residentDetails: d.residentDetails as "Owned House" | "Rented House",
           aadhaarNumber: opt(d.aadhaarNumber),
         },
-    occupation: buildOccupation(d),
+    occupation: buildOccupation(d, avgIncome),
     banking: buildBanking(d),
     coApplicant: isCompany ? undefined : buildCoApplicant(d),
   };
@@ -878,7 +883,14 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       const occupation = profileTypeFor(state.draft);
       const emi = Number(state.draft.existingEmi || 0);
       const phase2FoirResult = computePhase2FoirResult(phase1IncomeResult.average_income, occupation, emi);
+
+      const draft = { ...state.draft };
+      if (occupation === "Salaried" && phase1IncomeResult.average_income > 0) {
+        draft.grossSalary = phase2FoirResult.average_monthly_income;
+      }
+
       return {
+        draft,
         currentYearDocData: current,
         prevYearDocData: prev,
         phase1IncomeResult,
@@ -1057,10 +1069,12 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   },
 
   submit: async () => {
-    const { draft } = get();
+    const { draft, phase1IncomeResult } = get();
     set({ submitting: true, error: null });
     try {
-      const result = await evaluateOnboardingForm(buildPayload(draft));
+      const result = await evaluateOnboardingForm(
+        buildPayload(draft, phase1IncomeResult.average_income)
+      );
       set({ result, submitting: false });
     } catch (err) {
       if (err instanceof FormValidationError) {

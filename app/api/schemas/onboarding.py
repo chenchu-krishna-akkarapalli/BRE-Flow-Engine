@@ -353,6 +353,7 @@ class SalariedOccupation(FormModel):
     # Collected instead of Form-16 years when the proof offered is an ITR.
     current_year_itr: Optional[float] = Field(default=None, alias="currentYearItr", ge=0.0)
     previous_year_itr: Optional[float] = Field(default=None, alias="previousYearItr", ge=0.0)
+    average_monthly_income: Optional[float] = Field(default=None, alias="averageMonthlyIncome", ge=0.0)
 
     @model_validator(mode="after")
     def _validate_income_proof(self) -> "SalariedOccupation":
@@ -416,9 +417,14 @@ class SalariedOccupation(FormModel):
         # are measured in.
         work_experience_years = tenure_months // 12
         no_income_proof = self.form_16_status is Form16Status.NO_INCOME_PROOF
+        effective_monthly_salary = (
+            self.average_monthly_income
+            if (self.average_monthly_income is not None and self.average_monthly_income > 0)
+            else self.gross_salary
+        )
         return {
             "occupation": OccupationType.SALARIED.value,
-            "net_monthly_salary": self.gross_salary,
+            "net_monthly_salary": effective_monthly_salary,
             # An ITR proves income without a Form-16 history, so EMP-SAL-206
             # does not apply — the engine skips it rather than scoring 0 years.
             "income_proof": self.form_16_status.value,

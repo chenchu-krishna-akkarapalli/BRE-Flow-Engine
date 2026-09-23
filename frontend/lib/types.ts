@@ -63,6 +63,7 @@ export interface SalariedOccupation {
   // Required instead of form16Years when the proof offered is an ITR.
   currentYearItr?: number;
   previousYearItr?: number;
+  averageMonthlyIncome?: number;
 }
 
 export interface SelfEmployedOccupation {

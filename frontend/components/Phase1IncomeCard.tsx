@@ -81,6 +81,10 @@ export function Phase1IncomeCard() {
     if (phase1Result.income_previous_year > 0) {
       setField("prevITRAmount", Math.round(phase1Result.income_previous_year));
     }
+    if (phase1Result.average_income > 0) {
+      const avgMonthly = Math.round((phase1Result.average_income / 12) * 100) / 100;
+      setField("grossSalary", avgMonthly);
+    }
     setAppliedNotification(true);
     setTimeout(() => setAppliedNotification(false), 3500);
   }
@@ -157,18 +161,26 @@ export function Phase1IncomeCard() {
             <TrendingUp size={14} />
             <span>Assessed 2-Year Average Income</span>
           </div>
-          <div className="mt-1 flex items-baseline gap-3">
+          <div className="mt-1 flex flex-wrap items-baseline gap-3">
             <span className="font-mono text-2xl sm:text-3xl font-black text-brand-950">
               {formatCurrency(avgIncome)}
             </span>
             <span className="text-xs text-brand-800 font-medium">
               / year average
             </span>
+            <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-100/90 px-2.5 py-1 text-xs font-mono font-bold text-emerald-950 border border-emerald-300/80">
+              ₹{Math.round(avgIncome / 12).toLocaleString("en-IN")} / mo (Step 7 Salary)
+            </span>
           </div>
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-[0.75rem] text-brand-800">
+          <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[0.75rem] text-brand-800">
             <span>Formula:</span>
             <code className="rounded bg-brand-100/80 px-1.5 py-0.5 font-mono text-[0.6875rem] font-semibold">
               ({formatCurrency(cyBreakdown.final_yearly_income)} + {formatCurrency(pyBreakdown.final_yearly_income)}) / 2
+            </code>
+            <span className="text-brand-600 font-medium">•</span>
+            <span>Monthly:</span>
+            <code className="rounded bg-brand-100/80 px-1.5 py-0.5 font-mono text-[0.6875rem] font-semibold">
+              {formatCurrency(Math.round(avgIncome / 12))} / mo
             </code>
           </div>
         </div>
@@ -184,7 +196,7 @@ export function Phase1IncomeCard() {
           </button>
           {appliedNotification && (
             <span className="text-[0.6875rem] font-medium text-success animate-in fade-in">
-              ✓ Updated Current & Previous ITR in draft!
+              ✓ Applied: ITR & Monthly Salary (₹{Math.round(phase1Result.average_income / 12).toLocaleString("en-IN")}) updated!
             </span>
           )}
         </div>

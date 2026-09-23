@@ -367,6 +367,32 @@ def test_form_endpoint_rejects_mismatched_branch():
     assert response.status_code == 422
 
 
+def test_salaried_average_monthly_income_overrides_gross_salary():
+    submission = _deep_merge(
+        INDIVIDUAL_SALARIED,
+        {
+            "occupation": {
+                "grossSalary": 20000.0,
+                "averageMonthlyIncome": 65000.0,
+            }
+        },
+    )
+    form = OnboardingFormRequest.model_validate(submission)
+    payload = form.to_engine_payload()
+    assert payload["net_monthly_salary"] == 65000.0
+
+    response = client.post(
+        "/api/v1/onboarding/evaluate/form",
+        json=submission,
+        headers={"X-Tenant-ID": "tenant_beta"},
+    )
+    assert response.status_code == 200
+    body = response.json()
+    foir = body.get("foir_assessment", {})
+    if "BOB" in foir:
+        assert foir["BOB"]["base_income"] == 65000.0
+
+
 @pytest.mark.parametrize("model", [OnboardingFormRequest, OnboardingEvaluationRequest])
 def test_documented_swagger_example_validates(model) -> None:
     """The example is what "Try it out" posts, so a stale one is a 422 demo.
