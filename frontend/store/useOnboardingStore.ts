@@ -541,8 +541,8 @@ function buildOccupation(d: Draft, avgIncome = 0): Occupation {
     // Prior employment is required below 2 years and rejected at 2y+.
     prevCompanyName: collectsPrevEmployer ? d.prevCompanyName : undefined,
     prevCompanyJoining: collectsPrevEmployer ? d.prevCompanyJoining : undefined,
-    grossSalary: avgMonthly,
-    averageMonthlyIncome: avgMonthly,
+    grossSalary: Number(d.grossSalary),
+    averageMonthlyIncome: avgIncome > 0 ? Math.round((avgIncome / 12) * 100) / 100 : undefined,
     salaryMode: d.salaryMode as never,
     form16Status: d.form16Status as never,
     // Only accepted when Form 16 is claimed; the API rejects it otherwise.
@@ -884,13 +884,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       const emi = Number(state.draft.existingEmi || 0);
       const phase2FoirResult = computePhase2FoirResult(phase1IncomeResult.average_income, occupation, emi);
 
-      const draft = { ...state.draft };
-      if (occupation === "Salaried" && phase1IncomeResult.average_income > 0) {
-        draft.grossSalary = phase2FoirResult.average_monthly_income;
-      }
-
       return {
-        draft,
         currentYearDocData: current,
         prevYearDocData: prev,
         phase1IncomeResult,

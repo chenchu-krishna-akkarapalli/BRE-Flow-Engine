@@ -89,14 +89,7 @@ export function ReviewCard({
               ["Profile Type", "Salaried Professional"],
               ["Job Tenure", draft.tenureBand],
               ["Income Proof", draft.form16Status === "Form 16" ? `Form 16 (${draft.form16Years} yrs)` : "None"],
-              [
-                "Assessed Monthly Income",
-                `₹${Math.round(
-                  phase1Result.average_income > 0
-                    ? phase1Result.average_income / 12
-                    : Number(draft.grossSalary || 0)
-                ).toLocaleString("en-IN")}`,
-              ],
+              ["Monthly Gross Salary (Payslip)", draft.grossSalary ? `₹${Number(draft.grossSalary).toLocaleString("en-IN")}` : "—"],
             ]
           : profile === "Company"
           ? [
@@ -166,7 +159,7 @@ export function ReviewCard({
         ["Current Year Assessed Income", `₹${Math.round(phase1Result.income_current_year).toLocaleString("en-IN")}`],
         ["Previous Year Assessed Income", `₹${Math.round(phase1Result.income_previous_year).toLocaleString("en-IN")}`],
         ["Assessed 2-Year Average Income", `₹${Math.round(phase1Result.average_income).toLocaleString("en-IN")}`],
-        ["Assessed Monthly Income (Step 7)", `₹${Math.round(phase1Result.average_income / 12).toLocaleString("en-IN")} / mo`],
+        ["CRE Base Monthly Income", `₹${Math.round(phase1Result.average_income / 12).toLocaleString("en-IN")} / mo`],
         ["Existing Monthly EMI", draft.existingEmi ? `₹${Number(draft.existingEmi).toLocaleString("en-IN")}` : "₹0"],
       ],
     },

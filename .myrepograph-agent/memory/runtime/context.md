@@ -3,10 +3,12 @@
 Working state for the current task. Kept here rather than in the context window so long sessions do not carry their own history as ballast.
 
 ## Current task
-- [x] Add `get_leading_section_index` and filter leading section numbers in `line_amount` in `crates/coi-parser/src/contract.rs`
-- [x] Update `labelled_amount` lookahead and `inline_amount_after_label` for section total lines
-- [x] Run `cargo test --workspace` (100% passed) and batch processor via Docker
-- [x] Verify `Computation of Income for FY 2025-26_Kanhaiya.json` (`interest_from_saving_bank_accounts: 215`, `other_misc_income: 452100`, `other_item: null`, `total: 452315`)
+- [x] Implemented bulk CIBIL PDF runner script in `cibil-pdf-scrapper/scripts/run_cibil_tests.py` and `cibil-pdf-scrapper/run_tests.py`.
+- [x] Processed all 38 CIBIL PDFs from `cibil-pdf-scrapper/cibil-test/` through the `cibil-cli` Rust engine.
+- [x] Extracted FlowBRE target delivery schema (`CIBIL_Score`, `CIBIL_PL_Score`, `Write_Off_Details`, `Write_Off_Amount`, `DPD`, `Loan_Enquiry`, `Currently_Outstanding`), `consumer_info`, and `raw_report`.
+- [x] Evaluated credit rules with `service/bre.py` for each readable document.
+- [x] Generated 38 individual standardized JSON files in `cibil-pdf-scrapper/cibil-output/` plus benchmark summary `cibil_bulk_benchmark_summary.json`.
+- [x] Verified zero execution crashes/errors; 14 digital text PDFs successfully extracted, 24 image-only scanned PDFs correctly identified for OCR fallback.
 
 - [x] Implemented database models for dynamic module catalog: `ModuleCatalogModel`, `TenantModuleEntitlementModel`, `RoleModulePermissionModel` in `app/db/models/module.py` and registered in `app/db/models/__init__.py`.
 - [x] Authored and executed Alembic migration `0008_dynamic_module_catalog.py` seeding all 14 existing modules and complete default role permissions.

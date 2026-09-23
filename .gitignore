@@ -53,6 +53,8 @@ cibil-pdf-scrapper/temp_page_3.tsv
 cibil-pdf-scrapper/payslip-test/
 cibil-pdf-scrapper/computation-of-income-copies-test/
 cibil-pdf-scrapper/computation-of-income-copies-1/
+cibil-pdf-scrapper/cibil-test/
+cibil-pdf-scrapper/cibil-output/
 
 # OS-specific files
 .DS_Store

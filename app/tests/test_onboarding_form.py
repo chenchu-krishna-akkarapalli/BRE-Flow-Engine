@@ -367,19 +367,20 @@ def test_form_endpoint_rejects_mismatched_branch():
     assert response.status_code == 422
 
 
-def test_salaried_average_monthly_income_overrides_gross_salary():
+def test_salaried_bre_uses_payslip_gross_salary_while_cre_uses_assessed_income():
     submission = _deep_merge(
         INDIVIDUAL_SALARIED,
         {
             "occupation": {
-                "grossSalary": 20000.0,
+                "grossSalary": 35000.0,
                 "averageMonthlyIncome": 65000.0,
             }
         },
     )
     form = OnboardingFormRequest.model_validate(submission)
     payload = form.to_engine_payload()
-    assert payload["net_monthly_salary"] == 65000.0
+    # BRE engine strictly validates against Payslip gross salary:
+    assert payload["net_monthly_salary"] == 35000.0
 
     response = client.post(
         "/api/v1/onboarding/evaluate/form",
@@ -388,6 +389,7 @@ def test_salaried_average_monthly_income_overrides_gross_salary():
     )
     assert response.status_code == 200
     body = response.json()
+    # CRE FOIR assessment uses the CRE assessed income:
     foir = body.get("foir_assessment", {})
     if "BOB" in foir:
         assert foir["BOB"]["base_income"] == 65000.0

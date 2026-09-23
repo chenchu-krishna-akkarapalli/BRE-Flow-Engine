@@ -417,14 +417,9 @@ class SalariedOccupation(FormModel):
         # are measured in.
         work_experience_years = tenure_months // 12
         no_income_proof = self.form_16_status is Form16Status.NO_INCOME_PROOF
-        effective_monthly_salary = (
-            self.average_monthly_income
-            if (self.average_monthly_income is not None and self.average_monthly_income > 0)
-            else self.gross_salary
-        )
         return {
             "occupation": OccupationType.SALARIED.value,
-            "net_monthly_salary": effective_monthly_salary,
+            "net_monthly_salary": self.gross_salary,
             # An ITR proves income without a Form-16 history, so EMP-SAL-206
             # does not apply — the engine skips it rather than scoring 0 years.
             "income_proof": self.form_16_status.value,

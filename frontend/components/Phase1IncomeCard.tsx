@@ -81,10 +81,6 @@ export function Phase1IncomeCard() {
     if (phase1Result.income_previous_year > 0) {
       setField("prevITRAmount", Math.round(phase1Result.income_previous_year));
     }
-    if (phase1Result.average_income > 0) {
-      const avgMonthly = Math.round((phase1Result.average_income / 12) * 100) / 100;
-      setField("grossSalary", avgMonthly);
-    }
     setAppliedNotification(true);
     setTimeout(() => setAppliedNotification(false), 3500);
   }
@@ -169,7 +165,7 @@ export function Phase1IncomeCard() {
               / year average
             </span>
             <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-100/90 px-2.5 py-1 text-xs font-mono font-bold text-emerald-950 border border-emerald-300/80">
-              ₹{Math.round(avgIncome / 12).toLocaleString("en-IN")} / mo (Step 7 Salary)
+              ₹{Math.round(avgIncome / 12).toLocaleString("en-IN")} / mo (CRE Base Assessed)
             </span>
           </div>
           <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[0.75rem] text-brand-800">
@@ -196,7 +192,7 @@ export function Phase1IncomeCard() {
           </button>
           {appliedNotification && (
             <span className="text-[0.6875rem] font-medium text-success animate-in fade-in">
-              ✓ Applied: ITR & Monthly Salary (₹{Math.round(phase1Result.average_income / 12).toLocaleString("en-IN")}) updated!
+              ✓ Updated Current & Previous ITR in draft!
             </span>
           )}
         </div>

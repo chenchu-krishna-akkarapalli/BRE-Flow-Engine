@@ -189,3 +189,21 @@ Append-only session close-outs. One entry per session: what changed, how it was 
   - TypeScript typecheck `npx tsc --noEmit`: 0 errors.
   - Docker containers `flowbre_fastapi_app` and `flowbre_frontend` healthy and responding HTTP 200.
 - **Undone**: None.
+
+## [2026-09-23] CIBIL PDF Engine Bulk Testing & Extraction Pipeline
+- **What Changed**:
+  - Implemented `cibil-pdf-scrapper/scripts/run_cibil_tests.py` and `cibil-pdf-scrapper/run_tests.py` bulk testing runner.
+  - Processed all 38 CIBIL PDF documents from `cibil-pdf-scrapper/cibil-test/` through the `cibil-cli` Rust engine.
+  - Extracted FlowBRE delivery target schema (`CIBIL_Score`, `CIBIL_PL_Score`, `Write_Off_Details`, `Write_Off_Amount`, `DPD`, `Loan_Enquiry`, `Currently_Outstanding`).
+  - Extracted consumer profile details (`consumer_info`) and full internal report hierarchy (`raw_report`).
+  - Executed Business Rules Engine (`service/bre.py`) credit decisioning on all readable reports.
+  - Successfully written all 38 output JSON files to `cibil-pdf-scrapper/cibil-output/`.
+  - Generated consolidated benchmark summary at `cibil-pdf-scrapper/cibil-output/cibil_bulk_benchmark_summary.json`.
+- **Verification**:
+  - Processed 38 total PDFs:
+    - 14/38 readable text layer documents successfully parsed (100% success on text-layer reports, average score: 672.6, 0 execution errors).
+    - 24/38 image-only / rasterized PDFs correctly flagged by pipeline gating as `UNKNOWN_CONSUMER` requiring OCR.
+  - BRE Decisioning distribution: 5 APPROVE, 2 REFER, 7 DECLINE.
+  - Verified JSON schema conformance across all generated files in `cibil-pdf-scrapper/cibil-output/`.
+- **Undone**: None.
+
