@@ -404,8 +404,11 @@ pub fn preprocess_runs<'a>(runs: &'a [RawTextRun<'a>]) -> Vec<LayoutElement<'a>>
             for run in page_runs {
                 let y0 = run.bbox[1];
                 let ph = run.page_height;
-                if y0 < 60.0 || y0 > ph - 60.0 {
+                if y0 < 45.0 || y0 > ph - 45.0 {
                     let cleaned = run.text.trim().to_uppercase();
+                    if cleaned.contains('₹') || cleaned.contains("RS") || cleaned.contains("INR") {
+                        continue;
+                    }
                     let normalized = num_re.replace_all(&cleaned, "X").into_owned();
                     if normalized.len() > 3 {
                         *header_footer_occurrences.entry(normalized).or_default() += 1;
@@ -440,16 +443,35 @@ pub fn preprocess_runs<'a>(runs: &'a [RawTextRun<'a>]) -> Vec<LayoutElement<'a>>
         let ph = run.page_height;
         
         // Suppress recurring header/footer noise or common terms globally in header/footer regions
-        if y0 < 60.0 || y0 > ph - 60.0 {
+        if y0 < 45.0 || y0 > ph - 45.0 {
             let t_upper = run.text.to_uppercase();
             let is_critical_content = t_upper.contains("ACCOUNT") ||
+                t_upper.contains("AMOUNTS") ||
                 t_upper.contains("DATE OPENED") ||
                 t_upper.contains("DATE CLOSED") ||
                 t_upper.contains("SANCTIONED") ||
                 t_upper.contains("CURRENT BALANCE") ||
+                t_upper.contains("CURRENT") ||
+                t_upper.contains("BALANCE") ||
                 t_upper.contains("WRITTEN OFF") ||
+                t_upper.contains("WRITTEN") ||
                 t_upper.contains("DAYS PAST DUE") ||
-                t_upper.contains("YEAR");
+                t_upper.contains("YEAR") ||
+                t_upper.contains("EMI") ||
+                t_upper.contains('₹') ||
+                t_upper.contains("RS") ||
+                t_upper.contains("INR") ||
+                t_upper.contains("COLLATERAL") ||
+                t_upper.contains("OWNERSHIP") ||
+                t_upper.contains("TENURE") ||
+                t_upper.contains("INTEREST") ||
+                t_upper.contains("RATE") ||
+                t_upper.contains("FREQUENCY") ||
+                t_upper.contains("STATUS") ||
+                t_upper.contains("OVERDUE") ||
+                t_upper.contains("SETTLEMENT") ||
+                t_upper.contains("DISCLOSED") ||
+                t_upper.contains("REPAYMENT");
 
             if !is_critical_content {
                 if is_common_header_footer(&normalized) {

@@ -139,6 +139,8 @@ mod tests {
                 closed_accounts: 0,
                 total_balance: 0,
                 total_sanctioned_amount: 0,
+                total_active_emi: 0,
+                total_emi: 0,
             },
             accounts: Vec::new(),
             enquiries: Vec::new(),

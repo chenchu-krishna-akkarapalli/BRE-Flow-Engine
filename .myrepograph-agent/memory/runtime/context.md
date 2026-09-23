@@ -3,6 +3,12 @@
 Working state for the current task. Kept here rather than in the context window so long sessions do not carry their own history as ballast.
 
 ## Current task
+- [x] Extracted EMI from active accounts and loan terms (EMI, repayment tenure, interest rate, payment frequency, account number, member name) in Rust domain engine (`crates/cibil-domain`).
+- [x] Aggregated `Total_Active_EMI` and `Total_EMI` in delivery schema `TargetReport` and `AccountsSummary`.
+- [x] Fixed status detection in `parser.rs` to correctly recognize `AccountStatus::Active` when `DATE CLOSED: NOT DISCLOSED` is present.
+- [x] Recompiled release binary `cibil-cli` and deployed to `flowbre_fastapi_app:/usr/local/bin/cibil-cli`.
+- [x] Mapped `Total_Active_EMI` to `existingEmi` in `app/services/cibil_service.py` for CRE Phase 2 FOIR calculations.
+- [x] Ran automated test suites (20/20 Rust tests, 43/43 Python tests) and refreshed all 38 output files in `cibil-pdf-scrapper/cibil-output/`.
 - [x] Implemented bulk CIBIL PDF runner script in `cibil-pdf-scrapper/scripts/run_cibil_tests.py` and `cibil-pdf-scrapper/run_tests.py`.
 - [x] Processed all 38 CIBIL PDFs from `cibil-pdf-scrapper/cibil-test/` through the `cibil-cli` Rust engine.
 - [x] Extracted FlowBRE target delivery schema (`CIBIL_Score`, `CIBIL_PL_Score`, `Write_Off_Details`, `Write_Off_Amount`, `DPD`, `Loan_Enquiry`, `Currently_Outstanding`), `consumer_info`, and `raw_report`.

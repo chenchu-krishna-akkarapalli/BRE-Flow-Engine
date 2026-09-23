@@ -58,6 +58,10 @@ def _enquiries_30d(r: dict[str, Any]) -> int:
     return int((r.get("Loan_Enquiry") or {}).get("Past_30_Days") or 0)
 
 
+def _total_active_emi(r: dict[str, Any]) -> int:
+    return int(r.get("Total_Active_EMI") or 0)
+
+
 RULES: Final[tuple[Rule, ...]] = (
     Rule("WO_PRESENT", "Written-off balance reported", Decision.DECLINE,
          lambda r: _write_off_total(r) > 0),
@@ -117,5 +121,6 @@ def evaluate(report: dict[str, Any]) -> BreOutcome:
             "total_overdue": _overdue(report),
             "max_recent_dpd": _max_recent_dpd(report),
             "enquiries_past_30_days": _enquiries_30d(report),
+            "total_active_emi": _total_active_emi(report),
         },
     )

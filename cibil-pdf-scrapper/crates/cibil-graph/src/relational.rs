@@ -206,6 +206,8 @@ impl CibilGraph {
         let closed_accounts = accounts.len() as u32 - active_accounts;
         let total_balance = accounts.iter().map(|a| a.current_balance.unwrap_or(0)).sum();
         let total_sanctioned_amount = accounts.iter().map(|a| a.sanctioned_amount.unwrap_or(0)).sum();
+        let total_active_emi = accounts.iter().filter(|a| a.status == AccountStatus::Active).filter_map(|a| a.emi_amount).sum();
+        let total_emi = accounts.iter().filter_map(|a| a.emi_amount).sum();
 
         let accounts_summary = AccountsSummary {
             total_accounts: accounts.len() as u32,
@@ -213,6 +215,8 @@ impl CibilGraph {
             closed_accounts,
             total_balance,
             total_sanctioned_amount,
+            total_active_emi,
+            total_emi,
         };
 
         let score_info = ScoreInfo {
@@ -300,6 +304,12 @@ mod tests {
             date_closed: None,
             sanctioned_amount: Some(27550),
             current_balance: Some(27550),
+            emi_amount: None,
+            payment_frequency: None,
+            repayment_tenure: None,
+            interest_rate: None,
+            account_number: None,
+            member_name: None,
             ownership: Some("INDIVIDUAL".to_string()),
             collateral_type: Some("GOLD".to_string()),
             collateral_value: Some(41200),

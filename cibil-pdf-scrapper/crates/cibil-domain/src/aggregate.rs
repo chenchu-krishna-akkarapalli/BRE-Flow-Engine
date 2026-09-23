@@ -47,6 +47,10 @@ pub struct TargetReport {
     pub cibil_score: u16,
     #[serde(rename = "CIBIL_PL_Score")]
     pub cibil_pl_score: Value,
+    #[serde(rename = "Total_Active_EMI")]
+    pub total_active_emi: u64,
+    #[serde(rename = "Total_EMI")]
+    pub total_emi: u64,
     #[serde(rename = "Write_Off_Details")]
     pub write_off_details: WriteOffDetails,
     #[serde(rename = "Write_Off_Amount")]
@@ -101,6 +105,18 @@ pub struct WriteOffAmount {
 #[derive(Serialize, Debug, Clone)]
 pub struct DpdEntry {
     pub status: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub emi: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub repayment_tenure: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub interest_rate: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub payment_frequency: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub account_number: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub member_name: Option<String>,
     #[serde(flatten)]
     pub years: IndexMap<String, IndexMap<String, Value>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -383,6 +399,12 @@ impl TargetReport {
             let years = dpd_years(acc);
             dpd.insert(key, DpdEntry {
                 status: dpd_status(acc),
+                emi: acc.emi_amount,
+                repayment_tenure: acc.repayment_tenure,
+                interest_rate: acc.interest_rate,
+                payment_frequency: acc.payment_frequency.clone(),
+                account_number: acc.account_number.clone(),
+                member_name: acc.member_name.clone(),
                 current_dpd: if years.is_empty() { Some("NA".to_string()) } else { None },
                 years,
                 start_date: acc.payment_history_start_date.clone(),
@@ -433,6 +455,8 @@ impl TargetReport {
                 Some(v) => Value::from(v),
                 None => Value::from(PL_SCORE_ABSENT),
             },
+            total_active_emi: report.accounts_summary.total_active_emi,
+            total_emi: report.accounts_summary.total_emi,
             write_off_details: details,
             write_off_amount,
             dpd,
@@ -531,6 +555,12 @@ mod tests {
             date_closed: None,
             sanctioned_amount: Some(100),
             current_balance: Some(50),
+            emi_amount: None,
+            payment_frequency: None,
+            repayment_tenure: None,
+            interest_rate: None,
+            account_number: None,
+            member_name: None,
             ownership: None,
             collateral_type: None,
             collateral_value: None,
@@ -562,6 +592,12 @@ mod tests {
             let acc = account(1, status.clone());
             let entry = DpdEntry {
                 status: dpd_status(&acc),
+                emi: None,
+                repayment_tenure: None,
+                interest_rate: None,
+                payment_frequency: None,
+                account_number: None,
+                member_name: None,
                 current_dpd: None,
                 years: dpd_years(&acc),
                 start_date: acc.payment_history_start_date.clone(),
@@ -585,6 +621,12 @@ mod tests {
         assert!(years.is_empty());
         let entry = DpdEntry {
             status: dpd_status(&acc),
+            emi: None,
+            repayment_tenure: None,
+            interest_rate: None,
+            payment_frequency: None,
+            account_number: None,
+            member_name: None,
             current_dpd: Some("NA".to_string()),
             years,
             start_date: None,

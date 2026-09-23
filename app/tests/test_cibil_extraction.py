@@ -232,3 +232,11 @@ def test_recent_severe_default_raises_both_flags() -> None:
 
     assert fields["bureauDpd"] == 120
     assert fields["hasMissedPayment"] is True and fields["missedOver90"] is True
+
+
+def test_active_emi_maps_onto_existing_emi() -> None:
+    fields = map_to_bureau_fields(_with(Total_Active_EMI=68000, Total_EMI=85000))
+    assert fields["existingEmi"] == 68000.0
+    assert fields["totalActiveEmi"] == 68000.0
+    assert fields["totalEmi"] == 85000.0
+

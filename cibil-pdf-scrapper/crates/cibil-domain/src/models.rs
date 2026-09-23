@@ -48,6 +48,8 @@ pub struct AccountsSummary {
     pub closed_accounts: u32,
     pub total_balance: u64,
     pub total_sanctioned_amount: u64,
+    pub total_active_emi: u64,
+    pub total_emi: u64,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -59,6 +61,12 @@ pub struct CreditAccount {
     pub date_closed: Option<String>,
     pub sanctioned_amount: Option<u64>,
     pub current_balance: Option<u64>,
+    pub emi_amount: Option<u64>,
+    pub payment_frequency: Option<String>,
+    pub repayment_tenure: Option<u32>,
+    pub interest_rate: Option<f64>,
+    pub account_number: Option<String>,
+    pub member_name: Option<String>,
     pub ownership: Option<String>,
     pub collateral_type: Option<String>,
     pub collateral_value: Option<u64>,

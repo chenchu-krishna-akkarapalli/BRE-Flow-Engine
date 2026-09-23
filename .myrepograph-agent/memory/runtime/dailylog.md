@@ -205,5 +205,19 @@ Append-only session close-outs. One entry per session: what changed, how it was 
     - 24/38 image-only / rasterized PDFs correctly flagged by pipeline gating as `UNKNOWN_CONSUMER` requiring OCR.
   - BRE Decisioning distribution: 5 APPROVE, 2 REFER, 7 DECLINE.
   - Verified JSON schema conformance across all generated files in `cibil-pdf-scrapper/cibil-output/`.
+## [2026-09-23] CIBIL Engine: Active Account EMI & Loan Terms Extraction
+- **What Changed**:
+  - `crates/cibil-domain/src/models.rs`: Added `emi_amount: Option<u64>`, `payment_frequency: Option<String>`, `repayment_tenure: Option<u32>`, `interest_rate: Option<f64>`, `account_number: Option<String>`, `member_name: Option<String>` to `CreditAccount`, and `total_active_emi: u64`, `total_emi: u64` to `AccountsSummary`.
+  - `crates/cibil-domain/src/parser.rs`: Added extraction logic for EMI, repayment tenure, interest rate (rounded to 2 decimal places), payment frequency, and account number. Fixed account status resolution to prevent `"DATE CLOSED: NOT DISCLOSED"` falsely marking active accounts as `Inactive`.
+  - `crates/cibil-domain/src/aggregate.rs`: Exposed `Total_Active_EMI` and `Total_EMI` on `TargetReport`, and attached optional `emi`, `repayment_tenure`, `interest_rate`, `payment_frequency`, `account_number`, `member_name` to `DpdEntry`.
+  - `crates/cibil-graph/src/relational.rs`: Updated `AccountsSummary` construction with active and total EMI sums.
+  - `service/bre.py` & `scripts/run_cibil_tests.py`: Emitted `total_active_emi` in `signals`.
+  - `app/services/cibil_service.py`: Mapped `Total_Active_EMI` to `existingEmi` and `totalActiveEmi`, and `Total_EMI` to `totalEmi`.
+  - Recompiled release binary `cibil-cli` via Docker and deployed to `flowbre_fastapi_app:/usr/local/bin/cibil-cli`.
+  - Re-ran bulk testing across all 38 PDFs in `cibil-test/` and regenerated outputs in `cibil-output/`.
+- **Verification**:
+  - Rust tests: 20/20 passed (`cargo test -p cibil-domain -p cibil-graph`).
+  - Python tests: 43/43 passed (`pytest app/tests/test_cibil_extraction.py`).
+  - Target document verification (`mohammed tousif r a h.pdf`, Account 2 Gold Loan): Extracted `status: "ACTIVE"`, `emi: 68000`, `repayment_tenure: 13`, `interest_rate: 0.23`, `Total_Active_EMI: 228054`.
+  - Bulk test verification: 14 text PDFs parsed with 100% success; extracted active EMI across 6 reports (up to ₹2,28,054) and total EMI across 10 reports (up to ₹4,056,680). 0 execution failures.
 - **Undone**: None.
-

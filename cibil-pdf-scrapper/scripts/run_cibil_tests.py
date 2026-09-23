@@ -36,6 +36,7 @@ def evaluate_bre(report: Dict[str, Any]) -> Dict[str, Any]:
                     max_recent_dpd = max(max_recent_dpd, v)
 
     enquiries_30d = int((report.get("Loan_Enquiry") or {}).get("Past_30_Days") or 0)
+    total_active_emi = int(report.get("Total_Active_EMI") or 0)
 
     rules = [
         ("WO_PRESENT", "Written-off balance reported", "DECLINE", write_off_total > 0),
@@ -67,6 +68,7 @@ def evaluate_bre(report: Dict[str, Any]) -> Dict[str, Any]:
             "write_off_total": write_off_total,
             "total_overdue": overdue_total,
             "enquiries_past_30_days": enquiries_30d,
+            "total_active_emi": total_active_emi,
         },
     }
 

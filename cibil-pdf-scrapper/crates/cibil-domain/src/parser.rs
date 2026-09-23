@@ -318,6 +318,16 @@ fn parse_accounts_summary(elements: &[LayoutElement], accounts: &[CreditAccount]
     let total_balance = accounts.iter().map(|a| a.current_balance.unwrap_or(0)).sum();
     let total_sanctioned_amount = accounts.iter().map(|a| a.sanctioned_amount.unwrap_or(0)).sum();
 
+    let total_active_emi: u64 = accounts
+        .iter()
+        .filter(|a| a.status == AccountStatus::Active)
+        .filter_map(|a| a.emi_amount)
+        .sum();
+    let total_emi: u64 = accounts
+        .iter()
+        .filter_map(|a| a.emi_amount)
+        .sum();
+
     // Check if summary details exist in text
     if let Some(val) = find_val(elements, "Total", confs) {
         if let Ok(val_int) = val.parse::<u32>() {
@@ -336,6 +346,8 @@ fn parse_accounts_summary(elements: &[LayoutElement], accounts: &[CreditAccount]
         closed_accounts,
         total_balance,
         total_sanctioned_amount,
+        total_active_emi,
+        total_emi,
     })
 }
 
@@ -426,32 +438,14 @@ fn parse_accounts(elements: &[LayoutElement], confs: &mut Vec<f32>) -> Result<Ve
             .cloned()
             .collect();
 
+        let card_text = card_elements.iter().map(|el| el.text.as_ref()).collect::<Vec<_>>().join("\n");
+        let card_text_upper = card_elements.iter().map(|el| el.text.to_uppercase()).collect::<Vec<_>>().join(" ");
+
         // Extract fields
         let account_type = find_val(&card_elements_col1, "TYPE", &mut acc_confs)
             .map(|s| redact_aadhaar(&s))
             .unwrap_or_else(|| "UNKNOWN TYPE".to_string());
 
-        // Specific dispositions are tested before the generic ACTIVE/INACTIVE
-        // substrings: a written-off account is usually also flagged ACTIVE.
-        let mut status = AccountStatus::Unknown;
-        let card_text_upper = card_elements.iter().map(|el| el.text.to_uppercase()).collect::<Vec<_>>().join(" ");
-        let written_off_re = Regex::new(r"WRITTEN[\s-]?OFF").unwrap();
-        let suit_filed_re = Regex::new(r"SUIT[\s-]?FILED").unwrap();
-        if written_off_re.is_match(&card_text_upper) {
-            status = AccountStatus::WrittenOff;
-        } else if suit_filed_re.is_match(&card_text_upper) {
-            status = AccountStatus::SuitFiled;
-        } else if card_text_upper.contains("REPOSSESSED") {
-            status = AccountStatus::Repossessed;
-        } else if card_text_upper.contains("INACTIVE") || card_text_upper.contains("CLOSED") {
-            status = AccountStatus::Inactive;
-        } else if card_text_upper.contains("ACTIVE") {
-            status = AccountStatus::Active;
-        }
-
-        let card_text = card_elements.iter().map(|el| el.text.as_ref()).collect::<Vec<_>>().join("\n");
-        // The "CONSUMER CIR" layout writes these as inline "OPENED : dd-mm-yyyy"
-        // without the "DATE" prefix that the tabular layout uses.
         let opened_re = Regex::new(r"(?i)(?:DATE\s*)?OPENED\s*:\s*(\d{2}[/-]\d{2}[/-]\d{4})").unwrap();
         let closed_re = Regex::new(r"(?i)(?:DATE\s*)?CLOSED\s*:\s*(\d{2}[/-]\d{2}[/-]\d{4})").unwrap();
 
@@ -466,7 +460,48 @@ fn parse_accounts(elements: &[LayoutElement], confs: &mut Vec<f32>) -> Result<Ve
             .map(|c| c.get(1).unwrap().as_str().to_string())
             .or_else(|| {
                 find_val(&card_elements_col1, "DATE CLOSED", &mut acc_confs)
+            })
+            .filter(|d| {
+                let u = d.to_uppercase();
+                !u.contains("NOT DISCLOSED") && !u.contains("NIL") && !u.contains("NA") && !u.contains("--") && !d.trim().is_empty()
             });
+
+        // Specific dispositions are tested before the generic ACTIVE/INACTIVE
+        let status_val = find_val(&card_elements_col3, "STATUS", &mut acc_confs)
+            .or_else(|| find_val(&card_elements_col4, "CREDIT FACILITY STATUS", &mut acc_confs))
+            .or_else(|| find_val(&card_elements_col1, "STATUS", &mut acc_confs))
+            .or_else(|| find_val(&card_elements, "STATUS", &mut acc_confs))
+            .or_else(|| find_inline(&card_text, "STATUS"))
+            .or_else(|| find_inline(&card_text, "ACCOUNT STATUS"))
+            .or_else(|| find_inline(&card_text, "CREDIT FACILITY STATUS"));
+
+        let status_upper = status_val.as_deref().unwrap_or("").to_uppercase();
+        let written_off_re = Regex::new(r"WRITTEN[\s-]?OFF").unwrap();
+        let suit_filed_re = Regex::new(r"SUIT[\s-]?FILED").unwrap();
+
+        let status = if written_off_re.is_match(&status_upper) || written_off_re.is_match(&card_text_upper) {
+            AccountStatus::WrittenOff
+        } else if suit_filed_re.is_match(&status_upper) || suit_filed_re.is_match(&card_text_upper) {
+            AccountStatus::SuitFiled
+        } else if status_upper.contains("REPOSSESSED") || card_text_upper.contains("REPOSSESSED") {
+            AccountStatus::Repossessed
+        } else if status_upper.contains("ACTIVE") || status_upper.contains("OPEN") {
+            AccountStatus::Active
+        } else if status_upper.contains("INACTIVE") || status_upper.contains("CLOSED") || status_upper.contains("SETTLED") {
+            AccountStatus::Inactive
+        } else if date_closed.is_some() {
+            AccountStatus::Inactive
+        } else if card_text_upper.contains("STATUS : ACTIVE") || card_text_upper.contains("STATUS: ACTIVE") || card_text_upper.contains("STATUS - ACTIVE") {
+            AccountStatus::Active
+        } else if card_text_upper.contains("STATUS : CLOSED") || card_text_upper.contains("STATUS: CLOSED") || card_text_upper.contains("STATUS : INACTIVE") || card_text_upper.contains("STATUS: INACTIVE") {
+            AccountStatus::Inactive
+        } else if card_text_upper.contains("ACTIVE") && !card_text_upper.contains("INACTIVE") {
+            AccountStatus::Active
+        } else if card_text_upper.contains("INACTIVE") {
+            AccountStatus::Inactive
+        } else {
+            AccountStatus::Unknown
+        };
 
         // Each candidate must survive parse_amount before the chain stops: a
         // non-numeric hit from an earlier lookup must not mask a later one.
@@ -483,6 +518,88 @@ fn parse_accounts(elements: &[LayoutElement], confs: &mut Vec<f32>) -> Result<Ve
             .and_then(|s| parse_amount(&s))
             .or_else(|| find_val(&card_elements_col2, "CURRENT BALANCE", &mut acc_confs).and_then(|s| parse_amount(&s)))
             .or_else(|| find_inline(&card_text, "CURRENT BALANCE").and_then(|s| parse_amount(&s)));
+
+        // Loan terms & EMI fields
+        let emi_amount = find_val(&card_elements_col3, "EMI", &mut acc_confs)
+            .and_then(|s| parse_amount(&s))
+            .or_else(|| find_val(&card_elements_col3, "EMI AMOUNT", &mut acc_confs).and_then(|s| parse_amount(&s)))
+            .or_else(|| find_val(&card_elements_col2, "EMI", &mut acc_confs).and_then(|s| parse_amount(&s)))
+            .or_else(|| find_val(&card_elements, "EMI", &mut acc_confs).and_then(|s| parse_amount(&s)))
+            .or_else(|| find_inline(&card_text, "EMI").and_then(|s| parse_amount(&s)))
+            .or_else(|| find_inline(&card_text, "EMI AMOUNT").and_then(|s| parse_amount(&s)))
+            .or_else(|| {
+                let re = Regex::new(r"(?i)\bEMI\b\s*[:\-]?\s*(?:₹|RS\.?|INR)?\s*([0-9,]+(?:\.\d+)?)").unwrap();
+                re.captures(&card_text).and_then(|c| parse_amount(c.get(1).unwrap().as_str()))
+            });
+
+        let repayment_tenure = find_val(&card_elements_col3, "REPAYMENT TENURE", &mut acc_confs)
+            .or_else(|| find_val(&card_elements_col3, "TENURE", &mut acc_confs))
+            .or_else(|| find_val(&card_elements, "REPAYMENT TENURE", &mut acc_confs))
+            .or_else(|| find_inline(&card_text, "REPAYMENT TENURE"))
+            .or_else(|| find_inline(&card_text, "TENURE"))
+            .and_then(|s| {
+                let num_str: String = s.chars().filter(|c| c.is_ascii_digit()).collect();
+                num_str.parse::<u32>().ok()
+            })
+            .or_else(|| {
+                let re = Regex::new(r"(?i)\b(?:REPAYMENT\s*)?TENURE\b\s*[:\-]?\s*(\d+)").unwrap();
+                re.captures(&card_text).and_then(|c| c.get(1).unwrap().as_str().parse::<u32>().ok())
+            });
+
+        let interest_rate = find_val(&card_elements_col3, "INTEREST RATE", &mut acc_confs)
+            .or_else(|| find_val(&card_elements_col3, "RATE OF INTEREST", &mut acc_confs))
+            .or_else(|| find_val(&card_elements, "INTEREST RATE", &mut acc_confs))
+            .or_else(|| find_inline(&card_text, "INTEREST RATE"))
+            .or_else(|| find_inline(&card_text, "RATE OF INTEREST"))
+            .and_then(|s| {
+                let clean: String = s.chars().filter(|c| c.is_ascii_digit() || *c == '.').collect();
+                clean.parse::<f64>().ok()
+            })
+            .or_else(|| {
+                let re = Regex::new(r"(?i)\b(?:INTEREST\s*RATE|RATE\s*OF\s*INTEREST)\b\s*[:\-]?\s*([0-9]+(?:\.[0-9]+)?)\s*%?").unwrap();
+                re.captures(&card_text).and_then(|c| c.get(1).unwrap().as_str().parse::<f64>().ok())
+            })
+            .map(|r| (r * 100.0).round() / 100.0);
+
+        let payment_frequency = find_val(&card_elements_col3, "PAYMENT FREQUENCY", &mut acc_confs)
+            .or_else(|| find_val(&card_elements_col1, "PAYMENT FREQUENCY", &mut acc_confs))
+            .or_else(|| find_val(&card_elements, "PAYMENT FREQUENCY", &mut acc_confs))
+            .or_else(|| find_inline(&card_text, "PAYMENT FREQUENCY"))
+            .or_else(|| {
+                let re = Regex::new(r"(?i)\bPAYMENT\s*FREQUENCY\b\s*[:\-]?\s*([A-Za-z0-9\- ]+)").unwrap();
+                re.captures(&card_text).map(|c| c.get(1).unwrap().as_str().trim().to_string())
+            })
+            .filter(|s| {
+                let u = s.to_uppercase();
+                !u.is_empty() && u != "FREQUENCY" && u != "PAYMENT" && !u.contains("NOT DISCLOSED")
+            });
+
+        let account_number = find_val(&card_elements_col1, "ACCOUNT NUMBER", &mut acc_confs)
+            .or_else(|| find_val(&card_elements_col1, "ACCOUNT NO", &mut acc_confs))
+            .or_else(|| find_val(&card_elements, "ACCOUNT NUMBER", &mut acc_confs))
+            .or_else(|| find_inline(&card_text, "ACCOUNT NUMBER"))
+            .or_else(|| find_inline(&card_text, "ACCOUNT NO"))
+            .or_else(|| {
+                let re = Regex::new(r"(?i)\bACCOUNT\s*NUMBER\b\s*[:\-]?\s*([A-Za-z0-9*X\-]+)").unwrap();
+                re.captures(&card_text).map(|c| c.get(1).unwrap().as_str().trim().to_string())
+            })
+            .filter(|s| {
+                let u = s.to_uppercase();
+                !u.contains("NOT DISCLOSED") && !u.is_empty()
+            });
+
+        let member_name = find_val(&card_elements_col1, "MEMBER NAME", &mut acc_confs)
+            .or_else(|| find_val(&card_elements_col1, "MEMBER", &mut acc_confs))
+            .or_else(|| find_val(&card_elements, "MEMBER NAME", &mut acc_confs))
+            .or_else(|| find_inline(&card_text, "MEMBER NAME"))
+            .or_else(|| {
+                let re = Regex::new(r"(?i)\bMEMBER\s*NAME\b\s*[:\-]?\s*([A-Za-z0-9 .,&'\-/]+)").unwrap();
+                re.captures(&card_text).map(|c| c.get(1).unwrap().as_str().trim().to_string())
+            })
+            .filter(|s| {
+                let u = s.to_uppercase();
+                !u.is_empty() && !u.contains("NOT DISCLOSED") && !u.contains("BLANK")
+            });
 
         let ownership = find_val(&card_elements_col1, "OWNERSHIP", &mut acc_confs)
             .or_else(|| find_inline(&card_text, "OWNERSHIP"));
@@ -569,6 +686,12 @@ fn parse_accounts(elements: &[LayoutElement], confs: &mut Vec<f32>) -> Result<Ve
             date_closed,
             sanctioned_amount,
             current_balance,
+            emi_amount,
+            payment_frequency,
+            repayment_tenure,
+            interest_rate,
+            account_number,
+            member_name,
             ownership,
             collateral_type,
             collateral_value,
