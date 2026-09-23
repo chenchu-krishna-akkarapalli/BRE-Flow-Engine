@@ -122,6 +122,25 @@ Working state for the current task. Kept here rather than in the context window 
 
 ## Open questions
 
-_none_
+- [ ] Reconcile runtime code-defined bank/FOIR thresholds with the repository policy requiring dynamically loaded `zen_rules/*.json` graphs.
+- [ ] Decide whether duplicate router/schema surfaces (`app/api/router.py` vs `app/api/v1/router.py`, onboarding-local document/OTP routes vs dedicated routers) should be consolidated.
+- [ ] Implement or remove the advertised Redis PubSub SSE path; `SSEManager.publish_event()` is currently a no-op.
 
+## 2026-09-23 project exploration
 
+- [x] Mapped the FastAPI, Next.js, PostgreSQL/Redis/Celery, Alembic, and Rust document-engine boundaries.
+- [x] Traced the primary onboarding path: frontend API client -> tenant middleware/RLS -> `BREEngineService` -> application/rule audit persistence.
+- [x] Confirmed document extraction invokes Rust CLI subprocesses using stdin-framed PDFs and bounded timeouts.
+- [x] Counted 259 Python tests and 112 Rust test annotations; frontend `npm run typecheck` passed.
+- [ ] Backend test execution unavailable locally: system Python is 3.9 and lacks FastAPI.
+- [ ] Rust test execution unavailable locally: `cargo` is not installed.
+
+## 2026-09-23 frontend architecture blueprint
+
+- [x] Audited frontend routes, stores, API calls, auth/tenant propagation, client boundaries, seed fallbacks, build configuration, and large modules.
+- [x] Replaced `frontend/microfrontend.md` article notes with a repository-specific 6-phase upgrade plan and deliverable checklist.
+- [x] Defined domain boundaries, API/session contract, security and tenancy controls, onboarding ownership, performance budgets, tests, CI/CD, rollout, and rollback for one Next.js deployment unit.
+- [x] Removed all micro-frontend, Module Federation, multi-zone, cross-zone, and separate-deployment logic from `frontend/microfrontend.md` at user request.
+- [x] Frontend typecheck passed.
+- [ ] Frontend lint is blocked by `typescript-eslint@8.65.0` rejecting TypeScript `7.0.2`.
+- [ ] Offline production build is blocked by build-time Google Fonts downloads for Inter, JetBrains Mono, and Outfit.

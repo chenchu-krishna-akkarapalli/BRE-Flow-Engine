@@ -221,3 +221,42 @@ Append-only session close-outs. One entry per session: what changed, how it was 
   - Target document verification (`mohammed tousif r a h.pdf`, Account 2 Gold Loan): Extracted `status: "ACTIVE"`, `emi: 68000`, `repayment_tenure: 13`, `interest_rate: 0.23`, `Total_Active_EMI: 228054`.
   - Bulk test verification: 14 text PDFs parsed with 100% success; extracted active EMI across 6 reports (up to ₹2,28,054) and total EMI across 10 reports (up to ₹4,056,680). 0 execution failures.
 - **Undone**: None.
+
+## [2026-09-23] Repository Architecture Exploration
+- **What Changed**: No application source changed. Documented the current architecture and open design risks in runtime context.
+- **Verified**:
+  - FastAPI entrypoint/middleware/router, async SQLAlchemy pool, RLS tenant context, BRE call path, audit persistence, Next.js API integration, Celery workers, Alembic chain through `0008`, and the 27-member Rust workspace.
+  - Frontend `npm run typecheck`: passed with 0 errors.
+  - Repository contains 259 Python test functions and 112 Rust test annotations.
+- **Unavailable Checks**:
+  - `python3 -m pytest app/tests/test_bre_engine.py -q` stopped during collection because host Python 3.9 lacks FastAPI.
+  - `cargo test -q --workspace` could not start because `cargo` is absent.
+  - No latency benchmark was executed; SLA claims remain unverified in this session.
+- **Surprises / Risks**:
+  - Runtime bank policies and FOIR tiers are hardcoded in Python despite workspace policy requiring dynamic `zen_rules/*.json` loading.
+  - `SSEManager.publish_event()` is a no-op.
+  - Duplicate router and schema surfaces increase drift risk.
+
+## [2026-09-23] Frontend Architecture and Micro-Frontend Upgrade Blueprint
+- **What Changed**:
+  - Replaced `frontend/microfrontend.md` (an imported article/tool transcript) with a verified 631-line repository-specific architecture and delivery blueprint.
+  - Documented current routes/data maturity, API integrations, auth/tenant gaps, browser-policy duplication, hotspot modules, target domain slices, rendering/state/API contracts, security, tenancy, onboarding, performance, testing, CI/CD, rollout, and backend dependencies.
+  - Defined six delivery phases with deliverables and acceptance criteria; multi-zone extraction remains optional behind measurable entry criteria.
+- **Verification**:
+  - `npm run typecheck`: passed.
+  - `git diff --check`: passed after removing Markdown trailing whitespace.
+  - Markdown structure checked: headings present and fenced code blocks balanced.
+- **Blocked / Existing Toolchain Issues**:
+  - `npm run lint` cannot start because `typescript-eslint@8.65.0` rejects TypeScript `7.0.2`.
+  - `npm run build` reached Turbopack but failed because the restricted environment cannot download Inter, JetBrains Mono, and Outfit from Google Fonts.
+- **Application Source Changes**: None; documentation and mandated runtime memory only.
+
+## [2026-09-23] Remove Micro-Frontend Logic from Frontend Blueprint
+- **What Changed**:
+  - Removed Module Federation, multi-zone, runtime-composition, cross-zone, separate-repository, and independent-deployment guidance from `frontend/microfrontend.md`.
+  - Reframed the target as one domain-modular Next.js application with one build and deployment unit.
+  - Removed the optional zone-extraction phase and related checklist/definition-of-done items.
+- **Verification**:
+  - Case-insensitive search found no micro-frontend-specific terms or logic remaining in the document.
+  - `git diff --check` passed; document now has 601 lines.
+- **Application Source Changes**: None.
