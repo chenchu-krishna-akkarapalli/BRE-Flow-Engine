@@ -162,7 +162,46 @@ export async function extractDocument(
 }
 
 // The CIBIL report is parsed by the Rust engine and discarded; only these
-// bureau fields come back, keyed to the wizard's own draft fields.
+export interface CibilAccountDetail {
+  key: string;
+  index: number;
+  accountType: string;
+  status: string;
+  isActive: boolean;
+  emi: number;
+  repaymentTenure?: number | null;
+  interestRate?: number | null;
+  paymentFrequency?: string | null;
+  accountNumber?: string | null;
+  memberName?: string | null;
+  sanctionedAmount?: number | null;
+  currentBalance?: number | null;
+  amountOverdue?: number | null;
+  worstDpd: number;
+  startDate?: string | null;
+  endDate?: string | null;
+  lastPayment?: string | null;
+}
+
+export interface CibilConsumerInfo {
+  name: string;
+  pan?: string | null;
+  dateOfBirth?: string | null;
+  gender?: string | null;
+  controlNumber?: string | null;
+  reportDate?: string | null;
+}
+
+export interface CibilAccountsSummary {
+  totalAccounts: number;
+  activeAccounts: number;
+  closedAccounts: number;
+  totalBalance: number;
+  totalSanctionedAmount: number;
+  totalActiveEmi: number;
+  totalEmi: number;
+}
+
 export interface CibilExtraction {
   success: boolean;
   filename: string;
@@ -170,7 +209,7 @@ export interface CibilExtraction {
   // SUCCESS | UNKNOWN_CONSUMER | DUPLICATE_DOCUMENT — only SUCCESS carries fields.
   status: string;
   message: string;
-  extracted: Record<string, string | number | boolean | null>;
+  extracted: Record<string, any>;
 }
 
 export async function extractCibilReport(file: File): Promise<CibilExtraction> {

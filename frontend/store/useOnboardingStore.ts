@@ -223,6 +223,7 @@ export const CIBIL_POPULATED_FIELDS = [
   "bureauWriteOffAmount",
   "cibilPlScoreToggle",
   "bureauCibilPlScore",
+  "existingEmi",
 ] as const satisfies readonly (keyof Draft)[];
 
 export function dpdDaysFor(draft: Draft): number {
@@ -938,7 +939,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   applyCibilExtraction: (fields, filename) =>
     set((state) => {
       // Only fields the wizard actually owns are written; the response also
-      // carries evidence (worstEverDpd, enquiry counts) that has no input.
+      // carries evidence (worstEverDpd, enquiry counts, accounts) that has no input.
       const draft = { ...state.draft };
       for (const key of CIBIL_POPULATED_FIELDS) {
         const value = fields[key];
@@ -946,7 +947,18 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
           (draft as Record<string, unknown>)[key] = value;
         }
       }
-      return { draft, cibilVerified: { filename, evidence: fields }, error: null };
+      if (fields.existingEmi !== undefined && fields.existingEmi !== null && fields.existingEmi !== "") {
+        draft.existingEmi = Number(fields.existingEmi);
+      } else if (fields.totalActiveEmi !== undefined && fields.totalActiveEmi !== null && fields.totalActiveEmi !== "") {
+        draft.existingEmi = Number(fields.totalActiveEmi);
+      }
+
+      const occupation = profileTypeFor(draft);
+      const emi = Number(draft.existingEmi || 0);
+      const avgIncome = state.phase1IncomeResult?.average_income ?? 0;
+      const phase2FoirResult = computePhase2FoirResult(avgIncome, occupation, emi);
+
+      return { draft, phase2FoirResult, cibilVerified: { filename, evidence: fields }, error: null };
     }),
 
   clearCibilExtraction: () => set({ cibilVerified: null }),

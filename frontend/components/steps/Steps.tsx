@@ -1093,7 +1093,7 @@ export function Step4Banking() {
   const locked = useOnboardingStore((s) => s.cibilVerified) !== null;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex w-full min-w-0 flex-col gap-6">
       <Field label="Which bank do you already have a savings or current account with?" htmlFor="existingAccountBank">
         <Select id="existingAccountBank" value={draft.existingAccountBank} onChange={k("existingAccountBank")} options={ACCOUNT_BANKS} />
       </Field>
@@ -1114,9 +1114,27 @@ export function Step4Banking() {
 
       <CibilUpload />
 
-      <Field label="What is your latest credit score (CIBIL score), if you know it?" htmlFor="bureauCibilScore">
-        <TextInput id="bureauCibilScore" type="number" value={draft.bureauCibilScore} onChange={(v) => set("bureauCibilScore", num(v))} numeric verified={locked} disabled={locked} />
-      </Field>
+      <div className="grid gap-6 sm:grid-cols-2 min-w-0">
+        <Field label="What is your latest credit score (CIBIL score), if you know it?" htmlFor="bureauCibilScore">
+          <TextInput id="bureauCibilScore" type="number" value={draft.bureauCibilScore} onChange={(v) => set("bureauCibilScore", num(v))} numeric verified={locked} disabled={locked} />
+        </Field>
+
+        <Field label="Total ongoing monthly loan EMI obligations (₹)" htmlFor="existingEmi">
+          <TextInput
+            id="existingEmi"
+            type="number"
+            value={draft.existingEmi}
+            onChange={(v) => {
+              const val = num(v);
+              set("existingEmi", val);
+              useOnboardingStore.getState().setExistingEmi(val === "" ? "" : Number(val));
+            }}
+            numeric
+            verified={locked}
+            disabled={locked}
+          />
+        </Field>
+      </div>
 
       <Field label="Have you ever missed a loan payment, or paid one late?" htmlFor="hasMissedPayment">
         <RadioCards
@@ -1154,7 +1172,7 @@ export function Step4Banking() {
         />
       </Field>
 
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-6 sm:grid-cols-2 min-w-0">
         <Field label="How much do you currently owe in overdue payments? (₹)" htmlFor="bureauCurrentlyOutstanding">
           <TextInput id="bureauCurrentlyOutstanding" type="number" value={draft.bureauCurrentlyOutstanding} onChange={(v) => set("bureauCurrentlyOutstanding", num(v))} numeric verified={locked} disabled={locked} />
         </Field>
@@ -1174,11 +1192,11 @@ export function Step4Banking() {
 
       {draft.hasWriteOff && (
         <>
-          <fieldset className="rounded-md border border-line p-4">
+          <fieldset className="min-w-0 rounded-md border border-line p-4">
             <legend className="px-2 text-[0.9375rem] font-medium text-ink-muted">
               Which of these was written off? Tick all that apply.
             </legend>
-            <div className="grid gap-1 sm:grid-cols-2">
+            <div className="grid gap-1 sm:grid-cols-2 min-w-0">
               {WRITE_OFF_FLAGS.map((flag) => (
                 <Checkbox
                   key={flag.key}

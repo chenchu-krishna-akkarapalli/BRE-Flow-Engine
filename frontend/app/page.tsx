@@ -219,7 +219,7 @@ function OnboardingWizardContent() {
           /* Step 7 Content - Side-by-side layout on large screens */
           <div className={`flex w-full flex-col gap-8 lg:flex-row lg:items-start max-w-[var(--shell-max)] mx-auto ${animationClass}`}>
             {/* Left Column: Full Audit Trail */}
-            <div className="flex w-full flex-col gap-6 lg:max-w-[var(--form-col)]">
+            <div className="flex w-full min-w-0 flex-1 flex-col gap-6 lg:max-w-[var(--form-col)]">
               {/* Stepper Progress Header */}
               <Stepper entityType={draft.entityType} stepId={stepId} onJump={handleJump} />
 
@@ -240,7 +240,7 @@ function OnboardingWizardContent() {
             </div>
 
             {/* Right Column: BRE Telemetry Matrix */}
-            <aside className="w-full lg:sticky lg:top-20 lg:max-w-[var(--telemetry-col)]">
+            <aside className="w-full shrink-0 lg:sticky lg:top-20 lg:w-[var(--telemetry-col)] lg:max-w-[var(--telemetry-col)]">
               <BankMatrix result={result} />
             </aside>
           </div>
@@ -248,14 +248,14 @@ function OnboardingWizardContent() {
           /* Normal Onboarding Steps 1 to 6 */
           <>
             {/* Left Form Wizard Column */}
-            <div className="flex w-full flex-col gap-6 lg:max-w-[var(--form-col)]">
+            <div className="flex w-full min-w-0 flex-1 flex-col gap-6 lg:max-w-[var(--form-col)]">
               {/* Stepper Progress Header */}
               <Stepper entityType={draft.entityType} stepId={stepId} onJump={handleJump} />
 
               {/* Form Step Body Container with Day Mode Glass Panel */}
               <section
                 key={stepId}
-                className={`${animationClass} glass-panel rounded-2xl p-6 sm:p-8 shadow-sm border border-line bg-white overflow-hidden`}
+                className={`${animationClass} glass-panel w-full min-w-0 rounded-2xl p-6 sm:p-8 shadow-sm border border-line bg-white overflow-hidden`}
               >
                 {StepBody && <StepBody />}
               </section>
@@ -314,7 +314,7 @@ function OnboardingWizardContent() {
             </div>
 
             {/* Right Telemetry Column */}
-            <aside className="w-full lg:sticky lg:top-20 lg:max-w-[var(--telemetry-col)] flex flex-col gap-4">
+            <aside className="w-full shrink-0 lg:sticky lg:top-20 lg:w-[var(--telemetry-col)] lg:max-w-[var(--telemetry-col)] flex flex-col gap-4">
               {/* Telemetry Matrix shows PENDING (null) on Steps 1 to 6 */}
               <BankMatrix result={null} />
             </aside>

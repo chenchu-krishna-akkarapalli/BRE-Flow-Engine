@@ -42,6 +42,32 @@ impl From<Option<u64>> for NilOr {
 }
 
 #[derive(Serialize, Debug, Clone)]
+pub struct TargetConsumerInfo {
+    pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pan: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub date_of_birth: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub gender: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub control_number: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub report_date: Option<String>,
+}
+
+#[derive(Serialize, Debug, Clone)]
+pub struct TargetAccountsSummary {
+    pub total_accounts: u32,
+    pub active_accounts: u32,
+    pub closed_accounts: u32,
+    pub total_balance: u64,
+    pub total_sanctioned_amount: u64,
+    pub total_active_emi: u64,
+    pub total_emi: u64,
+}
+
+#[derive(Serialize, Debug, Clone)]
 pub struct TargetReport {
     #[serde(rename = "CIBIL_Score")]
     pub cibil_score: u16,
@@ -61,6 +87,10 @@ pub struct TargetReport {
     pub loan_enquiry: LoanEnquiry,
     #[serde(rename = "Currently_Outstanding")]
     pub currently_outstanding: CurrentlyOutstanding,
+    #[serde(rename = "Consumer_Info", skip_serializing_if = "Option::is_none")]
+    pub consumer_info: Option<TargetConsumerInfo>,
+    #[serde(rename = "Accounts_Summary", skip_serializing_if = "Option::is_none")]
+    pub accounts_summary: Option<TargetAccountsSummary>,
 }
 
 #[derive(Serialize, Debug, Clone, Default)]
@@ -117,6 +147,12 @@ pub struct DpdEntry {
     pub account_number: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub member_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sanctioned_amount: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub current_balance: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub amount_overdue: Option<u64>,
     #[serde(flatten)]
     pub years: IndexMap<String, IndexMap<String, Value>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -405,6 +441,9 @@ impl TargetReport {
                 payment_frequency: acc.payment_frequency.clone(),
                 account_number: acc.account_number.clone(),
                 member_name: acc.member_name.clone(),
+                sanctioned_amount: acc.sanctioned_amount,
+                current_balance: acc.current_balance,
+                amount_overdue: acc.amount_overdue,
                 current_dpd: if years.is_empty() { Some("NA".to_string()) } else { None },
                 years,
                 start_date: acc.payment_history_start_date.clone(),
@@ -462,6 +501,23 @@ impl TargetReport {
             dpd,
             loan_enquiry,
             currently_outstanding,
+            consumer_info: Some(TargetConsumerInfo {
+                name: report.consumer_info.consumer_name.clone(),
+                pan: report.consumer_info.pan.clone(),
+                date_of_birth: report.consumer_info.date_of_birth.clone(),
+                gender: report.consumer_info.gender.clone(),
+                control_number: Some(report.report_metadata.control_number.clone()),
+                report_date: Some(report.report_metadata.report_date.clone()),
+            }),
+            accounts_summary: Some(TargetAccountsSummary {
+                total_accounts: report.accounts_summary.total_accounts,
+                active_accounts: report.accounts_summary.active_accounts,
+                closed_accounts: report.accounts_summary.closed_accounts,
+                total_balance: report.accounts_summary.total_balance,
+                total_sanctioned_amount: report.accounts_summary.total_sanctioned_amount,
+                total_active_emi: report.accounts_summary.total_active_emi,
+                total_emi: report.accounts_summary.total_emi,
+            }),
         }
     }
 }
@@ -598,6 +654,9 @@ mod tests {
                 payment_frequency: None,
                 account_number: None,
                 member_name: None,
+                sanctioned_amount: None,
+                current_balance: None,
+                amount_overdue: None,
                 current_dpd: None,
                 years: dpd_years(&acc),
                 start_date: acc.payment_history_start_date.clone(),
@@ -627,6 +686,9 @@ mod tests {
             payment_frequency: None,
             account_number: None,
             member_name: None,
+            sanctioned_amount: None,
+            current_balance: None,
+            amount_overdue: None,
             current_dpd: Some("NA".to_string()),
             years,
             start_date: None,

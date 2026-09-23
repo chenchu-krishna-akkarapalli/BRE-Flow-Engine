@@ -36,7 +36,6 @@ export function Phase1IncomeCard() {
   const setField = useOnboardingStore((s) => s.setField);
   const draft = useOnboardingStore((s) => s.draft);
   const phase2FoirResult = useOnboardingStore((s) => s.phase2FoirResult);
-  const setExistingEmi = useOnboardingStore((s) => s.setExistingEmi);
 
 
   const [showAdjustments, setShowAdjustments] = useState(false);
@@ -219,31 +218,31 @@ export function Phase1IncomeCard() {
           </div>
         </div>
 
-        {/* Existing EMI Input Box */}
-        <div className="rounded-xl border border-brand-100 bg-brand-50/40 p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="max-w-md">
-            <label htmlFor="step6ExistingEmi" className="text-xs font-bold text-ink block">
-              Existing Monthly Loan EMI (₹)
-            </label>
-            <span className="text-[0.6875rem] text-ink-subtle block mt-0.5">
-              Enter applicant's total ongoing monthly loan EMI obligations (personal, car, or home loans).
-            </span>
-          </div>
-          <div className="relative min-w-[200px] sm:max-w-[240px] w-full">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-ink-muted text-sm font-semibold">
-              ₹
+        {/* Active Loan Obligations (Collected in Step 4 via CIBIL) */}
+        <div className="rounded-xl border border-brand-100 bg-brand-50/40 px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white border border-brand-200 text-brand-700 shadow-2xs">
+              <FileCheck size={14} />
             </div>
-            <input
-              id="step6ExistingEmi"
-              type="number"
-              min="0"
-              value={draft.existingEmi || ""}
-              onChange={(e) =>
-                setExistingEmi(e.target.value === "" ? "" : Math.max(0, parseFloat(e.target.value)))
-              }
-              placeholder="e.g. 15000"
-              className="w-full rounded-xl border border-line bg-white pl-8 pr-3 py-2 text-sm font-mono font-bold text-ink shadow-2xs outline-none transition-all focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
-            />
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-ink">
+                  Existing Monthly Loan EMI
+                </span>
+                <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-[0.625rem] font-bold text-emerald-800 border border-emerald-200">
+                  From Step 4 CIBIL
+                </span>
+              </div>
+              <span className="text-[0.6875rem] text-ink-subtle block">
+                Total active EMI obligations detected in credit bureau analysis
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-sm font-bold text-ink bg-white px-3 py-1.5 rounded-lg border border-line shadow-2xs">
+              {formatCurrency(Number(draft.existingEmi || 0))}
+              <span className="text-[0.6875rem] text-ink-subtle font-normal ml-1">/ month</span>
+            </span>
           </div>
         </div>
 

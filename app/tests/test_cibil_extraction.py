@@ -240,3 +240,39 @@ def test_active_emi_maps_onto_existing_emi() -> None:
     assert fields["totalActiveEmi"] == 68000.0
     assert fields["totalEmi"] == 85000.0
 
+
+def test_structured_accounts_and_consumer_info_populated() -> None:
+    payload = _with(
+        Consumer_Info={"name": "TEST CONSUMER", "pan": "ABCDE1234F", "date_of_birth": "01/01/1990", "gender": "Male"},
+        Accounts_Summary={"total_accounts": 2, "active_accounts": 1, "closed_accounts": 1, "total_balance": 50000, "total_sanctioned_amount": 100000, "total_active_emi": 15000, "total_emi": 25000},
+        DPD={
+            "Account_1_Gold_Loan": {
+                "status": "ACTIVE",
+                "emi": 15000,
+                "sanctioned_amount": 100000,
+                "current_balance": 50000,
+                "amount_overdue": 0,
+                "interest_rate": 9.5,
+                "repayment_tenure": 24,
+                "2026": {"JAN": 0},
+            },
+            "Account_2_Personal_Loan": {
+                "status": "INACTIVE",
+                "emi": 10000,
+                "sanctioned_amount": 50000,
+                "current_balance": 0,
+                "2024": {"DEC": 0},
+            }
+        },
+    )
+    fields = map_to_bureau_fields(payload)
+    assert fields["consumerInfo"]["name"] == "TEST CONSUMER"
+    assert fields["consumerInfo"]["pan"] == "ABCDE1234F"
+    assert len(fields["accounts"]) == 2
+    assert len(fields["activeAccounts"]) == 1
+    assert fields["activeAccounts"][0]["accountType"] == "Gold Loan"
+    assert fields["activeAccounts"][0]["emi"] == 15000.0
+    assert fields["accountsSummary"]["totalAccounts"] == 2
+    assert fields["accountsSummary"]["activeAccounts"] == 1
+
+

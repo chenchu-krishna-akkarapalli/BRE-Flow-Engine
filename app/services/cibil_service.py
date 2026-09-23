@@ -256,6 +256,74 @@ def map_to_bureau_fields(data: Dict[str, Any]) -> Dict[str, Any]:
 
     pl_score = _pl_score(data.get("CIBIL_PL_Score"))
 
+    # Parse and structure per-account credit facilities
+    dpd_dict = data.get("DPD") or {}
+    accounts: List[Dict[str, Any]] = []
+    for key, val in dpd_dict.items():
+        if not isinstance(val, dict):
+            continue
+        parts = key.split("_")
+        idx = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else len(accounts) + 1
+        raw_name = " ".join(parts[2:]) if len(parts) > 2 else key
+        acc_type = raw_name.replace("_", " ").title()
+        status_str = str(val.get("status") or "ACTIVE").upper()
+        is_active = "ACTIVE" in status_str and "INACTIVE" not in status_str and "CLOSED" not in status_str
+
+        # Compute worst recent DPD for this account
+        years = [k for k in val.keys() if k.isdigit()]
+        recent_acc_dpd = 0
+        for y in years:
+            m_dict = val.get(y) or {}
+            if isinstance(m_dict, dict):
+                for m_val in m_dict.values():
+                    recent_acc_dpd = max(recent_acc_dpd, _dpd_days(m_val))
+
+        accounts.append({
+            "key": key,
+            "index": idx,
+            "accountType": acc_type,
+            "status": status_str,
+            "isActive": is_active,
+            "emi": _amount(val.get("emi")),
+            "repaymentTenure": val.get("repayment_tenure"),
+            "interestRate": val.get("interest_rate"),
+            "paymentFrequency": val.get("payment_frequency"),
+            "accountNumber": val.get("account_number"),
+            "memberName": val.get("member_name"),
+            "sanctionedAmount": _amount(val.get("sanctioned_amount")),
+            "currentBalance": _amount(val.get("current_balance")),
+            "amountOverdue": _amount(val.get("amount_overdue")),
+            "worstDpd": recent_acc_dpd,
+            "startDate": val.get("start_date"),
+            "endDate": val.get("end_date"),
+            "lastPayment": val.get("last_payment"),
+        })
+
+    # Sort accounts: active first, then by index
+    accounts.sort(key=lambda a: (0 if a["isActive"] else 1, a["index"]))
+    active_accounts = [a for a in accounts if a["isActive"]]
+
+    consumer_raw = data.get("Consumer_Info") or {}
+    consumer_info = {
+        "name": consumer_raw.get("name") or "",
+        "pan": consumer_raw.get("pan"),
+        "dateOfBirth": consumer_raw.get("date_of_birth"),
+        "gender": consumer_raw.get("gender"),
+        "controlNumber": consumer_raw.get("control_number"),
+        "reportDate": consumer_raw.get("report_date"),
+    }
+
+    acc_sum_raw = data.get("Accounts_Summary") or {}
+    accounts_summary = {
+        "totalAccounts": acc_sum_raw.get("total_accounts") or len(accounts),
+        "activeAccounts": acc_sum_raw.get("active_accounts") or len(active_accounts),
+        "closedAccounts": acc_sum_raw.get("closed_accounts") or (len(accounts) - len(active_accounts)),
+        "totalBalance": _amount(acc_sum_raw.get("total_balance")) or _amount(outstanding.get("Total_Current_Balance")),
+        "totalSanctionedAmount": _amount(acc_sum_raw.get("total_sanctioned_amount")),
+        "totalActiveEmi": _amount(data.get("Total_Active_EMI")),
+        "totalEmi": _amount(data.get("Total_EMI")),
+    }
+
     return {
         "bureauCibilScore": int(data.get("CIBIL_Score") or 0),
         "cibilPlScoreToggle": pl_score is not None,
@@ -274,6 +342,20 @@ def map_to_bureau_fields(data: Dict[str, Any]) -> Dict[str, Any]:
         "totalEmi": _amount(data.get("Total_EMI")),
         "hasWriteOff": any(write_offs.values()),
         "bureauWriteOffAmount": cc_amount or total_write_off,
+        "consumerInfo": consumer_info,
+        "accountsSummary": accounts_summary,
+        "accounts": accounts,
+        "activeAccounts": active_accounts,
+        "dpdRisk": {
+            "maxRecentDpd": recent_dpd,
+            "lifetimeWorstDpd": lifetime_dpd,
+            "hasSevereDpd": severe,
+        },
+        "writeOffSummary": {
+            "total": total_write_off,
+            "principal": _amount((data.get("Write_Off_Amount") or {}).get("Principal")),
+            "details": write_off_details,
+        },
         **write_offs,
     }
 
