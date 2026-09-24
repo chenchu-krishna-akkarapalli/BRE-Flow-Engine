@@ -77,6 +77,16 @@ def validate_upload(content: bytes, content_type: Optional[str], filename: str) 
         )
 
 
+_semaphore: Optional[asyncio.Semaphore] = None
+
+
+def _get_semaphore() -> asyncio.Semaphore:
+    global _semaphore
+    if _semaphore is None:
+        _semaphore = asyncio.Semaphore(getattr(settings, "DOC_EXTRACTION_MAX_CONCURRENCY", 10))
+    return _semaphore
+
+
 # single concise context line
 async def _run_engine(pdf_bytes: bytes, doc_id: str) -> Dict[str, Any]:
     """Spawn coi-cli, frame request over stdin, return envelope dict."""
@@ -85,22 +95,24 @@ async def _run_engine(pdf_bytes: bytes, doc_id: str) -> Dict[str, Any]:
         raise CoiEngineError(missing_component() or "The COI engine is unavailable.")
 
     argv = [binary, "-"]
-    proc = await asyncio.create_subprocess_exec(
-        *argv,
-        stdin=asyncio.subprocess.PIPE,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
-    try:
-        stdout, stderr = await asyncio.wait_for(
-            proc.communicate(pdf_bytes), timeout=settings.COI_ENGINE_TIMEOUT_S
+
+    async with _get_semaphore():
+        proc = await asyncio.create_subprocess_exec(
+            *argv,
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
         )
-    except asyncio.TimeoutError as exc:
-        proc.kill()
-        await proc.wait()
-        raise CoiEngineError(
-            f"The COI engine exceeded its {settings.COI_ENGINE_TIMEOUT_S:.0f}s budget."
-        ) from exc
+        try:
+            stdout, stderr = await asyncio.wait_for(
+                proc.communicate(pdf_bytes), timeout=settings.COI_ENGINE_TIMEOUT_S
+            )
+        except asyncio.TimeoutError as exc:
+            proc.kill()
+            await proc.wait()
+            raise CoiEngineError(
+                f"The COI engine exceeded its {settings.COI_ENGINE_TIMEOUT_S:.0f}s budget."
+            ) from exc
 
     if stdout:
         out_str = stdout.decode("utf-8", errors="replace").strip()

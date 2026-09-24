@@ -71,6 +71,16 @@ def validate_upload(content: bytes, content_type: Optional[str], filename: str) 
         )
 
 
+_semaphore: Optional[asyncio.Semaphore] = None
+
+
+def _get_semaphore() -> asyncio.Semaphore:
+    global _semaphore
+    if _semaphore is None:
+        _semaphore = asyncio.Semaphore(getattr(settings, "DOC_EXTRACTION_MAX_CONCURRENCY", 10))
+    return _semaphore
+
+
 async def _run_engine(pdf_bytes: bytes, doc_id: str) -> Dict[str, Any]:
     """Spawn itr-cli, frame request over stdin, return envelope dict."""
     binary = _binary_path()
@@ -79,20 +89,21 @@ async def _run_engine(pdf_bytes: bytes, doc_id: str) -> Dict[str, Any]:
 
     frame = struct.pack("<Q", 2) + b"[]" + pdf_bytes
     argv = [binary, "-"]
-    proc = await asyncio.create_subprocess_exec(
-        *argv,
-        stdin=asyncio.subprocess.PIPE,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
 
-    timeout = float(getattr(settings, "ITR_ENGINE_TIMEOUT_SECONDS", 15.0))
-    try:
-        out, err = await asyncio.wait_for(proc.communicate(input=frame), timeout=timeout)
-    except asyncio.TimeoutError:
-        proc.kill()
-        await proc.wait()
-        raise ItrEngineError(f"ITR extraction timed out after {timeout:.1f}s") from None
+    timeout = float(getattr(settings, "ITR_ENGINE_TIMEOUT_S", 25.0))
+    async with _get_semaphore():
+        proc = await asyncio.create_subprocess_exec(
+            *argv,
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        try:
+            out, err = await asyncio.wait_for(proc.communicate(input=frame), timeout=timeout)
+        except asyncio.TimeoutError:
+            proc.kill()
+            await proc.wait()
+            raise ItrEngineError(f"ITR extraction timed out after {timeout:.1f}s") from None
 
     if proc.returncode != 0:
         err_msg = err.decode("utf-8", errors="replace").strip() or f"exit code {proc.returncode}"

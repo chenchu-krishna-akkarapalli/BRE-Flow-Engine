@@ -260,3 +260,54 @@ Append-only session close-outs. One entry per session: what changed, how it was 
   - Case-insensitive search found no micro-frontend-specific terms or logic remaining in the document.
   - `git diff --check` passed; document now has 601 lines.
 - **Application Source Changes**: None.
+
+## [2026-09-23] Concise Project Architecture Summary
+- **What Changed**: No application source changes; re-verified and summarized the frontend, FastAPI API/service layers, in-memory BRE, PostgreSQL/Alembic persistence, tenant isolation, Redis/Celery background infrastructure, Rust PDF engines, and Docker/Nginx deployment.
+- **Verification**: Bounded source inspection of `app/main.py`, `app/api/router.py`, database configuration/models/RLS, BRE implementation, document services, frontend API/state dependencies, Cargo workspace, and `docker-compose.yml`.
+- **SLA / Tests**: No code changed and no latency or test run was needed. Existing numeric SLA claims were not re-benchmarked.
+- **Architecture Risk**: Confirmed core bank eligibility policy is code-defined in `app/services/bre_engine.py`; this conflicts with the workspace rule requiring runtime-loaded `zen_rules/*.json` decision graphs.
+
+## [2026-09-23] Database Architecture Classification
+- **Finding**: Primary persistence is one PostgreSQL 16 relational database using a shared schema and indexed `tenant_id` foreign keys. Redis is auxiliary transient infrastructure for cache, nonce/session-style data, Celery broker/results, and PubSub.
+- **Not Implemented**: No repository configuration for read replicas, horizontal sharding, PostgreSQL table partitioning, CQRS, or event sourcing/event store.
+- **Important Detail**: The application sets `app.current_tenant_id` as an intended RLS context, but no `CREATE POLICY` or `ENABLE ROW LEVEL SECURITY` DDL was found in application migrations; current isolation is therefore visibly based on tenant-keyed data and application filtering, with database-enforced RLS not verifiable from repository migrations.
+- **Verification**: Two bounded searches across application code, migrations, dependencies, and Compose configuration; no code changed and no runtime benchmark was required.
+
+## [2026-09-23] Database Production-Readiness Verdict
+- **Verdict**: The single PostgreSQL/shared-schema multi-tenant pattern is production-valid for the current scale, but this repository is not fully production-hardened because database-enforced tenant RLS, managed backups/PITR, high availability/failover, and replica strategy are not demonstrated in repository configuration.
+- **Scope**: Advisory only; no application source changes or runtime benchmarks.
+- **Clarification**: Confirmed the distinction between a sound architecture pattern and incomplete production hardening; no further repository changes.
+
+## [2026-09-23] Database Hardening Priorities
+- **Recommendation**: First enforce tenant isolation with actual PostgreSQL RLS policies and cross-tenant tests; then remove default credentials/add TLS, configure WAL-based PITR with restore drills, use managed HA/failover, add query/connection monitoring and timeouts, and tune constraints/composite indexes from measured query plans.
+- **Deferred Until Metrics Justify**: Read replicas, time-based partitioning, and sharding. CQRS/event sourcing are not recommended for the current architecture without a concrete domain requirement.
+- **Verification**: Repository configuration rechecked; PostgreSQL primary documentation consulted for RLS, PITR, and standby replication. No application source changes or benchmarks.
+- **Project Fit Confirmation**: RLS/secrets/backups/monitoring/HA are directly applicable because the project stores tenant-scoped financial/onboarding data, currently provides fallback database credentials, and allows RLS context setup failures to be skipped. Replicas, partitioning, sharding, CQRS, and event sourcing remain measurement-driven deferrals.
+
+## [2026-09-23] Database Hardening Implementation Plan
+- **Plan**: Six ordered phases covering baseline objectives; centralized fail-closed tenant RLS and integration tests; production credentials/TLS/database roles; PITR plus restore drills; managed HA/readiness; and observability, timeouts, measured index tuning, and retention.
+- **Key Files**: Proposed next Alembic migration after `0008`, `app/db/rls.py`, `app/core/database.py`, `app/core/config.py`, Compose/deployment configuration, health endpoints, and new real-PostgreSQL integration tests.
+- **Deferrals**: Read replicas only for sustained read pressure, time partitioning only for materially large append-heavy tables, and sharding only after a single managed PostgreSQL cluster is proven insufficient. No CQRS/event sourcing work planned.
+- **Source Changes**: Runtime memory only; implementation has not started and tests/benchmarks were not run.
+
+## [2026-09-23] Database Hardening Phases 1-4 (Provider-Neutral Work)
+- **Phase 1 — RLS Foundation**: Added Alembic `0009` and `0010`, forcing tenant policies on eight strict tenant-owned business tables; made tenant context parameterized/fail-closed; removed unsafe raw-SQL interpolation; tightened platform leadership authorization.
+- **Phase 2 — Credentials and Runtime Enforcement**: Added separate runtime/migration URIs, production TLS/secret/auth validation, idempotent `bre_app` role bootstrap, and Compose separation (`bre_app` runtime, `bre_user` migrations). Live database is at `0010`; application and Celery containers are healthy.
+- **Phase 3 — Recovery**: Added guarded logical backup and disposable restore-drill scripts plus `docs/database-production-runbook.md`. Live drill restored revision `0010` and 4 tenant rows; temporary database and dump were removed. Logical dumps do not replace provider WAL/PITR.
+- **Phase 4 — Application Readiness**: Docker health now checks `/api/v1/ready`; web pools deploy as 5+5 per worker and Celery as 2+2 per worker, approximately 56 runtime connections before administrative headroom.
+- **Verification**: 19 focused security/config/migration tests passed; real PostgreSQL rejected cross-tenant insert and hid rows without context; `git diff --check`, shell syntax, Compose validation, health, readiness, role flags, and migration downgrade/re-upgrade passed. A wider affected suite passed 51 tests with 3 existing dynamic-navigation fixture/state failures. Full backend suite had 839 passed, 1 skipped, 45 existing failures dominated by payslip fixture conformance plus dynamic navigation and one bank-matrix source-inspection test.
+- **External Blocker**: Managed multi-zone HA, automatic failover, and WAL/PITR require the user's deployment-provider selection and credentials. No provider-specific mutation was attempted.
+- **Remaining Security Scope**: Nullable/global identity/session/role/telemetry/admin tables need explicit platform/global-row semantics before policies can be enabled safely.
+
+## [2026-09-23] Database Hardening Review Close-out
+- **Review Fixes**: Kept deployed migration `0009` immutable and introduced `0010` for `pipeline_lead`, `approval_queue`, `regional_branch`, and `commission_ledger`; added centralized `get_tenant_db` binding on current persisted onboarding paths; strengthened production URL validation; removed the one-shot Compose role-setup service in favor of fresh-cluster init; restored fail-closed production Compose defaults.
+- **Final State**: Alembic is at `0010`; forced RLS covers 8 strict tenant-owned tables; `bre_app` reports `rolsuper=false` and `rolbypassrls=false`; web and Celery are running and the web container is healthy.
+- **Verification**: 53 focused tests passed. Compose validation and `git diff --check` passed. `/api/v1/ready` returned database, Redis, and BRE checks true in 11.752 ms. A custom-format dump restored into `bre_restore_verify` at revision `0010` with 4 tenants; the disposable database and dump were removed.
+- **Measured SLA**: Readiness request was 11.752 ms, inside the repository's 30 ms simple-GET target. No business CRUD/evaluation latency benchmark was rerun in this close-out.
+- **Surprise Corrected**: Expanding an already-applied migration would leave deployed databases inconsistent; the added RLS scope was moved to follow-up migration `0010` before close-out.
+- **External Blocker**: Managed multi-zone failover and WAL/PITR cannot be provisioned until the deployment provider, region, credentials, and cost tier are selected. Later observability/index work remains sequenced after that phase.
+
+## [2026-09-24] Database Hardening Before/Why/After Explanation
+- **Scope**: Reconstructed the original database-security behavior from `HEAD`, compared it with the current working diff, and prepared a detailed explanation of the RLS, authentication, database-role, TLS configuration, recovery, readiness, and connection-budget changes. No application source was changed.
+- **Current Verification**: PostgreSQL, Redis, API, and Celery containers are running; API and PostgreSQL report healthy; Alembic reports `0010 (head)`; all 8 selected business tables have both RLS and forced RLS; `bre_app` reports `rolsuper=false` and `rolbypassrls=false`.
+- **Accuracy Boundary**: Managed multi-zone HA and provider WAL/PITR remain unimplemented pending provider selection. Nullable/global identity, session, role, telemetry, alert, and tenant-administration tables remain outside RLS pending explicit global-row semantics. No new performance benchmark or test run was performed for this explanation-only turn.

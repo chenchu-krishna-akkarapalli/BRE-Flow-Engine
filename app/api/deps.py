@@ -2,22 +2,57 @@ from typing import AsyncGenerator, Callable, List, Optional
 from fastapi import Depends, Header, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from redis.asyncio import Redis
-from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.constants import HIERARCHY_ANCESTORS_MAP
+from app.core.config import settings
 from app.core.database import get_db
 from app.core.redis import get_redis
 from app.core.security import verify_token
 from app.core.exceptions import ForbiddenError, UnauthorizedError
+from app.db.rls import set_tenant_rls_context
 from app.middleware.tenant_context import get_current_tenant_id
 
 # Reusable HTTP Bearer authentication scheme
 security_bearer = HTTPBearer(auto_error=False)
 
 # Extracts and validates current tenant UUID context
-async def get_current_tenant(x_tenant_id: str = Header(default="default")) -> str:
-    return x_tenant_id or get_current_tenant_id() or "default"
+async def get_current_tenant(
+    x_tenant_id: Optional[str] = Header(default=None),
+    auth: Optional[HTTPAuthorizationCredentials] = Depends(security_bearer),
+) -> str:
+    requested_tenant = x_tenant_id or get_current_tenant_id() or "default"
+    if not settings.REQUIRE_AUTHENTICATED_TENANT_CONTEXT:
+        return requested_tenant
+    if not auth:
+        raise UnauthorizedError("Authorization header missing for tenant-scoped access.")
+
+    token_payload = verify_token(auth.credentials)
+    if not token_payload:
+        raise UnauthorizedError("Invalid or expired JWT token.")
+    token_tenant = token_payload.get("tenant_uuid")
+    user_role = token_payload.get("role", "TRANSACTIONAL_USER")
+    governance_level = token_payload.get("governance_level", "TENANT")
+    is_platform_leadership = governance_level == "PLATFORM" and user_role in (
+        "SUPER_ADMIN", "REGIONAL_DIRECTOR", "OPERATIONS_HEAD", "ACCOUNTS_HEAD",
+        "AREA_MANAGER", "TEAM_LEADER", "SALES_MANAGER",
+    )
+    if not is_platform_leadership:
+        if not token_tenant:
+            raise ForbiddenError("Authenticated user has no tenant assignment.")
+        if x_tenant_id and x_tenant_id != token_tenant:
+            raise ForbiddenError("TENANT_CROSS_ACCESS_VIOLATION: Token context does not match target tenant partition.")
+        requested_tenant = token_tenant
+    return requested_tenant
+
+
+async def get_tenant_db(
+    tenant_id: str = Depends(get_current_tenant),
+    db: AsyncSession = Depends(get_db),
+) -> AsyncSession:
+    """Return a session after binding its transaction to an authorized tenant."""
+    await set_tenant_rls_context(db, tenant_id)
+    return db
 
 # Validates JWT bearer token claims and user identity
 async def get_current_user(auth: Optional[HTTPAuthorizationCredentials] = Depends(security_bearer)) -> dict:
@@ -50,7 +85,7 @@ async def get_current_authorized_tenant(
     governance_level = token_payload.get("governance_level", "TENANT")
 
     # Platform owners and sales hierarchy leadership (Regional Director, Area Manager, etc.) can inspect channel tenants
-    is_leadership = governance_level == "PLATFORM" or user_role in (
+    is_leadership = governance_level == "PLATFORM" and user_role in (
         "SUPER_ADMIN", "REGIONAL_DIRECTOR", "OPERATIONS_HEAD", "ACCOUNTS_HEAD",
         "AREA_MANAGER", "TEAM_LEADER", "SALES_MANAGER"
     )
@@ -62,10 +97,7 @@ async def get_current_authorized_tenant(
             raise ForbiddenError("TENANT_CROSS_ACCESS_VIOLATION: Token context does not match target tenant partition.")
         target_tenant = token_tenant_uuid or route_tenant_uuid or "default"
 
-    try:
-        await db.execute(text(f"SET LOCAL app.current_tenant_id = '{target_tenant}';"))
-    except Exception:
-        pass
+    await set_tenant_rls_context(db, target_tenant)
 
     return target_tenant
 

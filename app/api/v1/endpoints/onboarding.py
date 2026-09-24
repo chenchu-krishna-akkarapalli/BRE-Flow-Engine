@@ -7,7 +7,7 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_current_tenant, get_db
+from app.api.deps import get_current_tenant, get_tenant_db
 from app.api.schemas.onboarding import (
     CibilExtractionResponse,
     CoiExtractionResponse,
@@ -30,7 +30,6 @@ from app.core.logging import logger, redact_pan, redact_pii
 from app.db.models.application import ApplicationModel
 from app.db.models.audit_log import AuditLogModel
 from app.db.models.rule_execution import RuleExecutionModel
-from app.db.rls import set_tenant_rls_context
 from app.services.bre_engine import bre_engine_service
 from app.services.cibil_service import CibilEngineError, extract_cibil_report
 from app.services.coi_service import CoiEngineError, extract_coi_report
@@ -72,7 +71,7 @@ def _rejection_details(evaluation: Dict[str, Any]) -> list[RejectionReasonDetail
 async def evaluate_onboarding_application(
     payload: OnboardingEvaluationRequest,
     tenant_id: str = Depends(get_current_tenant),
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_tenant_db),
 ):
     """Evaluates candidate application against partner bank rules, records RLS audit trail, and returns verdict in < 80 ms."""
     start_time = time.perf_counter()
@@ -89,8 +88,6 @@ async def evaluate_onboarding_application(
     logger.info(f"Evaluating application for tenant '{tenant_id}': {log_safe_payload}")
 
     # Enforce PostgreSQL Row-Level Security
-    await set_tenant_rls_context(db, tenant_id)
-
     # Execute in-memory Zen-Engine rules (< 10 ms)
     evaluation = await bre_engine_service.evaluate_application(engine_payload, tenant_id=tenant_id)
 
@@ -288,7 +285,7 @@ async def _persist_form_evaluation(
 async def evaluate_onboarding_form(
     form: OnboardingFormRequest,
     tenant_id: str = Depends(get_current_tenant),
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_tenant_db),
 ):
     """Evaluate a 5-step onboarding wizard submission (Individual / Company / HUF).
 
@@ -306,8 +303,6 @@ async def evaluate_onboarding_form(
         f"Evaluating {form.identity.entity_type.value} onboarding form for tenant "
         f"'{tenant_id}': {log_safe_payload}"
     )
-
-    await set_tenant_rls_context(db, tenant_id)
 
     evaluation = await bre_engine_service.evaluate_application(engine_payload, tenant_id=tenant_id)
 
@@ -407,14 +402,12 @@ async def export_application_report(
     application_id: str,
     format: Literal["pdf", "excel"] = Query("pdf", description="Document format."),
     tenant_id: str = Depends(get_current_tenant),
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_tenant_db),
 ):
     """Stream the evaluation audit report as a PDF or Excel workbook.
 
     Built entirely in memory (`BytesIO`) — no temp files on the request path.
     """
-    await set_tenant_rls_context(db, tenant_id)
-
     app_row = (
         await db.execute(select(ApplicationModel).where(ApplicationModel.id == application_id))
     ).scalar_one_or_none()

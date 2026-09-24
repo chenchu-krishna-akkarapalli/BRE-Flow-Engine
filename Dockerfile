@@ -110,9 +110,9 @@ USER appuser
 
 EXPOSE 8000
 
-# Container liveness probe using Python built-in urllib (no curl package needed in slim image)
+# Container readiness probe using Python built-in urllib (no curl package needed in slim image)
 HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health')" || exit 1
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/ready')" || exit 1
 
 # Start ASGI application using Gunicorn + Uvicorn workers
 CMD ["gunicorn", "app.main:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8000", "--timeout", "30"]

@@ -15,7 +15,7 @@ from app.db.base_class import Base
 from app.db.models import TenantModel, ApplicationModel, RuleExecutionModel, AuditLogModel
 
 config = context.config
-config.set_main_option("sqlalchemy.url", settings.ASYNC_DATABASE_URI)
+config.set_main_option("sqlalchemy.url", settings.MIGRATION_DATABASE_URI)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)

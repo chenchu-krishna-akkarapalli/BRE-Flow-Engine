@@ -117,6 +117,16 @@ def validate_upload(content: bytes, content_type: Optional[str], filename: str) 
         )
 
 
+_semaphore: Optional[asyncio.Semaphore] = None
+
+
+def _get_semaphore() -> asyncio.Semaphore:
+    global _semaphore
+    if _semaphore is None:
+        _semaphore = asyncio.Semaphore(getattr(settings, "DOC_EXTRACTION_MAX_CONCURRENCY", 10))
+    return _semaphore
+
+
 async def _run_engine(pdf_bytes: bytes, doc_id: str) -> Dict[str, Any]:
     """Spawn the engine, frame the request over stdin, return its envelope."""
     binary = _binary_path()
@@ -129,22 +139,24 @@ async def _run_engine(pdf_bytes: bytes, doc_id: str) -> Dict[str, Any]:
     frame = struct.pack("<Q", 2) + b"[]" + pdf_bytes
 
     argv = [binary, "-", "--schema", "target", "--pipeline", "--from-pdf", "--doc-id", doc_id]
-    proc = await asyncio.create_subprocess_exec(
-        *argv,
-        stdin=asyncio.subprocess.PIPE,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
-    try:
-        stdout, stderr = await asyncio.wait_for(
-            proc.communicate(frame), timeout=settings.CIBIL_ENGINE_TIMEOUT_S
+
+    async with _get_semaphore():
+        proc = await asyncio.create_subprocess_exec(
+            *argv,
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
         )
-    except asyncio.TimeoutError as exc:
-        proc.kill()
-        await proc.wait()
-        raise CibilEngineError(
-            f"The CIBIL engine exceeded its {settings.CIBIL_ENGINE_TIMEOUT_S:.0f}s budget."
-        ) from exc
+        try:
+            stdout, stderr = await asyncio.wait_for(
+                proc.communicate(frame), timeout=settings.CIBIL_ENGINE_TIMEOUT_S
+            )
+        except asyncio.TimeoutError as exc:
+            proc.kill()
+            await proc.wait()
+            raise CibilEngineError(
+                f"The CIBIL engine exceeded its {settings.CIBIL_ENGINE_TIMEOUT_S:.0f}s budget."
+            ) from exc
 
     if proc.returncode != 0:
         # The binary was found and ran, so a non-zero exit is this document

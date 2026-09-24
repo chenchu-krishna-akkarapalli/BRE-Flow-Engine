@@ -407,8 +407,6 @@ function TradeBusinessBranch() {
         prevItrFieldId="prevITRAmount"
       />
 
-      <Phase1IncomeCard />
-
       <Field label="For how many years have you filed tax returns?" htmlFor="businessItrYears">
         <TextInput id="businessItrYears" type="number" value={draft.businessItrYears} onChange={(v) => set("businessItrYears", num(v))} numeric />
       </Field>
@@ -474,7 +472,6 @@ function AgricultureBranch() {
                 currentItrFieldId="currentITRAmount"
                 prevItrFieldId="prevITRAmount"
               />
-              <Phase1IncomeCard />
               <Field label="For how many years have you filed tax returns?" htmlFor="businessItrYears">
                 <TextInput id="businessItrYears" type="number" value={draft.businessItrYears} onChange={(v) => set("businessItrYears", num(v))} numeric />
               </Field>

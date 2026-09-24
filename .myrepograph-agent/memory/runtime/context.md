@@ -125,10 +125,21 @@ Working state for the current task. Kept here rather than in the context window 
 - [ ] Reconcile runtime code-defined bank/FOIR thresholds with the repository policy requiring dynamically loaded `zen_rules/*.json` graphs.
 - [ ] Decide whether duplicate router/schema surfaces (`app/api/router.py` vs `app/api/v1/router.py`, onboarding-local document/OTP routes vs dedicated routers) should be consolidated.
 - [ ] Implement or remove the advertised Redis PubSub SSE path; `SSEManager.publish_event()` is currently a no-op.
+- [ ] Select the managed PostgreSQL provider (AWS RDS/Aurora, Azure Database for PostgreSQL, GCP Cloud SQL/AlloyDB, or another platform) before implementing multi-zone HA, automatic failover, and managed PITR.
+- [ ] Extend explicit RLS policy design to nullable/global identity, session, role, telemetry, alert, and tenant-administration tables after defining platform/global-row semantics.
 
 ## 2026-09-23 project exploration
 
 - [x] Mapped the FastAPI, Next.js, PostgreSQL/Redis/Celery, Alembic, and Rust document-engine boundaries.
+- [x] Re-verified those boundaries from source and prepared a simple architecture summary covering frontend, backend, BRE, database, tenancy, cache/workers, document extraction, and deployment.
+- [x] Classified persistence as a single shared-schema PostgreSQL relational database with tenant-keyed rows, plus Redis for transient cache/broker/session concerns; confirmed no read replicas, sharding, CQRS, event sourcing, or PostgreSQL table partitioning in repository configuration.
+- [x] Prioritized database production hardening: enforce/test PostgreSQL RLS, externalize secrets and TLS, add PITR plus restore drills, deploy HA/failover, add database observability/timeouts, and tune constraints/composite indexes before considering replicas or partitioning.
+- [x] Produced a phased database implementation plan: baseline/RPO-RTO, centralized fail-closed RLS with real-Postgres isolation tests, production secrets/TLS/roles, PITR and restore drills, managed HA, observability/query tuning, then metric-triggered replicas or partitioning.
+- [x] Implemented immutable migration `0009` for four onboarding tables and follow-up `0010` for four operational business tables; deployed all eight forced-RLS policies using a non-superuser `bre_app` runtime role plus separate `bre_user` migration role.
+- [x] Added fail-closed parameterized tenant context, deterministic tenant ID resolution, platform-governance authorization tightening, and production authenticated-tenant enforcement.
+- [x] Added production validation for non-default JWT secret, TLS runtime/migration URLs, separate DB users, and authenticated tenant context.
+- [x] Added guarded database backup/restore scripts and verified a live restore to revision `0010` with all 4 tenants; removed the temporary dump and disposable database.
+- [x] Switched Docker health to `/api/v1/ready` and bounded web/Celery connection pools to an estimated 56-runtime-connection ceiling.
 - [x] Traced the primary onboarding path: frontend API client -> tenant middleware/RLS -> `BREEngineService` -> application/rule audit persistence.
 - [x] Confirmed document extraction invokes Rust CLI subprocesses using stdin-framed PDFs and bounded timeouts.
 - [x] Counted 259 Python tests and 112 Rust test annotations; frontend `npm run typecheck` passed.
