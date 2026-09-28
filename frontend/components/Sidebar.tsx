@@ -117,7 +117,6 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
           { name: "Dashboard", href: `${prefix}/dashboard` || "/dashboard", icon: "LayoutDashboard" },
           { name: "Onboarding Wizard", href: prefix || "/", icon: "FileText", badge: "Steps 1–6", badgeType: "brand" as const },
           { name: "User Management", href: `${prefix}/assignments` || "/assignments", icon: "Users" },
-          { name: "Analytics", href: `${prefix}/telemetry` || "/telemetry", icon: "BarChart3" },
         ],
       },
       {
@@ -126,7 +125,6 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
           { name: "Sales Pipeline", href: `${prefix}/pipeline` || "/pipeline", icon: "GitPullRequest" },
           { name: "Approvals", href: `${prefix}/approvals` || "/approvals", icon: "CheckCircle", badge: "Underwriting", badgeType: "emerald" as const },
           { name: "Commissions", href: `${prefix}/commissions` || "/commissions", icon: "CreditCard" },
-          { name: "Regional Hierarchy", href: `${prefix}/regional` || "/regional", icon: "MapPin" },
         ],
       },
       {
@@ -134,9 +132,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
         items: [
           { name: "Platform Overview", href: `/${platformUuid}/platformoverview`, icon: "Crown", badge: "Owner", badgeType: "amber" as const },
           { name: "Live Logs & Audit", href: `${prefix}/logs` || "/logs", icon: "Activity", badge: "Live", badgeType: "amber" as const },
-          { name: "Database Health", href: "/platform/db-health", icon: "Activity" },
           { name: "Cyber Security Cell", href: "/platform/cyber-cell", icon: "ShieldAlert", badge: "SOC", badgeType: "rose" as const },
-          { name: "Platform Billing", href: "/platform/billing", icon: "DollarSign" },
         ],
       },
     ];

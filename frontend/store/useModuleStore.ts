@@ -105,16 +105,6 @@ function getCanonicalSections(role: string | null, tenantUuid: string | null): D
     });
   }
 
-  // Analytics: available to Sales Manager and above
-  if (isSuperAdmin || isParallelHead || isAreaManager || isTeamLeader || isSalesManager) {
-    portalItems.push({
-      code: "ANALYTICS",
-      name: "Analytics",
-      href: `${prefix}/telemetry` || "/telemetry",
-      icon: "BarChart3",
-    });
-  }
-
   // Section 2: Operations & Sales
   const opsItems: DynamicNavItem[] = [];
 
@@ -151,16 +141,6 @@ function getCanonicalSections(role: string | null, tenantUuid: string | null): D
     });
   }
 
-  // Regional Hierarchy: Area Manager, Regional Director, Super Admin
-  if (isSuperAdmin || userRole === "REGIONAL_DIRECTOR" || isAreaManager || isTeamLeader || isSalesManager) {
-    opsItems.push({
-      code: "REGIONAL_HIERARCHY",
-      name: "Regional Hierarchy",
-      href: `${prefix}/regional` || "/regional",
-      icon: "MapPin",
-    });
-  }
-
   // Section 3: Platform Oversight
   const governanceItems: DynamicNavItem[] = [];
   const defaultPlatformUuid = "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f";
@@ -189,15 +169,6 @@ function getCanonicalSections(role: string | null, tenantUuid: string | null): D
       });
     }
 
-    if (isSuperAdmin || userRole === "OPERATIONS_HEAD" || userRole === "DB_ADMIN") {
-      governanceItems.push({
-        code: "DB_HEALTH",
-        name: "Database Health",
-        href: "/platform/db-health",
-        icon: "Activity",
-      });
-    }
-
     if (isSuperAdmin || userRole === "OPERATIONS_HEAD" || userRole === "SOC_ANALYST") {
       governanceItems.push({
         code: "CYBER_CELL",
@@ -206,27 +177,6 @@ function getCanonicalSections(role: string | null, tenantUuid: string | null): D
         icon: "ShieldAlert",
         badge: "SOC",
         badgeType: "rose",
-      });
-    }
-
-    if (isSuperAdmin || userRole === "ACCOUNTS_HEAD") {
-      governanceItems.push({
-        code: "BILLING",
-        name: "Platform Billing",
-        href: "/platform/billing",
-        icon: "DollarSign",
-      });
-    }
-
-    // Dynamic Module Manager link for Super Admins
-    if (isSuperAdmin) {
-      governanceItems.push({
-        code: "MODULE_MANAGER",
-        name: "Dynamic Module Manager",
-        href: "/platform/modules",
-        icon: "Sliders",
-        badge: "Admin",
-        badgeType: "brand",
       });
     }
   }
@@ -309,21 +259,6 @@ export const useModuleStore = create<ModuleStoreState>((set, get) => {
                   canApprove: it.can_approve,
                 })),
               }));
-
-              // If super admin, make sure dynamic module manager is in platform governance
-              if ((role || "SUPER_ADMIN").toUpperCase() === "SUPER_ADMIN") {
-                const govSection = dynamicSections.find((s) => s.sectionKey === "PLATFORM_GOVERNANCE");
-                if (govSection && !govSection.items.some((it) => it.code === "MODULE_MANAGER")) {
-                  govSection.items.push({
-                    code: "MODULE_MANAGER",
-                    name: "Dynamic Module Manager",
-                    href: "/platform/modules",
-                    icon: "Sliders",
-                    badge: "Admin",
-                    badgeType: "brand",
-                  });
-                }
-              }
 
               lastFetchedKey = requestKey;
               set({ sections: dynamicSections, isLoading: false });

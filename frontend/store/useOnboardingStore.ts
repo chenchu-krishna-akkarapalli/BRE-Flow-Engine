@@ -1,6 +1,7 @@
 "use client";
 
 import { create } from "zustand";
+import { hardenedIndexedDbStorage } from "@/lib/storage/hardenedStorage";
 import { evaluateOnboardingForm, FormValidationError } from "@/lib/api";
 import { GOVERNMENT_SECTOR, STEP_PLAN } from "@/lib/form-schema";
 import type {
@@ -142,7 +143,7 @@ export interface Draft {
 
 const INITIAL_DRAFT: Draft = {
   entityType: "Individual",
-  applicantName: "", dob: "", gender: "", pan: "", maritalStatus: "",
+  applicantName: "", dob: "", gender: "Male", pan: "", maritalStatus: "Married",
   citizenshipStatus: "Resident Indian", nriStayPeriod: 12, phone: "", email: "",
   panVerified: false, phoneVerified: false,
   companyName: "", companyType: "", companyPan: "", companyLocation: "",
@@ -688,65 +689,14 @@ export function computePhase1IncomeResult(
   };
 }
 
+import { PolicyIndex } from "@/lib/policyIndexer";
+
 export function getBankFoirRatioClient(
   bankCode: string,
   workType: string,
   averageIncome: number,
 ): { foirPct: number; desc: string; notes?: string } {
-  const code = bankCode.toUpperCase();
-  const isSalaried = workType.toLowerCase().includes("salaried");
-  const gmi = Math.round((averageIncome / 12) * 100) / 100;
-
-  if (code === "BOB") {
-    if (isSalaried) {
-      if (gmi <= 50000) return { foirPct: 0.6, desc: "GMI ≤ ₹50,000 (60%)" };
-      if (gmi <= 150000) return { foirPct: 0.7, desc: "GMI ₹50,000 – ₹1,50,000 (70%)" };
-      return { foirPct: 0.8, desc: "GMI > ₹1,50,000 (80%)" };
-    } else {
-      if (averageIncome < 600000) return { foirPct: 0.6, desc: "Avg Annual Income < ₹6 Lakh (60%)" };
-      return { foirPct: 0.8, desc: "Avg Annual Income ≥ ₹6 Lakh (80%)" };
-    }
-  } else if (code === "BOM") {
-    if (isSalaried) {
-      if (gmi <= 50000) return { foirPct: 0.6, desc: "GMI ≤ ₹50,000 (60%)" };
-      if (gmi <= 100000) return { foirPct: 0.65, desc: "GMI ₹50,000 – ₹1,00,000 (65%)" };
-      if (gmi <= 200000) return { foirPct: 0.7, desc: "GMI ₹1,00,000 – ₹2,00,000 (70%)" };
-      if (gmi <= 500000) return { foirPct: 0.75, desc: "GMI ₹2,00,000 – ₹5,00,000 (75%)" };
-      return { foirPct: 0.8, desc: "GMI > ₹5,00,000 (80%)" };
-    } else {
-      if (averageIncome < 600000) return { foirPct: 0.6, desc: "Avg Annual Income < ₹6 Lakh (60%)" };
-      if (averageIncome < 1200000) return { foirPct: 0.65, desc: "Avg Annual Income ₹6L – ₹12L (65%)" };
-      if (averageIncome < 2400000) return { foirPct: 0.7, desc: "Avg Annual Income ₹12L – ₹24L (70%)" };
-      if (averageIncome < 6000000) return { foirPct: 0.75, desc: "Avg Annual Income ₹24L – ₹60L (75%)" };
-      return { foirPct: 0.8, desc: "Avg Annual Income ≥ ₹60 Lakh (80%)" };
-    }
-  } else if (code === "BOI") {
-    if (isSalaried) {
-      if (gmi < 100000) return { foirPct: 0.6, desc: "GMI < ₹1 Lakh (60%)" };
-      if (gmi <= 500000) return { foirPct: 0.7, desc: "GMI ₹1 Lakh – ₹5 Lakh (70%)" };
-      return { foirPct: 0.75, desc: "GMI > ₹5 Lakh (75%)" };
-    } else {
-      if (gmi < 100000) return { foirPct: 0.6, desc: "Converted GMI < ₹1 Lakh (60%)", notes: "Evaluated on converted monthly income" };
-      if (gmi <= 500000) return { foirPct: 0.7, desc: "Converted GMI ₹1L – ₹5L (70%)", notes: "Evaluated on converted monthly income" };
-      return { foirPct: 0.75, desc: "Converted GMI > ₹5 Lakh (75%)", notes: "Evaluated on converted monthly income" };
-    }
-  } else if (code === "IOB") {
-    if (isSalaried) {
-      if (gmi <= 100000) return { foirPct: 0.6, desc: "GMI ≤ ₹1 Lakh (60%)" };
-      return { foirPct: 0.7, desc: "GMI > ₹1 Lakh (70%)", notes: "Requires DGM Approval" };
-    } else {
-      if (gmi <= 100000) return { foirPct: 0.6, desc: "Converted GMI ≤ ₹1 Lakh (60%)", notes: "Evaluated on converted monthly income" };
-      return { foirPct: 0.7, desc: "Converted GMI > ₹1 Lakh (70%)", notes: "Requires DGM Approval" };
-    }
-  } else if (code === "INDIAN" || code === "INDIAN_BANK") {
-    const ref = (isSalaried && averageIncome > 15000000) ? gmi : averageIncome;
-    if (ref < 1500000) return { foirPct: 0.6, desc: "Income < ₹15 Lakhs (60%)" };
-    return { foirPct: 0.7, desc: "Income ≥ ₹15 Lakhs (70%)", notes: "Subject to ₹50,000 minimum net take-home surplus condition" };
-  } else {
-    // Default (HDFC, AXIS, KOTAK)
-    if (isSalaried) return { foirPct: 0.5, desc: "Standard Salaried Benchmark (50%)", notes: "Default benchmark" };
-    return { foirPct: 0.6, desc: "Standard Self-Employed Benchmark (60%)", notes: "Default benchmark" };
-  }
+  return PolicyIndex.getFoirRatio(bankCode, workType, averageIncome);
 }
 
 export function computePhase2FoirResult(
@@ -754,56 +704,13 @@ export function computePhase2FoirResult(
   occupation: string,
   existingEmi: number,
 ): Phase2FoirCalculationResponse {
-  const isSalaried = occupation.toLowerCase().includes("salaried");
-  const workType = isSalaried ? "Salaried" : "Self-Employed";
-  const averageMonthly = Math.round((averageIncome / 12) * 100) / 100;
-  const baseIncome = isSalaried ? averageMonthly : Math.round(averageIncome * 100) / 100;
-  const emi = Math.max(0, Number(existingEmi) || 0);
-
-  const bankNames: Record<string, string> = {
-    BOB: "Bank of Baroda",
-    BOM: "Bank of Maharashtra",
-    BOI: "Bank of India",
-    IOB: "Indian Overseas Bank",
-    INDIAN_BANK: "Indian Bank",
-    HDFC: "HDFC Bank",
-    AXIS: "Axis Bank",
-    KOTAK: "Kotak Mahindra Bank",
-  };
-
-  const allBanks = ["BOB", "BOM", "BOI", "IOB", "INDIAN_BANK", "HDFC", "AXIS", "KOTAK"];
-  const results: Record<string, BankFoirDetail> = {};
-
-  for (const code of allBanks) {
-    const { foirPct, desc, notes } = getBankFoirRatioClient(code, workType, averageIncome);
-    const foirBasedIncome = Math.round(baseIncome * foirPct * 100) / 100;
-    const finalProcessed = Math.round((foirBasedIncome - emi) * 100) / 100;
-
-    results[code] = {
-      bank_code: code,
-      bank_name: bankNames[code] || code,
-      work_type: workType,
-      base_income: baseIncome,
-      foir_percentage: foirPct,
-      foir_based_income: foirBasedIncome,
-      existing_emi: emi,
-      final_processed_income: finalProcessed,
-      bracket_description: desc,
-      notes,
-    };
-  }
-
-  return {
-    average_income: averageIncome,
-    average_monthly_income: averageMonthly,
-    occupation: workType,
-    existing_emi: emi,
-    bank_foir_results: results,
-  };
+  return PolicyIndex.evaluateAll(averageIncome, occupation, existingEmi);
 }
 
 
 interface OnboardingState {
+  hasHydrated: boolean;
+  setHasHydrated: (val: boolean) => void;
   draft: Draft;
   stepId: number;
   submitting: boolean;
@@ -846,9 +753,19 @@ interface OnboardingState {
   prev: () => void;
   submit: () => Promise<void>;
   reset: () => void;
+  tenantUuid: string | null;
+  setTenantUuid: (uuid: string | null) => void;
+  activeRole: string | null;
+  setActiveRole: (role: string | null) => void;
 }
 
-export const useOnboardingStore = create<OnboardingState>((set, get) => ({
+export const useOnboardingStore = create<OnboardingState>()((set, get) => ({
+  hasHydrated: true,
+  setHasHydrated: (val) => set({ hasHydrated: val }),
+  tenantUuid: null,
+  setTenantUuid: (uuid) => set({ tenantUuid: uuid }),
+  activeRole: null,
+  setActiveRole: (role) => set({ activeRole: role }),
   draft: INITIAL_DRAFT,
   stepId: 1,
   submitting: false,
@@ -1075,11 +992,13 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   },
 
   submit: async () => {
-    const { draft, phase1IncomeResult } = get();
+    const { draft, phase1IncomeResult, tenantUuid } = get();
     set({ submitting: true, error: null });
     try {
       const result = await evaluateOnboardingForm(
-        buildPayload(draft, phase1IncomeResult.average_income)
+        buildPayload(draft, phase1IncomeResult.average_income),
+        undefined,
+        tenantUuid
       );
       set({ result, submitting: false });
     } catch (err) {
@@ -1103,7 +1022,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
     }
   },
 
-  reset: () =>
+  reset: () => {
     set({
       draft: INITIAL_DRAFT,
       stepId: 1,
@@ -1115,7 +1034,32 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       itrVerified: null,
       itrRecords: {},
       coiRecords: {},
+      currentYearDocData: INITIAL_YEARLY_INCOME,
+      prevYearDocData: INITIAL_YEARLY_INCOME,
+      phase1IncomeResult: computePhase1IncomeResult(INITIAL_YEARLY_INCOME, INITIAL_YEARLY_INCOME),
       phase2FoirResult: computePhase2FoirResult(0, "Self-Employed", 0),
-    }),
-
+    });
+    void Promise.resolve(hardenedIndexedDbStorage.removeItem("onboarding-storage"));
+  },
 }));
+
+// Clean any previous persisted drafts so refreshes always start pristine
+if (typeof window !== "undefined") {
+  void Promise.resolve(hardenedIndexedDbStorage.removeItem("onboarding-storage"));
+}
+
+/**
+ * Atomic fine-grained selector hook.
+ * Subscribes strictly to a single field in the draft, preventing whole-step re-renders on keystrokes.
+ */
+export function useDraftField<K extends keyof Draft>(key: K): Draft[K] {
+  return useOnboardingStore((s) => s.draft[key]);
+}
+
+/**
+ * Stable setter hook for draft fields.
+ */
+export function useSetDraftField() {
+  return useOnboardingStore((s) => s.setField);
+}
+

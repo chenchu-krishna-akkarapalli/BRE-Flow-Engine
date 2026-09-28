@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.deps import get_current_user, require_roles
 from app.core.database import get_db
 from app.core.security import derive_password_hash, generate_salt
+from app.db.models.role import RoleModel
 from app.db.models.tenant import TenantModel, TenantStatusHistoryModel
 from app.db.models.user import UserModel
 
@@ -391,12 +392,28 @@ class UpdateTenantUserPayload(BaseModel):
     role: Optional[str] = None
     status: Optional[str] = None
 
-# Retrieves all real database employees bound to a specific channel partner
+# Retrieves all real database employees bound to a specific channel partner or platform-wide
 @router.get("/{tenant_uuid}/users", response_model=List[TenantUserResponse])
 async def get_tenant_users(
     tenant_uuid: str,
     db: AsyncSession = Depends(get_db),
 ):
+    if tenant_uuid in ("platform", "global", "all"):
+        user_stmt = select(UserModel).order_by(UserModel.created_at.desc())
+        user_res = await db.execute(user_stmt)
+        users = user_res.scalars().all()
+        return [
+            TenantUserResponse(
+                id=u.id,
+                tenant_id=u.tenant_id or "platform",
+                name=u.full_name or (u.username.split("@")[0].replace(".", " ").title() if "@" in u.username else u.username),
+                email=u.email or u.username,
+                role=u.role,
+                status="ACTIVE" if u.is_active else "SUSPENDED",
+            )
+            for u in users
+        ]
+
     stmt = select(TenantModel).where(
         or_(
             TenantModel.tenant_uuid == tenant_uuid,
@@ -434,7 +451,7 @@ async def get_tenant_users(
         ))
     return results
 
-# Adds a new employee directly into the database for this channel partner
+# Adds a new employee directly into the database for this channel partner or platform
 @router.post("/{tenant_uuid}/users", response_model=TenantUserResponse)
 async def create_tenant_user(
     tenant_uuid: str,
@@ -450,7 +467,30 @@ async def create_tenant_user(
     )
     res = await db.execute(stmt)
     tenant = res.scalars().first()
-    target_tenant_id = tenant.id if tenant else tenant_uuid
+    if tenant:
+        target_tenant_id = tenant.id
+    else:
+        # Fall back to active primary tenant (or None) to avoid foreign key violations with "platform"
+        stmt_def = select(TenantModel).where(TenantModel.is_active == True).order_by(TenantModel.created_at.asc())
+        res_def = await db.execute(stmt_def)
+        first_t = res_def.scalars().first()
+        target_tenant_id = first_t.id if first_t else None
+
+    # Check and register role in RoleModel if missing
+    role_stmt = select(RoleModel).where(RoleModel.name == payload.role)
+    role_res = await db.execute(role_stmt)
+    role_found = role_res.scalars().first()
+    if not role_found:
+        new_role_model = RoleModel(
+            name=payload.role,
+            display_name=payload.role.replace("_", " ").title(),
+            description=f"Dynamic role {payload.role}",
+            governance_level="PLATFORM" if payload.role in ("SUPER_ADMIN", "REGIONAL_DIRECTOR", "OPERATIONS_HEAD", "ACCOUNTS_HEAD") else "TENANT",
+            hierarchy_tier=0 if payload.role == "SUPER_ADMIN" else 6,
+            is_system_role=False,
+        )
+        db.add(new_role_model)
+        await db.flush()
 
     email_clean = payload.email.strip().lower()
     existing_stmt = select(UserModel).where(

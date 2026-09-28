@@ -40,7 +40,7 @@ async def test_get_navigation_catalog():
         assert res.status_code == 200
         catalog = res.json()
         assert isinstance(catalog, list)
-        assert len(catalog) >= 13
+        assert len(catalog) >= 8
         codes = [m["code"] for m in catalog]
         assert "DASHBOARD" in codes
         assert "ONBOARDING" in codes
@@ -48,6 +48,10 @@ async def test_get_navigation_catalog():
         assert "APPROVALS" in codes
         assert "COMMISSIONS" in codes
         assert "SETTINGS" not in codes
+        assert "ANALYTICS" not in codes
+        assert "REGIONAL_HIERARCHY" not in codes
+        assert "DB_HEALTH" not in codes
+        assert "BILLING" not in codes
 
 
 

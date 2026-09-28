@@ -3,9 +3,19 @@
 Working state for the current task. Kept here rather than in the context window so long sessions do not carry their own history as ballast.
 
 ## Current task
+- [x] Redesigned FlowBRE top navigation bar in `frontend/components/AppHeader.tsx` to match the exact 52px compact design specification.
+- [x] Dynamically replaced `FlowBRE / Console` with the active logged-in channel name (e.g. `Bank of India Channel`) based on route `tenantUuid`, auth store, and tenant registry.
+- [x] Implemented typing-only Quick Search engine in `frontend/components/AppHeader.tsx`: popover stays hidden on empty focus, opens only when user actively types, and filters matching modules, leads, policies, and actions accordingly.
+- [x] Updated `--header-height: 52px` in `frontend/app/globals.css`.
+- [x] Verified zero TypeScript compilation errors with `npx tsc --noEmit` and restarted `flowbre_frontend` Docker container.
 - [x] Extracted EMI from active accounts and loan terms (EMI, repayment tenure, interest rate, payment frequency, account number, member name) in Rust domain engine (`crates/cibil-domain`).
 - [x] Aggregated `Total_Active_EMI` and `Total_EMI` in delivery schema `TargetReport` and `AccountsSummary`.
 - [x] Fixed status detection in `parser.rs` to correctly recognize `AccountStatus::Active` when `DATE CLOSED: NOT DISCLOSED` is present.
+- [x] Fixed Onboarding Wizard step navigation breaking on `/[tenantUuid]?step=N` by dynamically preserving `pathname` in URL query synchronization.
+- [x] Converted `useOnboardingStore` to session-only in-memory storage (clears on reload, saves in-memory during step transitions).
+- [x] Deactivated cold-start draft recovery prompt banner and updated auto-save status pill to "Session Active (In-Memory)".
+- [x] Enabled Onboarding Wizard navigation access across all roles in the organization hierarchy.
+- [x] Rebuilt Next.js frontend with Turbopack and verified `flowbre_frontend` container recreation on `http://localhost:3000/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f?step=1`.
 - [x] Recompiled release binary `cibil-cli` and deployed to `flowbre_fastapi_app:/usr/local/bin/cibil-cli`.
 - [x] Mapped `Total_Active_EMI` to `existingEmi` in `app/services/cibil_service.py` for CRE Phase 2 FOIR calculations.
 - [x] Ran automated test suites (20/20 Rust tests, 43/43 Python tests) and refreshed all 38 output files in `cibil-pdf-scrapper/cibil-output/`.
@@ -117,8 +127,16 @@ Working state for the current task. Kept here rather than in the context window 
 - [x] Generated 15 verified, completely unique test sets under `test files/test 1` to `test 15` with `current/` and `prev/` folders (60 unique files, 0 duplicates) and comprehensive documentation in `test files/README.md`.
 - [x] Implemented CRE Phase 2 Bank FOIR calculation engine (`app/services/foir_service.py`) per `CRE_docs/FOIR Calculation (2).xlsx`.
 - [x] Integrated interactive Existing EMI input field into Step 6 and computed `final_processed_income = foir_based_income - existing_emi`.
-- [x] Rendered Bank-Wise Processed Income preview in Step 6 and expandable Phase 2 FOIR cards in Step 7 Audit Cards.
 - [x] All 27 backend tests passing, frontend typechecked with 0 errors, Docker stack running healthy.
+- [x] Upgraded `<Select>` in `frontend/components/Field.tsx` to a fully responsive custom dropdown with `left-0 right-0` constraint, animated `ChevronDown`, checkmarks, and click-outside dismissal, eliminating mobile/split-screen viewport overflow.
+- [x] Verified full Next.js production build (`npm run build`) passing cleanly across all 24 routes.
+- [x] Resolved ERR_3000_UNAUTHORIZED login bug for newly assigned roles/users:
+  - Connected `Platform User Management` (`useRoleHierarchyStore.ts` and `[tenantUuid]/assignments/page.tsx`) to real backend endpoints (`GET/POST/PATCH/DELETE /api/v1/tenants/{tenant_uuid}/users`).
+  - Added support in `app/api/v1/endpoints/tenants.py` for `tenant_uuid="platform"` to query all users and automatically resolve target tenant ID to avoid foreign key violations.
+  - Enabled dynamic auto-registration of new roles in PostgreSQL `RoleModel` upon user creation.
+  - Hardened `UserRepository.get_by_identifier` with case-insensitive lowercase matching (`func.lower`) and added fallback operational navigation nodes for custom roles.
+  - Fixed in-memory nonce eviction on Redis consumption in `uas_service.py` to prevent replay bypass.
+  - Seeded and verified real logins for `rani@gmail.com` (SUPER_ADMIN) and `sagar@gmail.com` (TRANSACTIONAL_USER) with token issuance.
 
 ## Open questions
 
@@ -135,12 +153,50 @@ Working state for the current task. Kept here rather than in the context window 
 - [ ] Backend test execution unavailable locally: system Python is 3.9 and lacks FastAPI.
 - [ ] Rust test execution unavailable locally: `cargo` is not installed.
 
-## 2026-09-23 frontend architecture blueprint
+## 2026-09-23 frontend architecture blueprint & upgrades
 
 - [x] Audited frontend routes, stores, API calls, auth/tenant propagation, client boundaries, seed fallbacks, build configuration, and large modules.
 - [x] Replaced `frontend/microfrontend.md` article notes with a repository-specific 6-phase upgrade plan and deliverable checklist.
 - [x] Defined domain boundaries, API/session contract, security and tenancy controls, onboarding ownership, performance budgets, tests, CI/CD, rollout, and rollback for one Next.js deployment unit.
 - [x] Removed all micro-frontend, Module Federation, multi-zone, cross-zone, and separate-deployment logic from `frontend/microfrontend.md` at user request.
-- [x] Frontend typecheck passed.
-- [ ] Frontend lint is blocked by `typescript-eslint@8.65.0` rejecting TypeScript `7.0.2`.
-- [ ] Offline production build is blocked by build-time Google Fonts downloads for Inter, JetBrains Mono, and Outfit.
+- [x] **Phase 1: Pre-flight Step Validation & Atomic Subscriptions**
+  - Implemented `frontend/lib/validation.ts` (PAN, Aadhaar, Phone, Email, Pincode, Employment schemas).
+  - Added atomic selectors `useDraftField` and `useSetDraftField` to `frontend/store/useOnboardingStore.ts`.
+- [x] **Phase 2: Route-Level Monolith Splitting & Dynamic Imports**
+  - Split `Steps.tsx` (1,376 LOC) into `Step1Identity.tsx` to `Step6Phase1Income.tsx`, `step-shared.tsx`, and `index.ts`.
+  - Added `StepLoadingSkeleton.tsx` and dynamic imports in `frontend/app/page.tsx`.
+- [x] **Phase 3: Multi-Tier State Persistence & Auto-Save Recovery**
+  - Built zero-dependency IndexedDB storage `hardenedIndexedDbStorage` with 7-day TTL in `frontend/lib/storage/hardenedStorage.ts`.
+  - Hooked Zustand `persist` with `partialize` excluding file blobs, added `AutoSaveIndicator.tsx` and `ResumePromptBanner.tsx`.
+- [x] **Phase 4: API Resilience, Request Deduping & Timeout Handling**
+  - Implemented `fetchWithRetry` with 15s timeout, exponential backoff, and in-flight request deduplication in `frontend/lib/api.ts`.
+  - Added `OfflineAlert.tsx` with live browser network listeners.
+- [x] **Phase 5: Step Preheating & Matrix Policy Indexer**
+  - Built $O(1)$ in-memory hash map index `frontend/lib/policyIndexer.ts`.
+  - Built `usePreheatNextStep.ts` using `requestIdleCallback` for opportunistic bundle prefetching.
+- [x] **Phase 6: Accessibility Trapping & Performance Telemetry**
+  - Built `frontend/components/ErrorBoundary.tsx` and `frontend/lib/telemetry.ts` (marks, durations, long tasks).
+  - Added modal focus trapping, keyboard navigation, and ARIA roles across `frontend/app/page.tsx`.
+- [x] Verified complete frontend suite: `npx tsc --noEmit` (0 errors) and Next.js Turbopack `npm run build` (compiled in 6.1s across all 14 routes).
+
+## 2026-09-24 Navigation Module Streamlining
+- [x] Removed 5 unneeded navigation modules (`Regional Hierarchy`, `Analytics / Telemetry`, `Database Health`, `Platform Billing`, `Dynamic Module Manager`) across all architecture layers:
+  - `frontend/store/useModuleStore.ts`: Cleared fallback entries and dynamic injection for Super Admin.
+  - `frontend/components/Sidebar.tsx`: Cleared fallback items.
+  - `frontend/lib/navigation.ts`: Cleared `PORTAL_NAVIGATION_SCHEMA` items.
+  - `app/core/constants.py`: Cleared `RAW_NAVIGATION_SCHEMA` items.
+  - `app/api/v1/endpoints/navigation.py`: Cleared `MODULE_CATALOG` items.
+  - PostgreSQL Database: Purged records from `navigation_node`, `role_module_permission`, `tenant_module_entitlement`, and `module_catalog`.
+  - Rebuilt Next.js frontend with Turbopack standalone (`npm run build`: 0 errors).
+  - Recreated Docker frontend container (`flowbre_frontend` running healthy).
+  - Verified backend pytest suite (`pytest app/tests/test_dynamic_navigation.py`: 5/5 passed).
+
+## 2026-09-24 Onboarding Form Native Select Overlay Fix
+- [x] Restored native `<select>` in `frontend/components/Field.tsx`:
+  - Replaced DOM-constrained custom `<ul>` with native `<select className="... appearance-none pr-10 cursor-pointer">` and right-aligned `ChevronDown`.
+  - Native select opens OS-level floating overlay matching Image 2 (`✓ Resident Indian`, `NRI/PIO`), eliminating container clipping at the bottom of the card.
+  - TypeScript checked (`npx tsc --noEmit`: 0 errors).
+  - Rebuilt and restarted `flowbre_frontend` Docker container with Turbopack standalone output.
+
+
+

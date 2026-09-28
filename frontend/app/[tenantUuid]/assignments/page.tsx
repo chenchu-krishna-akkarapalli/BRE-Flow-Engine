@@ -32,6 +32,7 @@ export default function TenantAssignmentsPage({
     getTierLevel,
     getRoleByKey,
     getParentRole,
+    fetchUsers,
     addUser,
     updateUser,
     deleteUser,
@@ -40,6 +41,10 @@ export default function TenantAssignmentsPage({
     canManageUser,
     resetToDefaults,
   } = useRoleHierarchyStore();
+
+  useEffect(() => {
+    fetchUsers(tenantUuid);
+  }, [tenantUuid, fetchUsers]);
 
   const [activeTab, setActiveTab] = useState<"roster" | "tree">("roster");
   const [searchTerm, setSearchTerm] = useState("");
@@ -95,17 +100,22 @@ export default function TenantAssignmentsPage({
   }, [users, searchTerm, departmentFilter, getRoleByKey, canSeeUser, currentAuthRole]);
 
   // Handle add user submission
-  const handleInviteUser = (e: React.FormEvent) => {
+  const handleInviteUser = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newName.trim() || !newEmail.trim()) return;
 
-    addUser({
-      tenantId: tenantUuid || "default",
+    const res = await addUser({
+      tenantId: tenantUuid || "platform",
       name: newName.trim(),
       email: newEmail.trim(),
       role: newRole,
       status: "ACTIVE",
     });
+
+    if (res && res.success === false) {
+      alert(res.error || "Failed to create user in database.");
+      return;
+    }
 
     setNewName("");
     setNewEmail("");
@@ -114,13 +124,14 @@ export default function TenantAssignmentsPage({
   };
 
   // Handle edit user submission
-  const handleUpdateUser = (e: React.FormEvent) => {
+  const handleUpdateUser = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingUser) return;
-    updateUser(editingUser.id, {
+    await updateUser(editingUser.id, {
+      name: editingUser.name,
       role: editingUser.role,
       status: editingUser.status,
-    });
+    }, tenantUuid);
     setEditingUser(null);
   };
 

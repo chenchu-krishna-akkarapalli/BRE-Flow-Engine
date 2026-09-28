@@ -1,6 +1,3 @@
-"use client";
-
-// Re-export all steps and shared helpers from modular files to preserve backward compatibility
 export { Step1Identity } from "./Step1Identity";
 export { Step2Address } from "./Step2Address";
 export { Step3Occupation } from "./Step3Occupation";

@@ -260,3 +260,148 @@ Append-only session close-outs. One entry per session: what changed, how it was 
   - Case-insensitive search found no micro-frontend-specific terms or logic remaining in the document.
   - `git diff --check` passed; document now has 601 lines.
 - **Application Source Changes**: None.
+
+## [2026-09-23] Frontend Architecture Upgrades: Execution of Phases 1 to 6
+- **What Changed**:
+  - **Phase 1 (Pre-flight Step Validation & Atomic Subscriptions)**: Created `frontend/lib/validation.ts` with comprehensive validators for Steps 1–6 (PAN, Aadhaar, Phone, Email, Pincode, Salaried/Self-Employed/Company). Added atomic selectors `useDraftField` and `useSetDraftField` to `frontend/store/useOnboardingStore.ts`.
+  - **Phase 2 (Route-Level Monolith Splitting & Dynamic Imports)**: Decomposed `frontend/components/steps/Steps.tsx` (1,376 LOC) into modular components: `step-shared.tsx`, `Step1Identity.tsx` (synchronous), `Step2Address.tsx`, `Step3Occupation.tsx`, `Step4Banking.tsx`, `Step5CoApplicant.tsx`, `Step6Phase1Income.tsx`, with re-exports in `index.ts`. Created `frontend/components/StepLoadingSkeleton.tsx`. Dynamically imported deferred steps 2-6 and heavy analytical views in `frontend/app/page.tsx` with Suspense skeletons.
+  - **Phase 3 (Hardened Multi-Tier State Persistence & Auto-Save Recovery)**: Implemented native IndexedDB storage engine `frontend/lib/storage/hardenedStorage.ts` with 7-day TTL cleanup and in-memory fallback. Integrated Zustand `persist` middleware with `partialize` serialization and hydration tracking. Created `frontend/components/AutoSaveIndicator.tsx` and `frontend/components/ResumePromptBanner.tsx`.
+  - **Phase 4 (API Resilience, Request Deduping & Timeout Handling)**: Created resilient `fetchWithRetry` with 15s timeout, exponential backoff (2 retries on 5xx/network errors), pre-flight offline guard, and in-flight evaluation deduplication in `frontend/lib/api.ts`. Created `frontend/components/OfflineAlert.tsx`.
+  - **Phase 5 (Step Preheating & Matrix Policy Indexer)**: Implemented $O(1)$ in-memory hash map index `frontend/lib/policyIndexer.ts` for bank FOIR matrices. Built `frontend/hooks/usePreheatNextStep.ts` using idle-time callbacks (`requestIdleCallback`) to prefetch next step chunks and analytical modules.
+  - **Phase 6 (Accessibility Trapping & Performance Telemetry)**: Created reusable `frontend/components/ErrorBoundary.tsx` with inline recovery. Implemented `frontend/lib/telemetry.ts` for high-precision marks, durations, and `PerformanceObserver` long-task tracking. Enhanced `frontend/app/page.tsx` with modal focus trapping (Escape / Tab cycling) and accessibility attributes (`aria-current`, `aria-live`).
+- **Verification**:
+  - `npx tsc --noEmit`: 0 errors.
+  - `npm run build`: Turbopack compiled successfully in 6.1s across all 14 routes with 0 errors.
+  - Unit tests for validation, storage, deduplication, and policy indexing executed and passed.
+- **Undone**: None. All 6 phases executed and verified.
+
+## [2026-09-23] Fix "Next question" Button Disabled State & Validation Guidance
+- **What Changed**:
+  - `frontend/app/page.tsx`:
+    - Removed `disabled={!canProceed}` from the "Next question" button so the button is never unresponsive/dead (`disabled={termination !== null}`).
+    - Updated `handleNext` to run `validateStep(stepId, draft)` on click. If invalid, it sets `error: firstError` (rendering the prominent red error alert banner) and smoothly scrolls to and focuses the missing input element via `el.scrollIntoView({ behavior: 'smooth', block: 'center' })` and `el.focus()`.
+  - `frontend/components/steps/step-shared.tsx`:
+    - Exposed `error` in `useField()` hook so all step components can display real-time validation error borders and messages.
+  - `frontend/components/steps/Step1Identity.tsx`:
+    - Added error message and warning styling to `applicantName`, `dob`, `gender`, `pan`, `phone`, `email`, and company fields when required fields are missing.
+  - Rebuilt Docker image and restarted `flowbre_frontend` container.
+- **Verification**:
+  - `npx tsc --noEmit`: 0 errors.
+  - Turbopack production build succeeded in 6.2s.
+  - Docker container restarted and verified active/healthy on `127.0.0.1:3000`.
+- **Undone**: None.
+## [2026-09-23] Role Hierarchy Routing & In-Memory Session Onboarding Engine
+- **What Changed**:
+  - `frontend/app/page.tsx`:
+    - Bound `usePathname()` to all step transitions so `router.push(`${pathname}?step=${stepId}`)` and `router.replace(`${pathname}?step=${fallbackStep}`)` preserve the dynamic tenant UUID path (`/[tenantUuid]?step=N`) without reverting to root `/`.
+    - Added Channel Tenant and Active Role badges above the stepper header.
+    - Added fallback step validation on direct URL navigation to prevent jumping to inaccessible steps with an empty draft.
+  - `frontend/store/useOnboardingStore.ts`:
+    - Removed Zustand `persist` middleware. Onboarding store is now purely in-memory ("saved once across active steps").
+    - Added startup IndexedDB purging (`hardenedIndexedDbStorage.removeItem("onboarding-storage")`) ensuring page reload (`F5`) always starts with a fresh, clean draft without restoring stale data.
+    - Added `tenantUuid` and `activeRole` reactive state properties and forwarded tenant ID in the evaluation header (`X-Tenant-ID`).
+  - `frontend/components/ResumePromptBanner.tsx`:
+    - Deactivated cold-start draft recovery prompt banner (`return null`).
+  - `frontend/components/AutoSaveIndicator.tsx` & `frontend/components/Stepper.tsx`:
+    - Updated auto-save indicator to "Session Active (In-Memory)".
+    - Deduplicated auto-save indicator by displaying it cleanly in the header context bar.
+  - `frontend/lib/navigation.ts`:
+    - Expanded `PORTAL_NAVIGATION_SCHEMA` to grant Onboarding Wizard access to all organizational hierarchy roles (`SUPER_ADMIN`, `REGIONAL_DIRECTOR`, `OPERATIONS_HEAD`, `ACCOUNTS_HEAD`, `AREA_MANAGER`, `TEAM_LEADER`, `SALES_MANAGER`, `CHANNEL_ADMIN`, `TRANSACTIONAL_USER`).
+  - `frontend/lib/api.ts`:
+    - Updated `evaluateOnboardingForm` to propagate `tenantId` in the `X-Tenant-ID` header.
+- **Verification**:
+  - `npx tsc --noEmit`: 0 errors.
+  - `npm run build`: Turbopack compiled all static and dynamic routes (`/[tenantUuid]`) in 5.7s with 0 errors.
+  - Rebuilt Docker frontend container (`docker compose build frontend; docker compose up -d frontend`).
+  - `curl.exe -I http://localhost:3000/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f?step=1` returned `HTTP/1.1 200 OK`.
+- **Undone**: None.
+
+## [2026-09-24] Responsive Dropdown Upgrade & Initial Draft Gender Default
+- **What Changed**:
+  - `frontend/components/Field.tsx`:
+    - Replaced native HTML `<select>` with a custom responsive dropdown component bounded by `absolute left-0 right-0 w-full`.
+    - Added click-outside listener (`mousedown`), keyboard accessibility (`Escape`, `ArrowDown`, `ArrowUp`), animated `ChevronDown` rotation, brand teal highlights, and checkmark indicators for selected items.
+    - Prevents OS-level popup menu overflows on mobile viewports and narrow split-screens.
+  - `frontend/store/useOnboardingStore.ts`:
+    - Updated `INITIAL_DRAFT` to set `gender: "Male"` and `maritalStatus: "Married"` by default.
+    - Eliminates false "Please select your gender" validation errors when applicants leave the default selection intact.
+- **Verification**:
+  - `npx tsc --noEmit`: 0 errors.
+  - `npm run build`: Compiled with Turbopack in 11.0s with 0 errors across all 24 routes.
+- **Undone**: None.
+
+## [2026-09-24] Platform User Management DB Sync & Dynamic Role Login Fix
+- **What Changed**:
+  - `frontend/store/useRoleHierarchyStore.ts` & `frontend/app/[tenantUuid]/assignments/page.tsx`:
+    - Connected `useRoleHierarchyStore` user mutations to the real backend endpoints (`GET/POST/PATCH/DELETE /api/v1/tenants/${tenantUuid}/users`).
+    - Added `fetchUsers(tenantUuid)` on component mount and made user invitation/updates/deletions persist to PostgreSQL.
+  - `app/api/v1/endpoints/tenants.py`:
+    - Updated `get_tenant_users` to support `tenant_uuid="platform"` / `"global"`, returning all system users from the database.
+    - Updated `create_tenant_user` to gracefully resolve tenant IDs for platform users (preventing foreign key violation crashes) and dynamically insert any new role into PostgreSQL `RoleModel` upon creation.
+  - `app/db/repositories/user_repository.py`:
+    - Converted `get_by_identifier` to case-insensitive matching with `func.lower(...)`.
+    - Added automatic operational navigation node fallback for dynamic roles in `get_navigation_nodes_for_role`.
+  - `app/services/uas_service.py`:
+    - Cleared in-memory nonces upon Redis consumption to harden single-use token exchange.
+  - Seeded `rani@gmail.com` (`SUPER_ADMIN`) and `sagar@gmail.com` (`TRANSACTIONAL_USER`) with active tenant bindings in the database.
+- **Verification**:
+  - `docker exec flowbre_fastapi_app pytest app/tests/test_uas_auth.py`: 3/3 passed.
+  - Verified programmatic UAS challenge and verify flow for `rani@gmail.com` and `sagar@gmail.com`: 200 OK with valid JWT tokens issued.
+  - Rebuilt Next.js frontend container with Turbopack (`npm run build`: 0 errors).
+- **Undone**: None.
+
+## [2026-09-24] Navigation Module Streamlining (Removal of 5 Unneeded Modules)
+- **What Changed**:
+  - Removed 5 modules requested by user: `Regional Hierarchy`, `Analytics / Telemetry`, `Database Health`, `Platform Billing`, `Dynamic Module Manager`.
+  - `frontend/store/useModuleStore.ts`:
+    - Removed `ANALYTICS`, `REGIONAL_HIERARCHY`, `DB_HEALTH`, `BILLING`, and `MODULE_MANAGER` from `getCanonicalSections`.
+    - Removed `MODULE_MANAGER` injection for `SUPER_ADMIN` in `fetchModules`.
+  - `frontend/components/Sidebar.tsx`:
+    - Removed `Analytics`, `Regional Hierarchy`, `Database Health`, and `Platform Billing` from fallback navigation items.
+  - `frontend/lib/navigation.ts`:
+    - Removed `Analytics`, `Regional Hierarchy`, `Database Health`, and `Platform Billing` from `PORTAL_NAVIGATION_SCHEMA`.
+  - `app/core/constants.py`:
+    - Removed `Analytics`, `Regional Hierarchy`, `Database Health`, and `Platform Billing` from `RAW_NAVIGATION_SCHEMA`.
+  - `app/api/v1/endpoints/navigation.py`:
+    - Removed `ANALYTICS`, `REGIONAL_HIERARCHY`, `DB_HEALTH`, and `BILLING` from `MODULE_CATALOG`.
+  - `app/tests/test_dynamic_navigation.py`:
+    - Updated assertions for catalog length (>= 8) and verified removed modules are not in catalog.
+  - PostgreSQL Database:
+    - Purged rows from `role_module_permission` for removed module codes.
+    - Purged rows from `tenant_module_entitlement` for removed module codes.
+    - Purged rows from `module_catalog` for removed module codes.
+    - Purged rows from `navigation_node` for removed module paths and names.
+- **Verification**:
+  - `pytest app/tests/test_dynamic_navigation.py`: 5/5 tests passed (100%).
+  - `npx tsc --noEmit`: 0 errors.
+  - `npm run build`: 0 errors, compiled in 8.1s across all 24 routes.
+  - Rebuilt and restarted `flowbre_frontend` Docker container with Turbopack standalone output.
+  - Verified dynamic modules API (`GET /api/v1/navigation/modules?role=SUPER_ADMIN`) and catalog API (`GET /api/v1/navigation/catalog`) return only the clean, streamlined module list.
+- **Undone**: None.
+
+## [2026-09-24] Onboarding Form Native Select Overlay Fix
+- **What Changed**:
+  - `frontend/components/Field.tsx`:
+    - Restored native `<select>` in place of custom DOM `<ul>` menu.
+    - Uses `${CONTROL_BASE} appearance-none pr-10 cursor-pointer` with right-positioned `ChevronDown`.
+    - Clicking the dropdown now opens the browser/OS-level native overlay (matching Image 2) showing `✓ Resident Indian` and `NRI/PIO` without being clipped by parent card bounds or `overflow-hidden`.
+- **Verification**:
+  - `npx tsc --noEmit`: 0 errors.
+  - Docker frontend container rebuilt and restarted (`docker compose build frontend; docker compose up -d frontend`), verified `HTTP/1.1 200 OK`.
+- **Undone**: None.
+
+## [2026-09-28] Compact 52px Top Bar Redesign, Dynamic Channel Branding & Quick Search Engine
+- **What Changed**:
+  - `frontend/components/AppHeader.tsx`:
+    - Replaced monolithic header with exact compact 52px navbar matching Stitch design specification.
+    - Dynamically resolves logged-in channel name from `tenantUuid` via `getTenantByUuidOrCode`, API lookup, and user profile session.
+    - Displays channel name (e.g. `Bank of India Channel`) in place of `FlowBRE / Console` for channel users.
+    - Implemented omni-search engine with keyboard navigation (`⌘K` / `Ctrl+K`, arrows, `Enter`, `Esc`). Popover strictly appears ONLY when the user actively types into the search engine (hidden on blank focus/clear), filtering matching system modules, leads, policies, and actions dynamically.
+    - Preserved mail icon with green status dot, bell icon with red status dot, theme toggle, and user initials avatar (`TE` / `SA`) with sign-out dropdown.
+  - `frontend/app/globals.css`:
+    - Updated `--header-height: 52px`.
+- **Verification**:
+  - `npx tsc --noEmit`: 0 errors.
+  - `docker compose restart frontend`: container restarted and ready in 0ms.
+- **Undone**: None.
+

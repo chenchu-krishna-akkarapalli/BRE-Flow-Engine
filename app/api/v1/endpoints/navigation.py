@@ -66,18 +66,6 @@ MODULE_CATALOG = [
         "allowed_roles": ["SUPER_ADMIN", "REGIONAL_DIRECTOR", "OPERATIONS_HEAD", "ACCOUNTS_HEAD", "AREA_MANAGER", "TEAM_LEADER", "SALES_MANAGER", "CHANNEL_ADMIN"],
         "min_tier": 5,
     },
-    {
-        "code": "ANALYTICS",
-        "name": "Analytics",
-        "route_template": "/{tenant}/telemetry",
-        "icon": "BarChart3",
-        "section_key": "PORTAL_NAV",
-        "section_title": "Portal Navigation",
-        "badge": None,
-        "badge_type": None,
-        "allowed_roles": ["SUPER_ADMIN", "REGIONAL_DIRECTOR", "OPERATIONS_HEAD", "ACCOUNTS_HEAD", "AREA_MANAGER", "TEAM_LEADER", "SALES_MANAGER"],
-        "min_tier": 4,
-    },
 
     # Section 2: Operations & Sales
     {
@@ -116,18 +104,6 @@ MODULE_CATALOG = [
         "allowed_roles": ["SUPER_ADMIN", "REGIONAL_DIRECTOR", "ACCOUNTS_HEAD", "AREA_MANAGER", "TEAM_LEADER", "SALES_MANAGER", "CHANNEL_ADMIN"],
         "min_tier": 5,
     },
-    {
-        "code": "REGIONAL_HIERARCHY",
-        "name": "Regional Hierarchy",
-        "route_template": "/{tenant}/regional",
-        "icon": "MapPin",
-        "section_key": "OPERATIONS_SALES",
-        "section_title": "Operations & Sales",
-        "badge": None,
-        "badge_type": None,
-        "allowed_roles": ["SUPER_ADMIN", "REGIONAL_DIRECTOR", "AREA_MANAGER", "TEAM_LEADER", "SALES_MANAGER"],
-        "min_tier": 4,
-    },
 
     # Section 3: Platform Oversight (Application Owners)
     {
@@ -155,18 +131,6 @@ MODULE_CATALOG = [
         "min_tier": 1,
     },
     {
-        "code": "DB_HEALTH",
-        "name": "Database Health",
-        "route_template": "/platform/db-health",
-        "icon": "Activity",
-        "section_key": "PLATFORM_GOVERNANCE",
-        "section_title": "Platform Oversight (Application Owners)",
-        "badge": None,
-        "badge_type": None,
-        "allowed_roles": ["SUPER_ADMIN", "OPERATIONS_HEAD", "DB_ADMIN"],
-        "min_tier": 1,
-    },
-    {
         "code": "CYBER_CELL",
         "name": "Cyber Security Cell",
         "route_template": "/platform/cyber-cell",
@@ -176,18 +140,6 @@ MODULE_CATALOG = [
         "badge": "SOC",
         "badge_type": "rose",
         "allowed_roles": ["SUPER_ADMIN", "OPERATIONS_HEAD", "SOC_ANALYST"],
-        "min_tier": 1,
-    },
-    {
-        "code": "BILLING",
-        "name": "Platform Billing",
-        "route_template": "/platform/billing",
-        "icon": "DollarSign",
-        "section_key": "PLATFORM_GOVERNANCE",
-        "section_title": "Platform Oversight (Application Owners)",
-        "badge": None,
-        "badge_type": None,
-        "allowed_roles": ["SUPER_ADMIN", "ACCOUNTS_HEAD"],
         "min_tier": 1,
     },
 ]

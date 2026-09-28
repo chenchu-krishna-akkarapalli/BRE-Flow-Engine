@@ -45,7 +45,7 @@ export function Stepper({ entityType, stepId, onJump }: StepperProps) {
         </div>
 
         {/* Workflow Engine Badge */}
-        <div className="shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <span
             className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold border ${
               isCorporate

@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
-from sqlalchemy import or_, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.constants import RAW_NAVIGATION_SCHEMA
@@ -14,10 +14,16 @@ class UserRepository(BaseRepository[UserModel]):
     def __init__(self, db: AsyncSession):
         super().__init__(UserModel, db)
 
-    # Looks up user account by unique username or verified email address
+    # Looks up user account by unique username or verified email address (case-insensitive)
     async def get_by_identifier(self, identifier: str) -> Optional[UserModel]:
+        clean_id = identifier.strip().lower()
         stmt = select(UserModel).where(
-            or_(UserModel.username == identifier, UserModel.email == identifier)
+            or_(
+                func.lower(UserModel.username) == clean_id,
+                func.lower(UserModel.email) == clean_id,
+                UserModel.username == identifier,
+                UserModel.email == identifier,
+            )
         )
         result = await self.db.execute(stmt)
         return result.scalars().first()
@@ -112,8 +118,13 @@ class UserRepository(BaseRepository[UserModel]):
         for group in RAW_NAVIGATION_SCHEMA:
             filtered_items = []
             for item in group["items"]:
-                if role_name != "SUPER_ADMIN" and role_name not in item["roles"]:
-                    continue
+                if role_name == "SUPER_ADMIN" or role_name in item["roles"]:
+                    pass
+                else:
+                    # For custom dynamic roles, allow non-admin operational nodes
+                    is_admin_item = any(admin_kw in item["name"].lower() for admin_kw in ["platform", "cyber", "db health", "billing"])
+                    if is_admin_item:
+                        continue
 
                 if "global_path" in item:
                     href = item["global_path"]

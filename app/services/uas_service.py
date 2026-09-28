@@ -200,6 +200,7 @@ class UASService:
                 if cached_val:
                     expected_nonce = cached_val if isinstance(cached_val, str) else cached_val.decode("utf-8")
                     await redis.delete(redis_key)
+                    _in_memory_nonces.pop(redis_key, None)
         except Exception:
             pass
 

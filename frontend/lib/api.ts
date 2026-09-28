@@ -8,7 +8,6 @@ import type {
   ValidationErrorItem,
 } from "./types";
 
-
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://127.0.0.1:8000";
 const TENANT_ID = process.env.NEXT_PUBLIC_TENANT_ID ?? "default";
 
@@ -38,39 +37,165 @@ export class ApiError extends Error {
   }
 }
 
+export class NetworkOfflineError extends Error {
+  constructor(message = "You are currently offline. Please check your internet connection.") {
+    super(message);
+    this.name = "NetworkOfflineError";
+  }
+}
+
+export class RequestTimeoutError extends Error {
+  readonly timeoutMs: number;
+  constructor(timeoutMs: number) {
+    super(`Request timed out after ${Math.round(timeoutMs / 1000)} seconds. Please check your connection and try again.`);
+    this.name = "RequestTimeoutError";
+    this.timeoutMs = timeoutMs;
+  }
+}
+
+export interface FetchWithRetryOptions extends RequestInit {
+  timeoutMs?: number;
+  retries?: number;
+  retryDelayMs?: number;
+}
+
+/**
+ * Resilient fetch wrapper with 15s timeout, exponential backoff retries on 5xx or connection drops,
+ * and offline pre-flight checks.
+ */
+export async function fetchWithRetry(
+  url: string,
+  options: FetchWithRetryOptions = {},
+): Promise<Response> {
+  const {
+    timeoutMs = 15000,
+    retries = 2,
+    retryDelayMs = 1000,
+    ...fetchOptions
+  } = options;
+
+  // 1. Offline pre-flight guard
+  if (typeof navigator !== "undefined" && navigator.onLine === false) {
+    throw new NetworkOfflineError();
+  }
+
+  // 2. Set up 15s timeout with AbortController
+  const controller = new AbortController();
+  let timedOut = false;
+  const timeoutId = setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, timeoutMs);
+
+  // Link caller-supplied signal if present
+  if (fetchOptions.signal) {
+    fetchOptions.signal.addEventListener("abort", () => {
+      controller.abort(fetchOptions.signal?.reason);
+    });
+  }
+
+  try {
+    const res = await fetch(url, {
+      ...fetchOptions,
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+
+    // Exponential backoff retry on transient 5xx server errors
+    if (!res.ok && res.status >= 500 && retries > 0) {
+      if (process.env.NODE_ENV !== "production") {
+        console.warn(`[API] Server error ${res.status} on ${url}. Retrying in ${retryDelayMs}ms (${retries} attempts left)...`);
+      }
+      await new Promise((r) => setTimeout(r, retryDelayMs));
+      return fetchWithRetry(url, {
+        ...options,
+        retries: retries - 1,
+        retryDelayMs: retryDelayMs * 2,
+      });
+    }
+
+    return res;
+  } catch (err: unknown) {
+    clearTimeout(timeoutId);
+
+    if (timedOut) {
+      throw new RequestTimeoutError(timeoutMs);
+    }
+
+    // If aborted explicitly by caller, don't retry
+    if (fetchOptions.signal?.aborted) {
+      throw err;
+    }
+
+    // Retry transient network errors (TypeError, connection dropped)
+    if (retries > 0 && err instanceof Error && err.name !== "AbortError") {
+      if (process.env.NODE_ENV !== "production") {
+        console.warn(`[API] Network error on ${url}: ${err.message}. Retrying in ${retryDelayMs}ms (${retries} attempts left)...`);
+      }
+      await new Promise((r) => setTimeout(r, retryDelayMs));
+      return fetchWithRetry(url, {
+        ...options,
+        retries: retries - 1,
+        retryDelayMs: retryDelayMs * 2,
+      });
+    }
+
+    throw err;
+  }
+}
+
 /** Logging hook — never receives raw PII. */
 export function logSubmission(payload: OnboardingFormRequest): void {
   if (process.env.NODE_ENV === "production") return;
   console.info("[onboarding] submitting", redactPii(payload));
 }
 
-export async function evaluateOnboardingForm(
+// In-flight evaluation deduplication map
+const inFlightEvaluationMap = new Map<string, Promise<EvaluationResponse>>();
+
+export function evaluateOnboardingForm(
   payload: OnboardingFormRequest,
   signal?: AbortSignal,
+  tenantId?: string | null,
 ): Promise<EvaluationResponse> {
-  logSubmission(payload);
+  const cacheKey = JSON.stringify({ payload, tenantId });
+  const existing = inFlightEvaluationMap.get(cacheKey);
+  if (existing) {
+    if (process.env.NODE_ENV !== "production") {
+      console.info("[API] Deduplicating concurrent evaluateOnboardingForm request");
+    }
+    return existing;
+  }
 
-  const response = await fetch(`${API_BASE}/api/v1/onboarding/evaluate/form`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Tenant-ID": TENANT_ID,
-    },
-    body: JSON.stringify(payload),
-    signal,
+  const promise = (async () => {
+    logSubmission(payload);
+
+    const response = await fetchWithRetry(`${API_BASE}/api/v1/onboarding/evaluate/form`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Tenant-ID": tenantId || TENANT_ID,
+      },
+      body: JSON.stringify(payload),
+      signal,
+    });
+
+    if (response.status === 422) {
+      const body = (await response.json()) as { detail?: ValidationErrorItem[] };
+      throw new FormValidationError(body.detail ?? []);
+    }
+    if (!response.ok) {
+      throw new ApiError(response.status, `Evaluation failed (${response.status}).`);
+    }
+
+    return (await response.json()) as EvaluationResponse;
+  })().finally(() => {
+    inFlightEvaluationMap.delete(cacheKey);
   });
 
-  if (response.status === 422) {
-    const body = (await response.json()) as { detail?: ValidationErrorItem[] };
-    throw new FormValidationError(body.detail ?? []);
-  }
-  if (!response.ok) {
-    throw new ApiError(response.status, `Evaluation failed (${response.status}).`);
-  }
-
-  return (await response.json()) as EvaluationResponse;
+  inFlightEvaluationMap.set(cacheKey, promise);
+  return promise;
 }
-
 
 /** Fetch an export and hand it to the browser as a native download.
  *
@@ -81,7 +206,7 @@ export async function downloadApplicationExport(
   applicationId: string,
   format: "pdf" | "excel",
 ): Promise<void> {
-  const response = await fetch(
+  const response = await fetchWithRetry(
     `${API_BASE}/api/v1/onboarding/applications/${applicationId}/export?format=${format}`,
     { headers: { "X-Tenant-ID": TENANT_ID } },
   );
@@ -99,7 +224,6 @@ export async function downloadApplicationExport(
   link.remove();
   URL.revokeObjectURL(url);
 }
-
 
 // --------------------------------------------------------------------------- //
 // Document extraction & OTP verification (add-on.md)
@@ -150,7 +274,7 @@ export async function extractDocument(
   const form = new FormData();
   form.append("file", file);
 
-  const response = await fetch(
+  const response = await fetchWithRetry(
     `${API_BASE}/api/v1/onboarding/documents/${documentType}/extract`,
     { method: "POST", headers: { "X-Tenant-ID": TENANT_ID }, body: form },
   );
@@ -161,7 +285,6 @@ export async function extractDocument(
   return (await response.json()) as DocumentExtraction;
 }
 
-// The CIBIL report is parsed by the Rust engine and discarded; only these
 export interface CibilAccountDetail {
   key: string;
   index: number;
@@ -206,7 +329,6 @@ export interface CibilExtraction {
   success: boolean;
   filename: string;
   size_bytes: number;
-  // SUCCESS | UNKNOWN_CONSUMER | DUPLICATE_DOCUMENT — only SUCCESS carries fields.
   status: string;
   message: string;
   extracted: Record<string, any>;
@@ -216,7 +338,7 @@ export async function extractCibilReport(file: File): Promise<CibilExtraction> {
   const form = new FormData();
   form.append("file", file);
 
-  const response = await fetch(`${API_BASE}/api/v1/onboarding/documents/cibil/extract`, {
+  const response = await fetchWithRetry(`${API_BASE}/api/v1/onboarding/documents/cibil/extract`, {
     method: "POST",
     headers: { "X-Tenant-ID": TENANT_ID },
     body: form,
@@ -239,7 +361,7 @@ export async function extractPayslipReport(file: File): Promise<PayslipExtractio
   const form = new FormData();
   form.append("file", file);
 
-  const response = await fetch(`${API_BASE}/api/v1/onboarding/documents/payslip/extract`, {
+  const response = await fetchWithRetry(`${API_BASE}/api/v1/onboarding/documents/payslip/extract`, {
     method: "POST",
     headers: { "X-Tenant-ID": TENANT_ID },
     body: form,
@@ -258,12 +380,11 @@ export interface CoiExtraction {
   extracted: Record<string, unknown>;
 }
 
-// single concise context line
 export async function extractCoiReport(file: File): Promise<CoiExtraction> {
   const form = new FormData();
   form.append("file", file);
 
-  const response = await fetch(`${API_BASE}/api/v1/onboarding/documents/coi/extract`, {
+  const response = await fetchWithRetry(`${API_BASE}/api/v1/onboarding/documents/coi/extract`, {
     method: "POST",
     headers: { "X-Tenant-ID": TENANT_ID },
     body: form,
@@ -313,7 +434,7 @@ export async function extractItrDocument(file: File): Promise<ItrExtraction> {
   const form = new FormData();
   form.append("file", file);
 
-  const response = await fetch(`${API_BASE}/api/v1/onboarding/documents/itr/extract`, {
+  const response = await fetchWithRetry(`${API_BASE}/api/v1/onboarding/documents/itr/extract`, {
     method: "POST",
     headers: { "X-Tenant-ID": TENANT_ID },
     body: form,
@@ -334,7 +455,7 @@ export interface OtpChallenge {
 }
 
 export async function sendOtp(channel: "email" | "mobile", target: string): Promise<OtpChallenge> {
-  const response = await fetch(`${API_BASE}/api/v1/onboarding/verification/otp/send`, {
+  const response = await fetchWithRetry(`${API_BASE}/api/v1/onboarding/verification/otp/send`, {
     method: "POST",
     headers: { "Content-Type": "application/json", "X-Tenant-ID": TENANT_ID },
     body: JSON.stringify({ channel, target }),
@@ -350,7 +471,7 @@ export async function verifyOtp(
   challengeId: string,
   code: string,
 ): Promise<{ verified: boolean; attempts_remaining: number }> {
-  const response = await fetch(`${API_BASE}/api/v1/onboarding/verification/otp/verify`, {
+  const response = await fetchWithRetry(`${API_BASE}/api/v1/onboarding/verification/otp/verify`, {
     method: "POST",
     headers: { "Content-Type": "application/json", "X-Tenant-ID": TENANT_ID },
     body: JSON.stringify({ challenge_id: challengeId, code }),
@@ -365,7 +486,7 @@ export async function verifyOtp(
 export async function calculatePhase1Income(
   payload: Phase1IncomeCalculationRequest,
 ): Promise<Phase1IncomeCalculationResponse> {
-  const response = await fetch(`${API_BASE}/api/v1/onboarding/income/phase1-calculate`, {
+  const response = await fetchWithRetry(`${API_BASE}/api/v1/onboarding/income/phase1-calculate`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -388,7 +509,7 @@ export async function calculatePhase2Foir(params: {
   occupation: string;
   existing_emi: number;
 }): Promise<Phase2FoirCalculationResponse> {
-  const response = await fetch(`${API_BASE}/api/v1/onboarding/income/phase2-foir`, {
+  const response = await fetchWithRetry(`${API_BASE}/api/v1/onboarding/income/phase2-foir`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -405,5 +526,3 @@ export async function calculatePhase2Foir(params: {
   }
   return (await response.json()) as Phase2FoirCalculationResponse;
 }
-
-

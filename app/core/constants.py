@@ -84,16 +84,6 @@ RAW_NAVIGATION_SCHEMA: List[Dict[str, Any]] = [
                 ],
                 "sort_order": 3,
             },
-            {
-                "name": "Analytics",
-                "path": "telemetry",
-                "icon": "BarChart3",
-                "roles": [
-                    ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_OPERATIONS_HEAD, ROLE_ACCOUNTS_HEAD,
-                    ROLE_AREA_MANAGER
-                ],
-                "sort_order": 4,
-            },
         ],
     },
     {
@@ -128,16 +118,6 @@ RAW_NAVIGATION_SCHEMA: List[Dict[str, Any]] = [
                 ],
                 "sort_order": 3,
             },
-            {
-                "name": "Regional Hierarchy",
-                "path": "regional",
-                "icon": "MapPin",
-                "roles": [
-                    ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_AREA_MANAGER, ROLE_TEAM_LEADER,
-                    ROLE_SALES_MANAGER
-                ],
-                "sort_order": 4,
-            },
         ],
     },
     {
@@ -156,27 +136,13 @@ RAW_NAVIGATION_SCHEMA: List[Dict[str, Any]] = [
                 "sort_order": 1,
             },
             {
-                "name": "Database Health",
-                "global_path": "/platform/db-health",
-                "icon": "Activity",
-                "roles": [ROLE_SUPER_ADMIN, ROLE_DB_ADMIN],
-                "sort_order": 2,
-            },
-            {
                 "name": "Cyber Security Cell",
                 "global_path": "/platform/cyber-cell",
                 "icon": "ShieldAlert",
                 "badge": "SOC",
                 "badgeType": "rose",
                 "roles": [ROLE_SUPER_ADMIN, ROLE_SOC_ANALYST],
-                "sort_order": 3,
-            },
-            {
-                "name": "Platform Billing",
-                "global_path": "/platform/billing",
-                "icon": "DollarSign",
-                "roles": [ROLE_SUPER_ADMIN, ROLE_ACCOUNTS_HEAD],
-                "sort_order": 4,
+                "sort_order": 2,
             },
         ],
     },

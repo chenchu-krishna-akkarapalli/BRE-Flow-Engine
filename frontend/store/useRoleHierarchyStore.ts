@@ -233,6 +233,7 @@ interface RoleHierarchyState {
   error: string | null;
 
   // Actions
+  fetchUsers: (tenantUuid: string) => Promise<void>;
   selectRole: (roleId: string | null) => void;
   getRoleByKey: (roleKey: string) => RoleHierarchyNode | undefined;
   getTierLevel: (roleKey: string) => number;
@@ -259,9 +260,9 @@ interface RoleHierarchyState {
 
   deleteRole: (roleKey: string) => { success: boolean; error?: string };
 
-  addUser: (user: Omit<TenantUser, "id">) => void;
-  updateUser: (id: string, updates: Partial<TenantUser>) => void;
-  deleteUser: (id: string) => void;
+  addUser: (user: Omit<TenantUser, "id">) => Promise<{ success: boolean; error?: string }>;
+  updateUser: (id: string, updates: Partial<TenantUser>, tenantUuid?: string) => Promise<{ success: boolean; error?: string }>;
+  deleteUser: (id: string, tenantUuid?: string) => Promise<{ success: boolean; error?: string }>;
 
   resetToDefaults: () => void;
 }
@@ -551,13 +552,66 @@ export const useRoleHierarchyStore = create<RoleHierarchyState>((set, get) => {
       return { success: true };
     },
 
-    addUser: (userData) => {
-      const newUser: TenantUser = {
+    fetchUsers: async (tenantUuid: string) => {
+      set({ isLoading: true, error: null });
+      try {
+        const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
+        const res = await fetch(`${apiBase}/api/v1/tenants/${tenantUuid}/users`);
+        if (res.ok) {
+          const dbUsers: TenantUser[] = await res.json();
+          if (Array.isArray(dbUsers) && dbUsers.length > 0) {
+            set({ users: dbUsers, isLoading: false });
+            if (typeof window !== "undefined") {
+              try {
+                localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(dbUsers));
+              } catch (e) {}
+            }
+            return;
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch users from backend:", err);
+      }
+      set({ isLoading: false });
+    },
+
+    addUser: async (userData) => {
+      set({ isLoading: true, error: null });
+      let dbUser: TenantUser | null = null;
+      try {
+        const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
+        const targetTenant = userData.tenantId || "platform";
+        const res = await fetch(`${apiBase}/api/v1/tenants/${targetTenant}/users`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: userData.name,
+            email: userData.email,
+            role: userData.role,
+            status: userData.status || "ACTIVE",
+          }),
+        });
+
+        if (res.ok) {
+          dbUser = await res.json();
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          const errMsg = errData.detail || errData.message || "Failed to create user in database";
+          set({ isLoading: false, error: errMsg });
+          return { success: false, error: errMsg };
+        }
+      } catch (err: any) {
+        console.error("Failed to create user in backend API:", err);
+      }
+
+      const newUser: TenantUser = dbUser || {
         id: `usr-${Date.now().toString().slice(-4)}`,
         ...userData,
       };
-      const updated = [...get().users, newUser];
-      set({ users: updated });
+
+      const existingWithoutThis = get().users.filter((u) => u.email.toLowerCase() !== userData.email.toLowerCase());
+      const updated = [newUser, ...existingWithoutThis];
+      set({ users: updated, isLoading: false });
       if (typeof window !== "undefined") {
         try {
           localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updated));
@@ -565,9 +619,26 @@ export const useRoleHierarchyStore = create<RoleHierarchyState>((set, get) => {
           console.error("Failed to persist users:", e);
         }
       }
+      return { success: true };
     },
 
-    updateUser: (id, updates) => {
+    updateUser: async (id, updates, tenantUuid) => {
+      try {
+        const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
+        const targetTenant = tenantUuid || "platform";
+        await fetch(`${apiBase}/api/v1/tenants/${targetTenant}/users/${id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: updates.name,
+            role: updates.role,
+            status: updates.status,
+          }),
+        });
+      } catch (err) {
+        console.error("Failed to update user in backend:", err);
+      }
+
       const updated = get().users.map((u) => (u.id === id ? { ...u, ...updates } : u));
       set({ users: updated });
       if (typeof window !== "undefined") {
@@ -577,9 +648,20 @@ export const useRoleHierarchyStore = create<RoleHierarchyState>((set, get) => {
           console.error("Failed to persist users:", e);
         }
       }
+      return { success: true };
     },
 
-    deleteUser: (id) => {
+    deleteUser: async (id, tenantUuid) => {
+      try {
+        const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
+        const targetTenant = tenantUuid || "platform";
+        await fetch(`${apiBase}/api/v1/tenants/${targetTenant}/users/${id}`, {
+          method: "DELETE",
+        });
+      } catch (err) {
+        console.error("Failed to delete user in backend:", err);
+      }
+
       const updated = get().users.filter((u) => u.id !== id);
       set({ users: updated });
       if (typeof window !== "undefined") {
@@ -589,6 +671,7 @@ export const useRoleHierarchyStore = create<RoleHierarchyState>((set, get) => {
           console.error("Failed to persist users:", e);
         }
       }
+      return { success: true };
     },
 
     resetToDefaults: () => {
