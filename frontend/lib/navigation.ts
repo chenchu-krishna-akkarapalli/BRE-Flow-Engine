@@ -137,14 +137,6 @@ export const PORTAL_NAVIGATION_SCHEMA: NavGroup[] = [
         badgeType: "amber",
         roles: ["SUPER_ADMIN", "OPERATIONS_HEAD", "CHANNEL_ADMIN"],
       },
-      {
-        name: "Cyber Security Cell",
-        href: () => `/platform/cyber-cell`,
-        icon: ShieldAlert,
-        badge: "SOC",
-        badgeType: "rose",
-        roles: ["SUPER_ADMIN", "SOC_ANALYST"],
-      },
     ],
   },
 ];

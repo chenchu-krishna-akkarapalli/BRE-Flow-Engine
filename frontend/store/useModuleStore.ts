@@ -168,17 +168,6 @@ function getCanonicalSections(role: string | null, tenantUuid: string | null): D
         badgeType: "amber",
       });
     }
-
-    if (isSuperAdmin || userRole === "OPERATIONS_HEAD" || userRole === "SOC_ANALYST") {
-      governanceItems.push({
-        code: "CYBER_CELL",
-        name: "Cyber Security Cell",
-        href: "/platform/cyber-cell",
-        icon: "ShieldAlert",
-        badge: "SOC",
-        badgeType: "rose",
-      });
-    }
   }
 
   const sections: DynamicNavSection[] = [

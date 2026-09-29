@@ -38,6 +38,7 @@ interface AuthState {
   logout: () => void;
   setSession: (session: AuthSessionResponse) => void;
   checkAuth: () => Promise<void>;
+  updateProfile: (updates: { name?: string; email?: string; phone?: string; designation?: string }) => void;
   hasRole: (...roles: RoleKey[]) => boolean;
   hasPermission: (permission: string) => boolean;
 }
@@ -89,6 +90,10 @@ function loadInitialSession(): {
       user: {
         user_id: parsed.user_id,
         username: parsed.username || parsed.user_id,
+        name: parsed.name || (parsed.username ? parsed.username.split("@")[0].replace(/[._]/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase()) : "Super Admin"),
+        email: parsed.email || (parsed.username && parsed.username.includes("@") ? parsed.username : "super.admin@flowbre.com"),
+        phone: parsed.phone || "+91 98765 43210",
+        designation: parsed.designation || (parsed.role === "SUPER_ADMIN" ? "Platform System Administrator" : "Channel Operations Lead"),
         role: parsed.role,
         permissions: parsed.permissions || [],
         role_nodes: parsed.role_nodes || [],
@@ -174,6 +179,8 @@ export const useAuthStore = create<AuthState>((set, get) => {
           user: {
             user_id: session.user_id,
             username: session.username,
+            name: (session as any).name || (session.username ? session.username.split("@")[0].replace(/[._]/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase()) : "Super Admin"),
+            email: (session as any).email || (session.username && session.username.includes("@") ? session.username : "super.admin@flowbre.com"),
             role: session.role,
             permissions: session.permissions,
             role_nodes: session.role_nodes || [],
@@ -224,6 +231,8 @@ export const useAuthStore = create<AuthState>((set, get) => {
         user: {
           user_id: session.user_id,
           username: session.username,
+          name: (session as any).name || (session.username ? session.username.split("@")[0].replace(/[._]/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase()) : "Super Admin"),
+          email: (session as any).email || (session.username && session.username.includes("@") ? session.username : "super.admin@flowbre.com"),
           role: session.role,
           permissions: session.permissions,
           role_nodes: session.role_nodes || [],
@@ -238,8 +247,27 @@ export const useAuthStore = create<AuthState>((set, get) => {
       if (!token) return;
       try {
         const profile = await fetchAuthenticatedProfile(token);
+        const storedRaw = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
+        let storedName: string | undefined;
+        let storedEmail: string | undefined;
+        if (storedRaw) {
+          try {
+            const parsed = JSON.parse(storedRaw);
+            storedName = parsed.name;
+            storedEmail = parsed.email;
+          } catch {
+            // ignore
+          }
+        }
+
+        const profileWithName: UserProfile = {
+          ...profile,
+          name: storedName || profile.name || (profile.username ? profile.username.split("@")[0].replace(/[._]/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase()) : "Super Admin"),
+          email: storedEmail || profile.email || (profile.username && profile.username.includes("@") ? profile.username : "super.admin@flowbre.com"),
+        };
+
         set({
-          user: profile,
+          user: profileWithName,
           role: profile.role as RoleKey,
           permissions: profile.permissions,
           roleNodes: profile.role_nodes || [],
@@ -249,6 +277,37 @@ export const useAuthStore = create<AuthState>((set, get) => {
       } catch {
         get().logout();
       }
+    },
+
+    updateProfile: (updates: { name?: string; email?: string; phone?: string; designation?: string }) => {
+      const current = get();
+      if (!current.user) return;
+      const updatedUser: UserProfile = {
+        ...current.user,
+        ...(updates.name !== undefined ? { name: updates.name } : {}),
+        ...(updates.email !== undefined ? { email: updates.email, username: updates.email } : {}),
+        ...(updates.phone !== undefined ? { phone: updates.phone } : {}),
+        ...(updates.designation !== undefined ? { designation: updates.designation } : {}),
+      };
+
+      if (typeof window !== "undefined") {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          const parsed = raw ? JSON.parse(raw) : {};
+          if (updates.name !== undefined) parsed.name = updates.name;
+          if (updates.email !== undefined) {
+            parsed.email = updates.email;
+            parsed.username = updates.email;
+          }
+          if (updates.phone !== undefined) parsed.phone = updates.phone;
+          if (updates.designation !== undefined) parsed.designation = updates.designation;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+        } catch {
+          // ignore
+        }
+      }
+
+      set({ user: updatedUser });
     },
 
     hasRole: (...roles: RoleKey[]) => {

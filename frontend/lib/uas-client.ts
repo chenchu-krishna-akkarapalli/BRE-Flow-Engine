@@ -44,7 +44,10 @@ export interface AuthSessionResponse {
 export interface UserProfile {
   user_id: string;
   username: string;
+  name?: string;
   email?: string;
+  phone?: string;
+  designation?: string;
   tenant_id?: string;
   role: string;
   permissions: string[];

@@ -166,7 +166,7 @@ export default function NewChannelPage() {
                 <span>Return to Login</span>
               </Link>
               <Link
-                href="/platform/dashboard"
+                href="/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f/platformoverview"
                 className="inline-flex items-center gap-1.5 rounded-xl bg-brand-500 px-4 py-2 text-xs font-bold text-white shadow-glow hover:bg-brand-600 transition-all"
               >
                 <span>View in Platform Approval Queue</span>

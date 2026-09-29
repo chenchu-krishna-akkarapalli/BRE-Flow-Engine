@@ -2,13 +2,19 @@
 
 import { use, useState, useMemo, useEffect } from "react";
 import {
+  Activity,
+  ChevronDown,
   Lock,
+  Mail,
   Network,
   Plus,
   Search,
   Shield,
   ShieldAlert,
+  ShieldCheck,
   Trash2,
+  User,
+  UserPlus,
   Users,
   X,
 } from "lucide-react";
@@ -365,176 +371,294 @@ export default function TenantAssignmentsPage({
       {/* TAB 2: Corporate & Sales Reporting Tree (Image 2) */}
       {activeTab === "tree" && <CorporateSalesTree />}
 
-      {/* Modal: Add New Role with all Hierarchy Roles */}
+      {/* Slide-over Drawer: Add New Role with all Hierarchy Roles */}
       {isInviteModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md rounded-2xl border border-line bg-white p-6 shadow-2xl animate-fade-in">
-            <div className="flex items-center justify-between pb-4 border-b border-line">
-              <div>
-                <h2 className="text-base font-extrabold text-ink font-display">
-                  Add New Role
-                </h2>
-                <p className="text-xs text-ink-subtle">
-                  Assign user roles aligned with the reporting hierarchy.
-                </p>
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          {/* Backdrop: Minimal overlay with zero blur so the entire page and table remain 100% visible */}
+          <div
+            className="fixed inset-0 bg-slate-900/10 transition-opacity animate-fade-in"
+            onClick={() => setIsInviteModalOpen(false)}
+          />
+
+          {/* Right-side Floating Card Drawer */}
+          <div className="fixed top-3 right-3 bottom-3 z-50 flex h-[calc(100vh-1.5rem)] w-full max-w-[460px] flex-col rounded-3xl bg-white border border-slate-200/90 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.22)] animate-drawer-in overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 bg-slate-50/70">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-teal-50 border border-teal-200/60 text-teal-600 shadow-2xs">
+                  <UserPlus size={20} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-base font-extrabold text-slate-900 font-display">
+                      Add New Role
+                    </h2>
+                    <span className="rounded-full bg-teal-100/80 px-2 py-0.5 text-[0.625rem] font-bold text-teal-800 font-mono">
+                      RBAC
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Assign user roles aligned with reporting hierarchy.
+                  </p>
+                </div>
               </div>
               <button
                 type="button"
                 onClick={() => setIsInviteModalOpen(false)}
-                className="text-ink-subtle hover:text-ink transition-colors"
+                className="rounded-full p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors cursor-pointer"
+                title="Close"
               >
                 <X size={18} />
               </button>
             </div>
 
-            <form onSubmit={handleInviteUser} className="space-y-4 pt-4">
-              <div>
-                <label className="block text-xs font-bold text-ink mb-1">Full Name</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Ramesh Kulkarni"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  className="w-full rounded-xl border border-line px-3 py-2 text-xs text-ink focus:border-brand-500 focus:outline-hidden"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-ink mb-1">Work Email</label>
-                <input
-                  type="email"
-                  required
-                  placeholder="e.g. ramesh.kulkarni@finsol.in"
-                  value={newEmail}
-                  onChange={(e) => setNewEmail(e.target.value)}
-                  className="w-full rounded-xl border border-line px-3 py-2 text-xs text-ink focus:border-brand-500 focus:outline-hidden"
-                />
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="block text-xs font-bold text-ink">Assigned Role</label>
-                  <span className="text-[0.6875rem] font-mono text-brand-600 font-bold">
-                    Hierarchy Tier Aligned
-                  </span>
+            {/* Form */}
+            <form onSubmit={handleInviteUser} className="flex-1 flex flex-col justify-between overflow-hidden">
+              <div className="flex-1 overflow-y-auto p-6 space-y-4.5">
+                <div>
+                  <label className="flex items-center justify-between text-xs font-bold text-slate-700 mb-1.5">
+                    <span className="flex items-center gap-1.5">
+                      <User size={13} className="text-slate-400" />
+                      Full Name
+                    </span>
+                    <span className="text-[0.625rem] font-normal text-slate-400">Required</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Ramesh Kulkarni"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-teal-500 focus:ring-3 focus:ring-teal-500/10 focus:outline-hidden transition-all font-medium"
+                  />
                 </div>
-                <select
-                  value={newRole}
-                  onChange={(e) => setNewRole(e.target.value)}
-                  className="w-full rounded-xl border border-line px-3 py-2 text-xs text-ink focus:border-brand-500 focus:outline-hidden font-mono font-medium"
-                >
-                  {assignableRoles.map((r) => (
-                    <option key={r.id} value={r.roleKey}>
-                      {r.displayName} ({r.department})
-                    </option>
-                  ))}
-                </select>
-                <p className="text-[0.625rem] text-ink-subtle mt-1">
-                  Select any leadership, regional, or sales function role (e.g. Regional Director, Operations Head).
-                </p>
+
+                <div>
+                  <label className="flex items-center justify-between text-xs font-bold text-slate-700 mb-1.5">
+                    <span className="flex items-center gap-1.5">
+                      <Mail size={13} className="text-slate-400" />
+                      Work Email
+                    </span>
+                    <span className="text-[0.625rem] font-normal text-slate-400">Corporate Domain</span>
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="e.g. ramesh.kulkarni@finsol.in"
+                    value={newEmail}
+                    onChange={(e) => setNewEmail(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-teal-500 focus:ring-3 focus:ring-teal-500/10 focus:outline-hidden transition-all font-medium"
+                  />
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
+                      <Shield size={13} className="text-teal-600" />
+                      Assigned Role
+                    </label>
+                    <span className="rounded-full bg-teal-50 border border-teal-200/60 px-2 py-0.5 text-[0.625rem] font-mono font-bold text-teal-700">
+                      Tier Aligned
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <select
+                      value={newRole}
+                      onChange={(e) => setNewRole(e.target.value)}
+                      className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 pr-9 text-xs text-slate-900 focus:bg-white focus:border-teal-500 focus:ring-3 focus:ring-teal-500/10 focus:outline-hidden transition-all font-mono font-medium cursor-pointer"
+                    >
+                      {assignableRoles.map((r) => (
+                        <option key={r.id} value={r.roleKey}>
+                          {r.displayName} ({r.department})
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown size={14} className="pointer-events-none absolute right-3.5 top-3.5 text-slate-400" />
+                  </div>
+                  <p className="text-[0.625rem] text-slate-400 mt-1.5 leading-relaxed">
+                    Select any leadership, regional, or sales function role (e.g. Regional Director, Operations Head).
+                  </p>
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700 mb-1.5">
+                    <Activity size={13} className="text-slate-400" />
+                    Account Status
+                  </label>
+                  <div className="flex items-center justify-between rounded-xl border border-emerald-200/80 bg-emerald-50/50 px-3.5 py-2.5 text-xs font-bold text-emerald-800">
+                    <div className="flex items-center gap-2">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                      </span>
+                      <span>ACTIVE &bull; Instant Provisioning</span>
+                    </div>
+                    <span className="text-[0.625rem] font-mono text-emerald-700 font-medium">Auto-Enabled</span>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-teal-100 bg-gradient-to-br from-teal-50/40 via-white to-slate-50 p-4 text-[0.6875rem] text-slate-600 space-y-1.5 shadow-2xs">
+                  <div className="font-bold text-slate-800 flex items-center gap-1.5">
+                    <ShieldCheck size={14} className="text-teal-600" />
+                    <span>Governance &amp; Privilege Enforcement</span>
+                  </div>
+                  <p className="text-slate-500 leading-relaxed">
+                    All assigned roles will immediately inherit permission scopes, telemetry visibility, and digital underwriting thresholds.
+                  </p>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-ink mb-1">Account Status</label>
-                <select
-                  value={newStatus}
-                  onChange={(e) => setNewStatus(e.target.value as "ACTIVE")}
-                  className="w-full rounded-xl border border-line px-3 py-2 text-xs text-ink focus:border-brand-500 focus:outline-hidden font-bold"
-                >
-                  <option value="ACTIVE">ACTIVE</option>
-                </select>
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setIsInviteModalOpen(false)}
-                  className="rounded-xl border border-line px-4 py-2 text-xs font-bold text-ink-muted hover:bg-slate-50 transition-all"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="rounded-xl bg-brand-500 px-4 py-2 text-xs font-bold text-white shadow-glow hover:bg-brand-600 transition-all"
-                >
-                  Create
-                </button>
+              {/* Drawer Footer */}
+              <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-slate-100 bg-slate-50/80 backdrop-blur-sm">
+                <span className="text-[0.6875rem] font-mono text-slate-400">
+                  Click outside to close
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsInviteModalOpen(false)}
+                    className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-600 shadow-2xs hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex items-center gap-1.5 rounded-xl bg-teal-600 px-5 py-2 text-xs font-bold text-white shadow-md shadow-teal-600/20 hover:bg-teal-700 transition-all cursor-pointer"
+                  >
+                    <Plus size={14} />
+                    <span>Create Role</span>
+                  </button>
+                </div>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* Modal: Edit Team Member */}
+      {/* Slide-over Drawer: Edit Team Member */}
       {editingUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md rounded-2xl border border-line bg-white p-6 shadow-2xl animate-fade-in">
-            <div className="flex items-center justify-between pb-4 border-b border-line">
-              <div>
-                <h2 className="text-base font-extrabold text-ink font-display">
-                  Edit Role & Status
-                </h2>
-                <p className="text-xs text-ink-subtle">{editingUser.name} ({editingUser.email})</p>
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          {/* Backdrop: Minimal overlay with zero blur */}
+          <div
+            className="fixed inset-0 bg-slate-900/10 transition-opacity animate-fade-in"
+            onClick={() => setEditingUser(null)}
+          />
+
+          {/* Right-side Floating Card Drawer */}
+          <div className="fixed top-3 right-3 bottom-3 z-50 flex h-[calc(100vh-1.5rem)] w-full max-w-[460px] flex-col rounded-3xl bg-white border border-slate-200/90 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.22)] animate-drawer-in overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 bg-slate-50/70">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-teal-50 border border-teal-200/60 text-teal-600 shadow-2xs">
+                  <ShieldCheck size={20} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-base font-extrabold text-slate-900 font-display">
+                      Edit Role &amp; Status
+                    </h2>
+                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[0.625rem] font-bold text-slate-600 font-mono">
+                      Active Member
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-0.5">{editingUser.name} &bull; {editingUser.email}</p>
+                </div>
               </div>
               <button
                 type="button"
                 onClick={() => setEditingUser(null)}
-                className="text-ink-subtle hover:text-ink transition-colors"
+                className="rounded-full p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors cursor-pointer"
+                title="Close"
               >
                 <X size={18} />
               </button>
             </div>
 
-            <form onSubmit={handleUpdateUser} className="space-y-4 pt-4">
-              <div>
-                <label className="block text-xs font-bold text-ink mb-1">Assigned Role</label>
-                <select
-                  value={editingUser.role}
-                  onChange={(e) =>
-                    setEditingUser({ ...editingUser, role: e.target.value })
-                  }
-                  className="w-full rounded-xl border border-line px-3 py-2 text-xs text-ink focus:border-brand-500 focus:outline-hidden font-mono font-medium"
-                >
-                  {roles.map((r) => (
-                    <option key={r.id} value={r.roleKey}>
-                      {r.displayName} ({r.department})
-                    </option>
-                  ))}
-                </select>
+            {/* Form */}
+            <form onSubmit={handleUpdateUser} className="flex-1 flex flex-col justify-between overflow-hidden">
+              <div className="flex-1 overflow-y-auto p-6 space-y-4.5">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
+                      <Shield size={13} className="text-teal-600" />
+                      Assigned Role
+                    </label>
+                    <span className="rounded-full bg-teal-50 border border-teal-200/60 px-2 py-0.5 text-[0.625rem] font-mono font-bold text-teal-700">
+                      Tier Aligned
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <select
+                      value={editingUser.role}
+                      onChange={(e) =>
+                        setEditingUser({ ...editingUser, role: e.target.value })
+                      }
+                      className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 pr-9 text-xs text-slate-900 focus:bg-white focus:border-teal-500 focus:ring-3 focus:ring-teal-500/10 focus:outline-hidden transition-all font-mono font-medium cursor-pointer"
+                    >
+                      {roles.map((r) => (
+                        <option key={r.id} value={r.roleKey}>
+                          {r.displayName} ({r.department})
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown size={14} className="pointer-events-none absolute right-3.5 top-3.5 text-slate-400" />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700 mb-1.5">
+                    <Activity size={13} className="text-slate-400" />
+                    Account Status
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={editingUser.status === "SUSPENDED" ? "SUSPENDED" : "ACTIVE"}
+                      onChange={(e) =>
+                        setEditingUser({
+                          ...editingUser,
+                          status: e.target.value as "ACTIVE" | "SUSPENDED",
+                        })
+                      }
+                      className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 pr-9 text-xs text-slate-900 focus:bg-white focus:border-teal-500 focus:ring-3 focus:ring-teal-500/10 focus:outline-hidden transition-all font-bold cursor-pointer"
+                    >
+                      <option value="ACTIVE">ACTIVE</option>
+                      <option value="SUSPENDED">SUSPENDED</option>
+                    </select>
+                    <ChevronDown size={14} className="pointer-events-none absolute right-3.5 top-3.5 text-slate-400" />
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50/40 via-white to-slate-50 p-4 text-[0.6875rem] text-slate-600 space-y-1.5 shadow-2xs">
+                  <div className="font-bold text-slate-800 flex items-center gap-1.5">
+                    <span>⚡ Instant Role Propagation</span>
+                  </div>
+                  <p className="text-slate-500 leading-relaxed">
+                    Updating permissions takes effect across all real-time approval pipelines, session tokens, and audit logs immediately.
+                  </p>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-ink mb-1">Account Status</label>
-                <select
-                  value={editingUser.status === "SUSPENDED" ? "SUSPENDED" : "ACTIVE"}
-                  onChange={(e) =>
-                    setEditingUser({
-                      ...editingUser,
-                      status: e.target.value as "ACTIVE" | "SUSPENDED",
-                    })
-                  }
-                  className="w-full rounded-xl border border-line px-3 py-2 text-xs text-ink focus:border-brand-500 focus:outline-hidden font-bold"
-                >
-                  <option value="ACTIVE">ACTIVE</option>
-                  <option value="SUSPENDED">SUSPENDED</option>
-                </select>
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setEditingUser(null)}
-                  className="rounded-xl border border-line px-4 py-2 text-xs font-bold text-ink-muted hover:bg-slate-50 transition-all"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="rounded-xl bg-brand-500 px-4 py-2 text-xs font-bold text-white shadow-glow hover:bg-brand-600 transition-all"
-                >
-                  Save Changes
-                </button>
+              {/* Drawer Footer */}
+              <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-slate-100 bg-slate-50/80 backdrop-blur-sm">
+                <span className="text-[0.6875rem] font-mono text-slate-400">
+                  Click outside to close
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setEditingUser(null)}
+                    className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-600 shadow-2xs hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex items-center gap-1.5 rounded-xl bg-teal-600 px-5 py-2 text-xs font-bold text-white shadow-md shadow-teal-600/20 hover:bg-teal-700 transition-all cursor-pointer"
+                  >
+                    <ShieldCheck size={14} />
+                    <span>Save Changes</span>
+                  </button>
+                </div>
               </div>
             </form>
           </div>

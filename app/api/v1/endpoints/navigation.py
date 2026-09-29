@@ -109,7 +109,7 @@ MODULE_CATALOG = [
     {
         "code": "PLATFORM_OVERVIEW",
         "name": "Platform Overview",
-        "route_template": "/platform/dashboard",
+        "route_template": "/{tenant}/platformoverview",
         "icon": "Crown",
         "section_key": "PLATFORM_GOVERNANCE",
         "section_title": "Platform Oversight (Application Owners)",
@@ -128,18 +128,6 @@ MODULE_CATALOG = [
         "badge": "Live",
         "badge_type": "amber",
         "allowed_roles": ["SUPER_ADMIN", "OPERATIONS_HEAD", "ACCOUNTS_HEAD", "REGIONAL_DIRECTOR", "AREA_MANAGER", "CHANNEL_ADMIN"],
-        "min_tier": 1,
-    },
-    {
-        "code": "CYBER_CELL",
-        "name": "Cyber Security Cell",
-        "route_template": "/platform/cyber-cell",
-        "icon": "ShieldAlert",
-        "section_key": "PLATFORM_GOVERNANCE",
-        "section_title": "Platform Oversight (Application Owners)",
-        "badge": "SOC",
-        "badge_type": "rose",
-        "allowed_roles": ["SUPER_ADMIN", "OPERATIONS_HEAD", "SOC_ANALYST"],
         "min_tier": 1,
     },
 ]

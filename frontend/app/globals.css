@@ -206,6 +206,21 @@ h1, h2, h3, h4, h5, h6 {
   animation: slide-in-left var(--dur-normal) var(--ease-out) forwards;
 }
 
+@keyframes drawer-slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0.8;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-drawer-in {
+  animation: drawer-slide-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 
 @keyframes pulse-glow {
   0%, 100% {

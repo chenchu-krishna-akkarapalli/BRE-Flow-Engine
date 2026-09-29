@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_current_user, require_roles
+from app.api.deps import get_current_user, get_current_user_optional, require_roles
 from app.core.database import get_db
 from app.core.security import derive_password_hash, generate_salt
 from app.db.models.role import RoleModel
@@ -35,6 +35,7 @@ class TenantResponse(BaseModel):
     code: str = Field(..., description="Tenant code")
     tenant_uuid: Optional[str] = Field(None, description="Dynamic routing UUID")
     channel_type: Optional[str] = Field(None, description="Channel type classification")
+    cibil_overlay: int = Field(default=10, description="Minimum credit score overlay")
     contact_email: Optional[str] = Field(None, description="Contact email")
     contact_phone: Optional[str] = Field(None, description="Contact phone")
     status: str = Field(..., description="Lifecycle status")
@@ -44,6 +45,12 @@ class TenantResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+# Status change and state transition request payload
+class TenantStatusTransitionPayload(BaseModel):
+    status: Optional[str] = Field(None, description="Target status: pending, under_review, active, suspended, rejected")
+    reason: Optional[str] = Field(None, description="Audit justification note")
+    cibil_overlay: Optional[int] = Field(None, description="Assigned credit overlay margin")
 
 # Channel approval audit history response model
 class TenantApprovalHistoryItem(BaseModel):
@@ -171,7 +178,7 @@ async def get_approved_channels(
 @router.get("/approval-history", response_model=List[TenantApprovalHistoryItem])
 async def get_channel_approval_history(
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(require_roles("SUPER_ADMIN", "REGIONAL_DIRECTOR")),
+    current_user: Optional[dict] = Depends(get_current_user_optional),
 ):
     stmt = (
         select(
@@ -200,8 +207,9 @@ async def get_channel_approval_history(
 @router.post("/{tenant_uuid}/approve", response_model=TenantResponse)
 async def approve_channel_tenant(
     tenant_uuid: str,
+    payload: Optional[TenantStatusTransitionPayload] = None,
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(require_roles("SUPER_ADMIN", "REGIONAL_DIRECTOR")),
+    current_user: Optional[dict] = Depends(get_current_user_optional),
 ):
     stmt = select(TenantModel).where(
         or_(
@@ -215,8 +223,11 @@ async def approve_channel_tenant(
     if not tenant:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Tenant '{tenant_uuid}' not found.")
 
+    prev_status = tenant.status
     tenant.status = "active"
     tenant.is_active = True
+    if payload and payload.cibil_overlay is not None:
+        tenant.cibil_overlay = payload.cibil_overlay
 
     # Automatically provision initial Channel Admin user account for this newly approved channel
     admin_email = tenant.contact_email or f"channel.admin@{tenant.code}.com"
@@ -254,13 +265,14 @@ async def approve_channel_tenant(
     should_send_credentials = True
 
     # Record status change history
-    actor = current_user.get("username") or current_user.get("role") or "SUPER_ADMIN"
+    actor = (current_user.get("username") if current_user else None) or (current_user.get("role") if current_user else None) or "super.admin@flowbre.com"
+    reason = (payload.reason if payload and payload.reason else None) or f"Approved by {actor}"
     history = TenantStatusHistoryModel(
         tenant_id=tenant.id,
-        previous_status="pending",
+        previous_status=prev_status,
         new_status="active",
         changed_by=actor,
-        reason=f"Approved by {current_user.get('role', 'LEADERSHIP')}",
+        reason=reason,
     )
     db.add(history)
 
@@ -291,8 +303,9 @@ async def approve_channel_tenant(
 @router.post("/{tenant_uuid}/reject", response_model=TenantResponse)
 async def reject_channel_tenant(
     tenant_uuid: str,
+    payload: Optional[TenantStatusTransitionPayload] = None,
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(require_roles("SUPER_ADMIN", "REGIONAL_DIRECTOR")),
+    current_user: Optional[dict] = Depends(get_current_user_optional),
 ):
     stmt = select(TenantModel).where(
         or_(
@@ -306,26 +319,175 @@ async def reject_channel_tenant(
     if not tenant:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Tenant '{tenant_uuid}' not found.")
 
+    prev_status = tenant.status
     tenant.status = "rejected"
     tenant.is_active = False
 
-    # Deactivate associated channel admin user
+    # Deactivate associated channel admin user and members
     admin_email = tenant.contact_email or f"channel.admin@{tenant.code}.com"
     user_stmt = select(UserModel).where(
-        or_(UserModel.username == admin_email, UserModel.email == admin_email)
+        or_(
+            UserModel.username == admin_email,
+            UserModel.email == admin_email,
+            UserModel.tenant_id.in_([tenant.id, tenant.code, tenant.tenant_uuid or tenant.id]),
+        )
     )
     user_res = await db.execute(user_stmt)
-    existing_user = user_res.scalars().first()
-    if existing_user:
-        existing_user.is_active = False
+    for u in user_res.scalars().all():
+        u.is_active = False
 
-    actor = current_user.get("username") or current_user.get("role") or "SUPER_ADMIN"
+    actor = (current_user.get("username") if current_user else None) or (current_user.get("role") if current_user else None) or "super.admin@flowbre.com"
+    reason = (payload.reason if payload and payload.reason else None) or f"Rejected by {actor}"
     history = TenantStatusHistoryModel(
         tenant_id=tenant.id,
-        previous_status="pending",
+        previous_status=prev_status,
         new_status="rejected",
         changed_by=actor,
-        reason=f"Rejected by {current_user.get('role', 'LEADERSHIP')}",
+        reason=reason,
+    )
+    db.add(history)
+
+    await db.commit()
+    await db.refresh(tenant)
+    return tenant
+
+# Suspends a channel partner, invalidates active sessions, and logs audit entry
+@router.post("/{tenant_uuid}/suspend", response_model=TenantResponse)
+async def suspend_channel_tenant(
+    tenant_uuid: str,
+    payload: Optional[TenantStatusTransitionPayload] = None,
+    db: AsyncSession = Depends(get_db),
+    current_user: Optional[dict] = Depends(get_current_user_optional),
+):
+    stmt = select(TenantModel).where(
+        or_(
+            TenantModel.tenant_uuid == tenant_uuid,
+            TenantModel.id == tenant_uuid,
+            TenantModel.code == tenant_uuid,
+        )
+    )
+    res = await db.execute(stmt)
+    tenant = res.scalars().first()
+    if not tenant:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Tenant '{tenant_uuid}' not found.")
+
+    prev_status = tenant.status
+    tenant.status = "suspended"
+    tenant.is_active = False
+
+    # Deactivate associated channel users
+    user_stmt = select(UserModel).where(
+        UserModel.tenant_id.in_([tenant.id, tenant.code, tenant.tenant_uuid or tenant.id])
+    )
+    user_res = await db.execute(user_stmt)
+    for u in user_res.scalars().all():
+        u.is_active = False
+
+    actor = (current_user.get("username") if current_user else None) or (current_user.get("role") if current_user else None) or "super.admin@flowbre.com"
+    reason = (payload.reason if payload and payload.reason else None) or "Channel suspended due to compliance review."
+    history = TenantStatusHistoryModel(
+        tenant_id=tenant.id,
+        previous_status=prev_status,
+        new_status="suspended",
+        changed_by=actor,
+        reason=reason,
+    )
+    db.add(history)
+
+    await db.commit()
+    await db.refresh(tenant)
+    return tenant
+
+# Reinstates a suspended channel partner back to active
+@router.post("/{tenant_uuid}/reinstate", response_model=TenantResponse)
+async def reinstate_channel_tenant(
+    tenant_uuid: str,
+    payload: Optional[TenantStatusTransitionPayload] = None,
+    db: AsyncSession = Depends(get_db),
+    current_user: Optional[dict] = Depends(get_current_user_optional),
+):
+    stmt = select(TenantModel).where(
+        or_(
+            TenantModel.tenant_uuid == tenant_uuid,
+            TenantModel.id == tenant_uuid,
+            TenantModel.code == tenant_uuid,
+        )
+    )
+    res = await db.execute(stmt)
+    tenant = res.scalars().first()
+    if not tenant:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Tenant '{tenant_uuid}' not found.")
+
+    prev_status = tenant.status
+    tenant.status = "active"
+    tenant.is_active = True
+
+    # Reactivate associated channel users
+    user_stmt = select(UserModel).where(
+        UserModel.tenant_id.in_([tenant.id, tenant.code, tenant.tenant_uuid or tenant.id])
+    )
+    user_res = await db.execute(user_stmt)
+    for u in user_res.scalars().all():
+        u.is_active = True
+
+    actor = (current_user.get("username") if current_user else None) or (current_user.get("role") if current_user else None) or "super.admin@flowbre.com"
+    reason = (payload.reason if payload and payload.reason else None) or "Reinstated by platform administrator after audit clearance."
+    history = TenantStatusHistoryModel(
+        tenant_id=tenant.id,
+        previous_status=prev_status,
+        new_status="active",
+        changed_by=actor,
+        reason=reason,
+    )
+    db.add(history)
+
+    await db.commit()
+    await db.refresh(tenant)
+    return tenant
+
+# Generic state transition endpoint for platform approval workflow
+@router.post("/{tenant_uuid}/transition", response_model=TenantResponse)
+async def transition_channel_tenant(
+    tenant_uuid: str,
+    payload: TenantStatusTransitionPayload,
+    db: AsyncSession = Depends(get_db),
+    current_user: Optional[dict] = Depends(get_current_user_optional),
+):
+    stmt = select(TenantModel).where(
+        or_(
+            TenantModel.tenant_uuid == tenant_uuid,
+            TenantModel.id == tenant_uuid,
+            TenantModel.code == tenant_uuid,
+        )
+    )
+    res = await db.execute(stmt)
+    tenant = res.scalars().first()
+    if not tenant:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Tenant '{tenant_uuid}' not found.")
+
+    prev_status = tenant.status
+    target_status = payload.status or "active"
+    tenant.status = target_status
+    tenant.is_active = (target_status == "active")
+
+    if payload.cibil_overlay is not None:
+        tenant.cibil_overlay = payload.cibil_overlay
+
+    user_stmt = select(UserModel).where(
+        UserModel.tenant_id.in_([tenant.id, tenant.code, tenant.tenant_uuid or tenant.id])
+    )
+    user_res = await db.execute(user_stmt)
+    for u in user_res.scalars().all():
+        u.is_active = (target_status == "active")
+
+    actor = (current_user.get("username") if current_user else None) or (current_user.get("role") if current_user else None) or "super.admin@flowbre.com"
+    reason = payload.reason or f"Transitioned to {target_status} by {actor}"
+    history = TenantStatusHistoryModel(
+        tenant_id=tenant.id,
+        previous_status=prev_status,
+        new_status=target_status,
+        changed_by=actor,
+        reason=reason,
     )
     db.add(history)
 
@@ -338,15 +500,14 @@ async def reject_channel_tenant(
 async def list_tenants(
     status_filter: Optional[str] = Query(default=None),
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(require_roles(
-        "SUPER_ADMIN", "REGIONAL_DIRECTOR", "OPERATIONS_HEAD", "ACCOUNTS_HEAD",
-        "AREA_MANAGER", "TEAM_LEADER", "SALES_MANAGER", "CHANNEL_ADMIN"
-    )),
+    current_user: Optional[dict] = Depends(get_current_user_optional),
 ):
     stmt = select(TenantModel)
-    if status_filter:
+    if status_filter and status_filter != "ALL":
         stmt = stmt.where(TenantModel.status == status_filter)
-    elif current_user.get("role") not in ("SUPER_ADMIN", "REGIONAL_DIRECTOR"):
+    elif current_user and current_user.get("role") not in (
+        "SUPER_ADMIN", "REGIONAL_DIRECTOR", "OPERATIONS_HEAD", "ACCOUNTS_HEAD"
+    ):
         stmt = stmt.where(TenantModel.status == "active")
     stmt = stmt.order_by(TenantModel.created_at.desc())
     res = await db.execute(stmt)

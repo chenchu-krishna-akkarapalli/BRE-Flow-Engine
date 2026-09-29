@@ -8,6 +8,7 @@ import {
   Building2,
   Check,
   CheckCircle2,
+  ChevronDown,
   Clock,
   Copy,
   ExternalLink,
@@ -23,6 +24,7 @@ import {
   ShieldCheck,
   Trash2,
   TrendingUp,
+  User,
   UserCheck,
   UserPlus,
   Users,
@@ -41,7 +43,6 @@ import {
   TenantUser,
   UserStatus,
 } from "@/store/useRoleHierarchyStore";
-import CorporateSalesTree from "@/components/CorporateSalesTree";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function ChannelWorkspacePage({
@@ -139,7 +140,6 @@ export default function ChannelWorkspacePage({
 
   // Active view state
   const [activeTab, setActiveTab] = useState<"employees" | "details" | "audit">("employees");
-  const [employeeSubView, setEmployeeSubView] = useState<"table" | "tree">("table");
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("ALL");
@@ -485,53 +485,25 @@ export default function ChannelWorkspacePage({
               </select>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-1 text-xs">
-                <button
-                  type="button"
-                  onClick={() => setEmployeeSubView("table")}
-                  className={`rounded-lg px-3 py-1 font-bold transition-all cursor-pointer ${
-                    employeeSubView === "table"
-                      ? "bg-white text-slate-900 shadow-xs"
-                      : "text-slate-500 hover:text-slate-800"
-                  }`}
-                >
-                  Table Roster
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setEmployeeSubView("tree")}
-                  className={`rounded-lg px-3 py-1 font-bold transition-all cursor-pointer ${
-                    employeeSubView === "tree"
-                      ? "bg-white text-slate-900 shadow-xs"
-                      : "text-slate-500 hover:text-slate-800"
-                  }`}
-                >
-                  Reporting Tree
-                </button>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setEditingUser(null);
-                  setFormName("");
-                  setFormEmail("");
-                  setFormRole("CHANNEL_ADMIN");
-                  setFormStatus("ACTIVE");
-                  setIsAddUserModalOpen(true);
-                }}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-teal-600 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-teal-700 transition-all cursor-pointer"
-              >
-                <Plus size={14} />
-                <span>Add Employee</span>
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setEditingUser(null);
+                setFormName("");
+                setFormEmail("");
+                setFormRole("CHANNEL_ADMIN");
+                setFormStatus("ACTIVE");
+                setIsAddUserModalOpen(true);
+              }}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-teal-600 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-teal-700 transition-all cursor-pointer"
+            >
+              <Plus size={14} />
+              <span>Add Employee</span>
+            </button>
           </div>
 
-          {/* SubView A: Table Roster */}
-          {employeeSubView === "table" && (
-            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
+          {/* Table Roster */}
+          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
               <div className="overflow-x-auto">
                 {channelEmployees.length === 0 ? (
                   <div className="p-12 text-center flex flex-col items-center justify-center gap-2">
@@ -653,23 +625,7 @@ export default function ChannelWorkspacePage({
                   </table>
                 )}
               </div>
-            </div>
-          )}
-
-          {/* SubView B: Visual Hierarchy Tree */}
-          {employeeSubView === "tree" && (
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
-              <div className="mb-4">
-                <h3 className="text-sm font-extrabold text-slate-900 font-display">
-                  {channel.name} Organization &amp; Sales Reporting Tree
-                </h3>
-                <p className="text-xs text-slate-500">
-                  Visual hierarchy showing frontline officers, supervisors, and administrative personnel for this channel partner.
-                </p>
-              </div>
-              <CorporateSalesTree />
-            </div>
-          )}
+          </div>
         </div>
       )}
 
@@ -691,22 +647,6 @@ export default function ChannelWorkspacePage({
               <div>
                 <span className="text-slate-400 font-medium">Internal Channel Slug</span>
                 <p className="font-mono font-bold text-slate-800">{channel.code}</p>
-              </div>
-
-              <div>
-                <span className="text-slate-400 font-medium">Dynamic Tenant UUID</span>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <code className="font-mono text-xs text-teal-700 bg-teal-50 px-2 py-1 rounded-md border border-teal-200">
-                    {channel.tenant_uuid}
-                  </code>
-                  <button
-                    type="button"
-                    onClick={() => handleCopy(channel.tenant_uuid, "detailUuid")}
-                    className="p-1 text-slate-400 hover:text-slate-600 cursor-pointer"
-                  >
-                    {copiedField === "detailUuid" ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
-                  </button>
-                </div>
               </div>
 
               <div>
@@ -798,95 +738,161 @@ export default function ChannelWorkspacePage({
         </div>
       )}
 
-      {/* ----------------- ADD / EDIT EMPLOYEE MODAL ----------------- */}
+      {/* ----------------- ADD / EDIT EMPLOYEE SLIDE-OVER DRAWER ----------------- */}
       {isAddUserModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl animate-fade-in">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <div className="flex items-center gap-2">
-                <UserCheck size={20} className="text-teal-600" />
-                <h3 className="text-base font-extrabold text-slate-900 font-display">
-                  {editingUser ? "Edit Employee Role" : `Add Employee to ${channel.name}`}
-                </h3>
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          {/* Backdrop: Minimal overlay with zero blur so the entire page remains 100% visible */}
+          <div
+            className="fixed inset-0 bg-slate-900/10 transition-opacity animate-fade-in"
+            onClick={() => setIsAddUserModalOpen(false)}
+          />
+
+          {/* Right-side Floating Card Drawer */}
+          <div className="fixed top-3 right-3 bottom-3 z-50 flex h-[calc(100vh-1.5rem)] w-full max-w-[460px] flex-col rounded-3xl bg-white border border-slate-200/90 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.22)] animate-drawer-in overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 bg-slate-50/70">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-teal-50 border border-teal-200/60 text-teal-600 shadow-2xs">
+                  <UserCheck size={20} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-extrabold text-slate-900 font-display">
+                      {editingUser ? "Edit Employee Role" : `Add Employee`}
+                    </h3>
+                    <span className="rounded-full bg-teal-100/80 px-2 py-0.5 text-[0.625rem] font-bold text-teal-800 font-mono">
+                      STAFF
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Channel: {channel.name}
+                  </p>
+                </div>
               </div>
               <button
                 type="button"
                 onClick={() => setIsAddUserModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                className="rounded-full p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors cursor-pointer"
+                title="Close"
               >
                 <X size={18} />
               </button>
             </div>
 
-            <form onSubmit={handleSaveUser} className="py-4 space-y-4 text-xs">
-              <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1">Full Name</label>
-                <input
-                  type="text"
-                  required
-                  value={formName}
-                  onChange={(e) => setFormName(e.target.value)}
-                  placeholder="e.g. Ramesh Kulkarni"
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs text-slate-900 focus:border-slate-800 focus:outline-hidden"
-                />
+            {/* Form */}
+            <form onSubmit={handleSaveUser} className="flex-1 flex flex-col justify-between overflow-hidden">
+              <div className="flex-1 overflow-y-auto p-6 space-y-4 text-xs">
+                <div>
+                  <label className="flex items-center justify-between text-xs font-bold text-slate-700 mb-1.5">
+                    <span className="flex items-center gap-1.5">
+                      <User size={13} className="text-slate-400" />
+                      Full Name
+                    </span>
+                    <span className="text-[0.625rem] font-normal text-slate-400">Required</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formName}
+                    onChange={(e) => setFormName(e.target.value)}
+                    placeholder="e.g. Ramesh Kulkarni"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-teal-500 focus:ring-3 focus:ring-teal-500/10 focus:outline-hidden transition-all font-medium"
+                  />
+                </div>
+
+                <div>
+                  <label className="flex items-center justify-between text-xs font-bold text-slate-700 mb-1.5">
+                    <span className="flex items-center gap-1.5">
+                      <Mail size={13} className="text-slate-400" />
+                      Corporate Email Address
+                    </span>
+                    <span className="text-[0.625rem] font-normal text-slate-400">Domain Auth</span>
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={formEmail}
+                    onChange={(e) => setFormEmail(e.target.value)}
+                    placeholder="e.g. ramesh@boi-dsa.in"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-teal-500 focus:ring-3 focus:ring-teal-500/10 focus:outline-hidden transition-all font-medium"
+                  />
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
+                      <Shield size={13} className="text-teal-600" />
+                      Assigned Role &amp; Permission Tier
+                    </label>
+                    <span className="rounded-full bg-teal-50 border border-teal-200/60 px-2 py-0.5 text-[0.625rem] font-mono font-bold text-teal-700">
+                      Channel Level
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <select
+                      value={formRole}
+                      onChange={(e) => setFormRole(e.target.value)}
+                      className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 pr-8 text-xs text-slate-900 focus:bg-white focus:border-teal-500 focus:ring-3 focus:ring-teal-500/10 focus:outline-hidden font-bold cursor-pointer"
+                    >
+                      <option value="CHANNEL_ADMIN">Channel Admin (Branch Head)</option>
+                      <option value="SALES_MANAGER">Sales Manager</option>
+                      <option value="TEAM_LEADER">Team Leader</option>
+                      <option value="TRANSACTIONAL_USER">Transactional User (Loan Officer)</option>
+                    </select>
+                    <ChevronDown size={14} className="pointer-events-none absolute right-3.5 top-3.5 text-slate-400" />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700 mb-1.5">
+                    <Activity size={13} className="text-slate-400" />
+                    Account Status
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={formStatus}
+                      onChange={(e) => setFormStatus(e.target.value as UserStatus)}
+                      className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 pr-8 text-xs text-slate-900 focus:bg-white focus:border-teal-500 focus:ring-3 focus:ring-teal-500/10 focus:outline-hidden font-bold cursor-pointer"
+                    >
+                      <option value="ACTIVE">ACTIVE</option>
+                      <option value="SUSPENDED">SUSPENDED</option>
+                    </select>
+                    <ChevronDown size={14} className="pointer-events-none absolute right-3.5 top-3.5 text-slate-400" />
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-teal-50/40 via-white to-slate-50 border border-teal-100 text-slate-600 text-[0.6875rem] space-y-1 shadow-2xs">
+                  <div className="font-bold text-slate-800 flex items-center gap-1.5">
+                    <ShieldCheck size={14} className="text-teal-600" />
+                    <span>Channel Tenancy Enforcement</span>
+                  </div>
+                  <p className="text-slate-500 leading-relaxed">
+                    Employee will be provisioned exclusively under channel <code className="font-mono text-teal-700 font-bold">{channel.name}</code> ({channel.tenant_uuid.slice(0, 10)}...).
+                  </p>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1">Corporate Email Address</label>
-                <input
-                  type="email"
-                  required
-                  value={formEmail}
-                  onChange={(e) => setFormEmail(e.target.value)}
-                  placeholder="e.g. ramesh@boi-dsa.in"
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs text-slate-900 focus:border-slate-800 focus:outline-hidden"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1">Assigned Role &amp; Permission Tier</label>
-                <select
-                  value={formRole}
-                  onChange={(e) => setFormRole(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs text-slate-900 focus:border-slate-800 focus:outline-hidden"
-                >
-                  <option value="CHANNEL_ADMIN">Channel Admin (Branch Head)</option>
-                  <option value="SALES_MANAGER">Sales Manager</option>
-                  <option value="TEAM_LEADER">Team Leader</option>
-                  <option value="TRANSACTIONAL_USER">Transactional User (Loan Officer)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1">Account Status</label>
-                <select
-                  value={formStatus}
-                  onChange={(e) => setFormStatus(e.target.value as UserStatus)}
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs text-slate-900 focus:border-slate-800 focus:outline-hidden"
-                >
-                  <option value="ACTIVE">ACTIVE</option>
-                  <option value="SUSPENDED">SUSPENDED</option>
-                </select>
-              </div>
-
-              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 text-[0.6875rem]">
-                🔒 Employee will be provisioned exclusively under channel <code className="font-mono text-teal-700 font-bold">{channel.name}</code> ({channel.tenant_uuid.slice(0, 10)}...).
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-4 border-t border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => setIsAddUserModalOpen(false)}
-                  className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="rounded-xl bg-slate-900 px-5 py-2 text-xs font-bold text-white shadow-md hover:bg-slate-800 transition-all cursor-pointer"
-                >
-                  {editingUser ? "Save Changes" : "Create Employee"}
-                </button>
+              {/* Drawer Footer */}
+              <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-slate-100 bg-slate-50/80 backdrop-blur-sm">
+                <span className="text-[0.6875rem] font-mono text-slate-400">
+                  Click outside to close
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsAddUserModalOpen(false)}
+                    className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-600 shadow-2xs hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex items-center gap-1.5 rounded-xl bg-teal-600 px-5 py-2 text-xs font-bold text-white shadow-md shadow-teal-600/20 hover:bg-teal-700 transition-all cursor-pointer"
+                  >
+                    <Plus size={14} />
+                    <span>{editingUser ? "Save Changes" : "Create Employee"}</span>
+                  </button>
+                </div>
               </div>
             </form>
           </div>

@@ -405,3 +405,275 @@ Append-only session close-outs. One entry per session: what changed, how it was 
   - `docker compose restart frontend`: container restarted and ready in 0ms.
 - **Undone**: None.
 
+## [2026-09-28] Removal of Redundant Platform Console Module
+- **What Changed**:
+  - `frontend/components/Sidebar.tsx`:
+    - Completely removed the "Platform Console" master banner from the top of the sidebar.
+    - Preserved "Platform Overview" under Platform Oversight governance items, eliminating duplicate access.
+  - `frontend/app/platform/dashboard/page.tsx`:
+    - Added automatic client-side redirect to `/[tenantUuid]/platformoverview`.
+  - `frontend/app/auth/login/page.tsx`:
+    - Updated post-authentication redirect for platform administrators from `/platform/dashboard` to `/[tenantUuid]/platformoverview`.
+  - `frontend/app/new-channel/page.tsx`:
+    - Updated return approval queue CTA to link to `platformoverview`.
+  - `app/api/v1/endpoints/navigation.py` & `alembic/versions/0008_dynamic_module_catalog.py`:
+    - Updated `PLATFORM_OVERVIEW` route template from `/platform/dashboard` to `/{tenant}/platformoverview`.
+  - Database (`module_catalog` table):
+    - Executed SQL update to synchronize `route_template` for `PLATFORM_OVERVIEW` to `/{tenant}/platformoverview`.
+- **Verification**:
+  - `app/tests/test_dynamic_navigation.py`: 5/5 tests passed (100%).
+  - `npx tsc --noEmit`: 0 errors.
+  - `docker compose restart frontend`: container restarted and ready in 0ms.
+- **Undone**: None.
+
+## [2026-09-28] Complete Removal of Cyber Security Cell Module
+- **What Changed**:
+  - `Database` (`bre_db`):
+    - Purged `CYBER_CELL` from `role_module_permission`, `module_catalog`, and `navigation_node` tables.
+  - `frontend/store/useModuleStore.ts`:
+    - Removed `CYBER_CELL` from canonical fallback navigation items under `Platform Oversight`.
+  - `frontend/components/Sidebar.tsx`:
+    - Removed `Cyber Security Cell` from static platform governance sections.
+  - `frontend/components/AppHeader.tsx`:
+    - Removed `module-cyber-cell` from omni-search catalog index.
+  - `frontend/lib/navigation.ts`:
+    - Removed `Cyber Security Cell` from `PORTAL_NAVIGATION_SCHEMA`.
+  - `app/api/v1/endpoints/navigation.py`:
+    - Removed `CYBER_CELL` from canonical `MODULE_CATALOG`.
+  - `app/core/constants.py`:
+    - Removed `Cyber Security Cell` from `RAW_NAVIGATION_SCHEMA`.
+  - `alembic/versions/0008_dynamic_module_catalog.py`:
+    - Removed `CYBER_CELL` seed definition.
+- **Verification**:
+  - `app/tests/test_dynamic_navigation.py`: 5/5 tests passed (100%).
+  - `npx tsc --noEmit`: 0 errors.
+  - `docker compose restart frontend`: container restarted and ready in 0ms.
+- **Undone**: None.
+
+## [2026-09-28] Removal of Reporting Tree Submodule from Platform Overview
+- **What Changed**:
+  - `frontend/app/[tenantUuid]/platformoverview/[channelUuid]/[channelSlug]/workspace/page.tsx`:
+    - Removed `CorporateSalesTree` component import.
+    - Removed `employeeSubView` state (`"table" | "tree"`).
+    - Removed `Table Roster` / `Reporting Tree` segmented sub-view toggle buttons.
+    - Removed SubView B visual hierarchy tree section (`CorporateSalesTree`).
+    - Rendered the employee Table Roster directly within the Channel Employees tab.
+- **Verification**:
+  - `npm --prefix frontend run build`: Compiled successfully in 5.3s with zero errors across all 23 Next.js routes.
+- **Undone**: None.
+
+## [2026-09-28] Replaced Archive Button with Reject Button on Suspended Channels
+- **What Changed**:
+  - `frontend/app/[tenantUuid]/platformoverview/page.tsx`:
+    - Replaced the grey `Archive` button in the `suspended` stage actions with a red `Reject` button styled with `bg-rose-600` and the `<X size={12} />` icon.
+    - Connected to the existing `REJECT` modal for audit reason logging and state machine transition to `rejected`.
+  - `frontend/app/platform/dashboard/page.tsx`:
+    - Replaced the `Archive` button with the `Reject` button for consistent state actions across routes.
+- **Verification**:
+  - `npm --prefix frontend run build`: Compiled with 0 errors across all routes in 5.8s.
+  - `docker compose restart frontend`: Container restarted and ready.
+- **Undone**: None.
+
+## [2026-09-28] Full Database API Persistence for Platform Overview
+- **What Changed**:
+  - `app/api/v1/endpoints/tenants.py`:
+    - Added `cibil_overlay` to `TenantResponse` model.
+    - Added `TenantStatusTransitionPayload` request schema.
+    - Added `POST /api/v1/tenants/{tenant_uuid}/suspend` endpoint.
+    - Added `POST /api/v1/tenants/{tenant_uuid}/reinstate` endpoint.
+    - Added `POST /api/v1/tenants/{tenant_uuid}/transition` unified state transition endpoint.
+    - Updated `POST /api/v1/tenants/{tenant_uuid}/approve` and `reject` to accept transition payloads and record custom audit reasons in `tenant_status_history`.
+    - Updated `GET /api/v1/tenants` and `GET /api/v1/tenants/approval-history` to support optional authentication headers.
+  - `frontend/app/[tenantUuid]/platformoverview/page.tsx`:
+    - Implemented `fetchLiveChannelsAndAudit()` fetching live tenant records and audit history directly from PostgreSQL.
+    - Connected `handleTransition()` to `POST /api/v1/tenants/{tenant_uuid}/transition`.
+    - Added "Sync Database" button in the header toolbar with real-time sync spinner.
+    - Safeguarded audit log rendering against empty UUID fields.
+- **Verification**:
+  - E2E API Verification: Successfully tested suspend and reinstate against PostgreSQL; verified audit logging into `tenant_status_history`.
+  - `npm --prefix frontend run build`: Compiled with 0 errors across all 23 Next.js routes in 5.9s.
+  - Restarted `flowbre_frontend` and `flowbre_fastapi_app` containers.
+- **Undone**: None.
+
+## [2026-09-28] Fixed Top Bar (AppHeader) Disappearing on Client-Side Module Navigation
+- **What Changed**:
+  - `frontend/app/layout.tsx`:
+    - Added `overflow-hidden` to `<html>` to stop document-level scroll leakage and viewport displacement.
+  - `frontend/components/AppHeader.tsx`:
+    - Added safe `currentPath = pathname || ""` fallback to prevent `TypeError: Cannot read properties of null (reading 'match' / 'startsWith')` when Next.js `usePathname()` evaluates during client transitions.
+  - `frontend/components/PortalShell.tsx`:
+    - Bound `panelRef` and `mainRef` with an explicit `useEffect` resetting `scrollTop = 0` on route changes (`pathname`).
+    - Added safe `currentPath = pathname || ""` fallback.
+    - Created and wrapped `<AppHeader />` in `<HeaderErrorBoundary>` with fixed `shrink-0 sticky top-0 z-30` guard to guarantee header persistence under any runtime circumstance.
+  - `frontend/components/Sidebar.tsx`:
+    - Added safe `currentPath` fallback for precision active link calculation.
+    - Added `scroll={false}` to all navigation `<Link>` components so Next.js does not fire automatic window scroll restoration on client transitions.
+  - `frontend/components/HeaderErrorBoundary.tsx`:
+    - Implemented robust React error boundary with fallback console header.
+- **Verification**:
+  - `npm --prefix frontend run typecheck`: Passed with 0 TypeScript errors.
+  - `npm --prefix frontend run build`: Compiled with 0 errors in 6.9s across all 23 Next.js routes.
+  - Restarted `flowbre_frontend` Docker container and verified HTTP 200 on `http://localhost:3000/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f/pipeline`.
+- **Undone**: None.
+
+## [2026-09-28] Moved Channel Name to Sidebar Brand Slot & Cleaned Top Bar Duplication
+- **What Changed**:
+  - `frontend/components/Sidebar.tsx`:
+    - Replaced hardcoded "FlowBRE [Tenant] {UUID}" brand block with dynamic channel resolver (`activeTenantUuid`, `channelName`).
+    - When a channel is logged in (e.g. Bank of India Channel), displays `<Building2 size={18} />`, the channel name, an emerald `Channel` badge, and `Channel Partner Workspace` (or user role).
+    - When Super Admin / platform is active, displays `<Zap size={18} /> FlowBRE [Admin]`.
+  - `frontend/components/AppHeader.tsx`:
+    - Completely removed `[Logo] FlowBRE / Console` brand lockup, preserving the mobile navigation drawer trigger (`xl:hidden`).
+    - Top bar now cleanly leads directly into the functional Quick Search bar (`⌘K`), messages, alerts, theme, and user profile avatar.
+  - `frontend/components/HeaderErrorBoundary.tsx`:
+    - Updated error fallback header to remove redundant logo and brand title.
+- **Verification**:
+  - `npm --prefix frontend run typecheck`: 0 TypeScript errors.
+  - `npm --prefix frontend run build`: Compiled with 0 errors in 6.8s across all 23 Next.js routes.
+  - Restarted `flowbre_frontend` Docker container and verified HTTP 200 on `http://localhost:3000/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f/pipeline`.
+- **Undone**: None.
+
+## [2026-09-28] Nexus Enterprise Sidebar Modernization
+- **What Changed**:
+  - `frontend/components/Sidebar.tsx`:
+    - Transformed brand header into Nexus geometric layout with stylized dark container, bold uppercase title, and wide-tracking `CHANNEL PARTNER` or `ENTERPRISE CORE` subtitle.
+    - Updated section titles to `text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400`.
+    - Implemented soft indigo active navigation items (`bg-indigo-50/90 text-indigo-700 font-semibold shadow-2xs`) with matching indigo line icons and pulsing `• Active` dot pill badge.
+    - Updated inactive items with refined hover states and modern pill badges (`BadgePill`).
+    - Implemented floating SLA & Operational Health footer card: emerald checkmark in rounded square, `99.98% SLA • Operational Health`, and quick alert bell with red `3` counter badge.
+- **Verification**:
+  - `npm --prefix frontend run typecheck`: 0 TypeScript errors.
+  - `npm --prefix frontend run build`: Compiled with 0 errors in 6.7s across all 23 Next.js routes.
+  - Restarted `flowbre_frontend` Docker container and verified HTTP 200 on `http://localhost:3000/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f/pipeline`.
+- **Undone**: None.
+
+## [2026-09-28] Reverted Sidebar Redesign to Original FlowBRE Style
+- **What Changed**:
+  - `frontend/components/Sidebar.tsx`:
+    - Reverted active navigation links back to high-contrast FlowBRE style: `bg-slate-900 text-white font-bold shadow-xs` with `text-teal-400` icons.
+    - Reverted brand header back to original compact layout with emerald `Building2` icon for active channels (`Bank of India Channel`) and `Zap` for platform.
+    - Reverted section headers back to `text-[0.625rem] font-extrabold uppercase tracking-wider text-slate-400`.
+    - Restored original `BadgePill` rendering without the pulsing `• Active` dot badge.
+    - Reverted footer widget back to the original Health Monitor SLA link (`99.98% SLA` with animated green ping).
+    - Preserved dynamic channel partner resolution (`Bank of India Channel` detection) and null-safe `currentPath` navigation.
+- **Verification**:
+  - `npm --prefix frontend run build`: Compiled with 0 errors in 6.2s across 24 Next.js routes.
+  - Restarted `flowbre_frontend` Docker container and verified HTTP 200 on `http://localhost:3000/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f/pipeline`.
+- **Undone**: None.
+
+## [2026-09-28] Removed Theme Toggle & Added Dedicated Edit Profile Page
+- **What Changed**:
+  - `frontend/components/AppHeader.tsx`:
+    - Removed dark/light mode toggle button (`<Moon className="w-4 h-4" />`) completely from header.
+    - Updated profile dropdown "Edit Profile" action item to navigate directly to the dedicated profile page (`/{tenantUuid}/profile` or `/profile`).
+    - Added "User Profile & Account Settings" into Quick Search (`⌘K`) indexing.
+  - `frontend/components/ProfileSettingsView.tsx`:
+    - Built comprehensive Profile & Account Settings view with large avatar identity header, breadcrumbs, editable personal details (Full Name, Email Address, Direct Phone, Designation), security & governance context (role, cryptographic Argon2 session proof, permissions), and workflow notification preferences.
+    - Includes instant `useAuthStore` update and `localStorage` persistence, discard changes, and save confirmation banner.
+  - `frontend/app/[tenantUuid]/profile/page.tsx` & `frontend/app/profile/page.tsx`:
+    - Created dedicated Next.js App Router pages for scoped tenant and global profile routes.
+  - `frontend/lib/uas-client.ts` & `frontend/store/useAuthStore.ts`:
+    - Extended `UserProfile` and `updateProfile` to manage `name`, `email`, `phone`, and `designation`.
+- **Verification**:
+  - `npm --prefix frontend run build`: Compiled with 0 errors in 6.3s across all 26 Next.js routes.
+  - Restarted `flowbre_frontend` Docker container and verified HTTP 200 on both `http://localhost:3000/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f/profile` and `http://localhost:3000/profile`.
+- **Undone**: None.
+
+## [2026-09-28] Displayed Channel Name in Sidebar Footer
+- **What Changed**:
+  - `frontend/components/Sidebar.tsx`:
+    - Replaced static "Health Monitor" label in sidebar footer status card with dynamic `{channelName || "Bank of India Channel"}`.
+    - Retained the green live ping indicator and 99.98% SLA telemetry badge.
+- **Verification**:
+  - `npm --prefix frontend run build`: Compiled with 0 errors in 6.7s across all 26 Next.js routes.
+  - Restarted `flowbre_frontend` Docker container and verified HTTP 200 on `http://localhost:3000/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f/dashboard`.
+- **Undone**: None.
+
+## [2026-09-28] Right-Side Slide-Over Drawers for Add Role & Add Channel
+- **What Changed**:
+  - `frontend/app/globals.css`:
+    - Added `@keyframes drawer-slide-in` and `.animate-drawer-in` utility for GPU-accelerated right-to-left slide entrance animation.
+  - `frontend/app/[tenantUuid]/assignments/page.tsx`:
+    - Converted "Add New Role" (`isInviteModalOpen`) and "Edit Role & Status" (`editingUser`) from centered dialogs into right-side slide-over drawers with backdrop blur, scrollable form body, and pinned footer action buttons.
+  - `frontend/app/[tenantUuid]/platformoverview/page.tsx`:
+    - Replaced "Sponsor New Channel" page redirect with a right-side slide-over drawer enabling instant channel onboarding (Channel Name, Tenant Code, Channel Type, CIBIL Overlay Margin, Admin Email, Direct Phone), state machine progression, and audit ledger persistence.
+  - `frontend/app/[tenantUuid]/platformoverview/[channelUuid]/[channelSlug]/workspace/page.tsx`:
+    - Converted "Add Employee (Role)" and "Edit Employee Role" modal to right-side slide-over drawer with tenancy isolation indicators.
+- **Verification**:
+  - `npm --prefix frontend run build`: Turbopack build compiled with 0 errors across all 26 Next.js routes in 6.1s.
+  - Restarted `flowbre_frontend` Docker container.
+## [2026-09-28] Floating Card Drawers & Crystal Clear Background Visibility
+- **What Changed**:
+  - Removed all `backdrop-blur-xs` masks across all drawer backdrops, replacing them with minimal transparent overlays (`bg-slate-900/10`) so the underlying page, tables, sidebar, and data remain 100% sharp, bright, legible, and visible.
+  - Converted wall-to-wall flat side drawers into floating card inspectors (`fixed top-3 right-3 bottom-3 rounded-3xl border border-slate-200/90 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.22)]`).
+  - Added micro-icons to form labels (`User`, `Mail`, `Shield`, `Activity`, `Building2`, `Globe`, `Phone`, `Sliders`), custom select dropdowns with `ChevronDown`, gradient callout cards with `ShieldCheck`, and polished action footers.
+  - Applied across "Add New Role" & "Edit Role" ([assignments/page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/%5BtenantUuid%5D/assignments/page.tsx)), "Sponsor New Channel" ([platformoverview/page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/%5BtenantUuid%5D/platformoverview/page.tsx)), and "Add Employee Role" ([workspace/page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/%5BtenantUuid%5D/platformoverview/%5BchannelUuid%5D/%5BchannelSlug%5D/workspace/page.tsx)).
+- **Verification**:
+  - `npm --prefix frontend run build`: Turbopack compiled all 26 routes with 0 errors in 9.6s.
+  - Restarted `flowbre_frontend` Docker container.
+  - Verified HTTP 200 on `http://localhost:3000/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f/assignments` and `http://localhost:3000/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f/platformoverview`.
+## [2026-09-28] Removed Dynamic Tenant UUID from Platform Overview Module
+- **What Changed**:
+  - `frontend/app/[tenantUuid]/platformoverview/page.tsx` & `frontend/app/platform/dashboard/page.tsx`:
+    - Removed `<th className="px-4 py-3.5">Dynamic Tenant UUID</th>` table column header and the corresponding copyable UUID button cell `<td className="px-4 py-3.5">`.
+    - Main channel roster table now displays a cleaner, more spacious view with Channel Partner, Classification, Lifecycle Status, CIBIL Overlay, Primary Administrator, and State Machine Actions.
+  - `frontend/app/[tenantUuid]/platformoverview/[channelUuid]/[channelSlug]/workspace/page.tsx`:
+    - Removed the "Dynamic Tenant UUID" code block under Channel Registration Parameters tab.
+- **Verification**:
+  - `npm --prefix frontend run build`: Turbopack compiled all 26 routes with 0 errors in 5.8s.
+  - Restarted `flowbre_frontend` Docker container.
+  - Verified HTTP 200 on `http://localhost:3000/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f/platformoverview`.
+- **Undone**: None.
+
+## [2026-09-28] Compact Audit Log Timeline Cards & "View Details" Slide-Over Drawer
+- **What Changed**:
+  - `frontend/app/[tenantUuid]/platformoverview/page.tsx` & `frontend/app/platform/dashboard/page.tsx`:
+    - Compacted each entry in the "Live `tenant_status_history` Audit Log Timeline" into a single, clean horizontal card displaying Channel Partner Name, lifecycle transition pill (`previous_status → new_status`), timestamp, and an interactive "View Details" button with an `Eye` icon.
+    - Implemented a dedicated right-side slide-over drawer (`selectedAuditLog`) in the floating card style (`fixed top-3 right-3 bottom-3 rounded-3xl`) with zero backdrop blur (`bg-slate-900/10`) to keep the rest of the page 100% visible and sharp.
+    - Inside the drawer: Channel Partner Entity & UUID, State Machine Lifecycle Transition, Action Justification & Compliance Notes, Authorized Operator, ISO Timestamp, and Immutable Audit Proof assurance.
+    - Fixed drawer closing JSX tags.
+- **Verification**:
+  - `npm --prefix frontend run build`: Turbopack compiled all 26 routes with 0 errors in 6.7s.
+  - Restarted `flowbre_frontend` Docker container.
+  - Verified HTTP 200 on `http://localhost:3000/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f/platformoverview`.
+- **Undone**: None.
+
+## [2026-09-28] Reverted Audit Log Timeline to Inline Details
+- **What Changed**:
+  - `frontend/app/[tenantUuid]/platformoverview/page.tsx` & `frontend/app/platform/dashboard/page.tsx`:
+    - Reverted "Live `tenant_status_history` Audit Log Timeline" cards back to the full inline layout where the status transition, justification reason, operator name, and timestamp are displayed directly on the card.
+    - Removed `selectedAuditLog` right-side slide-over drawer JSX, `selectedAuditLog` state hook, and `Eye` icon imports.
+- **Verification**:
+  - `npm --prefix frontend run build`: Turbopack build succeeded with 0 errors across all 26 routes in 6.4s.
+  - Restarted `flowbre_frontend` Docker container.
+  - Verified HTTP 200 on `http://localhost:3000/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f/platformoverview`.
+- **Undone**: None.
+
+## [2026-09-28] Converted Audit Log Timeline Section into "View Details" Drawer Trigger
+- **What Changed**:
+  - `frontend/app/[tenantUuid]/platformoverview/page.tsx` & `frontend/app/platform/dashboard/page.tsx`:
+    - Replaced the bulky inline timeline list with a compact section banner: "Live `tenant_status_history` Audit Log Timeline", "Immutable Ledger" tag, event counter badge, description, and an emerald/teal **"View Details"** button with `Eye` icon.
+    - Implemented right-side slide-over drawer (`isAuditLogDrawerOpen`) as an elevated floating card (`fixed top-3 right-3 bottom-3 rounded-3xl`) with transparent zero-blur overlay (`bg-slate-900/10`) so the underlying page remains 100% visible.
+    - Inside the drawer: all historical audit events in full detail (partner name, tenant UUID, status transition pills, action reason/justification, operator, timestamp, and immutable ledger assurance).
+- **Verification**:
+  - `npm --prefix frontend run build`: Turbopack build succeeded with 0 errors across all 26 routes in 6.6s.
+  - Restarted `flowbre_frontend` Docker container.
+  - Verified HTTP 200 on `http://localhost:3000/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f/platformoverview`.
+- **Undone**: None.
+
+## [2026-09-28] Downwards Collapsible Audit Log Details (No Popup)
+- **What Changed**:
+  - `frontend/app/[tenantUuid]/platformoverview/page.tsx` & `frontend/app/platform/dashboard/page.tsx`:
+    - Removed the right-side slide-over popup drawer entirely.
+    - Converted the "Live `tenant_status_history` Audit Log Timeline" card into an in-place downwards collapsible accordion:
+      - Default state: compact bar with title, `Immutable Ledger` badge, live count pill (`{auditLogs.length} Events`), description, and `[View Details ▾]` button.
+      - On click: expands directly downwards inside the card on the page (`isAuditLogsExpanded`), revealing all audit log events with transition pills, reasons, operator, timestamp, and immutable proof.
+      - Button dynamically changes to `[Hide Details ▴]` to collapse back up.
+- **Verification**:
+  - `npm --prefix frontend run build`: Turbopack build succeeded with 0 errors across all 26 routes in 5.8s.
+  - Restarted `flowbre_frontend` Docker container.
+  - Verified HTTP 200 on `http://localhost:3000/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f/platformoverview`.
+- **Undone**: None.
+
+
+

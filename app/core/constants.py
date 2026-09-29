@@ -135,15 +135,6 @@ RAW_NAVIGATION_SCHEMA: List[Dict[str, Any]] = [
                 ],
                 "sort_order": 1,
             },
-            {
-                "name": "Cyber Security Cell",
-                "global_path": "/platform/cyber-cell",
-                "icon": "ShieldAlert",
-                "badge": "SOC",
-                "badgeType": "rose",
-                "roles": [ROLE_SUPER_ADMIN, ROLE_SOC_ANALYST],
-                "sort_order": 2,
-            },
         ],
     },
 ]

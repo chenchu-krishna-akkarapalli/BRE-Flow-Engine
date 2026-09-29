@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { getTenantByUuidOrCode } from "@/lib/tenants-data";
 import {
   Activity,
   BarChart3,
@@ -92,8 +93,75 @@ function BadgePill({
 
 function SidebarContent({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
-  const { role, tenantUuid, roleNodes } = useAuthStore();
+  const currentPath = pathname || "";
+  const { user, role, tenantUuid, roleNodes } = useAuthStore();
   const sections = useModuleStore((s) => s.sections);
+
+  // 1. Resolve active tenant UUID from pathname, store, or user profile
+  const activeTenantUuid = (() => {
+    const match = currentPath.match(/^\/([a-zA-Z0-9_-]{8,36})(\/.*)?$/);
+    if (
+      match &&
+      !currentPath.startsWith("/platform") &&
+      !currentPath.startsWith("/auth") &&
+      !currentPath.startsWith("/new-channel") &&
+      !currentPath.startsWith("/health")
+    ) {
+      return match[1];
+    }
+    if (tenantUuid && tenantUuid !== "platform") {
+      return tenantUuid;
+    }
+    if (user?.tenant_id && user.tenant_id !== "platform") {
+      return user.tenant_id;
+    }
+    return null;
+  })();
+
+  // 2. Resolve channel name with fallback tiers (local registry -> API -> email heuristic)
+  const [channelName, setChannelName] = useState<string | null>(() => {
+    if (activeTenantUuid) {
+      const record = getTenantByUuidOrCode(activeTenantUuid);
+      if (record?.name) return record.name;
+    }
+    if (user?.email?.includes("@boi.com") || user?.username?.includes("boi.com")) {
+      return "Bank of India Channel";
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+    if (!activeTenantUuid) {
+      if (user?.email?.includes("@boi.com") || user?.username?.includes("boi.com")) {
+        setChannelName("Bank of India Channel");
+      }
+      return;
+    }
+
+    const localRecord = getTenantByUuidOrCode(activeTenantUuid);
+    if (localRecord?.name) {
+      setChannelName(localRecord.name);
+      return;
+    }
+
+    fetch(`/api/v1/tenants/${activeTenantUuid}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (isMounted && data?.name) {
+          setChannelName(data.name);
+        }
+      })
+      .catch(() => {
+        if (isMounted && (user?.email?.includes("@boi.com") || user?.username?.includes("boi.com"))) {
+          setChannelName("Bank of India Channel");
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [activeTenantUuid, user?.email, user?.username]);
 
   const homeHref = tenantUuid && tenantUuid !== "platform" ? `/${tenantUuid}` : "/";
   const isSuperAdmin = role === "SUPER_ADMIN" || role === "OPERATIONS_HEAD";
@@ -132,7 +200,6 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
         items: [
           { name: "Platform Overview", href: `/${platformUuid}/platformoverview`, icon: "Crown", badge: "Owner", badgeType: "amber" as const },
           { name: "Live Logs & Audit", href: `${prefix}/logs` || "/logs", icon: "Activity", badge: "Live", badgeType: "amber" as const },
-          { name: "Cyber Security Cell", href: "/platform/cyber-cell", icon: "ShieldAlert", badge: "SOC", badgeType: "rose" as const },
         ],
       },
     ];
@@ -142,21 +209,37 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
     <div className="flex h-full flex-col overflow-hidden bg-white/95 backdrop-blur-2xl">
       {/* Brand Header */}
       <div className="flex h-16 shrink-0 items-center justify-between border-b border-line px-4">
-        <Link href={homeHref} onClick={onClose} className="flex items-center gap-2.5 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 text-white shadow-xs transition-transform group-hover:scale-105">
-            <Zap size={18} className="text-teal-400" fill="currentColor" />
+        <Link href={homeHref} scroll={false} onClick={onClose} className="flex items-center gap-2.5 group min-w-0">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 text-white shadow-xs transition-transform group-hover:scale-105 shrink-0">
+            {channelName ? (
+              <Building2 size={18} className="text-emerald-400" />
+            ) : (
+              <Zap size={18} className="text-teal-400" fill="currentColor" />
+            )}
           </div>
-          <div>
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold tracking-tight text-base text-slate-900 font-display">
-                Flow<span className="text-teal-600">BRE</span>
+              <span className="font-extrabold tracking-tight text-sm text-slate-900 font-display truncate">
+                {channelName || "FlowBRE"}
               </span>
-              <span className="rounded-full bg-slate-100 px-1.5 py-0.2 text-[0.5625rem] font-mono font-bold text-slate-600 border border-slate-200">
-                {tenantUuid && tenantUuid !== "platform" ? "Tenant" : "UAS"}
-              </span>
+              {channelName ? (
+                <span className="rounded-full bg-emerald-50 px-1.5 py-0.2 text-[0.5625rem] font-mono font-bold text-emerald-700 border border-emerald-200 shrink-0">
+                  Channel
+                </span>
+              ) : (
+                <span className="rounded-full bg-slate-100 px-1.5 py-0.2 text-[0.5625rem] font-mono font-bold text-slate-600 border border-slate-200 shrink-0">
+                  {tenantUuid && tenantUuid !== "platform" ? "Tenant" : "UAS"}
+                </span>
+              )}
             </div>
-            <p className="text-[0.625rem] font-medium text-slate-500 truncate max-w-[130px]">
-              {tenantUuid && tenantUuid !== "platform" ? tenantUuid : "Decision Engine Core"}
+            <p className="text-[0.625rem] font-medium text-slate-500 truncate max-w-[140px]">
+              {channelName
+                ? role
+                  ? role.replace(/_/g, " ")
+                  : "Channel Partner"
+                : tenantUuid && tenantUuid !== "platform"
+                ? tenantUuid
+                : "Decision Engine Core"}
             </p>
           </div>
         </Link>
@@ -165,36 +248,13 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
           <button
             type="button"
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-line text-slate-400 transition-all hover:bg-slate-100 hover:text-slate-900 xl:hidden"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-line text-slate-400 transition-all hover:bg-slate-100 hover:text-slate-900 xl:hidden shrink-0"
             aria-label="Close navigation sidebar"
           >
             <X size={16} />
           </button>
         )}
       </div>
-
-      {/* Platform Master Console Banner for Super Admins */}
-      {isSuperAdmin && (
-        <div className="px-3 pt-3">
-          <Link
-            href="/platform/dashboard"
-            onClick={onClose}
-            className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs font-bold transition-all border ${
-              pathname.startsWith("/platform")
-                ? "bg-slate-900 text-white border-slate-900 shadow-xs"
-                : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              <Crown size={14} className={pathname.startsWith("/platform") ? "text-amber-400" : "text-amber-600"} />
-              <span>Platform Console</span>
-            </div>
-            <span className="text-[0.5625rem] font-mono uppercase px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">
-              Master
-            </span>
-          </Link>
-        </div>
-      )}
 
       {/* Navigation Links */}
       <div className="flex-1 overflow-y-auto px-2.5 py-3">
@@ -214,13 +274,14 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
                   
                   // Precision active link matching without false-positive prefix leaks
                   const isActive = isRootLink
-                    ? pathname === "/" || (Boolean(tenantUuid) && pathname === `/${tenantUuid}`)
-                    : pathname === item.href || pathname.startsWith(`${item.href}/`);
+                    ? currentPath === "/" || (Boolean(tenantUuid) && currentPath === `/${tenantUuid}`)
+                    : currentPath === item.href || currentPath.startsWith(`${item.href}/`);
 
                   return (
                     <Link
                       key={item.href}
                       href={item.href}
+                      scroll={false}
                       onClick={onClose}
                       className={`group flex min-h-[44px] w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-all duration-150 ${
                         isActive
@@ -256,19 +317,23 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
       <div className="shrink-0 border-t border-line bg-white/70 p-3 backdrop-blur-md">
         <Link
           href="/health"
+          scroll={false}
           onClick={onClose}
           className="flex items-center justify-between rounded-xl border border-line bg-white px-3 py-2 shadow-xs hover:border-slate-300 transition-all group"
         >
           <div className="flex items-center gap-2 min-w-0">
-            <span className="relative flex h-2 w-2">
+            <span className="relative flex h-2 w-2 shrink-0">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
             </span>
-            <span className="text-[0.6875rem] font-bold text-slate-800 truncate group-hover:text-teal-600 transition-colors">
-              Health Monitor
+            <span
+              className="text-[0.6875rem] font-bold text-slate-800 truncate group-hover:text-teal-600 transition-colors"
+              title={channelName || "Bank of India Channel"}
+            >
+              {channelName || "Bank of India Channel"}
             </span>
           </div>
-          <span className="font-mono text-[0.625rem] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded">
+          <span className="font-mono text-[0.625rem] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded shrink-0">
             99.98% SLA
           </span>
         </Link>

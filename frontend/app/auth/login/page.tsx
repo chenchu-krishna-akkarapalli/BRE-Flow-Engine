@@ -253,7 +253,8 @@ function LoginFormContent() {
       const session = await login(email.trim(), password, challengeData?.tenant_uuid);
       const targetTenant = session.tenant_uuid || challengeData?.tenant_uuid || "platform";
       const isPlatform = session.role === "SUPER_ADMIN" || targetTenant === "platform" || !targetTenant;
-      const targetRoute = isPlatform ? "/platform/dashboard" : `/${targetTenant}/dashboard`;
+      const platformUuid = targetTenant && targetTenant !== "platform" ? targetTenant : "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f";
+      const targetRoute = isPlatform ? `/${platformUuid}/platformoverview` : `/${targetTenant}/dashboard`;
       router.push(targetRoute);
     } catch (err: any) {
       setLocalError(err?.message || "Cryptographic proof verification failed. Check password.");

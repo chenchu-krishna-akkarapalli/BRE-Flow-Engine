@@ -3,6 +3,69 @@
 Working state for the current task. Kept here rather than in the context window so long sessions do not carry their own history as ballast.
 
 ## Current task
+- [x] Converted Live `tenant_status_history` Audit Log Timeline into Downwards Expandable Details:
+  - Removed popup / slide-over drawer completely.
+  - In [platformoverview/page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/%5BtenantUuid%5D/platformoverview/page.tsx) and [dashboard/page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/platform/dashboard/page.tsx), converted the section into a collapsible card:
+    - Default collapsed state: compact bar with title, `Immutable Ledger` badge, live count pill (`{auditLogs.length} Events`), description, and `[View Details ▾]` button.
+    - Clicking `View Details` smoothly expands downwards directly underneath inside the card, showing all historical events (partner names, status transition badges, compliance justifications, operator name, timestamp, and immutable ledger assurance).
+    - Button toggles to `[Hide Details ▴]`, allowing easy collapse back up.
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 5.8s with 0 errors), restarted `flowbre_frontend` Docker container, and confirmed HTTP 200.
+- [x] Removed "Dynamic Tenant UUID" from Platform Overview Module:
+  - Removed `<th className="px-4 py-3.5">Dynamic Tenant UUID</th>` column header and copyable UUID cell `<td className="px-4 py-3.5">` from the main channel roster table in [platformoverview/page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/%5BtenantUuid%5D/platformoverview/page.tsx) and [dashboard/page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/platform/dashboard/page.tsx).
+  - Removed "Dynamic Tenant UUID" parameter block under Channel Registration Parameters in [workspace/page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/%5BtenantUuid%5D/platformoverview/%5BchannelUuid%5D/%5BchannelSlug%5D/workspace/page.tsx).
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 5.8s) and restarted `flowbre_frontend` Docker container (HTTP 200).
+- [x] Rest of Page Clearly Visible & Elevated Floating Card Drawers:
+  - Removed all `backdrop-blur-xs` masks across all drawer backdrops, replacing them with minimal transparent overlays (`bg-slate-900/10`) so the underlying page, tables, sidebar, and data remain 100% sharp, bright, legible, and visible.
+  - Converted wall-to-wall flat side drawers into floating card inspectors (`fixed top-3 right-3 bottom-3 rounded-3xl border border-slate-200/90 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.22)]`).
+  - Added micro-icons to form labels (`User`, `Mail`, `Shield`, `Activity`, `Building2`, `Globe`, `Phone`, `Sliders`), custom select dropdowns with `ChevronDown`, gradient callout cards with `ShieldCheck`, and polished action footers.
+  - Applied across "Add New Role" & "Edit Role" ([assignments/page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/%5BtenantUuid%5D/assignments/page.tsx)), "Sponsor New Channel" ([platformoverview/page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/%5BtenantUuid%5D/platformoverview/page.tsx)), and "Add Employee Role" ([workspace/page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/%5BtenantUuid%5D/platformoverview/%5BchannelUuid%5D/%5BchannelSlug%5D/workspace/page.tsx)).
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 9.6s) and restarted `flowbre_frontend` Docker container (HTTP 200).
+- [x] Converted Add Role and Add Channel into Right-Side Slide-Over Drawers:
+  - Transformed "Add New Role" (`isInviteModalOpen`) and "Edit Role & Status" (`editingUser`) in [assignments/page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/%5BtenantUuid%5D/assignments/page.tsx) from centered modals into smooth right-side slide-over drawers with backdrop blur and `.animate-drawer-in` entrance.
+  - Transformed "Sponsor New Channel" in [platformoverview/page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/%5BtenantUuid%5D/platformoverview/page.tsx) from a page redirect to a right-side slide-over drawer with instant channel registration, state machine progression, and audit trail logging.
+  - Transformed "Add Employee (Role)" and "Edit Employee Role" in [workspace/page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/%5BtenantUuid%5D/platformoverview/%5BchannelUuid%5D/%5BchannelSlug%5D/workspace/page.tsx) into right-side slide-over drawers.
+  - Added `@keyframes drawer-slide-in` and `.animate-drawer-in` in [globals.css](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/globals.css).
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 6.1s) and restarted `flowbre_frontend` Docker container (HTTP 200).
+- [x] Displayed active channel name in sidebar footer:
+  - Replaced "Health Monitor" in [Sidebar.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/components/Sidebar.tsx) footer card with dynamic `{channelName || "Bank of India Channel"}`.
+  - Retained the green live ping indicator and 99.98% SLA telemetry badge.
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 6.7s) and restarted `flowbre_frontend` container (HTTP 200).
+- [x] Dedicated Edit Profile Page & Theme Toggle Removal:
+  - Removed theme toggle (`Moon` button) completely from header.
+  - Replaced static email text in profile dropdown with "Edit Profile" action item.
+  - Clicking "Edit Profile" now navigates to a dedicated page (`/{tenantUuid}/profile` or `/profile`).
+  - Created `ProfileSettingsView.tsx`, `frontend/app/[tenantUuid]/profile/page.tsx`, and `frontend/app/profile/page.tsx`.
+  - Profile page allows viewing and editing Full Name, Email Address, Phone Number, and Designation, with organization & RBAC governance summary and workflow notification toggles.
+  - Extended `useAuthStore` and `UserProfile` to persist all profile changes to memory and browser `localStorage`.
+  - Added "User Profile & Account Settings" into Quick Search (`⌘K`).
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 6.3s) and restarted `flowbre_frontend` container (HTTP 200).
+- [x] Reverted sidebar redesign in `frontend/components/Sidebar.tsx` back to original FlowBRE design:
+  - **Brand Header**: Reverted container back to original compact layout with emerald `Building2` icon for active channels (`Bank of India Channel`) and `Zap` for platform.
+  - **Section Titles**: Reverted back to `text-[0.625rem] font-extrabold uppercase tracking-wider text-slate-400`.
+  - **Active State**: Reverted back to original dark high-contrast style (`bg-slate-900 text-white font-bold shadow-xs`) with `text-teal-400` icons.
+  - **Badges**: Restored original `BadgePill` rendering without pulsing `• Active` dot pill.
+  - **Footer Widget**: Reverted back to original Health Monitor SLA link (`99.98% SLA` with animated green ping).
+  - Preserved dynamic channel partner resolution (`Bank of India Channel` detection), null-safe `currentPath` navigation, and scroll jump fixes.
+  - Verified with `npm --prefix frontend run build` (compiled 24 routes in 6.2s) and restarted `flowbre_frontend` Docker container (HTTP 200).
+- [x] Completely removed `[Logo] FlowBRE / Console` brand lockup from the top bar (`frontend/components/AppHeader.tsx` and `HeaderErrorBoundary.tsx`):
+  - Preserved mobile navigation drawer trigger button (`<button onClick={toggleDrawer} className="... xl:hidden">`).
+  - Top bar now cleanly leads directly into the functional Quick Search bar (`⌘K`), messages, alerts, theme, and user profile avatar without any redundant logo or text.
+  - Active channel branding is maintained exclusively in the top-left sidebar brand header (`frontend/components/Sidebar.tsx`).
+  - Verified with `npm --prefix frontend run build` (compiled in 6.8s) and verified container running healthy.
+- [x] Fixed top bar (`AppHeader`) disappearing on client-side navigation between modules:
+  - Identified dual root cause: 1) Next.js router scroll restoration / focus scroll shifting the outer panel container (`div.overflow-hidden`) by 52px, clipping `<AppHeader />` off-screen, and 2) Next.js `usePathname()` returning `null` during route transitions causing `TypeError: Cannot read properties of null` across regex and `.startsWith()` calls.
+  - Added safe `currentPath = pathname || ""` fallbacks across `frontend/components/AppHeader.tsx`, `frontend/components/PortalShell.tsx`, and `frontend/components/Sidebar.tsx`.
+  - Added `overflow-hidden` to `<html>` in `frontend/app/layout.tsx` to stop window-level scroll drift.
+  - Added explicit scroll reset effect (`panelRef.current.scrollTop = 0`, `mainRef.current.scrollTop = 0`) on `pathname` changes in `frontend/components/PortalShell.tsx`.
+  - Added `scroll={false}` to all navigation `<Link>` components in `frontend/components/Sidebar.tsx` to prevent Next.js from triggering window/layout scroll jumps.
+  - Created `frontend/components/HeaderErrorBoundary.tsx` and wrapped `<AppHeader />` inside it to ensure the top bar never crashes or unmounts during runtime edge cases.
+  - Verified with `npm --prefix frontend run build` (compiled cleanly) and tested live endpoints.
+- [x] Connected Platform Overview directly to PostgreSQL database via live endpoints (`GET /api/v1/tenants`, `GET /api/v1/tenants/approval-history`, `POST /api/v1/tenants/{uuid}/transition`, `suspend`, `reinstate`, `approve`, `reject`), ensuring channel statuses, state machine counts, and audit logs persist permanently across refreshes.
+- [x] Replaced "Archive" action button with a prominent red "Reject" button (`bg-rose-600` with `X` icon) across Platform Overview (`frontend/app/[tenantUuid]/platformoverview/page.tsx`) and Dashboard (`frontend/app/platform/dashboard/page.tsx`) for suspended channels.
+- [x] Removed "Reporting Tree" submodule and view switcher from Platform Overview channel workspace (`frontend/app/[tenantUuid]/platformoverview/[channelUuid]/[channelSlug]/workspace/page.tsx`), rendering the employee Table Roster directly.
+- [x] Completely purged "Cyber Security Cell" (`CYBER_CELL`) module across database (`module_catalog`, `role_module_permission`, `navigation_node`), backend schemas (`navigation.py`, `constants.py`), frontend navigation (`useModuleStore.ts`, `Sidebar.tsx`, `navigation.ts`), and search index (`AppHeader.tsx`).
+- [x] Completely removed redundant "Platform Console" module from `frontend/components/Sidebar.tsx` in favor of "Platform Overview".
+- [x] Updated routes and database (`module_catalog`) for `PLATFORM_OVERVIEW` to point cleanly to `/{tenant}/platformoverview`, redirecting legacy `/platform/dashboard` requests.
 - [x] Redesigned FlowBRE top navigation bar in `frontend/components/AppHeader.tsx` to match the exact 52px compact design specification.
 - [x] Dynamically replaced `FlowBRE / Console` with the active logged-in channel name (e.g. `Bank of India Channel`) based on route `tenantUuid`, auth store, and tenant registry.
 - [x] Implemented typing-only Quick Search engine in `frontend/components/AppHeader.tsx`: popover stays hidden on empty focus, opens only when user actively types, and filters matching modules, leads, policies, and actions accordingly.
