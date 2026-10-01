@@ -2,8 +2,212 @@
 
 Working state for the current task. Kept here rather than in the context window so long sessions do not carry their own history as ballast.
 
-## Current task
-- [x] Converted Live `tenant_status_history` Audit Log Timeline into Downwards Expandable Details:
+- [x] Dark Grey Dropdown Connecting Tree Guide Line in Sidebar (1px, Dark Grey):
+  - Retained thin 1px border stroke (`border-l`), avoiding all extra thickness.
+  - Set color to dark grey (`border-slate-500` / `border-slate-600`):
+    - Inactive / open dropdown: `border-slate-500` (crisp dark slate grey).
+    - Active dropdown (`hasActiveChild`): `border-slate-600` (deep dark grey).
+  - Maintained smooth transitions (`transition-colors duration-150`).
+  - Verified with `npm --prefix frontend run build` (all 26 routes compiled in 5.9s with 0 errors).
+  - Restarted Docker container `flowbre_frontend` and confirmed 200 OK.
+- [x] Removed ⌘K Symbol Badge from Sidebar Search Bar:
+  - In `frontend/components/Sidebar.tsx`, removed `<kbd className="... font-mono">⌘K</kbd>` from inside the search input box.
+  - Adjusted right input padding from `pr-9` to `pr-8` and updated collapsed search tooltip to `title="Search"`.
+  - Preserved background `Ctrl+K` / `Cmd+K` keyboard shortcut functionality.
+  - Verified with `npm --prefix frontend run build` (all 26 routes compiled in 12.1s with 0 errors).
+  - Restarted Docker container `flowbre_frontend` and confirmed 200 OK.
+- [x] Fixed Approvals Page Spacing and Eliminated Side Scroll (Unified View):
+  - Completely eliminated the horizontal scrollbar (`side scroll`) by removing `overflow-x-auto` and applying `table-fixed w-full` directly on the card table.
+  - Proportioned all 6 columns to mathematically fit 100% of the container: Queue ID (`w-20`), Applicant (`w-[19%]`), Exception Category (`w-[18%]`), Underwriter Notes (`w-auto` flexible with `truncate` & tooltip), Status (`w-24`), and Actions (`w-[170px]`).
+  - Both Approve and Reject buttons fit comfortably side-by-side with crisp padding and zero clipping, with the entire table presented seamlessly in a single unified view.
+  - Verified with `npm --prefix frontend run build` (all 26 routes compiled in 5.5s with 0 errors).
+  - Restarted Docker container `flowbre_frontend` and confirmed 200 OK.
+- [x] Positioned Sidebar Resize / Collapse Button beside Channel Name in White Space:
+  - Repositioned the resize toggle button out of the role row (`SUPER ADMIN`) and placed it on Row 1 directly beside the channel name (`Bank of India Channel v`) in the available header white space.
+  - Scaled up button to `h-7 w-7` (28px x 28px) matching the logo dimensions, with `PanelLeftClose size={16}`, rounded corners `rounded-lg`, and refined border `border-slate-200/80 shadow-2xs`.
+  - Shifted button further right: removed parent `mr-1` from tenant container and added `-mr-1` right offset for seamless margin alignment with the sidebar seam.
+  - Row 2 cleanly displays the role name (`SUPER ADMIN`) with zero clutter or inline icons.
+  - In collapsed rail mode (`isCollapsed === true`), the sidebar header displays a centered `PanelLeft` expand button (`h-8 w-8`) so users can easily restore full navigation.
+  - Removed duplicate desktop collapse controls from `AppHeader.tsx`.
+  - Verified with `npm --prefix frontend run build` (all 26 routes compiled in 6.0s with 0 errors).
+  - Restarted Docker container `flowbre_frontend` and confirmed 200 OK.
+- [x] Unified Sidebar Resize / Collapse Controls to Single Top-Bar Button:
+  - Removed the redundant floating circular edge toggle button (`-right-3 top-4` with `ChevronLeft` / `ChevronRight`) on the sidebar border seam in `frontend/components/Sidebar.tsx`.
+  - Retained and polished the single desktop resize toggle button on the top bar in `frontend/components/AppHeader.tsx` (`PanelLeft` / `PanelLeftClose`) positioned directly adjacent to the sidebar.
+  - Added global `Ctrl+B` / `Cmd+B` keyboard shortcut handler in `Sidebar.tsx` and updated button tooltip to `title={isCollapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}`.
+  - Cleaned up unused `ChevronLeft` and `ChevronRight` imports in `Sidebar.tsx`.
+  - Verified with `npm --prefix frontend run build` (all 26 routes compiled in 6.3s with 0 errors).
+  - Restarted Docker container `flowbre_frontend` and confirmed 200 OK.
+- [x] Resolved Sidebar Module Selection Lag & Previous Module Flicker Bug:
+  - Root cause:
+    1. Next.js App Router client navigation is asynchronous; `usePathname()` does not update until the destination route completes loading and rendering (200-500ms delay).
+    2. In `Sidebar.tsx`, active indicator state (`isActive` and section `hasActiveChild`) was purely reactive to `usePathname()`. When a user clicked a new module, the clicked module did not light up immediately; instead, the selection box/indicator remained stuck on the previous module during the transition, making it visually appear as though the cursor/box went to the previous module before finally jumping to the current module.
+    3. Route regex in `Sidebar.tsx` and `AppHeader.tsx` (`/([a-zA-Z0-9_-]{8,36})`) did not exclude standard top-level routes (`assignments`, `dashboard`, `pipeline`, `approvals`, `commissions`, etc.), causing `activeTenantUuid` to temporarily match route names.
+  - Fixes applied:
+    - `frontend/components/Sidebar.tsx`:
+      - Implemented instant optimistic active path tracking via `optimisticPath` state, updated synchronously on `onMouseDown` and `onClick`.
+      - Synchronized `activePath = optimisticPath || currentPath`, clearing `optimisticPath` whenever actual `pathname` resolves.
+      - Switched link styling from `transition-all duration-150` to `transition-colors duration-100` for zero-lag instant visual feedback.
+      - Added `KNOWN_STATIC_ROUTES` guard to exclude standard routes from tenant UUID parsing.
+    - `frontend/components/AppHeader.tsx`:
+      - Added `KNOWN_STATIC_ROUTES` guard to prevent standard route names from corrupting `activeTenantUuid`.
+  - Verified with `npm --prefix frontend run build` (all 26 routes compiled in 6.1s with 0 errors).
+  - Restarted Docker container `flowbre_frontend` and confirmed 200 OK.
+- [x] Implemented Change Password Feature in Profile Settings:
+  - Added backend schema `ChangePasswordRequest` / `ChangePasswordResponse`.
+  - Added UAS service logic with salt rotation (`generate_salt(16)`) and PBKDF2/SHA-256 verification.
+  - Added endpoint `POST /api/v1/auth/change-password`.
+  - Tested with pytest `app/tests/test_change_password.py` (100% pass).
+  - Integrated frontend client `changeUserPassword`, store `changePassword`, and real-time password validation card in `ProfileSettingsView.tsx`.
+- [x] Enforced Strict Multi-Tenant Isolation in User Management for Channel Partners:
+  - Root cause:
+    1. `frontend/app/[tenantUuid]/assignments/page.tsx`: `filteredUsers` only checked `canSeeUser(role, u.role)` with zero tenant filtering. Because all channel admins are Tier 5 and transactional users are Tier 6, every channel admin and transactional user across all channels passed visibility checks.
+    2. `frontend/store/useRoleHierarchyStore.ts`: `fetchUsers` merged newly fetched users with all `otherTenantUsers` across all tenants into a single shared array and cached them in `localStorage` (`flowbre_users_v6_clean`), leaking admins from Deloitte, Cognizant, Infosys, Wipro, Apex FinTech, etc.
+    3. `app/api/v1/endpoints/tenants.py`: Main tenant `get_tenant_users` query included `UserModel.role == "CHANNEL_ADMIN"`, leaking all channel admins into main tenant roster.
+    4. `Sidebar.tsx` & `assignments/page.tsx`: Navigation defaulted to main tenant UUID rather than the authenticated channel admin's bound tenant UUID.
+  - Fixes applied:
+    - `app/api/v1/endpoints/tenants.py`: Added `current_user` dependency to `get_tenant_users`. Authenticated `CHANNEL_ADMIN` and `TRANSACTIONAL_USER` requests are strictly scoped to their own channel tenant. Removed `UserModel.role == "CHANNEL_ADMIN"` leakage from Main Tenant corporate user list.
+    - `frontend/app/[tenantUuid]/assignments/page.tsx`: Added strict multi-tenant isolation in `filteredUsers`. Channel users are strictly locked to their own channel partner organization (`isSelf || matchesTenant`) and limited to `CHANNEL_ADMIN` / `TRANSACTIONAL_USER`. Sub-tenant views are locked to `tenantUuid`. Main Tenant view excludes cross-channel admins and transactional users. Added Channel Isolated header alert banner.
+    - `frontend/store/useRoleHierarchyStore.ts`: Removed duplicate Harpreet Singh in main tenant seed. Bumped storage key to `flowbre_users_v7_clean` and purged `flowbre_users_v6_clean`. Added auth token header and clean tenant replacement in `fetchUsers`. Added `getUsersForTenant`.
+    - `frontend/app/assignments/page.tsx`: Dynamically resolves channel partner's tenant ID for channel users on `/assignments` instead of hardcoding Main Tenant.
+    - `frontend/components/Sidebar.tsx`: Prioritized authenticated user's `tenant_id` for channel partners in `activeTenantUuid`.
+  - Verified with `npm --prefix frontend run build` (all 26 routes compiled in 6.8s with 0 errors).
+  - Restarted Docker containers (`flowbre_fastapi_app`, `flowbre_frontend`) and confirmed 200 OK.
+  - Verified API responses: `InfoTech` returns exactly 1 user (`InfoTech Admin`), Main Tenant returns exactly 9 corporate employees with zero channel partner leakage.
+- [x] Restored Red 'Suspend' Action Button in Platform Overview:
+  - Reverted button text from 'Suspend Channel' back to 'Suspend' in `frontend/app/[tenantUuid]/platformoverview/page.tsx` under STATE MACHINE ACTIONS for active channels.
+  - Restored red styling (`border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100`) with `<Ban size={11} />` icon.
+  - Verified with `npm --prefix frontend run build` (15 routes compiled with 0 errors).
+  - Restarted Docker container `flowbre_frontend` and verified HTTP 200 OK.
+- [x] Fixed Channel Partner Default Status Bug (Show ACTIVE after Super Admin Approval):
+  - Root cause 1: `transition_channel_tenant` in `app/api/v1/endpoints/tenants.py` failed to activate users matching `admin_email` on approval, leaving `is_active = False`.
+  - Root cause 2: `get_tenant_users` evaluated unapproved/pending channels as `SUSPENDED` instead of `PENDING`, and did not evaluate sub-tenant user status according to channel approval status.
+  - Root cause 3: `useRoleHierarchyStore.ts` retained stale users in `localStorage` with `status: "SUSPENDED"`.
+  - Root cause 4: Active action buttons in `platformoverview/page.tsx` and `workspace/page.tsx` were rendered in red labeled "Suspend", misleading users into thinking the channel was suspended.
+  - Fixes applied:
+    - `app/api/v1/endpoints/tenants.py`: Auto-provision and activate Channel Admin user accounts on both `/approve` and `/transition` (`is_active = True`). Dynamic status mapping: channels pending approval show `PENDING` (amber), while approved channels show `ACTIVE` (emerald).
+    - `frontend/store/useRoleHierarchyStore.ts`: Expanded `UserStatus` to include `PENDING`, deduplicated users in `fetchUsers` by ID and lowercase email.
+    - `frontend/app/[tenantUuid]/assignments/page.tsx`: Added `flowbre_approval_sync` listener and `PENDING` badge support.
+    - `frontend/app/[tenantUuid]/platformoverview/page.tsx`: Replaced misleading red pill with styled button `<Ban size={11} /> <span>Suspend Channel</span>`.
+    - `frontend/app/[tenantUuid]/platformoverview/[channelUuid]/[channelSlug]/workspace/page.tsx`: Bound all banner, stats, profile, and user elements to `liveChannel` from live API, added `flowbre_approval_sync` listener, updated table status badge to display `PENDING` (amber) / `ACTIVE` (emerald), and restyled toggle button to `Suspend Access` / `Activate Access`.
+  - Verified with Next.js production build (`npm --prefix frontend run build` - 15 routes compiled with 0 errors).
+  - Executed end-to-end automated verification script: created `Wipro Tech Channel` (pending), approved as Super Admin, and verified channel and admin status transitioned immediately to `ACTIVE` across sub-tenant and main tenant rosters.
+- [x] Fixed Authentication Challenge Failure for Channel Admin and Transactional Users on Login Page:
+  - Root cause: The Quick Login demo account cards in `frontend/app/auth/login/page.tsx` were still pointing to legacy deleted email accounts (`channel.admin@boi.com` and `agent.john@boi.com`), triggering a 401 Not Found from `/api/v1/auth/challenge`.
+  - Updated `DEMO_ACCOUNTS` in `frontend/app/auth/login/page.tsx` to use active seeded accounts:
+    - Channel Admin: `partner@apex-punjab.in` (Apex FinTech Punjab).
+    - Transactional Officer: `simran.k@apex-punjab.in` (Apex FinTech Punjab).
+  - Enhanced `frontend/lib/uas-client.ts` to surface detailed backend error messages (`errorBody.detail`) instead of throwing a generic failure.
+  - Verified full cryptographic UAS challenge-response proof flow via automated test for `partner@apex-punjab.in`, `simran.k@apex-punjab.in`, `lahari-deloitte@gmail.com`, and `narashimlu-deloitte@gmail.com` (all return 200 OK with valid JWT tokens).
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 6.4s with 0 errors).
+  - Restarted `flowbre_frontend` and confirmed HTTP 200 OK.
+- [x] Enforced Strict Role Hierarchy Visibility (Hide Super Admin from Regional Director):
+  - Removed hardcoded `REGIONAL_DIRECTOR` exemption from `canSeeUser` and `canAssignRole` in `frontend/store/useRoleHierarchyStore.ts`.
+  - Regional Director (Tier 1) can now only see and manage roles strictly according to role hierarchy (`targetTier >= actorTier`), correctly hiding `SUPER_ADMIN` (Tier 0).
+  - Updated `CorporateSalesTree.tsx` to automatically display `Restricted - Superior tiers hidden` node lock for Tier 0 when logged in as Regional Director.
+  - Updated Scoped View alert banner in `frontend/app/[tenantUuid]/assignments/page.tsx` to trigger for Regional Director.
+  - Filtered `teamUsers` in `frontend/components/Sidebar.tsx` using `canSeeUser(role, u.role)` so Super Admin is also hidden from Regional Director in the team directory popover.
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 6.3s with 0 errors).
+  - Restarted `flowbre_frontend` and confirmed HTTP 200 OK.
+- [x] Resolved Top Bar Disappearing Bug During Client Navigation:
+  - Root cause: Next.js router scroll restoration and browser focus events were causing the global window/document viewport to scroll vertically by ~52-56px on client route transitions, shifting both `<AppHeader>` and the sidebar header off-screen.
+  - Implemented 4-layer viewport lockdown:
+    1. Locked `html, body` in `globals.css` with `position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; overscroll-behavior: none;`.
+    2. Locked `body` in `layout.tsx` with `fixed inset-0 flex h-full w-full overflow-hidden`.
+    3. Added `onScroll` guards to `panelRef` in `PortalShell.tsx`, `<aside>`, and `<SidebarContent>` in `Sidebar.tsx` to automatically clamp `scrollTop = 0`.
+    4. Enhanced `PortalShell.tsx` navigation effect with `requestAnimationFrame` + `setTimeout` scroll clamp and added `scroll={false}` to sidebar links.
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 6.1s with 0 errors).
+  - Restarted `flowbre_frontend` and confirmed HTTP 200 OK.
+- [x] Removed Channel Admin Role from Add New Role in User Management Module:
+  - Updated `assignableRoles` in `frontend/app/[tenantUuid]/assignments/page.tsx` to exclude `CHANNEL_ADMIN` alongside `TRANSACTIONAL_USER`.
+  - Updated `editableRoles` to exclude `CHANNEL_ADMIN` unless editing an existing Channel Admin record.
+  - "Add New Role" slide-over drawer now exclusively allows provisioning internal corporate hierarchy roles (`SUPER_ADMIN`, `REGIONAL_DIRECTOR`, `OPERATIONS_HEAD`, `ACCOUNTS_HEAD`, `AREA_MANAGER`, `TEAM_LEADER`, `SALES_MANAGER`).
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 5.3s with 0 errors).
+  - Restarted `flowbre_frontend` and confirmed HTTP 200 OK.
+- [x] Removed Sales Manager and Team Leader Roles from Add Employee & Filter in Platform Overview Channel Workspace:
+  - Removed `SALES_MANAGER` and `TEAM_LEADER` options from Add Employee drawer select in `frontend/app/[tenantUuid]/platformoverview/[channelUuid]/[channelSlug]/workspace/page.tsx`.
+  - Removed `SALES_MANAGER` and `TEAM_LEADER` from role filter dropdown in the same workspace page.
+  - Channel workspace is now strictly aligned with partner tenant isolation: only `CHANNEL_ADMIN` and `TRANSACTIONAL_USER` can be selected.
+  - Verified with `npm --prefix frontend run build` (compiled 26 routes in 5.5s with 0 errors).
+  - Restarted `flowbre_frontend` and confirmed HTTP 200 OK.
+- [x] Implemented Strict Main Tenant vs Partner Sub-Tenant Architecture with Clean Database Reset:
+  - Wiped all operational and dirty test data from PostgreSQL via CASCADE truncate.
+  - Implemented architecture in backend (`app/api/v1/endpoints/tenants.py`) and frontend (`assignments/page.tsx`, `useRoleHierarchyStore.ts`, `tenants-data.ts`):
+    - Main Tenant (`Bank of India Channel`): Exclusively hosts corporate governance roles (`SUPER_ADMIN`, `REGIONAL_DIRECTOR`, `OPERATIONS_HEAD`, `ACCOUNTS_HEAD`, `AREA_MANAGER`, `TEAM_LEADER`, `SALES_MANAGER`) + Channel Admins. Rejects and excludes Transactional Users.
+    - Partner Sub-Tenant (`Apex FinTech Punjab`): Exclusively hosts that partner's `CHANNEL_ADMIN` and `TRANSACTIONAL_USER` (Loan Officers). Corporate governance roles are blocked.
+  - Seeded clean baseline mock data for both tenants into the database (`user_account`, `tenant`) with valid passwords (`FlowBRE@2026!`).
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 5.5s with 0 errors).
+  - Restarted Docker containers (`flowbre_fastapi_app`, `flowbre_frontend`) and verified HTTP 200 OK.
+
+  - Darkened default unselected module headers from faint `text-slate-400` to high-contrast `text-slate-500` for clear visibility and hierarchy.
+  - Synchronized module section header appearance with on-hover styling when any sub-module is active/clicked (`hasActiveChild`):
+    - Container: `bg-slate-100/70 hover:bg-slate-100/90`
+    - Section Icon: `text-slate-800`
+    - Module Title: `text-slate-800`
+    - Chevron Down: `text-slate-700`
+  - Verified with `npm --prefix frontend run build` (compiled 15 static and 11 dynamic routes in 6.1s with 0 errors).
+  - Restarted Docker container `flowbre_frontend` and confirmed HTTP 200 OK.
+- [x] Fixed False Active Highlight Matching & Duplicate Module Routes in Sidebar:
+  - Eliminated the root cause of false highlighting ("another module is getting the box"):
+    - Replaced loose prefix match `currentPath.startsWith(`${item.href}/`)` with `checkItemActive(itemHref, currentPath, homeHref)`:
+      - Strictly prevents root links (`/${tenantUuid}` or `/` like Onboarding Wizard) from prefix-matching every nested page (`/approvals`, `/dashboard`, `/pipeline`, etc.).
+      - Sub-route prefix matching is bounded only to genuine sub-pages (e.g. `/pipeline/lead-123`).
+    - Fixed duplicate route URLs:
+      - `Credit Bureau Rules` (`CIBIL`) was duplicated to `${prefix}/dashboard` (duplicating `Dashboard`); updated to `${prefix}/configurator`.
+      - `Policy Documents` was duplicated to `${prefix} || "/"` (duplicating `Onboarding Wizard`); updated to `${prefix}/telemetry`.
+    - `homeHref`, `prefix`, and `platformUuid` now dynamically use `activeTenantUuid` from URL path, ensuring link targets and active checks always match the browser address bar.
+  - Verified with `npm --prefix frontend run build` (all 26 routes compiled in 16.6s with 0 errors).
+  - Restarted Docker container `flowbre_frontend` and confirmed HTTP 200 OK.
+- [x] Role-Ordered User Management Popover per Tenant (Reverted & Polished):
+  - Reverted the complex nested channel picker and oversized banner headers per the user's explicit request.
+  - Implemented clean role hierarchy sorting (`ROLE_ORDER`: Area Manager -> Team Leader -> Sales Manager -> Channel Admin -> Loan Officer) within the stable single-card popover (`w-[236px]`).
+  - Added clean, discrete role badges with brand styling on each user card (`Area Manager`, `Team Leader`, `Sales Manager`, `Channel Admin`, `Loan Officer`).
+  - Enhanced multi-tenant user resolution and normalization in `frontend/store/useRoleHierarchyStore.ts` and `frontend/components/Sidebar.tsx` to match each tenant's user management roster accurately.
+  - Populated `INITIAL_USERS` with complete role hierarchy coverage for all channels (`Bank of India`, `Apex FinTech Punjab`, `sagar`, `vidhya`, `TCS`, `HCL`, `zoho`).
+  - Configured footer link to open the active tenant's User Management module (`/${effectiveTenantUuid}/assignments`).
+  - Preserved outside collapse toggle button, search bar with Cmd+K, debt factory brand card, and top bar search removal.
+  - Verified with `npm --prefix frontend run build` (all 26 routes compiled in 6.1s with 0 errors).
+  - Restarted Docker container `flowbre_frontend` and confirmed HTTP 200 OK.
+- [x] Integrated User Management Team Dropdown with Email Links & Static WhatsApp Logo:
+  - Resolved popover right-edge clipping (previously `w-80` inside `w-[260px]` sidebar was truncated by 72px):
+    - Desktop expanded sidebar: Sized popover to `w-[236px]` (`left-0 top-12`) with exact 12px margins, ensuring all content stays 100% inside visible bounds.
+    - Desktop collapsed rail mode: Positioned popover using `fixed left-[76px] top-3 w-[250px]`, floating outside the rail without clipping.
+  - Linked to real user data from `useRoleHierarchyStore` with fallback to `INITIAL_USERS` scoped to the current channel.
+  - Displays each user's avatar initials, full name, role designation, and active status indicator.
+  - Added clickable `mailto:` action button and link that launches the user's mail client directly on click.
+  - Added a clean static emerald WhatsApp brand logo next to the email action.
+  - Included a bottom shortcut to navigate directly to the full User Management module (`/assignments`).
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 5.9s with 0 errors).
+  - Restarted Docker container `flowbre_frontend` and confirmed HTTP 200 OK.
+- [x] Placed Sidebar Collapse Toggle Outside (Resolved Logo Overlap):
+  - Removed the cramped desktop button from inside the 68px collapsed header in [Sidebar.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/components/Sidebar.tsx) that was getting covered under the logo.
+  - Added a dedicated desktop collapse/expand toggle button outside the sidebar in [AppHeader.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/components/AppHeader.tsx) on the top bar.
+  - Mounted an external floating edge pill button (`absolute -right-3 top-4 z-40`) on the outside border seam of `<aside>` in [Sidebar.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/components/Sidebar.tsx), with smooth hover zoom and animated `ChevronLeft` / `ChevronRight` icons.
+  - The toggle button is now 100% accessible, visible, and never hidden under the logo.
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 9.1s with 0 errors).
+- [x] Replaced Health Checking Footer with Debt Factory Brand Card:
+  - Removed health checking link (`/health`) and SLA telemetry badge (`99.98% SLA`) from [Sidebar.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/components/Sidebar.tsx) footer.
+  - Replaced it with a brand lockup card labeled `debt factory` featuring a custom `DF` logo badge in brand teal.
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 6.6s with 0 errors).
+- [x] Removed Secondary Utilitarian Links from Sidebar:
+  - Removed "Contact us", "Documentation", and "Status / All systems normal" section completely from [Sidebar.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/components/Sidebar.tsx) as requested.
+  - The bottom of the sidebar now cleanly transitions directly into the unified engine brand status lockup.
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 5.7s with 0 errors).
+- [x] Removed Search Engine from Top AppHeader:
+  - Removed top-bar search bar, dropdown popovers, static catalog, and keyboard listeners from [AppHeader.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/components/AppHeader.tsx).
+  - Search is now centrally managed by the dedicated navigation search bar in the sidebar (`⌘K` / `Ctrl+K`), eliminating UI redundancy.
+  - Kept mobile drawer button, message/notification icons, and user profile dropdown intact with clean layout spacing.
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 5.9s with 0 errors).
+- [x] End-to-End Sidebar UI Modifications & Complete UX Component & Dropdown Behavior:
+  - Deconstructed and matched reference image layout and behaviors while adhering strictly to existing FlowBRE color palette (`globals.css`).
+  - Added Workspace / Tenant Switcher Dropdown menu with channel selection from `INITIAL_TENANTS`, active status checkmark, and quick links to new channel / system settings.
+  - Added Desktop Sidebar Collapse Rail Mode toggle (`PanelLeftClose` / `PanelLeft`) with smooth width transition (`w-[260px]` <-> `w-[68px]`).
+  - Added Quick Search Bar (`⌘K` / `Ctrl+K`) with autofocus keyboard shortcut listener and live filtering of all navigation routes.
+  - Partitioned navigation into flat primary tier (`Dashboard`, `Onboarding Wizard`) and collapsible hierarchical dropdown groups (`COMPLIANCE`, `OPERATIONS & SALES`, `ORGANIZATION & PLATFORM`).
+  - Built collapsible section accordion dropdowns with animated `ChevronDown` rotations, memory persistence via `useSidebarStore`, and vertical tree connector guide lines (`border-l border-slate-200/90`).
+  - Refined active navigation item indicator matching the reference: crisp light container with existing brand teal accents (`bg-teal-50/80 text-teal-800 border-teal-200/80`) without harsh black backgrounds.
+  - Added utilitarian secondary links (`Contact us`, `Documentation`, `Status`, `Changelog`) and updated footer brand lockup with live SLA indicator.
+  - Verified with `npm --prefix frontend run build` (compiled all 26 routes in 8.7s with 0 errors).
   - Removed popup / slide-over drawer completely.
   - In [platformoverview/page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/%5BtenantUuid%5D/platformoverview/page.tsx) and [dashboard/page.tsx](file:///c:/Users/DELL/Desktop/breflow/BRE-Flow-Engine/frontend/app/platform/dashboard/page.tsx), converted the section into a collapsible card:
     - Default collapsed state: compact bar with title, `Immutable Ledger` badge, live count pill (`{auditLogs.length} Events`), description, and `[View Details ▾]` button.

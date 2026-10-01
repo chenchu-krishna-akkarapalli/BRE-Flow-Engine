@@ -34,7 +34,7 @@ export default function RootLayout({
       lang="en"
       className={`${outfit.variable} ${inter.variable} ${jetbrainsMono.variable} h-full overflow-hidden antialiased`}
     >
-      <body className="flex h-screen w-screen overflow-hidden bg-bg-deep text-ink selection:bg-brand-500/20 selection:text-brand-600">
+      <body className="fixed inset-0 flex h-full w-full overflow-hidden bg-bg-deep text-ink selection:bg-brand-500/20 selection:text-brand-600">
         <PortalShell>{children}</PortalShell>
       </body>
     </html>

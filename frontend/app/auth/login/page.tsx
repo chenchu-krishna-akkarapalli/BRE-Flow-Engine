@@ -138,9 +138,9 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     iconBg: "bg-emerald-100",
     iconColor: "text-emerald-700",
     icon: UserCheck,
-    email: "channel.admin@boi.com",
-    tenantName: "Bank of India North Channel",
-    description: "Channel workspace administrator for Bank of India territory.",
+    email: "partner@apex-punjab.in",
+    tenantName: "Apex FinTech Punjab",
+    description: "Partner Channel Admin for Apex FinTech Punjab.",
   },
   {
     label: "Transactional Officer",
@@ -150,9 +150,9 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     iconBg: "bg-teal-100",
     iconColor: "text-teal-700",
     icon: Layers,
-    email: "agent.john@boi.com",
-    tenantName: "Bank of India North Channel",
-    description: "6-step applicant onboarding, document uploads, and instant evaluations.",
+    email: "simran.k@apex-punjab.in",
+    tenantName: "Apex FinTech Punjab",
+    description: "Frontline loan officer: 6-step applicant onboarding and instant evaluations.",
   },
 ];
 
@@ -456,7 +456,7 @@ function LoginFormContent() {
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          placeholder="e.g. super.admin@flowbre.com or channel.admin@boi.com"
+                          placeholder="e.g. super.admin@flowbre.com or partner@apex-punjab.in"
                           className="w-full h-12 rounded-xl border border-slate-200 bg-slate-50/50 pl-10 pr-4 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-slate-800 focus:ring-2 focus:ring-slate-900/5 transition-all outline-hidden"
                           required
                         />

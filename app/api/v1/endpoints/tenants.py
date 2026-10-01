@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, Field
-from sqlalchemy import or_, select
+from sqlalchemy import and_, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user, get_current_user_optional, require_roles
@@ -229,13 +229,17 @@ async def approve_channel_tenant(
     if payload and payload.cibil_overlay is not None:
         tenant.cibil_overlay = payload.cibil_overlay
 
-    # Automatically provision initial Channel Admin user account for this newly approved channel
+    # Automatically provision/activate Channel Admin user account for this newly approved channel
     admin_email = tenant.contact_email or f"channel.admin@{tenant.code}.com"
     user_stmt = select(UserModel).where(
-        or_(UserModel.username == admin_email, UserModel.email == admin_email)
+        or_(
+            UserModel.username == admin_email,
+            UserModel.email == admin_email,
+            UserModel.tenant_id.in_([tenant.id, tenant.code, tenant.tenant_uuid or tenant.id]),
+        )
     )
     user_res = await db.execute(user_stmt)
-    existing_user = user_res.scalars().first()
+    existing_users = user_res.scalars().all()
 
     # Testing phase fixed password
     generated_password = "FlowBRE@2026!"
@@ -243,7 +247,7 @@ async def approve_channel_tenant(
     user_salt = generate_salt(16)
     pwd_hash = derive_password_hash(generated_password, user_salt)
 
-    if not existing_user:
+    if not existing_users and admin_email:
         new_channel_admin = UserModel(
             username=admin_email,
             email=admin_email,
@@ -256,11 +260,11 @@ async def approve_channel_tenant(
         )
         db.add(new_channel_admin)
     else:
-        existing_user.is_active = True
-        existing_user.salt = user_salt
-        existing_user.password_hash = pwd_hash
-        existing_user.tenant_id = tenant.id
-        existing_user.role = "CHANNEL_ADMIN"
+        for u in existing_users:
+            u.is_active = True
+            u.tenant_id = tenant.id
+            if u.email == admin_email or u.username == admin_email:
+                u.role = "CHANNEL_ADMIN"
 
     should_send_credentials = True
 
@@ -423,12 +427,18 @@ async def reinstate_channel_tenant(
     tenant.is_active = True
 
     # Reactivate associated channel users
+    admin_email = tenant.contact_email or f"channel.admin@{tenant.code}.com"
     user_stmt = select(UserModel).where(
-        UserModel.tenant_id.in_([tenant.id, tenant.code, tenant.tenant_uuid or tenant.id])
+        or_(
+            UserModel.tenant_id.in_([tenant.id, tenant.code, tenant.tenant_uuid or tenant.id]),
+            UserModel.username == admin_email,
+            UserModel.email == admin_email,
+        )
     )
     user_res = await db.execute(user_stmt)
     for u in user_res.scalars().all():
         u.is_active = True
+        u.tenant_id = tenant.id
 
     actor = (current_user.get("username") if current_user else None) or (current_user.get("role") if current_user else None) or "super.admin@flowbre.com"
     reason = (payload.reason if payload and payload.reason else None) or "Reinstated by platform administrator after audit clearance."
@@ -473,12 +483,41 @@ async def transition_channel_tenant(
     if payload.cibil_overlay is not None:
         tenant.cibil_overlay = payload.cibil_overlay
 
+    admin_email = tenant.contact_email or f"channel.admin@{tenant.code}.com"
     user_stmt = select(UserModel).where(
-        UserModel.tenant_id.in_([tenant.id, tenant.code, tenant.tenant_uuid or tenant.id])
+        or_(
+            UserModel.tenant_id.in_([tenant.id, tenant.code, tenant.tenant_uuid or tenant.id]),
+            UserModel.username == admin_email,
+            UserModel.email == admin_email,
+        )
     )
     user_res = await db.execute(user_stmt)
-    for u in user_res.scalars().all():
-        u.is_active = (target_status == "active")
+    users = user_res.scalars().all()
+
+    if target_status == "active":
+        if not users and admin_email:
+            user_salt = generate_salt(16)
+            pwd_hash = derive_password_hash("FlowBRE@2026!", user_salt)
+            new_channel_admin = UserModel(
+                username=admin_email,
+                email=admin_email,
+                full_name=f"{tenant.name} Admin",
+                salt=user_salt,
+                password_hash=pwd_hash,
+                role="CHANNEL_ADMIN",
+                tenant_id=tenant.id,
+                is_active=True,
+            )
+            db.add(new_channel_admin)
+        else:
+            for u in users:
+                u.is_active = True
+                u.tenant_id = tenant.id
+                if u.email == admin_email or u.username == admin_email:
+                    u.role = "CHANNEL_ADMIN"
+    else:
+        for u in users:
+            u.is_active = (target_status == "active")
 
     actor = (current_user.get("username") if current_user else None) or (current_user.get("role") if current_user else None) or "super.admin@flowbre.com"
     reason = payload.reason or f"Transitioned to {target_status} by {actor}"
@@ -518,7 +557,7 @@ async def list_tenants(
 async def get_tenant_by_uuid(
     tenant_uuid: str,
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(get_current_user),
+    current_user: Optional[dict] = Depends(get_current_user_optional),
 ):
     stmt = select(TenantModel).where(
         or_(
@@ -553,27 +592,32 @@ class UpdateTenantUserPayload(BaseModel):
     role: Optional[str] = None
     status: Optional[str] = None
 
+MAIN_TENANT_UUID = "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f"
+MAIN_TENANT_CODE = "boi-channel-north"
+
+def is_main_tenant_identifier(identifier: Optional[str]) -> bool:
+    if not identifier:
+        return False
+    clean = str(identifier).lower().strip()
+    return clean in (
+        MAIN_TENANT_UUID.lower(),
+        MAIN_TENANT_CODE.lower(),
+        "platform",
+        "global",
+        "all",
+        "boi",
+    )
+
 # Retrieves all real database employees bound to a specific channel partner or platform-wide
 @router.get("/{tenant_uuid}/users", response_model=List[TenantUserResponse])
 async def get_tenant_users(
     tenant_uuid: str,
     db: AsyncSession = Depends(get_db),
+    current_user: Optional[UserModel] = Depends(get_current_user_optional),
 ):
-    if tenant_uuid in ("platform", "global", "all"):
-        user_stmt = select(UserModel).order_by(UserModel.created_at.desc())
-        user_res = await db.execute(user_stmt)
-        users = user_res.scalars().all()
-        return [
-            TenantUserResponse(
-                id=u.id,
-                tenant_id=u.tenant_id or "platform",
-                name=u.full_name or (u.username.split("@")[0].replace(".", " ").title() if "@" in u.username else u.username),
-                email=u.email or u.username,
-                role=u.role,
-                status="ACTIVE" if u.is_active else "SUSPENDED",
-            )
-            for u in users
-        ]
+    # Channel Admins and Transactional Users are strictly isolated to their own channel tenant
+    if current_user and current_user.role in ("CHANNEL_ADMIN", "TRANSACTIONAL_USER"):
+        tenant_uuid = current_user.tenant_id or tenant_uuid
 
     stmt = select(TenantModel).where(
         or_(
@@ -585,32 +629,93 @@ async def get_tenant_users(
     res = await db.execute(stmt)
     tenant = res.scalars().first()
 
-    tenant_ids = [tenant_uuid]
-    is_default = False
-    if tenant:
-        tenant_ids.extend([tenant.id, tenant.code])
-        if tenant.tenant_uuid:
-            tenant_ids.append(tenant.tenant_uuid)
-        is_default = (tenant.code == "default")
+    is_main = is_main_tenant_identifier(tenant_uuid) or (
+        tenant and (
+            tenant.tenant_uuid == MAIN_TENANT_UUID or 
+            tenant.id == MAIN_TENANT_UUID or 
+            tenant.code == MAIN_TENANT_CODE
+        )
+    )
 
-    user_stmt = select(UserModel).where(UserModel.tenant_id.in_(tenant_ids))
+    if is_main:
+        # Bank of India Channel (Main Tenant):
+        # Stores and displays all corporate leadership and management roles.
+        # Excludes transactional users (loan officers) and external partner channel admins.
+        main_ids = [MAIN_TENANT_UUID, MAIN_TENANT_CODE, "platform", "global"]
+        if tenant:
+            main_ids.extend([tenant.id, tenant.code, tenant.tenant_uuid])
+
+        user_stmt = (
+            select(UserModel)
+            .where(
+                UserModel.tenant_id.in_(main_ids),
+                UserModel.role.in_([
+                    "SUPER_ADMIN",
+                    "REGIONAL_DIRECTOR",
+                    "OPERATIONS_HEAD",
+                    "ACCOUNTS_HEAD",
+                    "AREA_MANAGER",
+                    "TEAM_LEADER",
+                    "SALES_MANAGER",
+                ]),
+            )
+            .order_by(UserModel.created_at.asc())
+        )
+        user_res = await db.execute(user_stmt)
+        users = user_res.scalars().all()
+
+        res_list = []
+        for u in users:
+            computed_status = "ACTIVE" if u.is_active else "SUSPENDED"
+            res_list.append(
+                TenantUserResponse(
+                    id=u.id,
+                    tenant_id=MAIN_TENANT_UUID,
+                    name=u.full_name or (u.username.split("@")[0].replace(".", " ").title() if "@" in u.username else u.username),
+                    email=u.email or u.username,
+                    role=u.role,
+                    status=computed_status,
+                )
+            )
+        return res_list
+
+    # Partner Sub-Tenant (e.g. Apex FinTech Punjab):
+    # Only displays Channel Admin and Transactional Users of THIS specific channel partner.
+    if not tenant:
+        return []
+
+    tenant_ids = [tenant.id, tenant.code]
+    if tenant.tenant_uuid:
+        tenant_ids.append(tenant.tenant_uuid)
+
+    user_stmt = (
+        select(UserModel)
+        .where(
+            and_(
+                or_(
+                    UserModel.tenant_id.in_(tenant_ids),
+                    UserModel.email == tenant.contact_email,
+                    UserModel.username == tenant.contact_email,
+                ),
+                UserModel.role.in_(["CHANNEL_ADMIN", "TRANSACTIONAL_USER"]),
+            )
+        )
+        .order_by(UserModel.created_at.asc())
+    )
     user_res = await db.execute(user_stmt)
     users = user_res.scalars().all()
 
-    # Filter out platform governance roles if channel is a specific tenant
-    results = []
-    for u in users:
-        if not is_default and u.role in ("SUPER_ADMIN", "ACCOUNTS_HEAD", "OPERATIONS_HEAD", "REGIONAL_DIRECTOR"):
-            continue
-        results.append(TenantUserResponse(
+    return [
+        TenantUserResponse(
             id=u.id,
-            tenant_id=tenant.tenant_uuid if tenant and tenant.tenant_uuid else (tenant.id if tenant else tenant_uuid),
+            tenant_id=tenant.tenant_uuid or tenant.id,
             name=u.full_name or (u.username.split("@")[0].replace(".", " ").title() if "@" in u.username else u.username),
             email=u.email or u.username,
             role=u.role,
-            status="ACTIVE" if u.is_active else "SUSPENDED",
-        ))
-    return results
+            status="ACTIVE" if (u.is_active or tenant.status == "active") else ("PENDING" if tenant.status in ("pending", "under_review") else "SUSPENDED"),
+        )
+        for u in users
+    ]
 
 # Adds a new employee directly into the database for this channel partner or platform
 @router.post("/{tenant_uuid}/users", response_model=TenantUserResponse)
@@ -628,26 +733,76 @@ async def create_tenant_user(
     )
     res = await db.execute(stmt)
     tenant = res.scalars().first()
-    if tenant:
+
+    is_main = is_main_tenant_identifier(tenant_uuid) or (
+        tenant and (
+            tenant.tenant_uuid == MAIN_TENANT_UUID or 
+            tenant.id == MAIN_TENANT_UUID or 
+            tenant.code == MAIN_TENANT_CODE
+        )
+    )
+
+    if not is_main:
+        # Sub-Tenant validation: Only Transactional Users can be added here
+        if not tenant:
+            raise HTTPException(status_code=404, detail="Partner tenant not found.")
+        if payload.role != "TRANSACTIONAL_USER":
+            raise HTTPException(
+                status_code=400,
+                detail="Partner channels can only add Transactional Users (Loan Officers). Corporate governance roles are reserved for the Main Tenant (Bank of India Channel)."
+            )
         target_tenant_id = tenant.id
+        effective_role = "TRANSACTIONAL_USER"
     else:
-        # Fall back to active primary tenant (or None) to avoid foreign key violations with "platform"
-        stmt_def = select(TenantModel).where(TenantModel.is_active == True).order_by(TenantModel.created_at.asc())
-        res_def = await db.execute(stmt_def)
-        first_t = res_def.scalars().first()
-        target_tenant_id = first_t.id if first_t else None
+        # Main Tenant validation
+        if payload.role == "TRANSACTIONAL_USER":
+            raise HTTPException(
+                status_code=400,
+                detail="Transactional users (Loan Officers) cannot be created in the Main Tenant. They must be created inside their respective partner channel workspace."
+            )
+
+        effective_role = payload.role
+        if payload.role == "CHANNEL_ADMIN":
+            # Provision/link new partner tenant for this Channel Admin
+            channel_name = payload.name.strip()
+            slug = channel_name.lower().replace(" ", "-").replace("admin", "").strip("-") or f"channel-{secrets.token_hex(3)}"
+            existing_partner = await db.scalar(
+                select(TenantModel).where(or_(TenantModel.name == channel_name, TenantModel.code == f"tenant-{slug}"))
+            )
+            if existing_partner:
+                target_tenant_id = existing_partner.id
+            else:
+                new_partner_uuid = str(uuid.uuid4())
+                new_partner = TenantModel(
+                    id=new_partner_uuid,
+                    tenant_uuid=new_partner_uuid,
+                    name=f"{channel_name} Channel" if "Channel" not in channel_name else channel_name,
+                    code=f"tenant-{slug}",
+                    channel_type="FINTECH_PARTNER",
+                    status="active",
+                    cibil_overlay=10,
+                    contact_email=payload.email.strip().lower(),
+                    is_active=True,
+                )
+                db.add(new_partner)
+                await db.flush()
+                target_tenant_id = new_partner.id
+        else:
+            # Corporate leadership role in Main Tenant
+            main_t = tenant or await db.scalar(select(TenantModel).where(TenantModel.id == MAIN_TENANT_UUID))
+            target_tenant_id = main_t.id if main_t else MAIN_TENANT_UUID
 
     # Check and register role in RoleModel if missing
-    role_stmt = select(RoleModel).where(RoleModel.name == payload.role)
+    role_stmt = select(RoleModel).where(RoleModel.name == effective_role)
     role_res = await db.execute(role_stmt)
     role_found = role_res.scalars().first()
     if not role_found:
         new_role_model = RoleModel(
-            name=payload.role,
-            display_name=payload.role.replace("_", " ").title(),
-            description=f"Dynamic role {payload.role}",
-            governance_level="PLATFORM" if payload.role in ("SUPER_ADMIN", "REGIONAL_DIRECTOR", "OPERATIONS_HEAD", "ACCOUNTS_HEAD") else "TENANT",
-            hierarchy_tier=0 if payload.role == "SUPER_ADMIN" else 6,
+            name=effective_role,
+            display_name=effective_role.replace("_", " ").title(),
+            description=f"Dynamic role {effective_role}",
+            governance_level="PLATFORM" if effective_role in ("SUPER_ADMIN", "REGIONAL_DIRECTOR", "OPERATIONS_HEAD", "ACCOUNTS_HEAD") else "TENANT",
+            hierarchy_tier=0 if effective_role == "SUPER_ADMIN" else 6,
             is_system_role=False,
         )
         db.add(new_role_model)
@@ -666,7 +821,7 @@ async def create_tenant_user(
     if existing:
         existing.tenant_id = target_tenant_id
         existing.full_name = payload.name.strip()
-        existing.role = payload.role
+        existing.role = effective_role
         existing.is_active = (payload.status == "ACTIVE")
         await db.commit()
         await db.refresh(existing)
@@ -676,7 +831,7 @@ async def create_tenant_user(
             username=email_clean,
             email=email_clean,
             full_name=payload.name.strip(),
-            role=payload.role,
+            role=effective_role,
             tenant_id=target_tenant_id,
             is_active=(payload.status == "ACTIVE"),
             password_hash=pwd_hash,

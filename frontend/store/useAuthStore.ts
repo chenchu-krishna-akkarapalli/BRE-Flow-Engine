@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import {
   AuthSessionResponse,
+  changeUserPassword,
   computeChallengeProof,
   fetchAuthenticatedProfile,
   NavGroupNode,
@@ -39,6 +40,7 @@ interface AuthState {
   setSession: (session: AuthSessionResponse) => void;
   checkAuth: () => Promise<void>;
   updateProfile: (updates: { name?: string; email?: string; phone?: string; designation?: string }) => void;
+  changePassword: (currentPassword: string, newPassword: string, confirmPassword: string) => Promise<{ success: boolean; error?: string }>;
   hasRole: (...roles: RoleKey[]) => boolean;
   hasPermission: (permission: string) => boolean;
 }
@@ -308,6 +310,20 @@ export const useAuthStore = create<AuthState>((set, get) => {
       }
 
       set({ user: updatedUser });
+    },
+
+    changePassword: async (currentPassword: string, newPassword: string, confirmPassword: string) => {
+      const token = get().token;
+      if (!token) {
+        return { success: false, error: "Not authenticated. Please log in again." };
+      }
+      try {
+        await changeUserPassword(token, currentPassword, newPassword, confirmPassword);
+        return { success: true };
+      } catch (err: any) {
+        const msg = err?.message || "Failed to update password.";
+        return { success: false, error: msg };
+      }
     },
 
     hasRole: (...roles: RoleKey[]) => {

@@ -35,7 +35,7 @@ export const INITIAL_TENANTS: TenantRecord[] = [
     channel_type: "DSA",
     status: "active",
     cibil_overlay: 10,
-    contact_email: "channel.admin@boi.com",
+    contact_email: "super.admin@flowbre.com",
     contact_phone: "+91 98765 43210",
     evaluation_count_24h: 1482,
     mean_latency_ms: 18.4,
@@ -54,76 +54,6 @@ export const INITIAL_TENANTS: TenantRecord[] = [
     evaluation_count_24h: 3290,
     mean_latency_ms: 14.1,
     created_at: "2026-08-12T14:30:00Z",
-  },
-  {
-    id: "393dca9c-1d29-4976-8a40-6d08c481559b",
-    name: "sagar",
-    code: "tenant-sagar",
-    tenant_uuid: "393dca9c-1d29-4976-8a40-6d08c481559b",
-    channel_type: "DSA",
-    status: "active",
-    cibil_overlay: 10,
-    contact_email: "sagaranbu16@gmail.com",
-    contact_phone: "+91 97654 32190",
-    evaluation_count_24h: 210,
-    mean_latency_ms: 15.6,
-    created_at: "2026-08-18T18:20:00Z",
-  },
-  {
-    id: "f262420e-bdbc-45c5-bd07-83353c1795fb",
-    name: "vidhya",
-    code: "tenant-vidhya",
-    tenant_uuid: "f262420e-bdbc-45c5-bd07-83353c1795fb",
-    channel_type: "BANK_BRANCH",
-    status: "active",
-    cibil_overlay: 20,
-    contact_email: "vidhyaasagaranbarasan@gmail.com",
-    contact_phone: "+91 99112 33445",
-    evaluation_count_24h: 340,
-    mean_latency_ms: 16.2,
-    created_at: "2026-08-17T11:15:00Z",
-  },
-  {
-    id: "686172e9-51db-47c2-ba4f-0448923465f0",
-    name: "TCS",
-    code: "tenant-tcs",
-    tenant_uuid: "686172e9-51db-47c2-ba4f-0448923465f0",
-    channel_type: "DEALER_PARTNER",
-    status: "active",
-    cibil_overlay: 10,
-    contact_email: "tcs@gmail.com",
-    contact_phone: "+91 98111 22334",
-    evaluation_count_24h: 120,
-    mean_latency_ms: 19.1,
-    created_at: "2026-08-15T09:00:00Z",
-  },
-  {
-    id: "8b04f54c-d45a-4bd3-bac4-f9f33391c2b4",
-    name: "HCL",
-    code: "tenant-hcl",
-    tenant_uuid: "8b04f54c-d45a-4bd3-bac4-f9f33391c2b4",
-    channel_type: "FINTECH_PARTNER",
-    status: "active",
-    cibil_overlay: 15,
-    contact_email: "hcl@gmail.com",
-    contact_phone: "+91 98111 55667",
-    evaluation_count_24h: 450,
-    mean_latency_ms: 13.8,
-    created_at: "2026-08-16T12:00:00Z",
-  },
-  {
-    id: "125047c2-25d9-49a5-990f-6db76fa0c18e",
-    name: "zoho",
-    code: "tenant-zoho",
-    tenant_uuid: "125047c2-25d9-49a5-990f-6db76fa0c18e",
-    channel_type: "FINTECH_PARTNER",
-    status: "active",
-    cibil_overlay: 10,
-    contact_email: "demo@gmail.com",
-    contact_phone: "+91 98111 88990",
-    evaluation_count_24h: 670,
-    mean_latency_ms: 14.5,
-    created_at: "2026-08-17T15:30:00Z",
   },
 ];
 
@@ -153,11 +83,15 @@ export const INITIAL_AUDIT_LOGS: StatusAuditEntry[] = [
 export function getTenantByUuidOrCode(identifier: string): TenantRecord | undefined {
   if (!identifier) return undefined;
   const lower = identifier.toLowerCase();
+  const stripped = lower.startsWith("tenant-") ? lower.replace("tenant-", "") : lower;
   return INITIAL_TENANTS.find(
     (t) =>
       t.tenant_uuid.toLowerCase() === lower ||
       t.code.toLowerCase() === lower ||
       t.id.toLowerCase() === lower ||
-      t.name.toLowerCase() === lower
+      t.name.toLowerCase() === lower ||
+      t.code.toLowerCase() === stripped ||
+      t.code.toLowerCase() === `tenant-${stripped}` ||
+      t.name.toLowerCase() === stripped
   );
 }

@@ -94,7 +94,9 @@ export async function requestAuthChallenge(username: string, tenantId?: string):
     body: JSON.stringify({ username, tenant_id: tenantId }),
   });
   if (!response.ok) {
-    throw new Error("Failed to obtain authentication challenge from UAS.");
+    const errorBody = await response.json().catch(() => ({}));
+    const message = errorBody?.detail || errorBody?.error?.message || errorBody?.message || "Failed to obtain authentication challenge from UAS.";
+    throw new Error(message);
   }
   return (await response.json()) as ChallengePayload;
 }
@@ -120,7 +122,8 @@ export async function verifyAuthChallenge(
   });
   if (!response.ok) {
     const errorBody = await response.json().catch(() => ({}));
-    throw new Error(errorBody?.error?.message ?? "Authentication failed: invalid credentials or expired challenge.");
+    const message = errorBody?.detail || errorBody?.error?.message || errorBody?.message || "Authentication failed: invalid credentials or expired challenge.";
+    throw new Error(message);
   }
   return (await response.json()) as AuthSessionResponse;
 }
@@ -135,3 +138,32 @@ export async function fetchAuthenticatedProfile(token: string): Promise<UserProf
   }
   return (await response.json()) as UserProfile;
 }
+
+/** Changes authenticated user's account password with cryptographic verification */
+export async function changeUserPassword(
+  token: string,
+  currentPassword: string,
+  newPassword: string,
+  confirmPassword: string
+): Promise<{ success: boolean; message: string }> {
+  const response = await fetch(`${API_BASE}/api/v1/auth/change-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      current_password: currentPassword,
+      new_password: newPassword,
+      confirm_password: confirmPassword,
+    }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const errorMsg = data?.detail || data?.error?.message || data?.message || "Failed to update password.";
+    throw new Error(errorMsg);
+  }
+  return data as { success: boolean; message: string };
+}
+

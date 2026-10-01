@@ -307,29 +307,29 @@ export default function TenantApprovalsPage({
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-[var(--shell-max)] flex-1 flex-col gap-6 px-4 sm:px-6 py-6 animate-fade-in">
+    <div className="mx-auto flex w-full max-w-[1440px] flex-1 flex-col gap-6 px-4 sm:px-6 py-6 animate-fade-in">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-extrabold text-ink font-display">
+            <h1 className="text-2xl font-extrabold text-slate-900 font-display tracking-tight">
               Approvals & Governance Queue
             </h1>
-            <span className="rounded-md bg-brand-500/10 px-2 py-0.5 text-xs font-mono font-bold text-brand-600 border border-brand-500/20">
+            <span className="rounded-md bg-teal-50 px-2.5 py-0.5 text-xs font-mono font-bold text-teal-700 border border-teal-200">
               {tenantUuid}
             </span>
           </div>
-          <p className="text-xs text-ink-subtle mt-0.5">
+          <p className="text-xs text-slate-500 mt-1">
             Credit committee review, underwriting exceptions, and partner channel onboarding governance.
           </p>
         </div>
 
         {/* Primary Tab Navigation */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl border border-slate-200">
+        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl border border-slate-200 shrink-0">
           <button
             type="button"
             onClick={() => setActiveTab("exceptions")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
               activeTab === "exceptions"
                 ? "bg-white text-slate-900 shadow-xs"
                 : "text-slate-500 hover:text-slate-900"
@@ -345,7 +345,7 @@ export default function TenantApprovalsPage({
                 setActiveTab("channels");
                 fetchChannelData();
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeTab === "channels"
                   ? "bg-slate-900 text-white shadow-xs"
                   : "text-slate-600 hover:text-slate-900"
@@ -381,67 +381,75 @@ export default function TenantApprovalsPage({
 
       {/* Tab 1: Underwriting Exceptions */}
       {activeTab === "exceptions" ? (
-        <div className="overflow-hidden rounded-2xl border border-line bg-white shadow-xs">
-          <table className="w-full text-left text-xs">
-            <thead className="border-b border-line bg-slate-50 text-[0.6875rem] font-extrabold uppercase tracking-wider text-ink-subtle">
+        <div className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-xs">
+          <table className="w-full table-fixed text-left text-xs">
+            <thead className="border-b border-slate-200/80 bg-slate-50/80 text-[0.6875rem] font-extrabold uppercase tracking-wider text-slate-500">
               <tr>
-                <th className="px-5 py-3">Queue ID</th>
-                <th className="px-5 py-3">Applicant</th>
-                <th className="px-5 py-3">Exception Category</th>
-                <th className="px-5 py-3">Underwriter Notes</th>
-                <th className="px-5 py-3">Status</th>
-                <th className="px-5 py-3 text-right">Action</th>
+                <th className="w-20 px-3.5 py-3.5 whitespace-nowrap">Queue ID</th>
+                <th className="w-[19%] px-3.5 py-3.5 whitespace-nowrap">Applicant</th>
+                <th className="w-[18%] px-3.5 py-3.5 whitespace-nowrap">Exception Category</th>
+                <th className="px-3.5 py-3.5">Underwriter Notes</th>
+                <th className="w-24 px-2 py-3.5 text-center whitespace-nowrap">Status</th>
+                <th className="w-[170px] px-3.5 py-3.5 text-right whitespace-nowrap">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-line">
+            <tbody className="divide-y divide-slate-100">
               {approvals.map((item) => (
-                <tr key={item.id} className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-5 py-3.5 font-mono font-bold text-brand-600">{item.id}</td>
-                  <td className="px-5 py-3.5">
-                    <p className="font-bold text-ink">{item.applicantName}</p>
-                    <p className="text-[0.6875rem] text-ink-subtle">₹{item.requestedAmount.toLocaleString("en-IN")}</p>
+                <tr key={item.id} className="hover:bg-slate-50/60 transition-colors">
+                  <td className="px-3.5 py-3.5 font-mono font-bold text-teal-600 truncate">
+                    {item.id}
                   </td>
-                  <td className="px-5 py-3.5">
-                    <span className="inline-flex rounded-md bg-amber-500/10 px-2 py-0.5 text-[0.6875rem] font-bold text-amber-600 border border-amber-500/20">
+                  <td className="px-3.5 py-3.5">
+                    <p className="font-bold text-slate-900 leading-snug truncate">{item.applicantName}</p>
+                    <p className="text-[0.6875rem] text-slate-500 font-mono mt-0.5 truncate">
+                      ₹{item.requestedAmount.toLocaleString("en-IN")}
+                    </p>
+                  </td>
+                  <td className="px-3.5 py-3.5">
+                    <span className="inline-flex items-center rounded-md bg-amber-50 px-2 py-0.5 text-[0.6875rem] font-bold text-amber-700 border border-amber-200/80 truncate max-w-full">
                       {item.exceptionCategory}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-ink-muted max-w-xs truncate">{item.comments}</td>
-                  <td className="px-5 py-3.5">
+                  <td className="px-3.5 py-3.5 text-slate-600">
+                    <span className="block truncate text-xs text-slate-600" title={item.comments}>
+                      {item.comments}
+                    </span>
+                  </td>
+                  <td className="px-2 py-3.5 text-center whitespace-nowrap">
                     <span
-                      className={`inline-flex rounded-full px-2 py-0.5 text-[0.625rem] font-bold uppercase ${
+                      className={`inline-flex items-center justify-center rounded-full px-2.5 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider ${
                         item.status === "APPROVED"
-                          ? "bg-success/10 text-success border border-success/20"
-                          : item.status === "REJECTED"
-                          ? "bg-danger/10 text-danger border border-danger/20"
-                          : "bg-warning/10 text-warning border border-warning/20"
+                          ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                            : item.status === "REJECTED"
+                            ? "bg-rose-50 text-rose-700 border border-rose-200"
+                            : "bg-amber-50 text-amber-700 border border-amber-200"
                       }`}
                     >
                       {item.status}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-right">
+                  <td className="px-3.5 py-3.5 text-right whitespace-nowrap">
                     {item.status === "PENDING" ? (
-                      <div className="flex items-center justify-end gap-2">
+                      <div className="flex items-center justify-end gap-1.5 shrink-0">
                         <button
                           type="button"
                           onClick={() => handleDecision(item.id, "APPROVED")}
-                          className="inline-flex items-center gap-1 rounded-lg bg-emerald-500 px-2.5 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-emerald-600"
+                          className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-2.5 py-1.5 text-xs font-semibold text-white shadow-2xs hover:bg-emerald-700 active:scale-95 transition-all shrink-0"
                         >
                           <Check size={12} />
-                          Approve
+                          <span>Approve</span>
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDecision(item.id, "REJECTED")}
-                          className="inline-flex items-center gap-1 rounded-lg bg-rose-500 px-2.5 py-1 text-[0.6875rem] font-bold text-white shadow-xs hover:bg-rose-600"
+                          className="inline-flex items-center gap-1 rounded-lg bg-rose-600 px-2.5 py-1.5 text-xs font-semibold text-white shadow-2xs hover:bg-rose-700 active:scale-95 transition-all shrink-0"
                         >
                           <X size={12} />
-                          Reject
+                          <span>Reject</span>
                         </button>
                       </div>
                     ) : (
-                      <span className="text-[0.6875rem] text-ink-subtle">Signed off</span>
+                      <span className="text-[0.6875rem] font-medium text-slate-400">Signed off</span>
                     )}
                   </td>
                 </tr>

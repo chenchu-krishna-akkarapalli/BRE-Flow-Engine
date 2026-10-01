@@ -31,7 +31,7 @@ export default function TenantAssignmentsPage({
   params: Promise<{ tenantUuid: string }>;
 }) {
   const { tenantUuid } = use(params);
-  const { role: currentAuthRole } = useAuthStore();
+  const { role: currentAuthRole, user: currentAuthUser, tenantUuid: currentAuthTenantUuid } = useAuthStore();
   const {
     roles,
     users,
@@ -48,9 +48,38 @@ export default function TenantAssignmentsPage({
     resetToDefaults,
   } = useRoleHierarchyStore();
 
+  const isChannelUser = currentAuthRole === "CHANNEL_ADMIN" || currentAuthRole === "TRANSACTIONAL_USER";
+  const channelUserTenant = currentAuthUser?.tenant_id || currentAuthTenantUuid;
+
+  // The effective tenant being inspected/managed
+  const effectiveTenantUuid = (isChannelUser && channelUserTenant) ? channelUserTenant : tenantUuid;
+
   useEffect(() => {
-    fetchUsers(tenantUuid);
-  }, [tenantUuid, fetchUsers]);
+    if (effectiveTenantUuid) {
+      fetchUsers(effectiveTenantUuid);
+    }
+  }, [effectiveTenantUuid, fetchUsers]);
+
+  // Synchronize when a channel or user is approved in another tab or view
+  useEffect(() => {
+    let bc: BroadcastChannel | null = null;
+    try {
+      bc = new BroadcastChannel("flowbre_approval_sync");
+      bc.onmessage = () => {
+        if (effectiveTenantUuid) fetchUsers(effectiveTenantUuid);
+      };
+    } catch {}
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "flowbre_approval_sync") {
+        if (effectiveTenantUuid) fetchUsers(effectiveTenantUuid);
+      }
+    };
+    window.addEventListener("storage", onStorage);
+    return () => {
+      if (bc) bc.close();
+      window.removeEventListener("storage", onStorage);
+    };
+  }, [effectiveTenantUuid, fetchUsers]);
 
   const [activeTab, setActiveTab] = useState<"roster" | "tree">("roster");
   const [searchTerm, setSearchTerm] = useState("");
@@ -60,12 +89,43 @@ export default function TenantAssignmentsPage({
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<TenantUser | null>(null);
 
+  const isMainTenant =
+    !isChannelUser && (
+      effectiveTenantUuid === "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f" ||
+      effectiveTenantUuid === "boi-channel-north" ||
+      effectiveTenantUuid === "platform"
+    );
+
   // Roles available for assignment based on role hierarchy
   const assignableRoles = useMemo(() => {
+    if (!isMainTenant) {
+      // In partner sub-tenants, ONLY Transactional User (Loan Officer) is assignable
+      return roles.filter((r) => r.roleKey === "TRANSACTIONAL_USER");
+    }
+    // In Main Tenant, corporate management roles are assignable (TRANSACTIONAL_USER and CHANNEL_ADMIN excluded)
     return roles
+      .filter((r) => r.roleKey !== "TRANSACTIONAL_USER" && r.roleKey !== "CHANNEL_ADMIN")
       .filter((r) => canAssignRole(currentAuthRole || "SUPER_ADMIN", r.roleKey))
       .sort((a, b) => a.tierLevel - b.tierLevel);
-  }, [roles, currentAuthRole, canAssignRole]);
+  }, [roles, isMainTenant, currentAuthRole, canAssignRole]);
+
+  // Roles available when editing an existing member in user management
+  const editableRoles = useMemo(() => {
+    if (!isMainTenant) {
+      return roles.filter(
+        (r) =>
+          r.roleKey === "TRANSACTIONAL_USER" ||
+          (editingUser && r.roleKey === editingUser.role)
+      );
+    }
+    return roles
+      .filter(
+        (r) =>
+          (r.roleKey !== "TRANSACTIONAL_USER" && r.roleKey !== "CHANNEL_ADMIN") ||
+          (editingUser && r.roleKey === editingUser.role)
+      )
+      .sort((a, b) => a.tierLevel - b.tierLevel);
+  }, [roles, isMainTenant, editingUser]);
 
   // User form state
   const [newName, setNewName] = useState("");
@@ -80,15 +140,72 @@ export default function TenantAssignmentsPage({
     }
   }, [assignableRoles, newRole]);
 
-  // Filter users by RBAC visibility (cannot see superiors), search term, and department
+  // Filter users by strict tenancy isolation, RBAC visibility, search term, and department
   const filteredUsers = useMemo(() => {
     return users.filter((u) => {
-      // 1. RBAC Visibility rule: cannot see superiors in higher hierarchy tiers
+      // 1. Strict Tenancy Isolation
+      if (isChannelUser) {
+        // A Channel Admin or Transactional User can ONLY EVER see staff within their own channel
+        const isSelf = !!(currentAuthUser?.email && u.email?.toLowerCase() === currentAuthUser.email.toLowerCase());
+        const uTenant = (u.tenantId || "").toLowerCase();
+        const targetTenant = (channelUserTenant || effectiveTenantUuid || "").toLowerCase();
+        const strippedTarget = targetTenant.startsWith("tenant-") ? targetTenant.replace("tenant-", "") : targetTenant;
+
+        const matchesTenant =
+          uTenant === targetTenant ||
+          uTenant === strippedTarget ||
+          uTenant === `tenant-${strippedTarget}`;
+
+        if (!isSelf && !matchesTenant) {
+          return false;
+        }
+
+        // Channel partners only contain CHANNEL_ADMIN and TRANSACTIONAL_USER
+        if (u.role !== "CHANNEL_ADMIN" && u.role !== "TRANSACTIONAL_USER") {
+          return false;
+        }
+      } else if (!isMainTenant) {
+        // Sub-tenant view (e.g. Super Admin inspecting an approved partner channel)
+        const uTenant = (u.tenantId || "").toLowerCase();
+        const targetTenant = (effectiveTenantUuid || "").toLowerCase();
+        const strippedTarget = targetTenant.startsWith("tenant-") ? targetTenant.replace("tenant-", "") : targetTenant;
+
+        const matchesTenant =
+          uTenant === targetTenant ||
+          uTenant === strippedTarget ||
+          uTenant === `tenant-${strippedTarget}`;
+
+        if (!matchesTenant) {
+          return false;
+        }
+        if (u.role !== "CHANNEL_ADMIN" && u.role !== "TRANSACTIONAL_USER") {
+          return false;
+        }
+      } else {
+        // Main Tenant (Corporate platform view)
+        // Transactional users (loan officers) belong strictly to partner sub-tenants
+        if (u.role === "TRANSACTIONAL_USER") {
+          return false;
+        }
+        // Channel admins of other sub-tenants must not be shown in internal corporate staff
+        const uTenant = u.tenantId || "";
+        const isInternalTenant =
+          !uTenant ||
+          uTenant === "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f" ||
+          uTenant === "boi-channel-north" ||
+          uTenant === "platform" ||
+          uTenant === "global";
+        if (!isInternalTenant && u.role === "CHANNEL_ADMIN") {
+          return false;
+        }
+      }
+
+      // 2. RBAC Visibility rule: cannot see superiors in higher hierarchy tiers
       if (!canSeeUser(currentAuthRole || "SUPER_ADMIN", u.role)) {
         return false;
       }
 
-      // 2. Search filter
+      // 3. Search filter
       const roleObj = getRoleByKey(u.role);
       const matchesSearch =
         u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -96,14 +213,26 @@ export default function TenantAssignmentsPage({
         u.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (roleObj?.displayName.toLowerCase() || "").includes(searchTerm.toLowerCase());
 
-      // 3. Department filter
+      // 4. Department filter
       const matchesDept =
         departmentFilter === "ALL" ||
         (roleObj && roleObj.department.toUpperCase() === departmentFilter.toUpperCase());
 
       return matchesSearch && matchesDept;
     });
-  }, [users, searchTerm, departmentFilter, getRoleByKey, canSeeUser, currentAuthRole]);
+  }, [
+    users,
+    isChannelUser,
+    currentAuthUser,
+    channelUserTenant,
+    effectiveTenantUuid,
+    isMainTenant,
+    canSeeUser,
+    currentAuthRole,
+    getRoleByKey,
+    searchTerm,
+    departmentFilter,
+  ]);
 
   // Handle add user submission
   const handleInviteUser = async (e: React.FormEvent) => {
@@ -111,7 +240,7 @@ export default function TenantAssignmentsPage({
     if (!newName.trim() || !newEmail.trim()) return;
 
     const res = await addUser({
-      tenantId: tenantUuid || "platform",
+      tenantId: effectiveTenantUuid || tenantUuid || "platform",
       name: newName.trim(),
       email: newEmail.trim(),
       role: newRole,
@@ -151,7 +280,7 @@ export default function TenantAssignmentsPage({
               User Management & Role Assignments
             </h1>
             <span className="rounded-md bg-brand-500/10 px-2 py-0.5 text-xs font-mono font-bold text-brand-600 border border-brand-500/20">
-              {tenantUuid}
+              {effectiveTenantUuid}
             </span>
             <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-[0.6875rem] font-mono font-bold text-emerald-600 border border-emerald-500/20">
               v2.4 Live
@@ -228,7 +357,19 @@ export default function TenantAssignmentsPage({
       {activeTab === "roster" && (
         <div className="flex flex-col gap-4 animate-fade-in">
           {/* Active RBAC Role Scope Alert */}
-          {currentAuthRole && currentAuthRole !== "SUPER_ADMIN" && currentAuthRole !== "REGIONAL_DIRECTOR" && (
+          {isChannelUser ? (
+            <div className="flex items-center justify-between rounded-2xl bg-teal-500/5 border border-teal-500/20 px-4 py-2.5 text-xs text-teal-900">
+              <div className="flex items-center gap-2">
+                <ShieldCheck size={15} className="text-teal-600 shrink-0" />
+                <span>
+                  Scoped Channel View as <strong className="font-bold">{currentAuthRole}</strong>: Strictly isolated to your channel partner organization ({effectiveTenantUuid}). All external channel and corporate tenants are hidden.
+                </span>
+              </div>
+              <span className="font-mono text-[0.625rem] font-bold text-teal-700 bg-teal-100 px-2 py-0.5 rounded-md uppercase">
+                Channel Isolated
+              </span>
+            </div>
+          ) : currentAuthRole && currentAuthRole !== "SUPER_ADMIN" ? (
             <div className="flex items-center justify-between rounded-2xl bg-amber-500/5 border border-amber-500/20 px-4 py-2.5 text-xs text-amber-900">
               <div className="flex items-center gap-2">
                 <ShieldAlert size={15} className="text-amber-600 shrink-0" />
@@ -240,7 +381,7 @@ export default function TenantAssignmentsPage({
                 Subordinates Only
               </span>
             </div>
-          )}
+          ) : null}
 
           {/* Search & Department Filters */}
           <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -326,10 +467,12 @@ export default function TenantAssignmentsPage({
                             className={`inline-flex rounded-full px-2 py-0.5 text-[0.625rem] font-bold uppercase ${
                               user.status === "ACTIVE"
                                 ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20"
+                                : user.status === "PENDING"
+                                ? "bg-amber-500/10 text-amber-600 border border-amber-500/20"
                                 : "bg-rose-50 text-rose-600 border border-rose-200"
                             }`}
                           >
-                            {user.status === "SUSPENDED" ? "SUSPENDED" : "ACTIVE"}
+                            {user.status || "ACTIVE"}
                           </span>
                         </td>
 
@@ -595,7 +738,7 @@ export default function TenantAssignmentsPage({
                       }
                       className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 pr-9 text-xs text-slate-900 focus:bg-white focus:border-teal-500 focus:ring-3 focus:ring-teal-500/10 focus:outline-hidden transition-all font-mono font-medium cursor-pointer"
                     >
-                      {roles.map((r) => (
+                      {editableRoles.map((r) => (
                         <option key={r.id} value={r.roleKey}>
                           {r.displayName} ({r.department})
                         </option>

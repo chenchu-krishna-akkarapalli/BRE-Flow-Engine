@@ -8,6 +8,8 @@ from app.api.schemas.auth import (
     AuthTokenResponse,
     ChallengeRequest,
     ChallengeResponse,
+    ChangePasswordRequest,
+    ChangePasswordResponse,
     TokenRefreshRequest,
     UserSessionInfo,
     VerifyChallengeRequest,
@@ -96,6 +98,28 @@ async def logout_user(
     current_user: dict = Depends(get_current_user),
 ):
     return {"message": "Session successfully terminated.", "revoked": True}
+
+# Rotates user credentials with cryptographic verification and salt rotation
+@router.post("/change-password", response_model=ChangePasswordResponse)
+async def change_user_password(
+    payload: ChangePasswordRequest,
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    user_id = current_user.get("sub")
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication token missing user subject identifier.",
+        )
+    result = await uas_service.change_password(
+        db=db,
+        user_identifier=user_id,
+        current_password=payload.current_password,
+        new_password=payload.new_password,
+        confirm_password=payload.confirm_password,
+    )
+    return ChangePasswordResponse(**result)
 
 # Issues JWT Bearer token for authorized automated test clients
 @router.post("/token", response_model=LegacyTokenResponse)

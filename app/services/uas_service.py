@@ -1,14 +1,16 @@
 import hashlib
+import hmac
+import re
 import secrets
 import time
 import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.constants import RAW_NAVIGATION_SCHEMA, SYSTEM_ROLES_DEFINITION
-from app.core.exceptions import ForbiddenError, UnauthorizedError
+from app.core.exceptions import BadRequestError, ForbiddenError, NotFoundError, UnauthorizedError
 from app.core.redis import get_redis
 from app.core.security import (
     create_access_token,
@@ -311,6 +313,62 @@ class UASService:
             "role_nodes": role_nodes,
         }
 
+    # Rotates account password, validates complexity, verifies current password, and persists fresh salt
+    async def change_password(
+        self,
+        db: AsyncSession,
+        user_identifier: str,
+        current_password: str,
+        new_password: str,
+        confirm_password: str,
+    ) -> Dict[str, Any]:
+        if new_password != confirm_password:
+            raise BadRequestError("New password and confirm password do not match.")
+
+        if len(new_password) < 8:
+            raise BadRequestError("New password must be at least 8 characters long.")
+
+        if not re.search(r"[A-Z]", new_password):
+            raise BadRequestError("New password must contain at least one uppercase letter.")
+        if not re.search(r"[a-z]", new_password):
+            raise BadRequestError("New password must contain at least one lowercase letter.")
+        if not re.search(r"\d", new_password):
+            raise BadRequestError("New password must contain at least one number.")
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", new_password):
+            raise BadRequestError("New password must contain at least one special character (!@#$%^&*...).")
+
+        if current_password == new_password:
+            raise BadRequestError("New password cannot be the same as your current password.")
+
+        # Query user by ID, username, or email
+        stmt = select(UserModel).where(
+            or_(
+                UserModel.id == user_identifier,
+                UserModel.username == user_identifier,
+                UserModel.email == user_identifier,
+            )
+        )
+        res = await db.execute(stmt)
+        user = res.scalars().first()
+        if not user:
+            raise NotFoundError("User account not found.")
+
+        # Verify current password using stored salt
+        current_hash = derive_password_hash(current_password, user.salt or "")
+        if not hmac.compare_digest(current_hash, user.password_hash or ""):
+            raise BadRequestError("Current password entered is incorrect.")
+
+        # Rotate salt and derive new password hash
+        new_salt = generate_salt(16)
+        new_pwd_hash = derive_password_hash(new_password, new_salt)
+
+        user.salt = new_salt
+        user.password_hash = new_pwd_hash
+        user.updated_at = datetime.now(timezone.utc)
+
+        await db.commit()
+        return {"success": True, "message": "Password updated successfully."}
+
     # Seeds initial platform governance roles, navigation nodes, and bootstrap accounts in PostgreSQL
     async def seed_default_users(self, db: AsyncSession) -> None:
         for name, display_name, gov_level, tier in SYSTEM_ROLES_DEFINITION:
@@ -352,7 +410,7 @@ class UASService:
                         ))
         await db.flush()
 
-        tenant_res = await db.execute(select(TenantModel).where(TenantModel.code == "boi-channel-north"))
+        tenant_res = await db.execute(select(TenantModel).where(TenantModel.id == "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f"))
         boi_tenant = tenant_res.scalars().first()
         if not boi_tenant:
             tenant_uuid_val = "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f"
@@ -368,7 +426,24 @@ class UASService:
             db.add(boi_tenant)
             await db.flush()
 
+        apex_res = await db.execute(select(TenantModel).where(TenantModel.id == "681cc219-8f42-4c7c-bc29-377a40c750b8"))
+        apex_tenant = apex_res.scalars().first()
+        if not apex_tenant:
+            apex_uuid_val = "681cc219-8f42-4c7c-bc29-377a40c750b8"
+            apex_tenant = TenantModel(
+                id=apex_uuid_val,
+                name="Apex FinTech Punjab",
+                code="apex-fintech-punjab",
+                tenant_uuid=apex_uuid_val,
+                status="active",
+                channel_type="FINTECH_PARTNER",
+                is_active=True,
+            )
+            db.add(apex_tenant)
+            await db.flush()
+
         default_users = [
+            ("ratan-tata@gmail.com", "ratan-tata@gmail.com", "Ratan Tata", "SUPER_ADMIN", boi_tenant.id),
             ("super.admin@flowbre.com", "super.admin@flowbre.com", "Super Admin", "SUPER_ADMIN", boi_tenant.id),
             ("regional.director@flowbre.com", "regional.director@flowbre.com", "Regional Director", "REGIONAL_DIRECTOR", boi_tenant.id),
             ("ops.head@flowbre.com", "ops.head@flowbre.com", "Operations Head", "OPERATIONS_HEAD", boi_tenant.id),
@@ -376,8 +451,9 @@ class UASService:
             ("area.manager@boi.com", "area.manager@boi.com", "Area Manager", "AREA_MANAGER", boi_tenant.id),
             ("team.leader@boi.com", "team.leader@boi.com", "Team Leader", "TEAM_LEADER", boi_tenant.id),
             ("sales.manager@boi.com", "sales.manager@boi.com", "Sales Manager", "SALES_MANAGER", boi_tenant.id),
-            ("channel.admin@boi.com", "channel.admin@boi.com", "Channel Admin BOI", "CHANNEL_ADMIN", boi_tenant.id),
-            ("agent.john@boi.com", "agent.john@boi.com", "Loan Officer John", "TRANSACTIONAL_USER", boi_tenant.id),
+            ("partner@apex-punjab.in", "partner@apex-punjab.in", "Harpreet Singh", "CHANNEL_ADMIN", apex_tenant.id),
+            ("simran.k@apex-punjab.in", "simran.k@apex-punjab.in", "Simran Kaur", "TRANSACTIONAL_USER", apex_tenant.id),
+            ("gurpreet.g@apex-punjab.in", "gurpreet.g@apex-punjab.in", "Gurpreet Gill", "TRANSACTIONAL_USER", apex_tenant.id),
         ]
 
         default_password = "FlowBRE@2026!"

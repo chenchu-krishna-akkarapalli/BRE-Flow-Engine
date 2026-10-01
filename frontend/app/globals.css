@@ -88,7 +88,15 @@
   --shadow-float: 0 20px 40px -15px rgba(0, 0, 0, 0.12);
 }
 
+html,
 body {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
   background-color: hsl(var(--hsl-bg-deep));
   color: hsl(var(--hsl-ink));
   font-family: var(--font-sans);

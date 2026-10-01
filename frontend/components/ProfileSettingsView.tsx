@@ -18,13 +18,17 @@ import {
   Clock,
   KeyRound,
   RotateCcw,
+  Lock,
+  Eye,
+  EyeOff,
+  AlertCircle,
 } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { getTenantByUuidOrCode } from "@/lib/tenants-data";
 
 export function ProfileSettingsView({ tenantUuid }: { tenantUuid?: string }) {
   const router = useRouter();
-  const { user, role, tenantUuid: storeTenantUuid, permissions, updateProfile } = useAuthStore();
+  const { user, role, tenantUuid: storeTenantUuid, permissions, updateProfile, changePassword } = useAuthStore();
 
   const activeTenant = tenantUuid || storeTenantUuid || user?.tenant_id || "platform";
   const channelRecord = getTenantByUuidOrCode(activeTenant);
@@ -46,6 +50,66 @@ export function ProfileSettingsView({ tenantUuid }: { tenantUuid?: string }) {
   // Status feedback
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Password change states
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+
+  // Password requirements calculation
+  const hasMinLength = newPassword.length >= 8;
+  const hasUppercase = /[A-Z]/.test(newPassword);
+  const hasLowercase = /[a-z]/.test(newPassword);
+  const hasNumber = /\d/.test(newPassword);
+  const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
+  const passwordsMatch = newPassword.length > 0 && newPassword === confirmPassword;
+  const isNewPasswordValid = hasMinLength && hasUppercase && hasLowercase && hasNumber && hasSpecial;
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordError(null);
+    setPasswordSuccess(null);
+
+    if (!currentPassword) {
+      setPasswordError("Please enter your current account password.");
+      return;
+    }
+
+    if (!isNewPasswordValid) {
+      setPasswordError("New password does not meet the complexity requirements.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError("New password and confirm password do not match.");
+      return;
+    }
+
+    if (currentPassword === newPassword) {
+      setPasswordError("New password cannot be the same as your current password.");
+      return;
+    }
+
+    setIsChangingPassword(true);
+    const res = await changePassword(currentPassword, newPassword, confirmPassword);
+    setIsChangingPassword(false);
+
+    if (res.success) {
+      setPasswordSuccess("Password updated successfully! Your credentials have been rotated.");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setTimeout(() => setPasswordSuccess(null), 5000);
+    } else {
+      setPasswordError(res.error || "Failed to update password.");
+    }
+  };
 
   // Hydrate fields from current auth state
   useEffect(() => {
@@ -305,7 +369,201 @@ export function ProfileSettingsView({ tenantUuid }: { tenantUuid?: string }) {
             </div>
           </div>
 
-          {/* Section 2: Enterprise Role & Governance Context */}
+          {/* Section 2: Security Credentials & Password */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-sm font-bold text-slate-900">Security Credentials & Password</h2>
+                  <span className="rounded-full bg-slate-100 text-slate-600 px-2 py-0.5 text-[10px] font-mono font-bold">
+                    Argon2 / SHA-256
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Update your account password and rotate cryptographic session salt.
+                </p>
+              </div>
+              <div className="p-2 rounded-xl bg-slate-100 text-slate-700">
+                <Lock className="w-4 h-4 text-slate-700" />
+              </div>
+            </div>
+
+            {passwordSuccess && (
+              <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span className="font-medium">{passwordSuccess}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setPasswordSuccess(null)}
+                  className="text-emerald-700 hover:text-emerald-950 font-bold text-[11px] cursor-pointer"
+                >
+                  Dismiss
+                </button>
+              </div>
+            )}
+
+            {passwordError && (
+              <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                  <span className="font-medium">{passwordError}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setPasswordError(null)}
+                  className="text-rose-700 hover:text-rose-950 font-bold text-[11px] cursor-pointer"
+                >
+                  Dismiss
+                </button>
+              </div>
+            )}
+
+            <div className="space-y-4 pt-1">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-slate-700">
+                  Current Password <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <input
+                    type={showCurrentPassword ? "text" : "password"}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handlePasswordChange(e);
+                      }
+                    }}
+                    placeholder="Enter your current password"
+                    className="w-full bg-slate-50/50 hover:bg-white focus:bg-white border border-slate-200 rounded-xl pl-10 pr-10 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition shadow-2xs font-medium"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-0.5 transition cursor-pointer"
+                    tabIndex={-1}
+                  >
+                    {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* New Password */}
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-slate-700">
+                    New Password <span className="text-rose-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      type={showNewPassword ? "text" : "password"}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handlePasswordChange(e);
+                        }
+                      }}
+                      placeholder="Min 8 chars, 1 uppercase, number & symbol"
+                      className="w-full bg-slate-50/50 hover:bg-white focus:bg-white border border-slate-200 rounded-xl pl-10 pr-10 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition shadow-2xs font-medium"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-0.5 transition cursor-pointer"
+                      tabIndex={-1}
+                    >
+                      {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Confirm Password */}
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-slate-700">
+                    Confirm New Password <span className="text-rose-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handlePasswordChange(e);
+                        }
+                      }}
+                      placeholder="Re-enter your new password"
+                      className={`w-full bg-slate-50/50 hover:bg-white focus:bg-white border rounded-xl pl-10 pr-10 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 transition shadow-2xs font-medium ${
+                        confirmPassword && confirmPassword !== newPassword
+                          ? "border-rose-300 focus:border-rose-500 focus:ring-rose-500/20"
+                          : "border-slate-200 focus:border-indigo-600 focus:ring-indigo-500/20"
+                      }`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-0.5 transition cursor-pointer"
+                      tabIndex={-1}
+                    >
+                      {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Real-time Requirement Checklist */}
+              <div className="p-3.5 rounded-xl border border-slate-100 bg-slate-50/70">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[11px] font-bold text-slate-700">Password Requirements</span>
+                  {confirmPassword && (
+                    <span className={`text-[10px] font-mono font-bold ${passwordsMatch ? "text-emerald-600" : "text-rose-500"}`}>
+                      {passwordsMatch ? "✓ Passwords Match" : "✗ Passwords Do Not Match"}
+                    </span>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] font-mono">
+                  <div className={`flex items-center gap-1.5 ${hasMinLength ? "text-emerald-700 font-bold" : "text-slate-400"}`}>
+                    <span>{hasMinLength ? "✓" : "○"}</span>
+                    <span>8+ Characters</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 ${hasUppercase && hasLowercase ? "text-emerald-700 font-bold" : "text-slate-400"}`}>
+                    <span>{hasUppercase && hasLowercase ? "✓" : "○"}</span>
+                    <span>Upper & Lower</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 ${hasNumber ? "text-emerald-700 font-bold" : "text-slate-400"}`}>
+                    <span>{hasNumber ? "✓" : "○"}</span>
+                    <span>1+ Number</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 ${hasSpecial ? "text-emerald-700 font-bold" : "text-slate-400"}`}>
+                    <span>{hasSpecial ? "✓" : "○"}</span>
+                    <span>1+ Symbol</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={handlePasswordChange}
+                  disabled={isChangingPassword || !isNewPasswordValid || !passwordsMatch || !currentPassword}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 transition shadow-xs flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  <Lock className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>{isChangingPassword ? "Updating Password..." : "Update Password"}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 3: Enterprise Role & Governance Context */}
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs space-y-4">
             <div>
               <h2 className="text-sm font-bold text-slate-900">Organization & Security Governance</h2>

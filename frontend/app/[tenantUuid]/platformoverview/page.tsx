@@ -6,6 +6,7 @@ import {
   Activity,
   AlertCircle,
   ArrowRight,
+  Ban,
   Building2,
   Check,
   CheckCircle,
@@ -306,6 +307,16 @@ export default function ScopedPlatformOverviewPage({
 
       // 3. Re-sync live database records
       await fetchLiveChannelsAndAudit();
+
+      // 4. Broadcast channel status change to synchronise all tabs and user management
+      try {
+        const bc = new BroadcastChannel("flowbre_approval_sync");
+        bc.postMessage({ type: "CHANNEL_STATUS_CHANGED", channelId: tenant.id, action: newStatus });
+        bc.close();
+      } catch {}
+      try {
+        localStorage.setItem("flowbre_approval_sync", JSON.stringify({ action: newStatus, id: tenant.id, timestamp: Date.now() }));
+      } catch {}
     } catch (err) {
       console.error("Failed to persist tenant status transition to database:", err);
     }
@@ -595,10 +606,11 @@ export default function ScopedPlatformOverviewPage({
                                 setSelectedTenant(t);
                                 setActiveModal("SUSPEND");
                               }}
-                              className="inline-flex items-center gap-1 rounded-lg border border-rose-200 bg-rose-50 px-2 py-1 text-[0.6875rem] font-bold text-rose-700 hover:bg-rose-100 transition-all cursor-pointer"
+                              className="inline-flex items-center gap-1 rounded-lg border border-rose-200 bg-rose-50 px-2.5 py-1 text-[0.6875rem] font-bold text-rose-700 hover:bg-rose-100 transition-all cursor-pointer"
                               title="Suspend tenant and revoke user tokens"
                             >
-                              Suspend
+                              <Ban size={11} />
+                              <span>Suspend</span>
                             </button>
                           </>
                         )}

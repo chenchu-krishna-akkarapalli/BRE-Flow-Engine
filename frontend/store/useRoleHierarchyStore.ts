@@ -18,7 +18,7 @@ export interface RoleHierarchyNode {
   updatedAt: string;
 }
 
-export type UserStatus = "ACTIVE" | "SUSPENDED";
+export type UserStatus = "ACTIVE" | "SUSPENDED" | "PENDING";
 
 export interface TenantUser {
   id: string;
@@ -196,34 +196,24 @@ export const SEED_ROLES: RoleHierarchyNode[] = [
 ];
 
 export const INITIAL_USERS: TenantUser[] = [
-  // Bank of India Channel (e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f)
-  { id: "b3567f46-0d4e-41e8-ad32-2f31399195cc", tenantId: "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f", name: "Channel Admin BOI", email: "channel.admin@boi.com", role: "CHANNEL_ADMIN", status: "ACTIVE" },
-  { id: "2e0f152f-3a67-4205-8a4e-d5ef0a5e7d69", tenantId: "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f", name: "Sales Manager", email: "sales.manager@boi.com", role: "SALES_MANAGER", status: "ACTIVE" },
-  { id: "02c51528-d9e4-4381-9937-f534c480ffbf", tenantId: "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f", name: "Team Leader", email: "team.leader@boi.com", role: "TEAM_LEADER", status: "ACTIVE" },
-  { id: "f1f90a08-aea6-49ad-a3ce-ed8829e57f25", tenantId: "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f", name: "Loan Officer John", email: "agent.john@boi.com", role: "TRANSACTIONAL_USER", status: "ACTIVE" },
-  { id: "8d481d97-754f-4983-9f6b-2bd2139015d7", tenantId: "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f", name: "Area Manager", email: "area.manager@boi.com", role: "AREA_MANAGER", status: "ACTIVE" },
+  // Bank of India Channel (Main Tenant: e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f)
+  { id: "c7cddd4d-cd05-477e-8389-f710df69e883", tenantId: "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f", name: "Ratan Tata", email: "ratan-tata@gmail.com", role: "SUPER_ADMIN", status: "ACTIVE" },
+  { id: "ab7e16a4-ea04-4eb1-98a0-7e1508322b6e", tenantId: "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f", name: "Super Admin", email: "super.admin@flowbre.com", role: "SUPER_ADMIN", status: "ACTIVE" },
+  { id: "08024c02-11b9-47df-afb4-2d0059c4b43d", tenantId: "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f", name: "Vikram Malhotra", email: "regional.director@flowbre.com", role: "REGIONAL_DIRECTOR", status: "ACTIVE" },
+  { id: "c65b877d-e2ae-42cc-b072-2d9ced159a9a", tenantId: "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f", name: "Ananya Sharma", email: "ops.head@flowbre.com", role: "OPERATIONS_HEAD", status: "ACTIVE" },
+  { id: "24c5093e-f61d-479c-9484-ba7a774f983b", tenantId: "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f", name: "Rajesh Mehta", email: "accounts.head@flowbre.com", role: "ACCOUNTS_HEAD", status: "ACTIVE" },
+  { id: "837758f4-6668-45c7-87ef-e3091640818f", tenantId: "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f", name: "Suresh Raina", email: "area.manager@boi.com", role: "AREA_MANAGER", status: "ACTIVE" },
+  { id: "a8579566-b1e8-4391-8ef9-24512b739c1a", tenantId: "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f", name: "Amit Patel", email: "team.leader@boi.com", role: "TEAM_LEADER", status: "ACTIVE" },
+  { id: "81d1e20b-f41d-44b1-a633-4f1f8ba5e601", tenantId: "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f", name: "Priya Singh", email: "sales.manager@boi.com", role: "SALES_MANAGER", status: "ACTIVE" },
 
-  // Apex FinTech Punjab (681cc219-8f42-4c7c-bc29-377a40c750b8)
-  { id: "239259c5-9381-406e-bd78-2ef0d1544be9", tenantId: "681cc219-8f42-4c7c-bc29-377a40c750b8", name: "Apex FinTech Punjab Admin", email: "partner@apex-punjab.in", role: "CHANNEL_ADMIN", status: "ACTIVE" },
-
-  // sagar (393dca9c-1d29-4976-8a40-6d08c481559b)
-  { id: "10fdab36-6a59-4bd4-9e95-d8508bec2fe5", tenantId: "393dca9c-1d29-4976-8a40-6d08c481559b", name: "sagar Admin", email: "sagaranbu16@gmail.com", role: "CHANNEL_ADMIN", status: "ACTIVE" },
-
-  // vidhya (f262420e-bdbc-45c5-bd07-83353c1795fb)
-  { id: "def65343-4a88-4cf9-ab82-270c59a557bd", tenantId: "f262420e-bdbc-45c5-bd07-83353c1795fb", name: "iti Admin", email: "vidhyaasagaranbarasan@gmail.com", role: "CHANNEL_ADMIN", status: "ACTIVE" },
-
-  // TCS (686172e9-51db-47c2-ba4f-0448923465f0)
-  { id: "cfaff716-e462-4b64-9440-3f0827fed66f", tenantId: "686172e9-51db-47c2-ba4f-0448923465f0", name: "TCS Admin", email: "tcs@gmail.com", role: "CHANNEL_ADMIN", status: "ACTIVE" },
-
-  // HCL (8b04f54c-d45a-4bd3-bac4-f9f33391c2b4)
-  { id: "cb41af5e-96ef-4547-8f77-b3a4191a93e6", tenantId: "8b04f54c-d45a-4bd3-bac4-f9f33391c2b4", name: "HCL Admin", email: "hcl@gmail.com", role: "CHANNEL_ADMIN", status: "ACTIVE" },
-
-  // zoho (125047c2-25d9-49a5-990f-6db76fa0c18e)
-  { id: "52506272-2868-4a2c-ab44-3c266df793e3", tenantId: "125047c2-25d9-49a5-990f-6db76fa0c18e", name: "zoho Admin", email: "demo@gmail.com", role: "CHANNEL_ADMIN", status: "ACTIVE" },
+  // Apex FinTech Punjab (Partner Sub-Tenant: 681cc219-8f42-4c7c-bc29-377a40c750b8)
+  { id: "b33b6e13-ed18-48ef-b618-e4a5358edd6c", tenantId: "681cc219-8f42-4c7c-bc29-377a40c750b8", name: "Harpreet Singh", email: "partner@apex-punjab.in", role: "CHANNEL_ADMIN", status: "ACTIVE" },
+  { id: "916e5a5d-3760-4ccd-831a-617790289270", tenantId: "681cc219-8f42-4c7c-bc29-377a40c750b8", name: "Simran Kaur", email: "simran.k@apex-punjab.in", role: "TRANSACTIONAL_USER", status: "ACTIVE" },
+  { id: "e9a4d601-4064-491d-9ee9-b4961b78bd1c", tenantId: "681cc219-8f42-4c7c-bc29-377a40c750b8", name: "Gurpreet Gill", email: "gurpreet.g@apex-punjab.in", role: "TRANSACTIONAL_USER", status: "ACTIVE" },
 ];
 
 const ROLES_STORAGE_KEY = "flowbre_dynamic_roles_v2";
-const USERS_STORAGE_KEY = "flowbre_users_v3";
+const USERS_STORAGE_KEY = "flowbre_users_v7_clean";
 
 interface RoleHierarchyState {
   roles: RoleHierarchyNode[];
@@ -234,6 +224,7 @@ interface RoleHierarchyState {
 
   // Actions
   fetchUsers: (tenantUuid: string) => Promise<void>;
+  getUsersForTenant: (tenantUuid: string) => TenantUser[];
   selectRole: (roleId: string | null) => void;
   getRoleByKey: (roleKey: string) => RoleHierarchyNode | undefined;
   getTierLevel: (roleKey: string) => number;
@@ -314,26 +305,19 @@ function loadSavedRoles(): RoleHierarchyNode[] {
 function loadSavedUsers(): TenantUser[] {
   if (typeof window === "undefined") return INITIAL_USERS;
   try {
+    // Purge legacy storage keys with obsolete mock/test users
+    localStorage.removeItem("flowbre_users_v1");
+    localStorage.removeItem("flowbre_users_v2");
+    localStorage.removeItem("flowbre_users_v3");
+    localStorage.removeItem("flowbre_users_v4");
+    localStorage.removeItem("flowbre_users_v5");
+    localStorage.removeItem("flowbre_users_v6_clean");
+
     const raw = localStorage.getItem(USERS_STORAGE_KEY);
     if (!raw) return INITIAL_USERS;
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed) && parsed.length > 0) {
-      const existingIds = new Set(parsed.map((u: TenantUser) => u.id));
-      const initialToAdd = INITIAL_USERS.filter((u) => !existingIds.has(u.id));
-      const combined = [...parsed, ...initialToAdd];
-      const migrated = combined.map((u: TenantUser) => {
-        if ((u.status as string) === "INVITED" || (u.status as string) === "NEW") {
-          return {
-            ...u,
-            status: "ACTIVE" as UserStatus,
-          };
-        }
-        return u;
-      });
-      try {
-        localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(migrated));
-      } catch (e) {}
-      return migrated;
+      return parsed;
     }
   } catch (err) {
     console.error("Failed to load saved users:", err);
@@ -377,8 +361,8 @@ export const useRoleHierarchyStore = create<RoleHierarchyState>((set, get) => {
 
     canAssignRole: (actorRoleKey: string | null, targetRoleKey: string) => {
       if (!actorRoleKey) return true; // Default permissive in dev/preview
-      // Super Admin and Regional Director have access to assign all roles
-      if (actorRoleKey === "SUPER_ADMIN" || actorRoleKey === "REGIONAL_DIRECTOR") return true;
+      // Super Admin has access to assign all roles
+      if (actorRoleKey === "SUPER_ADMIN") return true;
 
       const actorTier = get().getTierLevel(actorRoleKey);
       const targetTier = get().getTierLevel(targetRoleKey);
@@ -388,13 +372,14 @@ export const useRoleHierarchyStore = create<RoleHierarchyState>((set, get) => {
     },
 
     canSeeUser: (actorRoleKey: string | null, targetRoleKey: string) => {
-      // Super Admin and Regional Director have global platform visibility across all tiers
-      if (!actorRoleKey || actorRoleKey === "SUPER_ADMIN" || actorRoleKey === "REGIONAL_DIRECTOR") return true;
+      // Super Admin has global platform visibility across all tiers
+      if (!actorRoleKey || actorRoleKey === "SUPER_ADMIN") return true;
 
       const actorTier = get().getTierLevel(actorRoleKey);
       const targetTier = get().getTierLevel(targetRoleKey);
 
       // Users CANNOT see superiors in higher hierarchy tiers (lower tier numbers)
+      // E.g. Regional Director (Tier 1) cannot see Super Admin (Tier 0)
       // E.g. Area Manager (Tier 2) cannot see Regional Director (Tier 1) or Super Admin (Tier 0)
       if (targetTier < actorTier) {
         return false;
@@ -552,18 +537,62 @@ export const useRoleHierarchyStore = create<RoleHierarchyState>((set, get) => {
       return { success: true };
     },
 
+    getUsersForTenant: (tenantUuid: string) => {
+      const lower = (tenantUuid || "").toLowerCase();
+      const stripped = lower.startsWith("tenant-") ? lower.replace("tenant-", "") : lower;
+      return get().users.filter((u) => {
+        const uT = (u.tenantId || "").toLowerCase();
+        return (
+          uT === lower ||
+          uT === stripped ||
+          uT === `tenant-${stripped}`
+        );
+      });
+    },
+
     fetchUsers: async (tenantUuid: string) => {
       set({ isLoading: true, error: null });
       try {
         const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
-        const res = await fetch(`${apiBase}/api/v1/tenants/${tenantUuid}/users`);
+        let token: string | null = null;
+        if (typeof window !== "undefined") {
+          try {
+            const rawSession = localStorage.getItem("flowbre_auth_session");
+            if (rawSession) {
+              token = JSON.parse(rawSession)?.access_token || null;
+            }
+          } catch {}
+        }
+        const headers: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {};
+        const res = await fetch(`${apiBase}/api/v1/tenants/${tenantUuid}/users`, { headers });
         if (res.ok) {
-          const dbUsers: TenantUser[] = await res.json();
-          if (Array.isArray(dbUsers) && dbUsers.length > 0) {
-            set({ users: dbUsers, isLoading: false });
+          const dbUsers: any[] = await res.json();
+          if (Array.isArray(dbUsers)) {
+            const normalizedUsers: TenantUser[] = dbUsers.map((u: any) => ({
+              id: u.id,
+              tenantId: u.tenant_id || tenantUuid,
+              name: u.name || u.full_name || u.username || "Team Member",
+              email: u.email || "",
+              role: u.role || "TRANSACTIONAL_USER",
+              status: (u.status as UserStatus) || "ACTIVE",
+            }));
+            const newIds = new Set(normalizedUsers.map((u) => u.id));
+            const newEmails = new Set(normalizedUsers.map((u) => (u.email || "").toLowerCase()).filter(Boolean));
+            const lowerTenant = tenantUuid.toLowerCase();
+            const strippedTenant = lowerTenant.startsWith("tenant-") ? lowerTenant.replace("tenant-", "") : lowerTenant;
+
+            const otherTenantUsers = get().users.filter((u) => {
+              if (newIds.has(u.id)) return false;
+              if (u.email && newEmails.has(u.email.toLowerCase())) return false;
+              const uT = (u.tenantId || "").toLowerCase();
+              if (uT === lowerTenant || uT === strippedTenant || uT === `tenant-${strippedTenant}`) return false;
+              return true;
+            });
+            const merged = [...normalizedUsers, ...otherTenantUsers];
+            set({ users: merged, isLoading: false });
             if (typeof window !== "undefined") {
               try {
-                localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(dbUsers));
+                localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(merged));
               } catch (e) {}
             }
             return;
@@ -577,7 +606,7 @@ export const useRoleHierarchyStore = create<RoleHierarchyState>((set, get) => {
 
     addUser: async (userData) => {
       set({ isLoading: true, error: null });
-      let dbUser: TenantUser | null = null;
+      let dbUser: any = null;
       try {
         const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
         const targetTenant = userData.tenantId || "platform";
@@ -604,9 +633,13 @@ export const useRoleHierarchyStore = create<RoleHierarchyState>((set, get) => {
         console.error("Failed to create user in backend API:", err);
       }
 
-      const newUser: TenantUser = dbUser || {
-        id: `usr-${Date.now().toString().slice(-4)}`,
-        ...userData,
+      const newUser: TenantUser = {
+        id: dbUser?.id || `usr-${Date.now().toString().slice(-4)}`,
+        tenantId: userData.tenantId,
+        name: dbUser?.name || userData.name,
+        email: dbUser?.email || userData.email,
+        role: dbUser?.role || userData.role,
+        status: dbUser?.status || userData.status || "ACTIVE",
       };
 
       const existingWithoutThis = get().users.filter((u) => u.email.toLowerCase() !== userData.email.toLowerCase());

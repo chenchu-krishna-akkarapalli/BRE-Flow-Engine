@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState, useMemo, useEffect } from "react";
+import { use, useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   Activity,
@@ -36,6 +36,7 @@ import {
   INITIAL_TENANTS,
   INITIAL_AUDIT_LOGS,
   TenantRecord,
+  TenantLifecycleStatus,
 } from "@/lib/tenants-data";
 import {
   useRoleHierarchyStore,
@@ -80,6 +81,39 @@ export default function ChannelWorkspacePage({
     };
   }, [channelUuid, channelSlug]);
 
+  const [liveChannel, setLiveChannel] = useState<TenantRecord>(channel);
+
+  const fetchLiveTenant = useCallback(async () => {
+    try {
+      const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
+      const res = await fetch(`${apiBase}/api/v1/tenants/${channelUuid}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.name) {
+          setLiveChannel({
+            id: data.id,
+            name: data.name,
+            code: data.code,
+            tenant_uuid: data.tenant_uuid || data.id,
+            channel_type: data.channel_type || "DSA",
+            status: (data.status as TenantLifecycleStatus) || "active",
+            cibil_overlay: data.cibil_overlay ?? 10,
+            contact_email: data.contact_email || `ops@${data.code}.in`,
+            contact_phone: data.contact_phone || "+91 98765 00000",
+            evaluation_count_24h: 840,
+            mean_latency_ms: 16.2,
+            created_at: data.created_at || new Date().toISOString(),
+          });
+        }
+      }
+    } catch {}
+  }, [channelUuid]);
+
+  useEffect(() => {
+    setLiveChannel(channel);
+    fetchLiveTenant();
+  }, [channelUuid, channel, fetchLiveTenant]);
+
   // Role hierarchy and user store
   const {
     roles,
@@ -97,11 +131,12 @@ export default function ChannelWorkspacePage({
   const [isLoadingUsers, setIsLoadingUsers] = useState<boolean>(true);
 
   // Fetch real database employees for this specific channel
-  const fetchRealUsers = async () => {
+  const fetchRealUsers = useCallback(async () => {
     try {
       setIsLoadingUsers(true);
       const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
-      const res = await fetch(`${apiBase}/api/v1/tenants/${channel.tenant_uuid}/users`);
+      const targetUuid = liveChannel?.tenant_uuid || channelUuid;
+      const res = await fetch(`${apiBase}/api/v1/tenants/${targetUuid}/users`);
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data)) {
@@ -126,17 +161,42 @@ export default function ChannelWorkspacePage({
     // Clean fallback matching this channel
     const fallback = INITIAL_USERS.filter(
       (u) =>
-        u.tenantId === channel.tenant_uuid ||
-        u.tenantId === channel.id ||
-        u.tenantId === channel.code
+        u.tenantId === liveChannel.tenant_uuid ||
+        u.tenantId === liveChannel.id ||
+        u.tenantId === liveChannel.code ||
+        u.tenantId === channelUuid
     );
     setRealUsers(fallback);
     setIsLoadingUsers(false);
-  };
+  }, [liveChannel?.tenant_uuid, liveChannel?.id, liveChannel?.code, channelUuid]);
 
   useEffect(() => {
     fetchRealUsers();
-  }, [channel.tenant_uuid]);
+  }, [fetchRealUsers]);
+
+  // Zero-latency cross-tab synchronization via BroadcastChannel and Storage events
+  useEffect(() => {
+    let bc: BroadcastChannel | null = null;
+    try {
+      bc = new BroadcastChannel("flowbre_approval_sync");
+      bc.onmessage = () => {
+        fetchLiveTenant();
+        fetchRealUsers();
+      };
+    } catch {}
+
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "flowbre_approval_sync") {
+        fetchLiveTenant();
+        fetchRealUsers();
+      }
+    };
+    window.addEventListener("storage", onStorage);
+    return () => {
+      if (bc) bc.close();
+      window.removeEventListener("storage", onStorage);
+    };
+  }, [fetchLiveTenant, fetchRealUsers]);
 
   // Active view state
   const [activeTab, setActiveTab] = useState<"employees" | "details" | "audit">("employees");
@@ -177,10 +237,10 @@ export default function ChannelWorkspacePage({
   const channelAuditLogs = useMemo(() => {
     return INITIAL_AUDIT_LOGS.filter(
       (a) =>
-        a.tenant_uuid === channel.tenant_uuid ||
-        a.tenant_name.toLowerCase().includes(channel.name.toLowerCase())
+        a.tenant_uuid === liveChannel.tenant_uuid ||
+        a.tenant_name.toLowerCase().includes(liveChannel.name.toLowerCase())
     );
-  }, [channel]);
+  }, [liveChannel]);
 
   // Handle create or edit employee with live API sync
   const handleSaveUser = async (e: React.FormEvent) => {
@@ -189,9 +249,11 @@ export default function ChannelWorkspacePage({
 
     const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
 
+    const channelTargetId = liveChannel?.tenant_uuid || channelUuid;
+
     if (editingUser) {
       try {
-        await fetch(`${apiBase}/api/v1/tenants/${channel.tenant_uuid}/users/${editingUser.id}`, {
+        await fetch(`${apiBase}/api/v1/tenants/${channelTargetId}/users/${editingUser.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -210,7 +272,7 @@ export default function ChannelWorkspacePage({
       });
     } else {
       try {
-        await fetch(`${apiBase}/api/v1/tenants/${channel.tenant_uuid}/users`, {
+        await fetch(`${apiBase}/api/v1/tenants/${channelTargetId}/users`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -224,13 +286,19 @@ export default function ChannelWorkspacePage({
         console.error("API error creating user:", err);
       }
       addUser({
-        tenantId: channel.tenant_uuid,
+        tenantId: channelTargetId,
         name: formName.trim(),
         email: formEmail.trim(),
         role: formRole,
         status: formStatus,
       });
     }
+
+    try {
+      const bc = new BroadcastChannel("flowbre_approval_sync");
+      bc.postMessage({ type: "CHANNEL_USERS_CHANGED", channelId: channelTargetId });
+      bc.close();
+    } catch {}
 
     await fetchRealUsers();
     setIsAddUserModalOpen(false);
@@ -244,8 +312,9 @@ export default function ChannelWorkspacePage({
   const handleToggleStatus = async (user: TenantUser) => {
     const nextStatus: UserStatus = user.status === "ACTIVE" ? "SUSPENDED" : "ACTIVE";
     const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
+    const channelTargetId = liveChannel?.tenant_uuid || channelUuid;
     try {
-      await fetch(`${apiBase}/api/v1/tenants/${channel.tenant_uuid}/users/${user.id}`, {
+      await fetch(`${apiBase}/api/v1/tenants/${channelTargetId}/users/${user.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: nextStatus }),
@@ -257,12 +326,18 @@ export default function ChannelWorkspacePage({
     setRealUsers((prev) =>
       prev.map((u) => (u.id === user.id ? { ...u, status: nextStatus } : u))
     );
+    try {
+      const bc = new BroadcastChannel("flowbre_approval_sync");
+      bc.postMessage({ type: "CHANNEL_USERS_CHANGED", channelId: channelTargetId });
+      bc.close();
+    } catch {}
   };
 
   const handleDeleteUser = async (userId: string) => {
     const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
+    const channelTargetId = liveChannel?.tenant_uuid || channelUuid;
     try {
-      await fetch(`${apiBase}/api/v1/tenants/${channel.tenant_uuid}/users/${userId}`, {
+      await fetch(`${apiBase}/api/v1/tenants/${channelTargetId}/users/${userId}`, {
         method: "DELETE",
       });
     } catch (err) {
@@ -270,6 +345,11 @@ export default function ChannelWorkspacePage({
     }
     deleteUser(userId);
     setRealUsers((prev) => prev.filter((u) => u.id !== userId));
+    try {
+      const bc = new BroadcastChannel("flowbre_approval_sync");
+      bc.postMessage({ type: "CHANNEL_USERS_CHANGED", channelId: channelTargetId });
+      bc.close();
+    } catch {}
   };
 
   const openEditModal = (user: TenantUser) => {
@@ -295,7 +375,7 @@ export default function ChannelWorkspacePage({
         <span>/</span>
         <span className="text-slate-400 font-mono text-[0.6875rem]">Channels</span>
         <span>/</span>
-        <span className="font-bold text-slate-800">{channel.name}</span>
+        <span className="font-bold text-slate-800">{liveChannel.name}</span>
         <span>/</span>
         <span className="rounded-md bg-slate-100 px-2 py-0.5 font-mono text-[0.625rem] text-slate-600 border border-slate-200">
           Workspace
@@ -313,35 +393,35 @@ export default function ChannelWorkspacePage({
               <div>
                 <div className="flex items-center gap-2.5 flex-wrap">
                   <h1 className="text-2xl font-extrabold text-slate-900 font-display">
-                    {channel.name}
+                    {liveChannel.name}
                   </h1>
                   <span
                     className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[0.625rem] font-bold uppercase border ${
-                      channel.status === "active"
+                      liveChannel.status === "active"
                         ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                        : channel.status === "under_review"
+                        : liveChannel.status === "under_review"
                         ? "bg-indigo-50 text-indigo-700 border-indigo-200"
-                        : channel.status === "pending"
+                        : liveChannel.status === "pending"
                         ? "bg-amber-50 text-amber-700 border-amber-200"
                         : "bg-rose-50 text-rose-700 border-rose-200"
                     }`}
                   >
-                    {channel.status}
+                    {liveChannel.status}
                   </span>
                   <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[0.625rem] font-mono font-bold text-slate-700 border border-slate-200">
-                    {channel.channel_type}
+                    {liveChannel.channel_type}
                   </span>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-slate-500 mt-1 flex-wrap font-mono">
-                  <span>Code: <strong>{channel.code}</strong></span>
+                  <span>Code: <strong>{liveChannel.code}</strong></span>
                   <span>•</span>
                   <button
                     type="button"
-                    onClick={() => handleCopy(channel.tenant_uuid, "channelUuid")}
+                    onClick={() => handleCopy(liveChannel.tenant_uuid, "channelUuid")}
                     className="inline-flex items-center gap-1 text-teal-700 hover:text-teal-800 transition-colors cursor-pointer"
                     title="Click to copy Channel UUID"
                   >
-                    <span>UUID: /{channel.tenant_uuid}</span>
+                    <span>UUID: /{liveChannel.tenant_uuid}</span>
                     {copiedField === "channelUuid" ? (
                       <Check size={12} className="text-emerald-600" />
                     ) : (
@@ -356,7 +436,7 @@ export default function ChannelWorkspacePage({
           {/* Header Action Buttons */}
           <div className="flex items-center gap-2.5 flex-wrap">
             <Link
-              href={`/${channel.tenant_uuid}/logs`}
+              href={`/${liveChannel.tenant_uuid}/logs`}
               className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-white hover:border-slate-300 transition-all"
             >
               <Activity size={14} />
@@ -384,13 +464,13 @@ export default function ChannelWorkspacePage({
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-slate-100 text-xs">
           <div className="rounded-xl bg-slate-50 p-3 border border-slate-100">
             <span className="text-[0.6875rem] font-bold text-slate-400 uppercase tracking-wider">CIBIL Overlay</span>
-            <p className="mt-1 font-mono text-base font-extrabold text-slate-900">+{channel.cibil_overlay} pts</p>
+            <p className="mt-1 font-mono text-base font-extrabold text-slate-900">+{liveChannel.cibil_overlay} pts</p>
             <span className="text-[0.625rem] text-slate-500">Margin on partner banks</span>
           </div>
 
           <div className="rounded-xl bg-slate-50 p-3 border border-slate-100">
             <span className="text-[0.6875rem] font-bold text-slate-400 uppercase tracking-wider">24h Evaluations</span>
-            <p className="mt-1 font-mono text-base font-extrabold text-teal-700">{channel.evaluation_count_24h}</p>
+            <p className="mt-1 font-mono text-base font-extrabold text-teal-700">{liveChannel.evaluation_count_24h}</p>
             <span className="text-[0.625rem] text-emerald-600 font-bold flex items-center gap-1">
               <TrendingUp size={11} /> +12% throughput
             </span>
@@ -398,7 +478,7 @@ export default function ChannelWorkspacePage({
 
           <div className="rounded-xl bg-slate-50 p-3 border border-slate-100">
             <span className="text-[0.6875rem] font-bold text-slate-400 uppercase tracking-wider">Mean Latency</span>
-            <p className="mt-1 font-mono text-base font-extrabold text-slate-900">{channel.mean_latency_ms} ms</p>
+            <p className="mt-1 font-mono text-base font-extrabold text-slate-900">{liveChannel.mean_latency_ms} ms</p>
             <span className="text-[0.625rem] text-emerald-600 font-bold flex items-center gap-1">
               <CheckCircle2 size={11} /> 100% SLA compliant
             </span>
@@ -406,8 +486,8 @@ export default function ChannelWorkspacePage({
 
           <div className="rounded-xl bg-slate-50 p-3 border border-slate-100">
             <span className="text-[0.6875rem] font-bold text-slate-400 uppercase tracking-wider">Primary Administrator</span>
-            <p className="mt-1 text-xs font-bold text-slate-900 truncate">{channel.contact_email}</p>
-            <p className="text-[0.625rem] text-slate-400 font-mono truncate">{channel.contact_phone}</p>
+            <p className="mt-1 text-xs font-bold text-slate-900 truncate">{liveChannel.contact_email}</p>
+            <p className="text-[0.625rem] text-slate-400 font-mono truncate">{liveChannel.contact_phone}</p>
           </div>
         </div>
       </div>
@@ -466,7 +546,7 @@ export default function ChannelWorkspacePage({
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder={`Search ${channel.name} employees...`}
+                  placeholder={`Search ${liveChannel.name} employees...`}
                   className="w-full h-9 rounded-xl border border-slate-200 bg-white pl-9 pr-4 text-xs text-slate-900 placeholder:text-slate-400 focus:border-slate-800 focus:outline-hidden"
                 />
               </div>
@@ -479,8 +559,6 @@ export default function ChannelWorkspacePage({
               >
                 <option value="ALL">All Roles</option>
                 <option value="CHANNEL_ADMIN">Channel Admin</option>
-                <option value="SALES_MANAGER">Sales Manager</option>
-                <option value="TEAM_LEADER">Team Leader</option>
                 <option value="TRANSACTIONAL_USER">Transactional User</option>
               </select>
             </div>
@@ -510,7 +588,7 @@ export default function ChannelWorkspacePage({
                     <Users className="w-10 h-10 text-slate-300" />
                     <h3 className="text-sm font-bold text-slate-700">No employees found for this channel</h3>
                     <p className="text-xs text-slate-400 max-w-sm">
-                      No staff members match the current filter or have been provisioned yet for {channel.name}.
+                      No staff members match the current filter or have been provisioned yet for {liveChannel.name}.
                     </p>
                     <button
                       type="button"
@@ -575,6 +653,8 @@ export default function ChannelWorkspacePage({
                                 className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[0.5625rem] font-bold uppercase border ${
                                   emp.status === "ACTIVE"
                                     ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                    : emp.status === "PENDING"
+                                    ? "bg-amber-50 text-amber-700 border-amber-200"
                                     : "bg-rose-50 text-rose-700 border-rose-200"
                                 }`}
                               >
@@ -584,7 +664,7 @@ export default function ChannelWorkspacePage({
 
                             {/* Channel ID */}
                             <td className="px-4 py-3.5 font-mono text-[0.6875rem] text-slate-500">
-                              /{channel.tenant_uuid.slice(0, 12)}...
+                              /{liveChannel.tenant_uuid.slice(0, 12)}...
                             </td>
 
                             {/* Actions */}
@@ -600,13 +680,9 @@ export default function ChannelWorkspacePage({
                                 <button
                                   type="button"
                                   onClick={() => handleToggleStatus(emp)}
-                                  className={`rounded-lg px-2.5 py-1 text-[0.6875rem] font-bold transition-all cursor-pointer ${
-                                    emp.status === "ACTIVE"
-                                      ? "bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100"
-                                      : "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100"
-                                  }`}
+                                  className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[0.6875rem] font-bold text-slate-700 shadow-xs hover:border-slate-300 hover:text-slate-900 transition-all cursor-pointer"
                                 >
-                                  {emp.status === "ACTIVE" ? "Suspend" : "Activate"}
+                                  {emp.status === "ACTIVE" ? "Suspend Access" : "Activate Access"}
                                 </button>
                                 <button
                                   type="button"
@@ -641,22 +717,22 @@ export default function ChannelWorkspacePage({
             <div className="space-y-3 text-xs">
               <div>
                 <span className="text-slate-400 font-medium">Channel Name</span>
-                <p className="font-bold text-slate-900 text-sm">{channel.name}</p>
+                <p className="font-bold text-slate-900 text-sm">{liveChannel.name}</p>
               </div>
 
               <div>
                 <span className="text-slate-400 font-medium">Internal Channel Slug</span>
-                <p className="font-mono font-bold text-slate-800">{channel.code}</p>
+                <p className="font-mono font-bold text-slate-800">{liveChannel.code}</p>
               </div>
 
               <div>
                 <span className="text-slate-400 font-medium">Channel Classification</span>
-                <p className="font-bold text-slate-800 mt-0.5">{channel.channel_type}</p>
+                <p className="font-bold text-slate-800 mt-0.5">{liveChannel.channel_type}</p>
               </div>
 
               <div>
                 <span className="text-slate-400 font-medium">Registration Date</span>
-                <p className="font-mono text-slate-700">{new Date(channel.created_at).toLocaleString()}</p>
+                <p className="font-mono text-slate-700">{new Date(liveChannel.created_at).toLocaleString()}</p>
               </div>
             </div>
           </div>
@@ -670,9 +746,9 @@ export default function ChannelWorkspacePage({
             <div className="space-y-3 text-xs">
               <div className="p-3.5 rounded-xl bg-teal-50/50 border border-teal-200">
                 <span className="text-[0.6875rem] font-bold text-teal-800 uppercase tracking-wider">CIBIL Overlay Score Margin</span>
-                <p className="font-mono text-xl font-extrabold text-teal-900 mt-1">+{channel.cibil_overlay} points</p>
+                <p className="font-mono text-xl font-extrabold text-teal-900 mt-1">+{liveChannel.cibil_overlay} points</p>
                 <p className="text-[0.6875rem] text-teal-700 mt-1">
-                  Applications evaluated for {channel.name} require a credit score threshold elevated by +{channel.cibil_overlay} points over base lender policies.
+                  Applications evaluated for {liveChannel.name} require a credit score threshold elevated by +{liveChannel.cibil_overlay} points over base lender policies.
                 </p>
               </div>
 
@@ -680,7 +756,7 @@ export default function ChannelWorkspacePage({
                 <span className="text-slate-400 font-medium">Primary Contact Email</span>
                 <p className="font-bold text-slate-900 flex items-center gap-1.5 mt-0.5">
                   <Mail size={13} className="text-slate-400" />
-                  <span>{channel.contact_email}</span>
+                  <span>{liveChannel.contact_email}</span>
                 </p>
               </div>
 
@@ -688,7 +764,7 @@ export default function ChannelWorkspacePage({
                 <span className="text-slate-400 font-medium">Official Phone</span>
                 <p className="font-mono text-slate-800 flex items-center gap-1.5 mt-0.5">
                   <Phone size={13} className="text-slate-400" />
-                  <span>{channel.contact_phone}</span>
+                  <span>{liveChannel.contact_phone}</span>
                 </p>
               </div>
 
@@ -765,7 +841,7 @@ export default function ChannelWorkspacePage({
                     </span>
                   </div>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Channel: {channel.name}
+                    Channel: {liveChannel.name}
                   </p>
                 </div>
               </div>
@@ -835,8 +911,6 @@ export default function ChannelWorkspacePage({
                       className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 pr-8 text-xs text-slate-900 focus:bg-white focus:border-teal-500 focus:ring-3 focus:ring-teal-500/10 focus:outline-hidden font-bold cursor-pointer"
                     >
                       <option value="CHANNEL_ADMIN">Channel Admin (Branch Head)</option>
-                      <option value="SALES_MANAGER">Sales Manager</option>
-                      <option value="TEAM_LEADER">Team Leader</option>
                       <option value="TRANSACTIONAL_USER">Transactional User (Loan Officer)</option>
                     </select>
                     <ChevronDown size={14} className="pointer-events-none absolute right-3.5 top-3.5 text-slate-400" />
@@ -867,7 +941,7 @@ export default function ChannelWorkspacePage({
                     <span>Channel Tenancy Enforcement</span>
                   </div>
                   <p className="text-slate-500 leading-relaxed">
-                    Employee will be provisioned exclusively under channel <code className="font-mono text-teal-700 font-bold">{channel.name}</code> ({channel.tenant_uuid.slice(0, 10)}...).
+                    Employee will be provisioned exclusively under channel <code className="font-mono text-teal-700 font-bold">{liveChannel.name}</code> ({liveChannel.tenant_uuid.slice(0, 10)}...).
                   </p>
                 </div>
               </div>

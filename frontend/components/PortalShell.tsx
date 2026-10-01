@@ -37,14 +37,36 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
 
   // Prevent scroll drift on client navigation: guarantee header remains pinned at (0, 0)
   useEffect(() => {
-    if (panelRef.current) {
-      panelRef.current.scrollTop = 0;
-      panelRef.current.scrollLeft = 0;
-    }
-    if (mainRef.current) {
-      mainRef.current.scrollTop = 0;
-    }
-    window.scrollTo(0, 0);
+    const lockScroll = () => {
+      if (window.scrollY !== 0 || window.scrollX !== 0) {
+        window.scrollTo(0, 0);
+      }
+      if (document.documentElement && document.documentElement.scrollTop !== 0) {
+        document.documentElement.scrollTop = 0;
+      }
+      if (document.body && document.body.scrollTop !== 0) {
+        document.body.scrollTop = 0;
+      }
+      if (panelRef.current && panelRef.current.scrollTop !== 0) {
+        panelRef.current.scrollTop = 0;
+      }
+      if (mainRef.current && mainRef.current.scrollTop !== 0) {
+        mainRef.current.scrollTop = 0;
+      }
+    };
+
+    lockScroll();
+
+    // Re-verify after Next.js router scroll restoration
+    const rafId = requestAnimationFrame(lockScroll);
+    const timeoutId = setTimeout(lockScroll, 60);
+
+    window.addEventListener("scroll", lockScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(rafId);
+      clearTimeout(timeoutId);
+      window.removeEventListener("scroll", lockScroll);
+    };
   }, [pathname]);
 
   useEffect(() => {
@@ -83,7 +105,14 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
       <Sidebar />
 
       {/* Main Workspace Panel Guard with strictly pinned Header */}
-      <div ref={panelRef} className="flex min-w-0 flex-1 flex-col overflow-hidden h-full">
+      <div
+        ref={panelRef}
+        onScroll={(e) => {
+          if (e.currentTarget.scrollTop !== 0) e.currentTarget.scrollTop = 0;
+          if (e.currentTarget.scrollLeft !== 0) e.currentTarget.scrollLeft = 0;
+        }}
+        className="flex min-w-0 flex-1 flex-col overflow-hidden h-full"
+      >
         <HeaderErrorBoundary>
           <div className="shrink-0 sticky top-0 z-30">
             <AppHeader />

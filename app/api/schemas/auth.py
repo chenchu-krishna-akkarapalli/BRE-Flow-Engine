@@ -65,3 +65,15 @@ class UserSessionInfo(BaseModel):
     role: str = Field(..., description="Assigned governance role")
     permissions: List[str] = Field(default_factory=list, description="List of permission codes")
     role_nodes: List[NavGroupNode] = Field(default_factory=list, description="Authorized navigation items")
+
+# Request payload for authenticated user password change
+class ChangePasswordRequest(BaseModel):
+    current_password: str = Field(..., min_length=1, description="Current account password")
+    new_password: str = Field(..., min_length=8, description="New password meeting complexity criteria")
+    confirm_password: str = Field(..., min_length=8, description="Password confirmation")
+
+# Response payload for password change
+class ChangePasswordResponse(BaseModel):
+    success: bool = Field(default=True, description="Whether password change succeeded")
+    message: str = Field(default="Password updated successfully.", description="Status message")
+
