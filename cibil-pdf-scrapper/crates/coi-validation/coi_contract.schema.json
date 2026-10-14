@@ -507,6 +507,12 @@
             "null"
           ]
         },
+        "income_from_house_property": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
         "income_from_business_or_profession": {
           "type": [
             "object",

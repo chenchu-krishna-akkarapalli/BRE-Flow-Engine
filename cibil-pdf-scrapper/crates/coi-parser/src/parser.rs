@@ -73,6 +73,11 @@ fn total_income(lines: &[Line]) -> Option<coi_domain::Money> {
             || upper.contains("COMPUTATION OF TOTAL")
             || upper.contains("TAX PAYABLE")
             || upper.contains("TAX ON TOTAL INCOME")
+            || upper.contains("FROM HOUSE PROPERTY")
+            || upper.contains("FROM BUSINESS")
+            || upper.contains("FROM CAPITAL")
+            || upper.contains("FROM OTHER")
+            || upper.contains("FROM SALAR")
             || patterns::is_slab_working(&upper)
         {
             continue;

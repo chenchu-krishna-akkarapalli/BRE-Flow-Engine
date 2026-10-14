@@ -8,4 +8,4 @@ args = [
 command = "C:/My-pro/project-map/src-tauri/target/release/mcp_server.exe"
 
 [mcp_servers.repo-graph.env]
-REPOGRAPH_MCP_TOOLS = "explore,files,domains,node,search,impact,callers,callees,status,edit,write,delete,batch_edit,edit_symbol,skeleton,trace,locate,lint,type_flow,slice,retrieve,shrink,learn,audit,debt,ladder"
+REPOGRAPH_MCP_TOOLS = "explore,files,domains,node,search,impact,callers,callees,status,edit,write,delete,batch_edit,edit_symbol,skeleton,trace,locate,lint,type_flow,slice,retrieve,shrink,learn,audit,debt,ladder,skill,checkpoint,rollback,taint,risk,transaction_begin,transaction_commit,transaction_rollback,tests,optimize_context,diff,architecture_check"

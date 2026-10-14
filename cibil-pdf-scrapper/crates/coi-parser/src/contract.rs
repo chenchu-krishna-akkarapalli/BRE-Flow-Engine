@@ -4,7 +4,7 @@ use coi_domain::{
     BusinessIncomeAdjustments, BusinessIncomeDetails, BusinessIncomeSection, CapitalGainSection,
     CaVerification, CoiDocument, ComputationOfTaxOnTotalIncome, ComputationOfTotalIncome,
     CreditEngineSummary, DeductionsSection, FinancialParticulars, GstTurnoverDetail,
-    HealthAndEducationCess, IncomeDeclaredBusinessTurnover, LongTermCapitalGainDetails,
+    HealthAndEducationCess, HousePropertySection, IncomeDeclaredBusinessTurnover, LongTermCapitalGainDetails,
     NormalIncomeTaxCalculation, OtherSourcesBreakdown, OtherSourcesDetails, OtherSourcesSection,
     PartnershipFirmShare, PresumptiveTier, ProfitsAndGainsBusinessProfession, RateAmount,
     RefundDetails, ReturnDetails, SalariesLayout, SelfAssessmentChallan, ShortTermCapitalGainDetails,
@@ -174,7 +174,7 @@ fn build_credit_summary(
     let declared_profit_44ad = comp_tot
         .profits_and_gains_business_profession
         .as_ref()
-        .and_then(|p| p.section_total.or(p.declared_profit_44ad))
+        .and_then(|p| p.declared_profit_44ad)
         .or_else(|| {
             income_declared_business_turnover
                 .as_ref()
@@ -314,15 +314,23 @@ fn extract_partnership_shares(lines: &[Line]) -> Vec<PartnershipFirmShare> {
 
 fn business_income_adjustments(lines: &[Line], computation: &coi_domain::Computation) -> BusinessIncomeAdjustments {
     let partnership_shares = extract_partnership_shares(lines);
-    let income_44ad = labelled_amount(
-        lines,
-        &[
-            "INCOME U/S 44AD",
-            "INCOME UNDER SECTION 44AD",
-            "PROFIT U/S 44AD",
-            "PROFIT DEEMED U/S 44AD",
-        ],
-    ).or_else(|| money_rupees(computation.heads.business_profession.as_ref()));
+    let is_44ad_doc = lines.iter().any(|l| {
+        let u = l.upper();
+        u.contains("44AD") || u.contains("PRESUMPTIVE")
+    });
+    let income_44ad = if is_44ad_doc {
+        labelled_amount(
+            lines,
+            &[
+                "INCOME U/S 44AD",
+                "INCOME UNDER SECTION 44AD",
+                "PROFIT U/S 44AD",
+                "PROFIT DEEMED U/S 44AD",
+            ],
+        ).or_else(|| money_rupees(computation.heads.business_profession.as_ref()))
+    } else {
+        None
+    };
     let profit_as_per_pnl = labelled_amount(
         lines,
         &[
@@ -331,6 +339,7 @@ fn business_income_adjustments(lines: &[Line], computation: &coi_domain::Computa
             "PROFIT AS PER P&L A/C",
             "PROFIT AS PER P&L",
             "PROFIT AS PER P AND L",
+            "NET PROFIT AS PER PROFIT AND LOSS",
             "NET PROFIT AS PER P&L",
             "GROSS PROFIT TRANSFERRED FROM TRADING ACCOUNT",
             "GROSS PROFIT TRANSFERRED",
@@ -348,20 +357,65 @@ fn business_income_adjustments(lines: &[Line], computation: &coi_domain::Computa
             "NON ALLOWABLE -SALARY",
         ],
     );
-    let additions = adjustment_items(lines, &["DEPRECIATION DEBITED IN P&L", "DEPRECIATION DEBITED IN P AND L"]);
-    let deductions = adjustment_items(lines, &["DEPRECIATION AS PER CHART U/S 32", "DEPRECIATION U/S 32", "DEPRECIATION AS PER SECTION 32"]);
+    let mut additions = adjustment_items(lines, &["DEPRECIATION DEBITED IN P&L", "DEPRECIATION DEBITED IN P AND L"]);
+    if additions.is_empty() {
+        for (i, line) in lines.iter().enumerate() {
+            let u = line.upper();
+            if (u.contains("ADD:") || u.contains("ADD :")) && (u.contains("DISALLOWABLE") || u.contains("ADDITION")) {
+                for k in 1..=2 {
+                    if let Some(nl) = lines.get(i + k) {
+                        let nu = nl.upper();
+                        if nu.contains("DEPRECIATION") {
+                            if let Some(amt) = line_amount(nl) {
+                                additions.push(AdjustmentItem {
+                                    particulars: "Depreciation".to_string(),
+                                    amount: Some(amt),
+                                });
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    let mut deductions = adjustment_items(lines, &[
+        "DEPRECIATION AS PER CHART U/S 32",
+        "DEPRECIATION U/S 32",
+        "DEPRECIATION AS PER SECTION 32",
+        "CURRENT DEPRECIATION U/S.32(1)",
+        "CURRENT DEPRECIATION",
+    ]);
+    if deductions.is_empty() {
+        for line in lines {
+            let u = line.upper();
+            if u.contains("CURRENT DEPRECIATION") || (u.contains("DEPRECIATION") && u.contains("32(1)")) {
+                if let Some(amt) = line_amount(line) {
+                    deductions.push(AdjustmentItem {
+                        particulars: line.segments.first().cloned().unwrap_or_else(|| "Current Depreciation U/s.32(1)".to_string()),
+                        amount: Some(amt),
+                    });
+                    break;
+                }
+            }
+        }
+    }
+
     let net_business_income = labelled_amount(
         lines,
         &[
-            "TOTAL BUSINESS INCOME",
+            "TOTAL INCOME FROM BUSINESS OR PROFESSION",
+            "TOTAL INCOME FROM BUSINESS",
             "NET BUSINESS INCOME",
             "INCOME FROM BUSINESS OR PROFESSION",
+            "PROFITS AND GAINS OF BUSINESS OR PROFESSION",
             "PROFIT OR GAINS OF BUSINESS OR PROFESSION",
             "PROFITS OR GAINS OF BUSINESS OR PROFESSION",
-            "PROFITS AND GAINS OF BUSINESS OR PROFESSION",
+            "PROFIT OR GAINS OF BUSINESS",
             "PROFITOR GAINS OF BUSINESS OR PROFESSION",
+            "PROFITOR GAINS",
             "INCOME FROM BUSINESS",
-            "PROFIT U/S 44AD",
         ],
     )
     .or_else(|| money_rupees(computation.heads.business_profession.as_ref()));
@@ -390,6 +444,12 @@ fn other_sources_breakdown(lines: &[Line], computation: &coi_domain::Computation
     let savings_bank_interest = labelled_amount(
         lines,
         &[
+            "INTEREST ON S.B.A/C.(S)",
+            "INTEREST ON S.B. A/C.(S)",
+            "INTEREST ON S.B. A/C",
+            "INTEREST ON S.B.A/C",
+            "INTEREST FROM S. B. A/C",
+            "INTEREST FROM S.B. A/C",
             "INTEREST FROM SAVING BANK A/C",
             "INTEREST FROM SAVING BANK",
             "INTEREST FROM SAVINGS BANK ACCOUNT",
@@ -401,8 +461,16 @@ fn other_sources_breakdown(lines: &[Line], computation: &coi_domain::Computation
             "SAVING BANK INTEREST",
         ],
     );
+    let non_saving_lines: Vec<Line> = lines
+        .iter()
+        .filter(|l| {
+            let u = l.upper();
+            !u.contains("SAVING") && !u.contains("S.B.") && !u.contains("S. B.") && !u.contains("80TTA")
+        })
+        .cloned()
+        .collect();
     let fdr_interest = labelled_amount(
-        lines,
+        &non_saving_lines,
         &[
             "INTEREST ON F.D.R",
             "INTEREST ON FDR",
@@ -702,6 +770,9 @@ fn annexures(lines: &[Line]) -> AnnexureDetails {
     if fdr_interest_list.is_empty() {
         for line in lines {
             let u = line.upper();
+            if u.contains("SAVING") || u.contains("S.B.") || u.contains("80TTA") {
+                continue;
+            }
             if u.contains("INTEREST FROM DEPOSIT") || u.contains("INTEREST ON DEPOSIT") {
                 if let Some(amt) = line_amount(line) {
                     fdr_interest_list.push(AnnexureIncomeItem {
@@ -775,7 +846,8 @@ fn extract_tds_tax_amount(lines: &[Line]) -> Option<i64> {
 }
 
 fn labelled_amount(lines: &[Line], labels: &[&str]) -> Option<i64> {
-    let looking_for_tax = labels.iter().any(|l| l.contains("TAX PAYABLE"));
+    let looking_for_tax = labels.iter().any(|l| l.contains("TAX PAYABLE") || l.contains("TOTAL TAX"));
+    let looking_for_grand_total_income = labels.iter().any(|l| *l == "TOTAL INCOME");
     lines.iter().find_map(|line| {
         let upper = line.upper();
         if upper.contains("115BAC")
@@ -787,9 +859,30 @@ fn labelled_amount(lines: &[Line], labels: &[&str]) -> Option<i64> {
         if !looking_for_tax && (upper.contains("TAX PAYABLE") || upper.contains("TAX ON TOTAL INCOME")) {
             return None;
         }
+        if looking_for_grand_total_income
+            && (upper.contains("FROM HOUSE PROPERTY")
+                || upper.contains("FROM BUSINESS")
+                || upper.contains("FROM CAPITAL")
+                || upper.contains("FROM OTHER")
+                || upper.contains("FROM SALAR"))
+        {
+            return None;
+        }
+        if looking_for_tax && upper.contains("TOTAL TAXABLE") {
+            return None;
+        }
         let squashed = upper.replace([' ', '"', '\''], "");
         labels.iter().any(|label| {
             let opt_squashed = label.replace([' ', '"', '\''], "");
+            let opt_clean = label.replace([' ', '"', '\'', '/', '-'], "");
+            if opt_squashed == "TOTALTAX" && squashed.contains("TOTALTAXABLE") {
+                return false;
+            }
+            if (opt_clean == "US28" || opt_clean == "UNDERSECTION28")
+                && (squashed.contains("288") || squashed.contains("ROUND") || squashed.contains("TOTALINCOME"))
+            {
+                return false;
+            }
             upper.contains(label) || squashed.contains(&opt_squashed)
         }).then(|| line_amount(line)).flatten()
     })
@@ -852,7 +945,7 @@ fn assessee_info(pairs: &[LabelValue], computation: &coi_domain::Computation, te
     AssesseeInfo {
         name,
         pan,
-        father_name: pair_value(pairs, &["FATHERSNAME", "FATHER'SNAME"]).or_else(|| inline_value(text, "FATHER'S?NAME")),
+        father_name: pair_value(pairs, &["FATHERSNAME", "FATHER'SNAME", "FATHERNAME"]).or_else(|| inline_value(text, r"FATHER'?S?\s*NAME")),
         residential_address: pair_value(pairs, &["RESIDENTIALADDRESS"]).or_else(|| first_address(pairs)).or_else(|| inline_value(text, "ADDRESS")),
         status: computation.assessee.status.clone().or_else(|| inline_value(text, "STATUS")),
         assessment_year,
@@ -876,14 +969,37 @@ fn is_valid_ifsc(code: &str) -> bool {
 }
 
 fn bank_details(pairs: &[LabelValue], lines: &[Line]) -> BankDetails {
-    let mut name = pair_value(pairs, &["NAMEOFBANK", "BANKNAME"]);
-    let mut ifsc = pair_value(pairs, &["IFSCCODE", "IFSC"]);
-    let mut account = pair_value(pairs, &["ACCOUNTNO", "ACCOUNTNUMBER", "ACCOUNT"]);
+    let mut name = pair_value(pairs, &["NAMEOFBANK", "BANKNAME"]).filter(|s| !s.trim().is_empty());
+    let mut ifsc = pair_value(pairs, &["IFSCCODE", "IFSC"]).filter(|s| !s.trim().is_empty());
+    let mut account = pair_value(pairs, &["ACCOUNTNO", "ACCOUNTNUMBER", "ACCOUNT"]).filter(|s| !s.trim().is_empty());
+
+    // 1. Structured table search: look for a row containing a valid IFSC
+    for line in lines {
+        for seg in &line.segments {
+            let s_trim = seg.trim();
+            if is_valid_ifsc(s_trim) {
+                if ifsc.is_none() {
+                    ifsc = Some(s_trim.to_ascii_uppercase());
+                }
+                for other_seg in &line.segments {
+                    let o_u = other_seg.to_ascii_uppercase();
+                    if (o_u.contains("BANK") || o_u.contains("LTD")) && !o_u.contains("IFSC") && name.as_ref().map_or(true, |s| s.trim().is_empty()) {
+                        name = Some(other_seg.trim().to_string());
+                    }
+                    let digits: String = other_seg.chars().filter(|c| c.is_ascii_digit()).collect();
+                    if digits.len() >= 9 && digits.len() <= 18 && account.as_ref().map_or(true, |s| s.trim().is_empty()) {
+                        account = Some(digits);
+                    }
+                }
+            }
+        }
+    }
 
     for line in lines {
         let text = line.text();
         let u = text.to_ascii_uppercase();
-        if u.contains("A/C NO") || u.contains("BANK") || u.contains("IFSC") {
+        let is_interest_line = u.contains("INTEREST") || u.contains("S.B.") || u.contains("SAVING") || u.contains("DEPOSIT");
+        if (u.contains("A/C NO") || u.contains("BANK") || u.contains("IFSC")) && !is_interest_line {
             if name.is_none() {
                 if let Some(caps) = Regex::new(r"(?i)([A-Z0-9\s]+?BANK)\s*,*\s*A/C").ok().and_then(|re| re.captures(&text)) {
                     name = Some(caps[1].trim().to_string());
@@ -892,7 +1008,7 @@ fn bank_details(pairs: &[LabelValue], lines: &[Line]) -> BankDetails {
                 }
             }
             if account.is_none() {
-                if let Some(caps) = Regex::new(r"(?i)A/C\s*(?:NO\.?|NUMBER)?\s*:?\s*([0-9A-Z]+)").ok().and_then(|re| re.captures(&text)) {
+                if let Some(caps) = Regex::new(r"(?i)A/C\s*(?:NO\.?|NUMBER)?\s*:?\s*([0-9A-Z]{9,18})").ok().and_then(|re| re.captures(&text)) {
                     account = Some(caps[1].trim().to_string());
                 }
             }
@@ -926,10 +1042,48 @@ fn bank_details(pairs: &[LabelValue], lines: &[Line]) -> BankDetails {
             cleaned = cleaned[..idx].trim();
         }
         let upper = cleaned.to_ascii_uppercase();
-        if upper.starts_with("INTEREST") || upper.starts_with("SAVINGS") || upper.starts_with("DEPOSIT") || upper.contains("INTEREST ON") || upper == "TYPE" {
+        if cleaned.is_empty() || upper.starts_with("INTEREST") || upper.starts_with("SAVINGS") || upper.starts_with("DEPOSIT") || upper.contains("INTEREST ON") || upper == "TYPE" {
             name = None;
         } else {
             *n = cleaned.to_string();
+        }
+    }
+
+    if name.as_ref().map_or(true, |s| s.trim().is_empty()) {
+        for line in lines {
+            let u = line.upper();
+            if (u.contains("BANK") || u.contains("LTD")) && !u.contains("INTEREST") && !u.contains("SAVING") && !u.contains("S.B.") {
+                for seg in &line.segments {
+                    let su = seg.to_ascii_uppercase();
+                    if (su.contains("BANK") || su.contains("LTD")) && !su.contains("INTEREST") && !su.contains("A/C") && !su.contains("DETAILS") {
+                        name = Some(seg.trim().to_string());
+                        break;
+                    }
+                }
+                if name.is_some() {
+                    break;
+                }
+            }
+        }
+    }
+
+    if name.as_ref().map_or(true, |s| s.trim().is_empty()) {
+        if let Some(ref code) = ifsc {
+            if code.starts_with("HDFC") {
+                name = Some("HDFC BANK LTD.".to_string());
+            } else if code.starts_with("SBIN") {
+                name = Some("STATE BANK OF INDIA".to_string());
+            } else if code.starts_with("ICIC") {
+                name = Some("ICICI BANK LIMITED".to_string());
+            } else if code.starts_with("PUNB") {
+                name = Some("PUNJAB NATIONAL BANK".to_string());
+            } else if code.starts_with("UTIB") {
+                name = Some("AXIS BANK".to_string());
+            } else if code.starts_with("BARB") {
+                name = Some("BANK OF BARODA".to_string());
+            } else if code.starts_with("KKBK") {
+                name = Some("KOTAK MAHINDRA BANK".to_string());
+            }
         }
     }
 
@@ -941,31 +1095,54 @@ fn bank_details(pairs: &[LabelValue], lines: &[Line]) -> BankDetails {
         }
     }
 
+    if let Some(ref acc) = account {
+        if acc.len() < 9 {
+            account = None;
+        }
+    }
+
     BankDetails {
         bank_name: name,
         ifsc_code: ifsc,
         account_no: account,
-        branch_address: pair_value(pairs, &["BRANCHADDRESS"]).or_else(|| {
+        branch_address: pair_value(pairs, &["BRANCHADDRESS", "BANKBRANCH", "BRANCH"]).or_else(|| {
             pairs.iter().find_map(|pair| {
                 let label = normalise(&pair.label);
-                (label == "ADDRESS" && pair.value.trim() != "").then(|| pair.value.trim().to_string())
+                (label == "BRANCHADDRESS" && pair.value.trim() != "").then(|| pair.value.trim().to_string())
             })
         }),
     }
 }
 
 fn return_details(text: &str) -> ReturnDetails {
-    let tax_regime = if text.to_ascii_uppercase().contains("115BAC")
-        || text.to_ascii_uppercase().contains("NEW TAX REGIME")
-    {
-        Some("NEW_REGIME_115BAC".to_string())
-    } else if text.to_ascii_uppercase().contains("OLD TAX REGIME")
-        || text.to_ascii_uppercase().contains("OLD REGIME")
-    {
-        Some("OLD_REGIME".to_string())
-    } else {
+    let tax_regime = text.lines().find_map(|line| {
+        let u = line.to_ascii_uppercase();
+        if u.contains("COMPUTATION OF TOTAL INCOME") || u.contains("COMPUTATION OF INCOME") || u.contains("RETURN") {
+            if u.contains("OLD REGIME") || u.contains("OLD TAX REGIME") {
+                return Some("OLD_REGIME".to_string());
+            }
+            if u.contains("115BAC") || u.contains("NEW TAX REGIME") || u.contains("NEW REGIME") {
+                return Some("NEW_REGIME_115BAC".to_string());
+            }
+        }
         None
-    };
+    }).or_else(|| {
+        if text.to_ascii_uppercase().contains("(OLD REGIME)")
+            || text.to_ascii_uppercase().contains("COMPUTATION OF TOTAL INCOME (OLD REGIME)")
+        {
+            Some("OLD_REGIME".to_string())
+        } else if text.to_ascii_uppercase().contains("115BAC")
+            || text.to_ascii_uppercase().contains("NEW TAX REGIME")
+        {
+            Some("NEW_REGIME_115BAC".to_string())
+        } else if text.to_ascii_uppercase().contains("OLD TAX REGIME")
+            || text.to_ascii_uppercase().contains("OLD REGIME")
+        {
+            Some("OLD_REGIME".to_string())
+        } else {
+            None
+        }
+    });
 
     let Some(return_line) = text.lines().find(|line| line.to_ascii_uppercase().contains("RETURN")) else {
         return ReturnDetails {
@@ -993,7 +1170,7 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         let u = line.upper();
         if u.contains("115BAC") || u.contains("NEW TAX REGIME") {
             Some("Section 115BAC - New Tax Regime".to_string())
-        } else if u.contains("OLD TAX REGIME") {
+        } else if u.contains("OLD TAX REGIME") || u.contains("OLD REGIME") {
             Some("Old Tax Regime".to_string())
         } else {
             None
@@ -1011,9 +1188,68 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         })
     });
 
+    let hp_total = labelled_amount(
+        lines,
+        &[
+            "TOTAL INCOME FROM HOUSE PROPERTY",
+            "INCOME FROM HOUSE PROPERTY",
+            "LOSS FROM HOUSE PROPERTY",
+        ],
+    )
+    .or_else(|| money_rupees(computation.heads.house_property.as_ref()));
+
+    let hp_interest = labelled_amount(
+        lines,
+        &[
+            "INTEREST ON BORROWED CAPITAL",
+            "INTEREST U/S 24(B)",
+            "INTEREST U/S 24 (B)",
+            "INTEREST U/S. 24(B)",
+            "INTEREST U/S. 24 (B)",
+            "U/S 24(B)",
+            "U/S 24 (B)",
+            "U/S. 24(B)",
+            "INTEREST ON HOUSING LOAN",
+        ],
+    );
+
+    let hp_alv = labelled_amount(
+        lines,
+        &[
+            "ANNUAL LETTABLE VALUE",
+            "ANNUAL VALUE",
+            "GROSS ANNUAL VALUE",
+        ],
+    );
+
+    let hp_std_ded = labelled_amount(
+        lines,
+        &[
+            "STANDARD DEDUCTION @ 30%",
+            "STANDARD DEDUCTION U/S 24(A)",
+            "STANDARD DEDUCTION",
+        ],
+    );
+
+    let has_hp_data = hp_total.filter(|&v| v != 0).is_some()
+        || hp_interest.filter(|&v| v > 0).is_some()
+        || hp_alv.filter(|&v| v > 0).is_some();
+    let hp_section = if has_hp_data {
+        Some(HousePropertySection {
+            chapter: Some("IV C".to_string()),
+            total: hp_total,
+            annual_lettable_value: hp_alv,
+            standard_deduction_30_pct: hp_std_ded,
+            interest_on_borrowed_capital: hp_interest,
+        })
+    } else {
+        None
+    };
+
     let bus_total = labelled_amount(
         lines,
         &[
+            "TOTAL INCOME FROM BUSINESS OR PROFESSION",
             "PROFITS AND GAINS OF BUSINESS OR PROFESSION",
             "INCOME FROM BUSINESS OR PROFESSION",
             "PROFITS AND GAINS OF BUSINESS",
@@ -1023,7 +1259,6 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "PROFITOR GAINS OF BUSINESS OR PROFESSION",
             "PROFITOR GAINS",
             "INCOME FROM BUSINESS",
-            "TOTAL BUSINESS INCOME",
             "PROFIT U/S 44AD",
             "U/S 28",
         ],
@@ -1053,22 +1288,39 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
     let cg_total = labelled_amount(lines, &["CAPITAL GAINS", "INCOME FROM CAPITAL GAIN", "TOTAL CAPITAL GAIN"])
         .or_else(|| money_rupees(computation.heads.capital_gains.as_ref()));
 
-    let cg_section = Some(CapitalGainSection {
-        chapter: Some("IV E".to_string()),
-        total: cg_total,
-        short_term_capital_gain: Some(ShortTermCapitalGainDetails {
-            capital_gain_as_per_details_attached: stcg_amt,
-        }),
-        long_term_capital_gain: Some(LongTermCapitalGainDetails {
-            long_term_capital_gain_u_s_112a_before_23_07_2024: ltcg_112a,
-            threshold_limit: Some(125000),
-            brought_forward_long_term_capital_loss: ltcg_loss,
-        }),
-    });
+    let has_cg = cg_total.filter(|&v| v != 0).is_some()
+        || stcg_amt.filter(|&v| v > 0).is_some()
+        || ltcg_112a.filter(|&v| v > 0).is_some();
+    let cg_section = if has_cg {
+        let stcg_details = stcg_amt.map(|amt| ShortTermCapitalGainDetails {
+            capital_gain_as_per_details_attached: Some(amt),
+        });
+        let ltcg_details = if ltcg_112a.is_some() || ltcg_loss.is_some() {
+            Some(LongTermCapitalGainDetails {
+                long_term_capital_gain_u_s_112a_before_23_07_2024: ltcg_112a,
+                threshold_limit: Some(125000),
+                brought_forward_long_term_capital_loss: ltcg_loss,
+            })
+        } else {
+            None
+        };
+        Some(CapitalGainSection {
+            chapter: Some("IV E".to_string()),
+            total: cg_total,
+            short_term_capital_gain: stcg_details,
+            long_term_capital_gain: ltcg_details,
+        })
+    } else {
+        None
+    };
 
     let sav_int = labelled_amount(
         lines,
         &[
+            "INTEREST ON S.B. A/C.(S)",
+            "INTEREST ON S.B.A/C.(S)",
+            "INTEREST ON S.B. A/C",
+            "INTEREST ON S.B.",
             "INTEREST FROM SAVING BANK ACCOUNT",
             "INTEREST FROM SAVINGS BANK ACCOUNT",
             "INTEREST FROM SAVING BANK AC",
@@ -1086,8 +1338,16 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "INTEREST FROM BANK",
         ],
     );
+    let non_saving_lines: Vec<Line> = lines
+        .iter()
+        .filter(|l| {
+            let u = l.upper();
+            !u.contains("SAVING") && !u.contains("S.B.") && !u.contains("S. B.") && !u.contains("80TTA")
+        })
+        .cloned()
+        .collect();
     let fdr_int = labelled_amount(
-        lines,
+        &non_saving_lines,
         &[
             "INTEREST ON FDR",
             "INTEREST ON F.D.R.",
@@ -1098,7 +1358,7 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         ],
     );
     let time_dep = labelled_amount(
-        lines,
+        &non_saving_lines,
         &[
             "INTEREST FROM TIME-DEPOSIT",
             "INTEREST FROM TIME DEPOSIT",
@@ -1106,10 +1366,6 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "INTEREST ON TIME DEPOSIT",
             "TIME DEPOSIT INTEREST",
             "TIME-DEPOSIT INTEREST",
-            "INTEREST FROM DEPOSIT",
-            "INTEREST ON DEPOSIT",
-            "INTEREST FROM DEPOSITS",
-            "INTEREST ON DEPOSITS",
         ],
     );
     let tax_ref = labelled_amount(
@@ -1143,19 +1399,24 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
     let os_total = labelled_amount(lines, &["INCOME FROM OTHER SOURCES", "TOTAL OTHER SOURCES"])
         .or_else(|| money_rupees(computation.heads.other_sources.as_ref()));
 
-    let os_section = Some(OtherSourcesSection {
-        chapter: Some("IV F".to_string()),
-        total: os_total,
-        details: Some(OtherSourcesDetails {
-            interest_from_saving_bank_accounts: sav_int,
-            interest_from_time_deposit: time_dep.or(fdr_int),
-            interest_on_fdr: fdr_int,
-            interest_on_income_tax_refund: tax_ref,
-            other_item: oth_item,
-            dividend_from_shares: div_amt,
+    let has_os = os_total.is_some() || sav_int.is_some() || fdr_int.is_some() || time_dep.is_some() || tax_ref.is_some() || oth_item.is_some() || div_amt.is_some();
+    let os_section = if has_os {
+        Some(OtherSourcesSection {
+            chapter: Some("IV F".to_string()),
             total: os_total,
-        }),
-    });
+            details: Some(OtherSourcesDetails {
+                interest_from_saving_bank_accounts: sav_int,
+                interest_from_time_deposit: time_dep,
+                interest_on_fdr: fdr_int,
+                interest_on_income_tax_refund: tax_ref,
+                other_item: oth_item,
+                dividend_from_shares: div_amt,
+                total: os_total,
+            }),
+        })
+    } else {
+        None
+    };
 
     let gti = labelled_amount(lines, &["GROSS TOTAL INCOME"]).or_else(|| money_rupees(computation.gross_total_income.as_ref()));
 
@@ -1180,11 +1441,10 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             .filter_map(|i| i.amount.as_ref().map(|m| m.paise.abs() / 100))
             .sum();
         (items_sum > 0).then_some(items_sum)
-    })
-    .or(Some(0));
-    let ded_section = Some(DeductionsSection {
+    });
+    let ded_section = ded_total.map(|tot| DeductionsSection {
         chapter: Some("VI-A".to_string()),
-        total: ded_total,
+        total: Some(tot),
     });
 
     let mut tot_inc_amt = labelled_amount(lines, &["TOTAL INCOME"]).or_else(|| money_rupees(computation.total_income.as_ref()));
@@ -1198,22 +1458,36 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
     let round_288a = labelled_amount(
         lines,
         &[
-            "NET TAXABLE INCOME (R/O TO NEAREST RUPEES TEN)",
-            "NET TAXABLE INCOME (R/O TO NEAREST RUPEE TEN)",
-            "NET TAXABLE INCOME (R/O",
-            "NET TAXABLE INCOME",
-            "ROUNDING OFF U/S 288 A",
+            "ROUNDED OFF U/S.288A",
+            "ROUNDED OFF U/S. 288A",
+            "ROUNDED OFF U/S. 288 A",
+            "ROUNDED OFF U/S 288A",
+            "ROUNDED OFF U/S 288 A",
+            "ROUNDED OFF U/S",
+            "ROUND OFF U/S.288A",
+            "ROUND OFF U/S 288A",
+            "ROUND OFF U/S. 288A",
+            "ROUND OFF U/S. 288 A",
+            "ROUND OFF U/S 288",
+            "ROUND OFF U/S",
+            "ROUNDING OFF U/S.288A",
             "ROUNDING OFF U/S 288A",
             "ROUNDING OFF U/S 288",
             "ROUNDING OFF UNDER SECTION 288A",
-            "ROUND OFF U/S 288 A",
-            "ROUND OFF U/S 288A",
-            "ROUND OFF U/S 288",
-            "ROUNDED OFF U/S 288 A",
-            "ROUNDED OFF U/S 288A",
             "ROUND OFF UNDER SECTION 288A",
         ],
     )
+    .or_else(|| {
+        labelled_amount(
+            lines,
+            &[
+                "NET TAXABLE INCOME (R/O TO NEAREST RUPEES TEN)",
+                "NET TAXABLE INCOME (R/O TO NEAREST RUPEE TEN)",
+                "NET TAXABLE INCOME (R/O",
+                "NET TAXABLE INCOME",
+            ],
+        )
+    })
     .or(tot_inc_amt);
     let exempt_10 = labelled_amount(lines, &["INCOME EXEMPT U/S 10", "PROFIT EXEMPT U/S 10(2A)", "EXEMPT INCOME U/S 10"]);
     let adj_tot_inc = labelled_amount(lines, &["ADJUSTED TOTAL INCOME"]).or(tot_inc_amt);
@@ -1241,12 +1515,31 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "SHORT TERM CAPITAL GAIN @",
             "SHORT TERM CAPITAL GAIN TAX",
             "TAX ON STCG",
-            "SHORT TERM CAPITAL GAIN",
+            "TAX ON SHORT TERM CAPITAL GAIN",
         ],
     );
     let mut tot_tax = labelled_amount(lines, &["GROSS TAX PAYABLE", "TOTAL TAX", "TOTAL TAX CALCULATED"]);
-    let rebate_87a = labelled_amount(lines, &["REBATE U/S 87A", "REBATE UNDER SECTION 87A"]);
-    let tax_after_reb = labelled_amount(lines, &["TAX AFTER REBATE"]).or_else(|| {
+    let gross_tax_re = Regex::new(r"(?i)GROSS\s+TAX\s+ON\s+RS\.?\s*([\d,]+)(?:\s*\([^\)]*\))?\s*[:=]?\s*([\d,]+)").unwrap();
+    let gross_tax_sum: i64 = lines.iter().filter_map(|l| {
+        gross_tax_re.captures(&l.text()).and_then(|c| parse_rupees(&c[2]))
+    }).sum();
+    if gross_tax_sum > 0 && (tot_tax.is_none() || gross_tax_sum > tot_tax.unwrap_or(0)) {
+        tot_tax = Some(gross_tax_sum);
+    }
+    let rebate_87a = labelled_amount(
+        lines,
+        &[
+            "TAX REBATE U/S.87(A)",
+            "TAX REBATE U/S 87A",
+            "REBATE U/S.87(A)",
+            "REBATE U/S 87(A)",
+            "REBATE U/S. 87(A)",
+            "REBATE U/S 87A",
+            "REBATE UNDER SECTION 87A",
+        ],
+    );
+    let balance_tax = labelled_amount(lines, &["BALANCE TAX", "TAX AFTER REBATE", "TAX PAYABLE"]);
+    let tax_after_reb = balance_tax.or_else(|| {
         match (tot_tax, rebate_87a) {
             (Some(t), Some(r)) => Some(t.saturating_sub(r)),
             _ => None,
@@ -1259,9 +1552,10 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             "HEALTH AND EDUCATION CESS",
             "HEC @",
             "CESS @ 4%",
+            "CESS @ 4.00%",
         ],
     );
-    let tax_after_c = labelled_amount(lines, &["TAX AFTER CESS", "TOTAL TAX AND CESS"]).or_else(|| {
+    let tax_after_c = labelled_amount(lines, &["TAX AFTER CESS", "TOTAL TAX AND CESS", "TOTAL TAX & CESS"]).or_else(|| {
         match (tax_after_reb, cess_amt) {
             (Some(tar), Some(c)) => Some(tar + c),
             _ => None,
@@ -1271,9 +1565,12 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
     let dep_140a = labelled_amount(
         lines,
         &[
+            "SELF ASSESSMENT TAX PAID U/S 140A",
+            "SELF ASSESSMENT TAX PAID",
             "DEPOSIT U/S 140A",
             "SELF ASSESSMENT TAX",
             "DEPOSIT UNDER SECTION 140A",
+            "SCROLL:",
         ],
     );
     let ref_288b = labelled_amount(lines, &["REFUNDABLE (ROUND OFF U/S 288B)", "ROUND OFF U/S 288B"]);
@@ -1345,19 +1642,26 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         tax_on_norm = tot_tax_norm;
     }
 
-    let norm_tax_calc = Some(NormalIncomeTaxCalculation {
-        normal_income: norm_inc,
-        exemption_limit: ex_lim.or(Some(300000)),
-        taxable_normal_income: tax_norm_inc,
-        tax_rate,
-        tax_on_normal_income: tax_on_norm,
-        total_tax: tot_tax_norm,
-    });
+    let norm_tax_calc = if norm_inc.is_some() || tax_norm_inc.is_some() || tax_on_norm.is_some() || tot_tax_norm.is_some() {
+        Some(NormalIncomeTaxCalculation {
+            normal_income: norm_inc,
+            exemption_limit: ex_lim.or(Some(300000)),
+            taxable_normal_income: tax_norm_inc,
+            tax_rate,
+            tax_on_normal_income: tax_on_norm,
+            total_tax: tot_tax_norm,
+        })
+    } else {
+        None
+    };
 
     let gross_sal = labelled_amount(lines, &["GROSS SALARY", "SALARY RECEIVED"]);
     let std_ded_16ia = labelled_amount(lines, &["STANDARD DEDUCTION U/S 16(IA)", "STANDARD DEDUCTION U/S 16IA", "STANDARD DEDUCTION", "DEDUCTION U/S 16(IA)"]);
     let tax_sal = labelled_amount(lines, &["TAXABLE SALARY", "NET SALARY", "INCOME CHARGEABLE UNDER THE HEAD SALARIES", "SALARIES"]);
-    let salaries = if gross_sal.is_some() || tax_sal.is_some() || std_ded_16ia.is_some() {
+    let has_sal_data = gross_sal.filter(|&v| v > 0).is_some()
+        || tax_sal.filter(|&v| v > 0).is_some()
+        || std_ded_16ia.filter(|&v| v > 0).is_some();
+    let salaries = if has_sal_data {
         Some(SalariesLayout {
             gross_salary: gross_sal,
             standard_deduction_u_s_16_ia: std_ded_16ia,
@@ -1376,9 +1680,9 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
     let mut current_tier: Option<PresumptiveTier> = None;
     let mut section_total = None;
 
-    let mut deemed_p = labelled_amount(lines, &["PROFIT DEEMED U/S 44AD", "DEEMED PROFIT"]);
-    let mut decl_p = labelled_amount(lines, &["PROFIT DECLARED U/S 44AD", "DECLARED PROFIT"]);
-    let mut turn_base = labelled_amount(lines, &["GROSS RECEIPT / TURNOVER", "TURNOVER"]);
+    let deemed_p = labelled_amount(lines, &["PROFIT DEEMED U/S 44AD", "DEEMED PROFIT"]);
+    let decl_p = labelled_amount(lines, &["PROFIT DECLARED U/S 44AD", "DECLARED PROFIT"]);
+    let turn_base = labelled_amount(lines, &["GROSS RECEIPT / TURNOVER", "TURNOVER"]);
     let tax_bus_p = labelled_amount(lines, &["PROFIT (HIGHER OF THE ABOVE)", "PROFIT TAKEN HIGHER OF DECLARED OR DEEMED", "PROFITS AND GAINS FROM BUSINESS OR PROFESSION", "PROFIT U/S 44AD"]);
 
     for line in lines {
@@ -1595,7 +1899,12 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
     };
     let final_gross_tot = sum_parts.or(gross_tot).or(gross_turnover);
 
-    let income_declared_business_turnover = if final_gross_tot.is_some() || gross_digital.is_some() || deemed_digital.is_some() || net_decl_info.is_some() || inc_decl_sec.is_some() {
+    let is_44ad = lines.iter().any(|l| {
+        let u = l.upper();
+        u.contains("44AD") || u.contains("44 AD") || u.contains("44ADA") || u.contains("44 ADA") || u.contains("44AE") || u.contains("44 AE")
+    });
+
+    let income_declared_business_turnover = if is_44ad && (final_gross_tot.is_some() || gross_digital.is_some() || deemed_digital.is_some() || net_decl_info.is_some() || inc_decl_sec.is_some()) {
         Some(IncomeDeclaredBusinessTurnover {
             due_date_for_filing_return: due_date,
             due_date_extended_to: ext_due_date,
@@ -1638,13 +1947,13 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
 
     let tax_bus_p_flat = section_total.or(decl_p_flat).or(tax_bus_p);
 
-    let mut profits_and_gains_business_profession = if !tiers.is_empty() || section_total.is_some() || deemed_p_flat.is_some() || decl_p_flat.is_some() {
+    let mut profits_and_gains_business_profession = if !tiers.is_empty() || section_total.is_some() || (is_44ad && deemed_p_flat.is_some()) || (is_44ad && decl_p_flat.is_some()) {
         Some(ProfitsAndGainsBusinessProfession {
             tiers,
             section_total: section_total.or(tax_bus_p_flat),
-            deemed_profit_44ad: deemed_p_flat,
-            declared_profit_44ad: decl_p_flat,
-            turnover_base_44ad: turn_base_flat,
+            deemed_profit_44ad: if is_44ad { deemed_p_flat } else { None },
+            declared_profit_44ad: if is_44ad { decl_p_flat } else { None },
+            turnover_base_44ad: if is_44ad { turn_base_flat } else { None },
             taxable_business_profit: tax_bus_p_flat,
         })
     } else {
@@ -1725,18 +2034,20 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             tiers: vec![],
             section_total: Some(bt),
             deemed_profit_44ad: None,
-            declared_profit_44ad: Some(bt),
-            turnover_base_44ad: final_gross_tot,
+            declared_profit_44ad: if is_44ad { Some(bt) } else { None },
+            turnover_base_44ad: if is_44ad { final_gross_tot } else { None },
             taxable_business_profit: Some(bt),
         });
     }
 
     // single concise context line
     let slab_item_re = Regex::new(r"(?i)(TAX\s+ON\s+RS\.?\s*[\d,]+(?:\s*\([\d,]+\s*[-–]\s*[\d,]+\)\s*@\s*[\d\.]+%|\s*@\s*[\d\.]+%|\s+NIL)?)\s*[:=]?\s*([\d,]+)").unwrap();
+    let gross_tax_item_re = Regex::new(r"(?i)GROSS\s+TAX\s+ON\s+RS\.?\s*([\d,]+)(?:\s*\(([^\)]*)\))?\s*[:=]?\s*([\d,]+)").unwrap();
     let tax_on_tot_re = Regex::new(r"(?i)TAX\s+ON\s+TOTAL\s+INCOME\s+RS\.?\s*(\(?.+?\)?)\s+([\d,]+)$").unwrap();
     let agri_reb_re = Regex::new(r"(?i)REBATE\s+OF\s+TAX\s+ON\s+AGRICULTURE\s+INCOME\s+RS\.?\s*(\(?.+?\)?)\s+([\d,]+)$").unwrap();
     let tax_after_agri_re = Regex::new(r"(?i)TAX\s+ON\s+RS\.?\s*[\d,]+\s+([\d,]+)$").unwrap();
     let challan_re = Regex::new(r"(?i)(.+?)\s*[-–]\s*(\d{5,7})\s*[-–]\s*(\d{4,8})\s*[-–]\s*([\d/-]+)\s+([\d,]+)").unwrap();
+    let scroll_line_re = Regex::new(r"(?i)Scroll\s*:\s*([0-9A-Z]*)\s*/\s*BSR\s*:\s*([0-9A-Z]*)\s*/\s*Date\s*:\s*([0-9/\.-]+)").unwrap();
 
     let mut tax_slabs = Vec::new();
     let mut tot_tax_found = None;
@@ -1753,7 +2064,16 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         let t = line.text();
         let u = line.upper();
 
-        if let Some(caps) = slab_item_re.captures(&t) {
+        if let Some(caps) = gross_tax_item_re.captures(&t) {
+            let amt = caps.get(3).and_then(|m| parse_rupees(m.as_str())).or_else(|| parse_rupees(&caps[2]));
+            if let Some(tax_amt) = amt {
+                let suffix = caps.get(2).map_or(String::new(), |m| format!(" ({})", m.as_str()));
+                tax_slabs.push(TaxSlabItem {
+                    slab: format!("Gross Tax on Rs. {}{}", &caps[1], suffix),
+                    tax_amount: tax_amt,
+                });
+            }
+        } else if let Some(caps) = slab_item_re.captures(&t) {
             if let Some(amt) = parse_rupees(&caps[2]) {
                 let slab_label = caps[1].trim();
                 let upper_label = slab_label.to_ascii_uppercase();
@@ -1802,6 +2122,29 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             fee_234f_amt = line_amount(line);
         }
 
+        if let Some(caps) = scroll_line_re.captures(&t) {
+            if self_assess_details.is_none() {
+                let challan_no = if !caps[1].is_empty() { Some(caps[1].trim().to_string()) } else { None };
+                let bsr_code = if !caps[2].is_empty() { Some(caps[2].trim().to_string()) } else { None };
+                let date = if !caps[3].is_empty() { Some(caps[3].trim().to_string()) } else { None };
+                let challan_amt = line_amount(line).or(self_assess_140a_amt).or(dep_140a).unwrap_or(0);
+                let next_bank = lines.get(idx + 1).and_then(|nl| {
+                    let nu = nl.upper();
+                    (nu.contains("BANK") || nu.contains("LTD")).then(|| nl.text().trim().to_string())
+                });
+                if self_assess_140a_amt.is_none() || self_assess_140a_amt == Some(0) {
+                    self_assess_140a_amt = Some(challan_amt);
+                }
+                self_assess_details = Some(SelfAssessmentChallan {
+                    bank_name: next_bank,
+                    bsr_code,
+                    challan_no,
+                    date,
+                    amount: challan_amt,
+                });
+            }
+        }
+
         if u.contains("140A") {
             if let Some(caps) = challan_re.captures(&t) {
                 if self_assess_140a_amt.is_none() {
@@ -1834,8 +2177,19 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         }
     }
 
+    if !tax_slabs.is_empty() {
+        let sum_slabs: i64 = tax_slabs.iter().map(|s| s.tax_amount).sum();
+        if sum_slabs > 0 && (tot_tax.is_none() || sum_slabs > tot_tax.unwrap_or(0)) {
+            tot_tax = Some(sum_slabs);
+        }
+    }
+
     if tot_tax.is_none() {
         tot_tax = tot_tax_found;
+    }
+
+    if self_assess_140a_amt.is_none() {
+        self_assess_140a_amt = dep_140a;
     }
 
     let comp_tax_on_tot = if !tax_slabs.is_empty() || tot_tax.is_some() || tax_on_tot_amt.is_some() {
@@ -1857,7 +2211,7 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
             rebate_u_s_87a: rebate_87a,
             tax_after_rebate: final_tax_after_reb,
             fee_payable_u_s_234f: fee_234f_amt,
-            self_assessment_tax_140a: self_assess_140a_amt,
+            self_assessment_tax_140a: self_assess_140a_amt.or(dep_140a),
             self_assessment_tax_details: self_assess_details,
         })
     } else {
@@ -1959,12 +2313,13 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         } else {
             None
         }
-    }).unwrap_or_else(|| "Special Rate income has not been considered while calculating rebate u/s 87A, as per the changes made in the Income Tax Law on 05/07/2024.".to_string());
+    });
 
     ComputationOfTotalIncome {
         tax_regime,
         assessment_year,
         salaries,
+        income_from_house_property: hp_section,
         profits_and_gains_business_profession,
         income_declared_business_turnover: income_declared_business_turnover.clone(),
         income_from_business_or_profession: bus_section,
@@ -1982,17 +2337,17 @@ fn computation_of_total_income(lines: &[Line], computation: &coi_domain::Computa
         tax_deducted_at_source_list,
         total_tds_tcs,
         refund,
-        special_rate_income_note: Some(spec_note),
+        special_rate_income_note: spec_note,
     }
 }
 
 fn tax_computation(lines: &[Line], computation: &coi_domain::Computation) -> TaxComputationContract {
     let slabs = lines.iter().filter_map(|line| {
         let upper = line.upper();
-        if !upper.starts_with("TAX ON") && !upper.starts_with("TAX DUE") {
+        if !upper.starts_with("TAX ON") && !upper.starts_with("TAX DUE") && !upper.starts_with("GROSS TAX ON") {
             return None;
         }
-        if !upper.contains('@') && !upper.contains('%') && !upper.contains("NIL") {
+        if !upper.contains('@') && !upper.contains('%') && !upper.contains("NIL") && !upper.starts_with("GROSS TAX ON") {
             return None;
         }
         let text = line.text();
@@ -2065,7 +2420,7 @@ fn amount_after_label(line: &Line, label_candidates: &[&str]) -> Option<i64> {
                 if let Some(amt) = parse_rupees(sub_seg) {
                     return Some(amt);
                 }
-                if sub_seg.trim().eq_ignore_ascii_case("NIL") || sub_seg.trim() == "-" {
+                if sub_seg.trim().eq_ignore_ascii_case("NIL") {
                     return Some(0);
                 }
             }
@@ -2169,6 +2524,7 @@ fn tds_item(line: &Line) -> Option<TdsItem> {
     Some(TdsItem { section: Some(section), description: Some(description), amount: line_amount(line) })
 }
 
+#[allow(dead_code)]
 fn deemed_rate_and_base(text: &str) -> (Option<i64>, Option<i64>) {
     let captures = Regex::new(r"(?i)@\s*(\d+)\s*%.*?(?:RS\.?\s*)?([0-9][0-9,]*)").ok()
         .and_then(|re| re.captures(text));
@@ -2196,6 +2552,8 @@ fn classify_slab_category(text: &str) -> Option<String> {
         Some("Normal Income Slab @ 30%".to_string())
     } else if u.contains("@ 0%") || u.contains("@0%") || u.contains("NIL") || u.contains("3,00,000") || u.contains("2,50,000") {
         Some("Normal Income Slab @ 0%".to_string())
+    } else if u.contains("GROSS TAX ON") {
+        Some("Normal / Special Tax Slab".to_string())
     } else {
         None
     }
@@ -2214,6 +2572,7 @@ fn first_amount_after_tax_on(text: &str) -> Option<i64> {
     None
 }
 
+#[allow(dead_code)]
 fn following_amount(lines: &[Line], index: usize, label: &str) -> Option<i64> {
     lines.iter().skip(index + 1).take(4).find_map(|line| {
         let upper = line.upper();
@@ -2225,11 +2584,27 @@ fn following_amount(lines: &[Line], index: usize, label: &str) -> Option<i64> {
 // single concise context line
 pub fn parse_amount(text: &str) -> Option<i64> {
     let mut trimmed = text.trim();
-    if trimmed.is_empty() || trimmed.eq_ignore_ascii_case("NIL") || trimmed == "-" {
+    if trimmed.is_empty() || trimmed == "-" || trimmed == "–" || trimmed == "—" || trimmed == "--" {
+        return None;
+    }
+    if trimmed.eq_ignore_ascii_case("NIL") {
         return Some(0);
     }
-    if trimmed.ends_with(|c: char| c.is_ascii_alphabetic()) {
+    let mut check_str = trimmed.to_ascii_uppercase();
+    for token in &["INR", "RS.", "RS", "CR", "DR"] {
+        check_str = check_str.replace(token, " ");
+    }
+    if !check_str.chars().all(|c| {
+        c.is_ascii_digit()
+            || matches!(c, '.' | ',' | '(' | ')' | '-' | '+' | ' ' | '/' | '\u{20B9}' | '\u{A0}')
+    }) || !check_str.chars().any(|c| c.is_ascii_digit()) {
         return None;
+    }
+    if check_str.contains('-') {
+        let trimmed_check = check_str.trim().trim_matches(['(', ')', '/']);
+        if !trimmed_check.starts_with('-') && !trimmed_check.ends_with('-') {
+            return None;
+        }
     }
     if let Some(dot_idx) = trimmed.rfind('.') {
         if dot_idx > 0 && trimmed[dot_idx + 1..].chars().all(|c| c.is_ascii_digit()) {

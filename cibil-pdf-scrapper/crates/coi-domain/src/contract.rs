@@ -110,6 +110,15 @@ pub struct SalariesLayout {
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct HousePropertySection {
+    pub chapter: Option<String>,
+    pub total: Option<i64>,
+    pub annual_lettable_value: Option<i64>,
+    pub standard_deduction_30_pct: Option<i64>,
+    pub interest_on_borrowed_capital: Option<i64>,
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ProfitsAndGainsBusinessProfession {
     pub tiers: Vec<PresumptiveTier>,
     pub section_total: Option<i64>,
@@ -268,6 +277,7 @@ pub struct ComputationOfTotalIncome {
     pub tax_regime: Option<String>,
     pub assessment_year: Option<String>,
     pub salaries: Option<SalariesLayout>,
+    pub income_from_house_property: Option<HousePropertySection>,
     pub profits_and_gains_business_profession: Option<ProfitsAndGainsBusinessProfession>,
     pub income_declared_business_turnover: Option<IncomeDeclaredBusinessTurnover>,
     pub income_from_business_or_profession: Option<BusinessIncomeSection>,

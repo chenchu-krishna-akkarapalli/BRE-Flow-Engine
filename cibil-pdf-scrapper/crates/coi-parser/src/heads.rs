@@ -37,6 +37,12 @@ fn head_amount(lines: &[Line], options: &[&str]) -> Option<Money> {
         let squashed = upper.replace([' ', '"', '\''], "");
         for option in options {
             let opt_squashed = option.replace([' ', '"', '\''], "");
+            let opt_clean = option.replace([' ', '"', '\'', '/', '-'], "");
+            if (opt_clean == "US28" || opt_clean == "UNDERSECTION28")
+                && (squashed.contains("288") || squashed.contains("ROUND") || squashed.contains("TOTALINCOME"))
+            {
+                continue;
+            }
             if squashed.contains(&opt_squashed) {
                 if let Some(money) = amount_on_line(line, option) {
                     return Some(money);
@@ -53,6 +59,12 @@ fn head_amount(lines: &[Line], options: &[&str]) -> Option<Money> {
                 let next_squashed = next_upper.replace([' ', '"', '\''], "");
                 for option in options {
                     let opt_squashed = option.replace([' ', '"', '\''], "");
+                    let opt_clean = option.replace([' ', '"', '\'', '/', '-'], "");
+                    if (opt_clean == "US28" || opt_clean == "UNDERSECTION28")
+                        && (next_squashed.contains("288") || next_squashed.contains("ROUND") || next_squashed.contains("TOTALINCOME"))
+                    {
+                        continue;
+                    }
                     if next_squashed.contains(&opt_squashed) {
                         if let Some(money) = amount_on_line(next_line, option) {
                             return Some(money);
@@ -91,34 +103,58 @@ pub fn extract_deductions(lines: &[Line]) -> ChapterViaDeductions {
     let mut items = Vec::new();
     let mut inside = false;
 
-    for line in lines {
+    for (idx, line) in lines.iter().enumerate() {
         let upper = line.upper();
         if patterns::matches_any(&upper, patterns::DEDUCTIONS_VIA) {
             inside = true;
             continue;
         }
         // The block ends at the next total line.
-        if inside && (upper.contains("TOTAL INCOME") || upper.contains("GROSS TOTAL INCOME")) {
+        if inside && (upper.contains("TOTAL INCOME") || upper.contains("GROSS TOTAL INCOME") || upper.contains("NET TAXABLE INCOME")) {
             inside = false;
         }
 
         // Section lines are recognised anywhere: some vendors list 80C under a
-        // sub-schedule far from the summary block.
+        // sub-schedule far from the summary block. Chapter VI-A is strictly sections starting with 80.
         let Some(caps) = patterns::section_code().captures(&upper) else { continue };
-        let section = caps[1].to_string();
-        if section.starts_with("87") || section.starts_with("89") {
+        let section = caps[1].to_ascii_uppercase();
+        if !section.starts_with("80") {
             continue;
         }
-        let amount = amount_on_line(line, &section);
+        let mut amount = amount_on_line(line, &section);
+        if amount.is_none() && inside {
+            // Forward lookahead up to 3 lines for allowable deduction or section amount
+            for k in 1..=3 {
+                if let Some(next_line) = lines.get(idx + k) {
+                    let next_upper = next_line.upper();
+                    if next_upper.contains("TOTAL DEDUCTION")
+                        || patterns::section_code().is_match(&next_upper)
+                    {
+                        break;
+                    }
+                    if let Some(m) = next_line.segments.iter().rev().find_map(|s| Money::parse(s)) {
+                        amount = Some(m);
+                    }
+                }
+            }
+        }
         if amount.is_none() && !inside {
             continue;
         }
-        items.push(DeductionItem {
-            section,
-            label: line.segments.first().cloned().unwrap_or_default(),
-            amount,
-            raw_line: line.text(),
-        });
+        if let Some(existing) = items.iter_mut().find(|i: &&mut DeductionItem| i.section == section) {
+            if existing.amount.is_none() && amount.is_some() {
+                existing.amount = amount;
+                existing.label = line.segments.first().cloned().unwrap_or_default();
+                existing.raw_line = line.text();
+            }
+        } else {
+            items.push(DeductionItem {
+                section,
+                label: line.segments.first().cloned().unwrap_or_default(),
+                amount,
+                raw_line: line.text(),
+            });
+        }
     }
 
     if (total.is_none() || total.as_ref().map(|t| t.paise).unwrap_or(0) == 0) && !items.is_empty() {

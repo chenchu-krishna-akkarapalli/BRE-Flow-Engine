@@ -266,6 +266,7 @@ fn scan_record(name: &str) -> serde_json::Value {
     })
 }
 
+#[allow(dead_code)]
 fn run_batch(dir: &Path, out_dir: Option<PathBuf>, as_json: bool) -> ExitCode {
     if let Some(out) = &out_dir {
         if let Err(e) = fs::create_dir_all(out) {

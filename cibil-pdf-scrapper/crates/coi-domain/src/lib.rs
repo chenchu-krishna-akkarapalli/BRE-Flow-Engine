@@ -17,7 +17,7 @@ pub use contract::{
     BusinessIncomeAdjustments, BusinessIncomeDetails, BusinessIncomeSection, CapitalGainSection,
     CaVerification, CoiDocument, ComputationOfTaxOnTotalIncome, ComputationOfTotalIncome,
     ConfidenceBreakdown, CreditEngineSummary, DeductionsSection, FinancialParticulars, GstTurnoverDetail,
-    HealthAndEducationCess, IncomeDeclaredBusinessTurnover, LongTermCapitalGainDetails, Meta,
+    HealthAndEducationCess, HousePropertySection, IncomeDeclaredBusinessTurnover, LongTermCapitalGainDetails, Meta,
     NormalIncomeTaxCalculation, OtherSourcesBreakdown, OtherSourcesDetails,
     OtherSourcesSection, PartnershipFirmShare, PresumptiveTier,
     ProfitsAndGainsBusinessProfession, RateAmount, RefundDetails, ReturnDetails,
