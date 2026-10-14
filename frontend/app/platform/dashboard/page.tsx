@@ -241,6 +241,13 @@ export default function PlatformOverviewPage() {
 
         <div className="flex items-center gap-2.5 self-start sm:self-auto">
           <Link
+            href="/platform/modules"
+            className="flex items-center gap-1.5 rounded-xl border border-teal-300 bg-teal-50 px-3.5 py-2.5 text-xs font-bold text-teal-700 hover:bg-teal-100 transition-all"
+          >
+            <Sliders size={15} />
+            <span>Dynamic Module Studio</span>
+          </Link>
+          <Link
             href="/new-channel"
             className="flex items-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-slate-900/10 hover:bg-slate-800 transition-all"
           >
@@ -499,20 +506,12 @@ export default function PlatformOverviewPage() {
                         {t.status === "active" && (
                           <>
                             <Link
-                              href={`/${t.tenant_uuid}/dashboard`}
+                              href={`/${t.tenant_uuid}/platformoverview/${t.tenant_uuid}/${t.code}/workspace`}
                               className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[0.6875rem] font-bold text-slate-800 shadow-xs hover:border-slate-400 hover:text-teal-700 transition-all"
-                              title="Open scoped tenant workspace"
+                              title={`Open ${t.name} Channel Workspace`}
                             >
                               <span>Open Workspace</span>
                               <ExternalLink size={11} />
-                            </Link>
-                            <Link
-                              href={`/${t.tenant_uuid}/configurator`}
-                              className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2 py-1 text-[0.6875rem] font-bold text-slate-600 hover:bg-white hover:text-slate-900 transition-all"
-                              title="Adjust BRE rules and CIBIL overlays"
-                            >
-                              <Sliders size={11} />
-                              <span>Rules</span>
                             </Link>
                             <button
                               type="button"

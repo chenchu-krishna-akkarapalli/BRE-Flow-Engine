@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "ocr_used": false,
+    "source": "text_layer"
+  },
+  "assessee_info": {
+    "pan": "AABPZ0521G",
+    "name": "NITAMBHAI BHARATBHAI ZAVERI",
+    "address": "C/O BIPINBHAI B.KOTHARI, 304,KHEMPLAZA,, ADARSH SCHOOL ROAD,, PATAN , PATAN , Gujarat, INDIA, 384265",
+    "status": "Individual",
+    "assessment_year": "2024-25",
+    "financial_year": "2023-24"
+  },
+  "return_details": {
+    "form_number": "ITR-3",
+    "filed_u_s": "139(1)- On or Before due date",
+    "acknowledgement_number": "648274960261024",
+    "date_of_filing": "26-Oct-2024"
+  },
+  "taxable_income_and_tax_details": {
+    "current_year_business_loss": 0,
+    "total_income": 641510,
+    "book_profit_under_mat": 0,
+    "adjusted_total_income_under_amt": 0,
+    "net_tax_payable": 0,
+    "interest_and_fee_payable": 0,
+    "total_tax_interest_and_fee_payable": 0,
+    "taxes_paid": 17815,
+    "tax_payable_or_refundable": -17820
+  },
+  "accreted_income_and_tax_details": {
+    "accreted_income_u_s_115td": 0,
+    "additional_tax_payable_u_s_115td": 0,
+    "interest_payable_u_s_115te": 0,
+    "additional_tax_and_interest_payable": 0,
+    "tax_and_interest_paid": 0,
+    "accreted_tax_payable_or_refundable": 0
+  },
+  "verification_details": {
+    "electronically_transmitted_on": "26-Oct-2024 09:23:24",
+    "ip_address": "27.61.209.29",
+    "verified_by": "NITAMBHAI BHARATBHAI ZAVERI",
+    "verifier_pan": "AABPZ0521G",
+    "verification_date": "26-Oct-2024",
+    "evc_code": "TN8KYMTBSI",
+    "verification_mode": "Aadhaar OTP",
+    "barcode_hash": "AABPZ0521G0364827496026102406831e7871ed60ba1b521cd6e739df47d099bec3"
+  }
+}

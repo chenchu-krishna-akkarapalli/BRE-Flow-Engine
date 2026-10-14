@@ -1,0 +1,14 @@
+[package]
+name = "itr-parser"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+itr-core = { path = "../itr-core" }
+itr-layout = { path = "../itr-layout" }
+itr-domain = { path = "../itr-domain" }
+regex = { workspace = true }
+serde = { workspace = true }
+
+[dev-dependencies]
+itr-pdf = { path = "../itr-pdf" }

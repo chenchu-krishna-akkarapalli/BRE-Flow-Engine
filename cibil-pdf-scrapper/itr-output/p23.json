@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "ocr_used": false,
+    "source": "text_layer"
+  },
+  "assessee_info": {
+    "pan": "DOFPS4492A",
+    "name": "PURSHOTTAM SHIVHARE",
+    "address": "WARD NO-34 , SATAI ROAD, SANDHYA VIHAR , CHHATARPUR , 18-Madhya Pradesh, 91-INDIA, 471001",
+    "status": "Individual",
+    "assessment_year": "2023-24",
+    "financial_year": "2022-23"
+  },
+  "return_details": {
+    "form_number": "ITR-3",
+    "filed_u_s": "139(1)- On or Before due date",
+    "acknowledgement_number": "730851940270723",
+    "date_of_filing": "27-Jul-2023"
+  },
+  "taxable_income_and_tax_details": {
+    "current_year_business_loss": 0,
+    "total_income": 477930,
+    "book_profit_under_mat": 0,
+    "adjusted_total_income_under_amt": 477930,
+    "net_tax_payable": 0,
+    "interest_and_fee_payable": 0,
+    "total_tax_interest_and_fee_payable": 0,
+    "taxes_paid": 0,
+    "tax_payable_or_refundable": 0
+  },
+  "accreted_income_and_tax_details": {
+    "accreted_income_u_s_115td": 0,
+    "additional_tax_payable_u_s_115td": 0,
+    "interest_payable_u_s_115te": 0,
+    "additional_tax_and_interest_payable": 0,
+    "tax_and_interest_paid": 0,
+    "accreted_tax_payable_or_refundable": 0
+  },
+  "verification_details": {
+    "electronically_transmitted_on": "27-Jul-2023 11:22:46",
+    "ip_address": "157.34.11.152",
+    "verified_by": "PURSHOTTAM SHIVHARE",
+    "verifier_pan": "DOFPS4492A",
+    "verification_date": "27-Jul-2023",
+    "evc_code": "7UD8VXBTCI",
+    "verification_mode": "Aadhaar",
+    "barcode_hash": "DOFPS4492A03730851940270723b131f270595bba7ec0005611b1d9cae8570a9abc"
+  }
+}

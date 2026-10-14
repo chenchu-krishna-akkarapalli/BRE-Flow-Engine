@@ -8,10 +8,12 @@ from app.api.v1.endpoints import (
     commissions,
     documents,
     health,
+    navigation,
     notifications,
     onboarding,
     pipeline,
     regional,
+    roles,
     telemetry,
     tenants,
     verification,
@@ -21,6 +23,8 @@ router = APIRouter()
 
 router.include_router(health.router, tags=["Health & Diagnostics"])
 router.include_router(auth.router, prefix="/auth", tags=["Universal Auth Server"])
+router.include_router(navigation.router, prefix="/navigation", tags=["Dynamic Navigation & Modules"])
+router.include_router(roles.router, prefix="/roles", tags=["Role Hierarchy & Governance"])
 router.include_router(onboarding.router, prefix="/onboarding", tags=["Onboarding BRE Evaluation"])
 router.include_router(documents.router, prefix="/onboarding/documents", tags=["Document Extraction & OCR"])
 router.include_router(verification.router, prefix="/onboarding/verification", tags=["Identity & OTP Verification"])

@@ -604,6 +604,11 @@ export function buildPayload(d: Draft): OnboardingFormRequest {
   };
 }
 
+export interface ItrRecord {
+  verified: boolean;
+  taxFeePayable: number | null;
+}
+
 interface OnboardingState {
   draft: Draft;
   stepId: number;
@@ -615,6 +620,8 @@ interface OnboardingState {
   cibilVerified: { filename: string; evidence: Record<string, unknown> } | null;
   payslipVerified: { filename: string; evidence: Record<string, unknown> } | null;
   coiVerified: { filename: string; evidence: Record<string, unknown> } | null;
+  itrVerified: { filename: string; evidence: Record<string, unknown> } | null;
+  itrRecords: Record<string, ItrRecord>;
 
   setField: <K extends keyof Draft>(key: K, value: Draft[K]) => void;
   // Bureau fields read off an uploaded CIBIL report. Set together so the
@@ -625,6 +632,9 @@ interface OnboardingState {
   clearPayslipExtraction: () => void;
   applyCoiExtraction: (data: Record<string, unknown>, filename: string) => void;
   clearCoiExtraction: () => void;
+  applyItrExtraction: (data: Record<string, unknown>, filename: string) => void;
+  clearItrExtraction: () => void;
+  setItrRecord: (id: string, record: ItrRecord | null) => void;
   goTo: (stepId: number) => void;
   next: () => void;
   prev: () => void;
@@ -641,6 +651,8 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   cibilVerified: null,
   payslipVerified: null,
   coiVerified: null,
+  itrVerified: null,
+  itrRecords: {},
 
   setField: (key, value) =>
     set((state) => {
@@ -746,6 +758,38 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
 
   clearCoiExtraction: () => set({ coiVerified: null }),
 
+  applyItrExtraction: (data, filename) =>
+    set((state) => {
+      const draft = { ...state.draft };
+      const rawData = (data.data as Record<string, unknown>) ?? data;
+      const assessee = (rawData.assessee_info as Record<string, unknown>) ?? {};
+
+      const applicantName = String(assessee.name ?? "");
+      const panNumber = String(assessee.pan ?? "");
+
+      if (applicantName && !draft.applicantName) {
+        draft.applicantName = applicantName;
+      }
+      if (panNumber && !draft.pan) {
+        draft.pan = panNumber;
+      }
+
+      return { draft, itrVerified: { filename, evidence: rawData }, error: null };
+    }),
+
+  clearItrExtraction: () => set({ itrVerified: null }),
+
+  setItrRecord: (id, record) =>
+    set((state) => {
+      const nextRecords = { ...state.itrRecords };
+      if (record) {
+        nextRecords[id] = record;
+      } else {
+        delete nextRecords[id];
+      }
+      return { itrRecords: nextRecords };
+    }),
+
   goTo: (stepId) => set({ stepId }),
 
   next: () => {
@@ -789,5 +833,16 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
     }
   },
 
-  reset: () => set({ draft: INITIAL_DRAFT, stepId: 1, result: null, error: null }),
+  reset: () =>
+    set({
+      draft: INITIAL_DRAFT,
+      stepId: 1,
+      result: null,
+      error: null,
+      cibilVerified: null,
+      payslipVerified: null,
+      coiVerified: null,
+      itrVerified: null,
+      itrRecords: {},
+    }),
 }));

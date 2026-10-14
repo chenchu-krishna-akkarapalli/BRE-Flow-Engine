@@ -56,11 +56,12 @@ COPY cibil-pdf-scrapper/crates ./crates
 # mount inside this same RUN or it disappears with it.
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/engine/target \
-    cargo build --release --bin cibil-cli --bin payslip-cli --bin coi-cli && \
-    strip target/release/cibil-cli target/release/payslip-cli target/release/coi-cli && \
+    cargo build --release --bin cibil-cli --bin payslip-cli --bin coi-cli --bin itr-cli && \
+    strip target/release/cibil-cli target/release/payslip-cli target/release/coi-cli target/release/itr-cli && \
     cp target/release/cibil-cli /usr/local/bin/cibil-cli && \
     cp target/release/payslip-cli /usr/local/bin/payslip-cli && \
-    cp target/release/coi-cli /usr/local/bin/coi-cli
+    cp target/release/coi-cli /usr/local/bin/coi-cli && \
+    cp target/release/itr-cli /usr/local/bin/itr-cli
 
 # ==========================================
 # STAGE 3: Runner Stage
@@ -85,10 +86,11 @@ RUN groupadd -g 10001 appgroup && \
 # Copy installed packages from builder stage
 COPY --from=builder /root/.local /home/appuser/.local
 
-# The CIBIL, Payslip & COI engine binaries — taken from the Rust stage.
+# The CIBIL, Payslip, COI & ITR engine binaries — taken from the Rust stage.
 COPY --from=engine /usr/local/bin/cibil-cli /usr/local/bin/cibil-cli
 COPY --from=engine /usr/local/bin/payslip-cli /usr/local/bin/payslip-cli
 COPY --from=engine /usr/local/bin/coi-cli /usr/local/bin/coi-cli
+COPY --from=engine /usr/local/bin/itr-cli /usr/local/bin/itr-cli
 
 # Ensure path includes user installed packages
 ENV PATH=/home/appuser/.local/bin:$PATH \
@@ -97,7 +99,8 @@ ENV PATH=/home/appuser/.local/bin:$PATH \
     PYTHONDONTWRITEBYTECODE=1 \
     CIBIL_ENGINE_BINARY=/usr/local/bin/cibil-cli \
     PAYSLIP_ENGINE_BINARY=/usr/local/bin/payslip-cli \
-    COI_ENGINE_BINARY=/usr/local/bin/coi-cli
+    COI_ENGINE_BINARY=/usr/local/bin/coi-cli \
+    ITR_ENGINE_BINARY=/usr/local/bin/itr-cli
 
 # Copy application source code
 COPY --chown=appuser:appgroup . .

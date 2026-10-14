@@ -23,6 +23,9 @@ from app.db.models import (
     UserRoleAssignmentHistoryModel,
     UserRoleModel,
     UserSessionModel,
+    ModuleCatalogModel,
+    TenantModuleEntitlementModel,
+    RoleModulePermissionModel,
 )
 
 # Verifies that all enterprise domain models are registered with SQLAlchemy metadata
@@ -49,6 +52,9 @@ def test_all_enterprise_models_registered_in_metadata():
         "commission_ledger",
         "regional_branch",
         "document_record",
+        "module_catalog",
+        "tenant_module_entitlement",
+        "role_module_permission",
     }
     assert expected_tables.issubset(table_names), f"Missing tables: {expected_tables - table_names}"
 
@@ -256,3 +262,48 @@ def test_commission_regional_document_instantiation():
     )
     assert doc.document_type == "cibil"
     assert doc.sha256_hash.startswith("e3b0c44")
+
+# Verifies dynamic module catalog, tenant entitlements, and role module permissions instantiation
+def test_dynamic_module_catalog_instantiation():
+    module = ModuleCatalogModel(
+        code="DOC_VAULT",
+        name="Document Vault",
+        route_template="/{tenant}/doc-vault",
+        icon_name="FolderLock",
+        section_key="PORTAL_NAV",
+        section_title="Portal Navigation",
+        badge="New",
+        badge_type="brand",
+        min_tier_level=6,
+        is_core=False,
+        is_active=True,
+        sort_order=15,
+        description="Centralized document storage and OCR status inspection.",
+    )
+    assert module.code == "DOC_VAULT"
+    assert module.is_active is True
+    assert module.sort_order == 15
+
+    entitlement = TenantModuleEntitlementModel(
+        tenant_id="tenant-abc-123",
+        module_code="DOC_VAULT",
+        is_enabled=True,
+        custom_name="Custom Documents",
+    )
+    assert entitlement.module_code == "DOC_VAULT"
+    assert entitlement.is_enabled is True
+    assert entitlement.custom_name == "Custom Documents"
+
+    perm = RoleModulePermissionModel(
+        role_key="SUPER_ADMIN",
+        module_code="DOC_VAULT",
+        can_view=True,
+        can_create=True,
+        can_edit=True,
+        can_approve=False,
+    )
+    assert perm.role_key == "SUPER_ADMIN"
+    assert perm.can_view is True
+    assert perm.can_create is True
+    assert perm.can_approve is False
+

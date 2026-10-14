@@ -19,7 +19,14 @@ members = [
     "crates/coi-domain",
     "crates/coi-parser",
     "crates/coi-validation",
-    "crates/coi-cli"
+    "crates/coi-cli",
+    "crates/itr-core",
+    "crates/itr-pdf",
+    "crates/itr-layout",
+    "crates/itr-domain",
+    "crates/itr-parser",
+    "crates/itr-validation",
+    "crates/itr-cli"
 ]
 resolver = "2"
 

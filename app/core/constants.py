@@ -94,16 +94,6 @@ RAW_NAVIGATION_SCHEMA: List[Dict[str, Any]] = [
                 ],
                 "sort_order": 4,
             },
-            {
-                "name": "Settings",
-                "path": "configurator",
-                "icon": "Sliders",
-                "roles": [
-                    ROLE_SUPER_ADMIN, ROLE_REGIONAL_DIRECTOR, ROLE_OPERATIONS_HEAD, ROLE_AREA_MANAGER,
-                    ROLE_TEAM_LEADER, ROLE_SALES_MANAGER, ROLE_CHANNEL_ADMIN
-                ],
-                "sort_order": 5,
-            },
         ],
     },
     {

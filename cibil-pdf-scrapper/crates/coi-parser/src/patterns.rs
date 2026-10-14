@@ -52,7 +52,8 @@ pub const CAPITAL_GAINS: &[&str] = &[
 pub const OTHER_SOURCES: &[&str] = &[
     "TOTAL INCOME FROM OTHER SOURCES", "TOTAL INCOME FROM OTHER SOURCE",
     "INCOME FROM OTHER SOURCES", "INCOME FROM OTHER SOURCE", "OTHER SOURCES (CHAPTER IV F)",
-    "CHAPTER IV F", "U/S 14", "U/S-14",
+    "CHAPTER IV F", "U/S 14", "U/S-14", "INTEREST INCOME (OTHER THAN NSC/KVP INTEREST)",
+    "INTEREST INCOME",
     // Bare heading dialect. Safe as a last entry: the head takes the first line
     // carrying an amount, and the annexure headings below carry none.
     "OTHER SOURCES",
@@ -105,6 +106,22 @@ pub fn is_slab_working(upper: &str) -> bool {
         || upper.contains("@15%")
         || upper.contains("@20%")
         || upper.contains("@30%")
+}
+
+/// True when a line belongs to an AIS/TIS (Taxpayer Information Summary) annexure table.
+pub fn is_ais_tis_annexure(upper: &str) -> bool {
+    if upper.contains("NOT IMPORTED") || upper.contains("CAUTION") {
+        return false;
+    }
+    upper.contains("DETAILS OF TAXPAYER INFORMATION SUMMARY")
+        || upper.contains("TAXPAYER INFORMATION SUMMARY")
+        || upper.contains("TAX PAYER INFORMATION SUMMARY")
+        || upper.contains("DETAILS OF AIS")
+        || upper.contains("DETAILS OF TIS")
+        || upper.contains("AIS REPORT")
+        || upper.contains("TIS REPORT")
+        || upper.contains("ANNEXURE: AIS")
+        || upper.contains("ANNEXURE: TIS")
 }
 
 /// True when a label matches any spelling for a field, ignoring inter-word gaps.

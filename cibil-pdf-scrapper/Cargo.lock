@@ -915,6 +915,80 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8f42a60cbdf9a97f5d2305f08a87dc4e09308d1276d28c869c684d7777685682"
 
 [[package]]
+name = "itr-cli"
+version = "0.1.0"
+dependencies = [
+ "itr-core",
+ "itr-domain",
+ "itr-layout",
+ "itr-parser",
+ "itr-pdf",
+ "itr-validation",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "itr-core"
+version = "0.1.0"
+dependencies = [
+ "lopdf",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
+name = "itr-domain"
+version = "0.1.0"
+dependencies = [
+ "itr-core",
+ "itr-layout",
+ "regex",
+ "serde",
+]
+
+[[package]]
+name = "itr-layout"
+version = "0.1.0"
+dependencies = [
+ "itr-core",
+ "itr-pdf",
+ "serde",
+]
+
+[[package]]
+name = "itr-parser"
+version = "0.1.0"
+dependencies = [
+ "itr-core",
+ "itr-domain",
+ "itr-layout",
+ "itr-pdf",
+ "regex",
+ "serde",
+]
+
+[[package]]
+name = "itr-pdf"
+version = "0.1.0"
+dependencies = [
+ "cibil-core",
+ "cibil-pdf",
+ "itr-core",
+ "lopdf",
+ "serde",
+]
+
+[[package]]
+name = "itr-validation"
+version = "0.1.0"
+dependencies = [
+ "itr-core",
+ "itr-domain",
+ "serde",
+]
+
+[[package]]
 name = "jiff"
 version = "0.2.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"

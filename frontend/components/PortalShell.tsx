@@ -39,7 +39,9 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
     // If authenticated and on login page, redirect to scoped dashboard
     if (isAuthenticated && pathname.startsWith("/auth")) {
       const isPlatform = role === "SUPER_ADMIN" || tenantUuid === "platform" || !tenantUuid;
-      const target = isPlatform ? "/platform/dashboard" : `/${tenantUuid}/dashboard`;
+      const defaultPlatformUuid = "e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f";
+      const activePlatformUuid = tenantUuid && tenantUuid !== "platform" ? tenantUuid : defaultPlatformUuid;
+      const target = isPlatform ? `/${activePlatformUuid}/platformoverview` : `/${tenantUuid}/dashboard`;
       router.replace(target);
       return;
     }

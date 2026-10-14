@@ -1,0 +1,11 @@
+[package]
+name = "itr-pdf"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+itr-core = { path = "../itr-core" }
+cibil-pdf = { path = "../cibil-pdf" }
+cibil-core = { path = "../cibil-core" }
+lopdf = { workspace = true }
+serde = { workspace = true }

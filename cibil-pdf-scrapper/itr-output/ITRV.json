@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "ocr_used": false,
+    "source": "text_layer"
+  },
+  "assessee_info": {
+    "pan": "CHVPP2403E",
+    "name": "MAYANK PATEL",
+    "address": "PLOT NO. 8 , PATRAKAR COLONY, NEAR SBI COLONY, FAFADIH , RAIPUR , 33-Chhattisgarh, 91-INDIA, 492009",
+    "status": "Individual",
+    "assessment_year": "2023-24",
+    "financial_year": "2022-23"
+  },
+  "return_details": {
+    "form_number": "ITR-3",
+    "filed_u_s": "139(1)- On or Before due date",
+    "acknowledgement_number": "815006290290723",
+    "date_of_filing": "29-Jul-2023"
+  },
+  "taxable_income_and_tax_details": {
+    "current_year_business_loss": 0,
+    "total_income": 558210,
+    "book_profit_under_mat": 0,
+    "adjusted_total_income_under_amt": 558210,
+    "net_tax_payable": 25108,
+    "interest_and_fee_payable": 0,
+    "total_tax_interest_and_fee_payable": 25108,
+    "taxes_paid": 44089,
+    "tax_payable_or_refundable": -18980
+  },
+  "accreted_income_and_tax_details": {
+    "accreted_income_u_s_115td": 0,
+    "additional_tax_payable_u_s_115td": 0,
+    "interest_payable_u_s_115te": 0,
+    "additional_tax_and_interest_payable": 0,
+    "tax_and_interest_paid": 0,
+    "accreted_tax_payable_or_refundable": 0
+  },
+  "verification_details": {
+    "electronically_transmitted_on": "29-Jul-2023 15:59:12",
+    "ip_address": "182.69.93.253",
+    "verified_by": "MAYANK PATEL",
+    "verifier_pan": "CHVPP2403E",
+    "verification_date": "29-Jul-2023",
+    "evc_code": "7U98BUWZ9I",
+    "verification_mode": "Aadhaar OTP",
+    "barcode_hash": "CHVPP2403E038150062902907234ba30e5ab0b80a449a88d4ffb90a427252bf5332"
+  }
+}

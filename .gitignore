@@ -41,6 +41,7 @@ frontend/next-env.d.ts
 
 # AI Agent & RepoGraph Indexes/Memories
 .repograph/
+.myrepograph-agent/
 .myrepograph-agent/memory/
 .myrepograph-agent/memory.md
 
@@ -56,3 +57,5 @@ cibil-pdf-scrapper/computation-of-income-copies-1/
 # OS-specific files
 .DS_Store
 Thumbs.db
+
+.env

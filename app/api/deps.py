@@ -28,6 +28,12 @@ async def get_current_user(auth: Optional[HTTPAuthorizationCredentials] = Depend
         raise UnauthorizedError("Invalid or expired JWT token.")
     return token_payload
 
+# Validates JWT bearer token if present, returns None otherwise
+async def get_current_user_optional(auth: Optional[HTTPAuthorizationCredentials] = Depends(security_bearer)) -> Optional[dict]:
+    if not auth:
+        return None
+    return verify_token(auth.credentials)
+
 # Enforces cryptographic tenant binding between JWT claims and route parameters
 async def get_current_authorized_tenant(
     request: Request,

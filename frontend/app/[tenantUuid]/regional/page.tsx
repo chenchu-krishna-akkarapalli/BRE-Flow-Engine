@@ -2,6 +2,7 @@
 
 import { use } from "react";
 import { MapPin, TrendingUp, Users } from "lucide-react";
+import ModuleGuard from "@/components/ModuleGuard";
 
 interface BranchItem {
   code: string;
@@ -27,7 +28,8 @@ export default function TenantRegionalPage({
   const { tenantUuid } = use(params);
 
   return (
-    <div className="mx-auto flex w-full max-w-[var(--shell-max)] flex-1 flex-col gap-6 px-4 sm:px-6 py-6 animate-fade-in">
+    <ModuleGuard moduleCode="REGIONAL_HIERARCHY">
+      <div className="mx-auto flex w-full max-w-[var(--shell-max)] flex-1 flex-col gap-6 px-4 sm:px-6 py-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -77,5 +79,6 @@ export default function TenantRegionalPage({
         </table>
       </div>
     </div>
+    </ModuleGuard>
   );
 }

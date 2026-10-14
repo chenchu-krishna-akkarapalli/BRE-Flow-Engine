@@ -1,4 +1,8 @@
+import logging
+import secrets
+import string
 import uuid
+from datetime import datetime
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, Field
@@ -34,9 +38,31 @@ class TenantResponse(BaseModel):
     contact_phone: Optional[str] = Field(None, description="Contact phone")
     status: str = Field(..., description="Lifecycle status")
     is_active: bool = Field(default=True, description="Active status flag")
+    created_at: Optional[datetime] = Field(None, description="Creation timestamp")
+    updated_at: Optional[datetime] = Field(None, description="Last update timestamp")
 
     class Config:
         from_attributes = True
+
+# Channel approval audit history response model
+class TenantApprovalHistoryItem(BaseModel):
+    id: str = Field(..., description="History record UUID")
+    tenant_id: str = Field(..., description="Tenant UUID")
+    channel_name: str = Field(..., description="Channel partner trade name")
+    channel_code: str = Field(..., description="Unique tenant slug code")
+    tenant_uuid: Optional[str] = Field(None, description="Dynamic routing UUID")
+    channel_type: Optional[str] = Field(None, description="Channel classification")
+    contact_email: Optional[str] = Field(None, description="Contact email")
+    contact_phone: Optional[str] = Field(None, description="Contact phone")
+    previous_status: str = Field(..., description="Status before transition")
+    new_status: str = Field(..., description="Status after transition")
+    changed_by: Optional[str] = Field(None, description="Actor who performed the change")
+    reason: Optional[str] = Field(None, description="Justification note")
+    created_at: Optional[datetime] = Field(None, description="Audit timestamp")
+
+    class Config:
+        from_attributes = True
+
 
 # Provisions new channel partner tenant in pending state
 @router.post("/signup", response_model=TenantResponse, status_code=status.HTTP_201_CREATED)
@@ -71,6 +97,35 @@ async def signup_tenant(
     db.add(new_tenant)
     await db.flush()
 
+    # Ensure a corresponding Channel Admin user account is registered in an inactive state
+    admin_email = payload.contact_email.strip().lower()
+    user_stmt = select(UserModel).where(
+        or_(UserModel.username == admin_email, UserModel.email == admin_email)
+    )
+    user_res = await db.execute(user_stmt)
+    existing_user = user_res.scalars().first()
+
+    user_salt = generate_salt(16)
+    pwd_hash = derive_password_hash("FlowBRE@2026!", user_salt)
+
+    if not existing_user:
+        new_channel_admin = UserModel(
+            username=admin_email,
+            email=admin_email,
+            full_name=f"{payload.name.strip()} Admin",
+            role="CHANNEL_ADMIN",
+            tenant_id=new_tenant.id,
+            is_active=False,
+            password_hash=pwd_hash,
+            salt=user_salt,
+        )
+        db.add(new_channel_admin)
+    else:
+        existing_user.tenant_id = new_tenant.id
+        existing_user.is_active = False
+        existing_user.password_hash = pwd_hash
+        existing_user.salt = user_salt
+
     history = TenantStatusHistoryModel(
         tenant_id=new_tenant.id,
         previous_status="none",
@@ -97,6 +152,49 @@ async def get_pending_channel_approvals(
     res = await db.execute(stmt)
     return list(res.scalars().all())
 
+# Retrieves all approved, active channel partners
+@router.get("/approved", response_model=List[TenantResponse])
+async def get_approved_channels(
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(require_roles("SUPER_ADMIN", "REGIONAL_DIRECTOR")),
+):
+    stmt = (
+        select(TenantModel)
+        .where(TenantModel.status == "active", TenantModel.is_active == True)
+        .order_by(TenantModel.updated_at.desc())
+    )
+    res = await db.execute(stmt)
+    return list(res.scalars().all())
+
+# Retrieves all channel onboarding approval and lifecycle history (visible to Super Admin & Regional Director)
+@router.get("/approval-history", response_model=List[TenantApprovalHistoryItem])
+async def get_channel_approval_history(
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(require_roles("SUPER_ADMIN", "REGIONAL_DIRECTOR")),
+):
+    stmt = (
+        select(
+            TenantStatusHistoryModel.id,
+            TenantStatusHistoryModel.tenant_id,
+            TenantModel.name.label("channel_name"),
+            TenantModel.code.label("channel_code"),
+            TenantModel.tenant_uuid,
+            TenantModel.channel_type,
+            TenantModel.contact_email,
+            TenantModel.contact_phone,
+            TenantStatusHistoryModel.previous_status,
+            TenantStatusHistoryModel.new_status,
+            TenantStatusHistoryModel.changed_by,
+            TenantStatusHistoryModel.reason,
+            TenantStatusHistoryModel.created_at,
+        )
+        .join(TenantModel, TenantModel.id == TenantStatusHistoryModel.tenant_id)
+        .order_by(TenantStatusHistoryModel.created_at.desc())
+    )
+    res = await db.execute(stmt)
+    rows = res.mappings().all()
+    return [TenantApprovalHistoryItem(**row) for row in rows]
+
 # Approves and activates a channel partner (invocable by Super Admin or Regional Director)
 @router.post("/{tenant_uuid}/approve", response_model=TenantResponse)
 async def approve_channel_tenant(
@@ -121,13 +219,19 @@ async def approve_channel_tenant(
 
     # Automatically provision initial Channel Admin user account for this newly approved channel
     admin_email = tenant.contact_email or f"channel.admin@{tenant.code}.com"
-    user_stmt = select(UserModel).where(UserModel.username == admin_email)
+    user_stmt = select(UserModel).where(
+        or_(UserModel.username == admin_email, UserModel.email == admin_email)
+    )
     user_res = await db.execute(user_stmt)
     existing_user = user_res.scalars().first()
 
+    # Testing phase fixed password
+    generated_password = "FlowBRE@2026!"
+
+    user_salt = generate_salt(16)
+    pwd_hash = derive_password_hash(generated_password, user_salt)
+
     if not existing_user:
-        user_salt = generate_salt(16)
-        pwd_hash = derive_password_hash("FlowBRE@2026!", user_salt)
         new_channel_admin = UserModel(
             username=admin_email,
             email=admin_email,
@@ -139,6 +243,14 @@ async def approve_channel_tenant(
             is_active=True,
         )
         db.add(new_channel_admin)
+    else:
+        existing_user.is_active = True
+        existing_user.salt = user_salt
+        existing_user.password_hash = pwd_hash
+        existing_user.tenant_id = tenant.id
+        existing_user.role = "CHANNEL_ADMIN"
+
+    should_send_credentials = True
 
     # Record status change history
     actor = current_user.get("username") or current_user.get("role") or "SUPER_ADMIN"
@@ -153,6 +265,25 @@ async def approve_channel_tenant(
 
     await db.commit()
     await db.refresh(tenant)
+
+    # Asynchronously dispatch credentials email to the channel admin via Celery & Resend/SMTP
+    if should_send_credentials:
+        try:
+            from app.worker.tasks.notification_tasks import send_channel_admin_credentials_task
+            send_channel_admin_credentials_task.delay(
+                to_email=admin_email,
+                channel_name=tenant.name,
+                username=admin_email,
+                password=generated_password,
+            )
+            logging.getLogger(__name__).info(
+                "Enqueued credentials email for approved channel admin '%s' (%s)", admin_email, tenant.name
+            )
+        except Exception as queue_err:
+            logging.getLogger(__name__).error(
+                "Failed to queue channel admin credentials email to %s: %s", admin_email, queue_err
+            )
+
     return tenant
 
 # Rejects a channel onboarding request
@@ -176,6 +307,16 @@ async def reject_channel_tenant(
 
     tenant.status = "rejected"
     tenant.is_active = False
+
+    # Deactivate associated channel admin user
+    admin_email = tenant.contact_email or f"channel.admin@{tenant.code}.com"
+    user_stmt = select(UserModel).where(
+        or_(UserModel.username == admin_email, UserModel.email == admin_email)
+    )
+    user_res = await db.execute(user_stmt)
+    existing_user = user_res.scalars().first()
+    if existing_user:
+        existing_user.is_active = False
 
     actor = current_user.get("username") or current_user.get("role") or "SUPER_ADMIN"
     history = TenantStatusHistoryModel(
@@ -229,3 +370,178 @@ async def get_tenant_by_uuid(
     if not tenant:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Tenant '{tenant_uuid}' not found.")
     return tenant
+
+# Tenant user schemas
+class TenantUserResponse(BaseModel):
+    id: str
+    tenant_id: str
+    name: str
+    email: str
+    role: str
+    status: str
+
+class CreateTenantUserPayload(BaseModel):
+    name: str
+    email: str
+    role: str = "CHANNEL_ADMIN"
+    status: str = "ACTIVE"
+
+class UpdateTenantUserPayload(BaseModel):
+    name: Optional[str] = None
+    role: Optional[str] = None
+    status: Optional[str] = None
+
+# Retrieves all real database employees bound to a specific channel partner
+@router.get("/{tenant_uuid}/users", response_model=List[TenantUserResponse])
+async def get_tenant_users(
+    tenant_uuid: str,
+    db: AsyncSession = Depends(get_db),
+):
+    stmt = select(TenantModel).where(
+        or_(
+            TenantModel.tenant_uuid == tenant_uuid,
+            TenantModel.id == tenant_uuid,
+            TenantModel.code == tenant_uuid,
+        )
+    )
+    res = await db.execute(stmt)
+    tenant = res.scalars().first()
+
+    tenant_ids = [tenant_uuid]
+    is_default = False
+    if tenant:
+        tenant_ids.extend([tenant.id, tenant.code])
+        if tenant.tenant_uuid:
+            tenant_ids.append(tenant.tenant_uuid)
+        is_default = (tenant.code == "default")
+
+    user_stmt = select(UserModel).where(UserModel.tenant_id.in_(tenant_ids))
+    user_res = await db.execute(user_stmt)
+    users = user_res.scalars().all()
+
+    # Filter out platform governance roles if channel is a specific tenant
+    results = []
+    for u in users:
+        if not is_default and u.role in ("SUPER_ADMIN", "ACCOUNTS_HEAD", "OPERATIONS_HEAD", "REGIONAL_DIRECTOR"):
+            continue
+        results.append(TenantUserResponse(
+            id=u.id,
+            tenant_id=tenant.tenant_uuid if tenant and tenant.tenant_uuid else (tenant.id if tenant else tenant_uuid),
+            name=u.full_name or (u.username.split("@")[0].replace(".", " ").title() if "@" in u.username else u.username),
+            email=u.email or u.username,
+            role=u.role,
+            status="ACTIVE" if u.is_active else "SUSPENDED",
+        ))
+    return results
+
+# Adds a new employee directly into the database for this channel partner
+@router.post("/{tenant_uuid}/users", response_model=TenantUserResponse)
+async def create_tenant_user(
+    tenant_uuid: str,
+    payload: CreateTenantUserPayload,
+    db: AsyncSession = Depends(get_db),
+):
+    stmt = select(TenantModel).where(
+        or_(
+            TenantModel.tenant_uuid == tenant_uuid,
+            TenantModel.id == tenant_uuid,
+            TenantModel.code == tenant_uuid,
+        )
+    )
+    res = await db.execute(stmt)
+    tenant = res.scalars().first()
+    target_tenant_id = tenant.id if tenant else tenant_uuid
+
+    email_clean = payload.email.strip().lower()
+    existing_stmt = select(UserModel).where(
+        or_(UserModel.username == email_clean, UserModel.email == email_clean)
+    )
+    existing_res = await db.execute(existing_stmt)
+    existing = existing_res.scalars().first()
+
+    user_salt = generate_salt(16)
+    pwd_hash = derive_password_hash("FlowBRE@2026!", user_salt)
+
+    if existing:
+        existing.tenant_id = target_tenant_id
+        existing.full_name = payload.name.strip()
+        existing.role = payload.role
+        existing.is_active = (payload.status == "ACTIVE")
+        await db.commit()
+        await db.refresh(existing)
+        target_user = existing
+    else:
+        new_user = UserModel(
+            username=email_clean,
+            email=email_clean,
+            full_name=payload.name.strip(),
+            role=payload.role,
+            tenant_id=target_tenant_id,
+            is_active=(payload.status == "ACTIVE"),
+            password_hash=pwd_hash,
+            salt=user_salt,
+        )
+        db.add(new_user)
+        await db.commit()
+        await db.refresh(new_user)
+        target_user = new_user
+
+    return TenantUserResponse(
+        id=target_user.id,
+        tenant_id=tenant_uuid,
+        name=target_user.full_name or target_user.username,
+        email=target_user.email or target_user.username,
+        role=target_user.role,
+        status="ACTIVE" if target_user.is_active else "SUSPENDED",
+    )
+
+# Updates an existing employee in the database
+@router.patch("/{tenant_uuid}/users/{user_id}", response_model=TenantUserResponse)
+async def update_tenant_user(
+    tenant_uuid: str,
+    user_id: str,
+    payload: UpdateTenantUserPayload,
+    db: AsyncSession = Depends(get_db),
+):
+    stmt = select(UserModel).where(UserModel.id == user_id)
+    res = await db.execute(stmt)
+    user = res.scalars().first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    if payload.name is not None:
+        user.full_name = payload.name.strip()
+    if payload.role is not None:
+        user.role = payload.role
+    if payload.status is not None:
+        user.is_active = (payload.status == "ACTIVE")
+
+    await db.commit()
+    await db.refresh(user)
+
+    return TenantUserResponse(
+        id=user.id,
+        tenant_id=tenant_uuid,
+        name=user.full_name or user.username,
+        email=user.email or user.username,
+        role=user.role,
+        status="ACTIVE" if user.is_active else "SUSPENDED",
+    )
+
+# Deletes or removes an employee from the channel
+@router.delete("/{tenant_uuid}/users/{user_id}")
+async def delete_tenant_user(
+    tenant_uuid: str,
+    user_id: str,
+    db: AsyncSession = Depends(get_db),
+):
+    stmt = select(UserModel).where(UserModel.id == user_id)
+    res = await db.execute(stmt)
+    user = res.scalars().first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    await db.delete(user)
+    await db.commit()
+    return {"success": True, "message": "User deleted successfully."}
+
