@@ -27,7 +27,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let positional: Vec<&String> = args[1..].iter().filter(|a| !a.starts_with("--")).collect();
     if positional.is_empty() {
         eprintln!("Usage: cibil-cli <blocks.json> [--schema internal|target] \
-                 [--pipeline] [--source <original.pdf>] [--seen <state.json>] [--doc-id <id>]
+                 [--pipeline] [--from-pdf|--from-html] [--source <original.pdf|.html>] [--seen <state.json>] [--doc-id <id>]
                  Use '-' as the blocks path to read a framed stdin request.");
         std::process::exit(1);
     }
@@ -107,6 +107,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
         Some(runs)
+    } else if args.iter().any(|a| a == "--from-html") {
+        // The bureau's HTML export: same frame, the document slot holds HTML bytes.
+        let bytes = match (&stdin_pdf, source.as_deref()) {
+            (Some(b), _) => b.clone(),
+            (None, Some(src)) => std::fs::read(src)?,
+            (None, None) => return Err("--from-html needs HTML bytes on stdin or --source".into()),
+        };
+        if !cibil_graph::html::looks_like_html(&bytes) {
+            return Err("--from-html input is not an HTML document".into());
+        }
+        Some(cibil_graph::html::html_to_runs(&bytes))
     } else {
         None
     };

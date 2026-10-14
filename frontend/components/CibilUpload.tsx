@@ -6,8 +6,23 @@ import { MAX_UPLOAD_BYTES, extractCibilReport } from "@/lib/api";
 import { useOnboardingStore } from "@/store/useOnboardingStore";
 import { CibilBureauSummaryCard } from "@/components/CibilBureauSummaryCard";
 
-// Upload a CIBIL report and let the Rust engine fill Step 4 from it. The PDF is
-// posted, parsed and discarded; only the bureau fields come back.
+// Upload a CIBIL report (PDF, or the bureau's HTML export) and let the Rust engine
+// fill Step 4 from it. The file is posted, parsed and discarded; only the bureau
+// fields come back.
+
+// Extensions as well as MIME types: Windows often reports "" for a saved .html file.
+const CIBIL_ACCEPT = "application/pdf,.pdf,text/html,.html,.htm";
+
+function isCibilReport(file: File): boolean {
+  const name = file.name.toLowerCase();
+  return (
+    file.type === "application/pdf" ||
+    file.type === "text/html" ||
+    name.endsWith(".pdf") ||
+    name.endsWith(".html") ||
+    name.endsWith(".htm")
+  );
+}
 export function CibilUpload() {
   const verified = useOnboardingStore((s) => s.cibilVerified);
   const apply = useOnboardingStore((s) => s.applyCibilExtraction);
@@ -24,8 +39,8 @@ export function CibilUpload() {
       setError(`That file is ${(file.size / 1_048_576).toFixed(1)} MB. The limit is 5 MB.`);
       return;
     }
-    if (file.type !== "application/pdf") {
-      setError("Upload the CIBIL report as a PDF.");
+    if (!isCibilReport(file)) {
+      setError("Upload the CIBIL report as a PDF or HTML file.");
       return;
     }
 
@@ -37,7 +52,7 @@ export function CibilUpload() {
         // presented as this applicant's history; they answer the questions instead.
         setError(
           result.status === "UNKNOWN_CONSUMER"
-            ? "We could not read a credit history from that PDF — it may be a scan or an image-only export. Please answer the questions below instead."
+            ? "We could not read a credit history from that report — it may be a scan or an image-only export. Please answer the questions below instead."
             : result.message || "That report could not be read. Please answer the questions below.",
         );
         return;
@@ -58,7 +73,7 @@ export function CibilUpload() {
           ref={inputRef}
           id="cibilReport"
           type="file"
-          accept="application/pdf"
+          accept={CIBIL_ACCEPT}
           className="sr-only"
           onChange={(e) => upload(e.target.files?.[0])}
         />
@@ -77,7 +92,7 @@ export function CibilUpload() {
         ref={inputRef}
         id="cibilReport"
         type="file"
-        accept="application/pdf"
+        accept={CIBIL_ACCEPT}
         className="sr-only"
         onChange={(e) => upload(e.target.files?.[0])}
       />
@@ -97,7 +112,7 @@ export function CibilUpload() {
           {busy ? "Reading your report…" : "Upload CIBIL report"}
         </button>
         <p className="text-[0.8125rem] text-ink">
-          Optional. Upload the PDF and we will fill in your score, active EMIs, and loan history automatically.
+          Optional. Upload the PDF or HTML report and we will fill in your score, active EMIs, and loan history automatically.
         </p>
       </div>
       <p aria-live="polite" className="sr-only">

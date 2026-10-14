@@ -460,7 +460,7 @@ DOCUMENT_EXTRACTORS = {"pan": extract_pan_card, "aadhaar": extract_aadhaar_card}
 
 @router.post("/documents/cibil/extract", response_model=CibilExtractionResponse)
 async def extract_cibil_report_document(
-    file: UploadFile = File(..., description="CIBIL consumer report PDF, up to 5 MB."),
+    file: UploadFile = File(..., description="CIBIL consumer report, PDF or HTML, up to 5 MB."),
     tenant_id: str = Depends(get_current_tenant),
 ):
     """Parse a CIBIL report with the Rust engine and return Step-4 bureau fields."""

@@ -10,5 +10,7 @@ cibil-pdf = { path = "../cibil-pdf" }
 cibil-domain = { path = "../cibil-domain" }
 cibil-validation = { path = "../cibil-validation" }
 petgraph = { workspace = true }
+# Spec-compliant HTML tokenizer for CIBIL HTML (CIR) reports; tokenizer only.
+html5ever = "0.27"
 serde = { workspace = true }
 serde_json = { workspace = true }

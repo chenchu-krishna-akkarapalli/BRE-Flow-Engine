@@ -12,7 +12,7 @@ engine's own service/cibil_engine_bridge.py: a panic or runaway allocation kills
 one child rather than the ASGI worker, a wall-clock timeout is enforceable per
 call, and the uploaded PDF never lands on disk.
 
-stdin frame: [8-byte little-endian blocks-JSON length][blocks JSON][raw PDF]
+stdin frame: [8-byte little-endian blocks-JSON length][blocks JSON][raw PDF or HTML]
 """
 
 import asyncio
@@ -23,12 +23,14 @@ import struct
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from app.constants import MAX_UPLOAD_BYTES
 from app.core.config import settings
 from app.core.exceptions import InvalidPayloadError
 from app.core.logging import logger, redact_pii
 from app.services.pdf_firewall import inspect
 
 ACCEPTED_CONTENT_TYPES = frozenset({"application/pdf"})
+HTML_CONTENT_TYPES = frozenset({"text/html", "application/xhtml+xml"})
 
 # Engine status values. Only SUCCESS carries a data payload.
 STATUS_SUCCESS = "SUCCESS"
@@ -111,24 +113,29 @@ def validate_upload(content: bytes, content_type: Optional[str], filename: str) 
     Emptiness, size and the actual %PDF- signature are the firewall's, which
     judges the bytes rather than what the client claims about them.
     """
-    if (content_type or "").lower() not in ACCEPTED_CONTENT_TYPES:
+    if (content_type or "").lower() not in ACCEPTED_CONTENT_TYPES and not is_html(content_type, filename):
         raise InvalidPayloadError(
-            f"'{filename}' is {content_type or 'of unknown type'}; upload the CIBIL report as a PDF."
+            f"'{filename}' is {content_type or 'of unknown type'}; upload the CIBIL report as a PDF or HTML file."
         )
 
 
-async def _run_engine(pdf_bytes: bytes, doc_id: str) -> Dict[str, Any]:
+def is_html(content_type: Optional[str], filename: str) -> bool:
+    """The bureau's HTML (CIR) export, read by the engine's --from-html mode."""
+    return (content_type or "").lower() in HTML_CONTENT_TYPES or filename.lower().endswith((".html", ".htm"))
+
+
+async def _run_engine(document: bytes, doc_id: str, html: bool = False) -> Dict[str, Any]:
     """Spawn the engine, frame the request over stdin, return its envelope."""
     binary = _binary_path()
     if binary is None:
         raise CibilEngineError(missing_component() or "The CIBIL engine is unavailable.")
 
-    # --from-pdf: the engine decodes the document itself, so no Python PDF
-    # library sits in the extraction path. The blocks slot stays in the frame
-    # because the wire format is [len][blocks][pdf]; it is sent empty.
-    frame = struct.pack("<Q", 2) + b"[]" + pdf_bytes
-
-    argv = [binary, "-", "--schema", "target", "--pipeline", "--from-pdf", "--doc-id", doc_id]
+    # The engine decodes the document itself (--from-pdf / --from-html), so no
+    # Python PDF or HTML library sits in the extraction path. The blocks slot
+    # stays in the frame because the wire format is [len][blocks][document]; it
+    # is sent empty.
+    frame = struct.pack("<Q", 2) + b"[]" + document
+    argv = [binary, "-", "--schema", "target", "--pipeline", "--from-html" if html else "--from-pdf", "--doc-id", doc_id]
     proc = await asyncio.create_subprocess_exec(
         *argv,
         stdin=asyncio.subprocess.PIPE,
@@ -371,16 +378,24 @@ async def extract_cibil_report(
     """
     validate_upload(content, content_type, filename)
 
-    # The uploaded bytes are attacker-controlled, so they are bounded and
-    # inspected before the engine is handed them.
-    verdict = inspect(content, filename)
-    if verdict.active_content_found:
-        logger.warning(
-            f"Active content detected in CIBIL upload '{redact_pii(filename)}': "
-            f"{verdict.as_log_fields()}"
-        )
-
-    envelope = await _run_engine(content, doc_id=filename)
+    if is_html(content_type, filename):
+        # The PDF firewall cannot judge HTML; the size bound it enforces still
+        # applies. The engine only tokenises it: scripts are never read or run.
+        if not content or len(content) > MAX_UPLOAD_BYTES:
+            raise InvalidPayloadError(
+                f"'{filename}' must be a non-empty HTML report of at most {MAX_UPLOAD_BYTES // 1_048_576} MB."
+            )
+        envelope = await _run_engine(content, doc_id=filename, html=True)
+    else:
+        # The uploaded bytes are attacker-controlled, so they are bounded and
+        # inspected before the engine is handed them.
+        verdict = inspect(content, filename)
+        if verdict.active_content_found:
+            logger.warning(
+                f"Active content detected in CIBIL upload '{redact_pii(filename)}': "
+                f"{verdict.as_log_fields()}"
+            )
+        envelope = await _run_engine(content, doc_id=filename)
     status = envelope.get("status", STATUS_SUCCESS)
     message = envelope.get("message", "")
 
