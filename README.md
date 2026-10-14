@@ -1,283 +1,260 @@
-# ⚡ FlowBRE: Multi-Tenant Onboarding Business Rules Engine (BRE) Platform
+# ⚡ FlowBRE: Enterprise Multi-Tenant Onboarding & Business Rules Engine (BRE) Platform
 
-[![Python Version](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue.svg)](https.python.org)
+[![Python Version](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue.svg)](https://python.org)
+[![Next.js](https://img.shields.io/badge/Next.js-16.2%20(React%2019)-black.svg)](https://nextjs.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-009688.svg)](https://fastapi.tiangolo.com)
-[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED.svg)](https://www.docker.com/)
+[![Rust](https://img.shields.io/badge/Rust-1.80+-DEA584.svg)](https://www.rust-lang.org/)
+[![Celery](https://img.shields.io/badge/Celery-5.3+-37814A.svg)](https://docs.celeryq.dev/)
+[![Docker](https://img.shields.io/badge/Docker-Multi--Stage-2496ED.svg)](https://www.docker.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16%20RLS-336791.svg)](https://www.postgresql.org)
-[![Redis](https://img.shields.io/badge/Redis-7%20Cache-DC382D.svg)](https://redis.io)
+[![Redis](https://img.shields.io/badge/Redis-7%20Cache%20%26%20PubSub-DC382D.svg)](https://redis.io)
 [![SLA Latency](https://img.shields.io/badge/SLA%20Latency-%3C%2015ms-brightgreen.svg)](#-performance-slas--budgets)
 
-**FlowBRE** is an enterprise-grade, high-performance, multi-tenant Onboarding Business Rules Engine (BRE) backend engineered for financial institutions, credit platforms, and partner banks. It evaluates complex candidate credit profiles, income criteria, CIBIL bureau histories, FOIR/DPD thresholds, and partner bank matrices in sub-millisecond RAM speeds while enforcing PostgreSQL Row-Level Security (RLS) and dynamic Redis rate-limiting.
+**FlowBRE** is an enterprise-grade, high-performance, full-stack multi-tenant loan onboarding and Credit Rule Engine (CRE) platform engineered for tier-1 financial institutions, fintech platforms, and commercial partner banks. 
+
+The platform evaluates complex candidate credit profiles, income documents, CIBIL bureau histories, FOIR/DPD thresholds, and partner bank matrices at sub-millisecond RAM speeds while enforcing PostgreSQL Row-Level Security (RLS), multi-tenant data isolation, strict 7-tier role-based access control (RBAC), and automated PII protection under the DPDP Act and RBI guidelines.
 
 ---
 
 ## 🏗️ Architectural Stack Overview
 
-FlowBRE relies on a zero-hot-path-disk-I/O architecture designed for microsecond evaluation latencies and absolute multi-tenant data isolation:
+FlowBRE operates on a zero-hot-path-disk-I/O architecture designed for microsecond evaluation latencies, high-throughput asynchronous document processing, and seamless cross-channel multi-tenancy:
 
-* **Core Engine (FastAPI + Asyncio)**: Non-blocking ASGI web application framework providing high-concurrency request routing and native Pydantic v2 schema validation.
-* **Decision Evaluation Engine (GoRules Zen-Engine)**: Rust-core decision engine executing pre-compiled AST JDM decision trees directly from system RAM (`< 0.5 ms` evaluation SLA).
-* **Database & Multi-Tenant Isolation (PostgreSQL 16)**: Async SQLAlchemy 2.0 ORM with PostgreSQL Row-Level Security (RLS) dynamically configured per transaction via `SELECT set_config('app.current_tenant_id', :tenant_id, true)`.
-* **Distributed Cache & Resilience Layer (Redis 7)**: SWR (Stale-While-Revalidate) HTTP caching, Token Bucket tenant rate limiting, and Singleflight lock pattern preventing thundering herd cache stampedes.
-* **Security & Observability Layer**: Automated PII masking (PAN, Aadhaar, DOB), PyJWT authentication, and structured JSON logs.
+```text
+                                 ┌────────────────────────────────────────────────────────┐
+                                 │                   Client Web Browser                   │
+                                 └───────────────────────────┬────────────────────────────┘
+                                                             │ :9000 (Unified Gateway)
+                                                             ▼
+                                 ┌────────────────────────────────────────────────────────┐
+                                 │               Nginx Edge Reverse Gateway               │
+                                 │  - SSE Streaming (No Buffering)  - Client / Route      │
+                                 │  - Zero-CORS Unified Origin      - API /api/ Route     │
+                                 └─────────────┬────────────────────────────┬─────────────┘
+                                               │                            │
+                     ┌─────────────────────────┘                            └───────────────────────────┐
+                     │ / (Frontend UI)                                                                  │ /api/ (REST & SSE)
+                     ▼                                                                                  ▼
+┌──────────────────────────────────────────────┐                              ┌──────────────────────────────────────────────────┐
+│   Next.js 16 Web Application (Port 3000)     │                              │         FastAPI Core Engine (Port 8000)          │
+│ • React 19 + Tailwind CSS v4                 │                              │ • Async SQLAlchemy 2.0 ORM + Alembic             │
+│ • Standalone Alpine Runner (< 120 MB)        │                              │ • Rust Native Domain Engines (CIBIL / Payslip)   │
+│ • Zustand 5 State Stores                     │                              │ • Zen-Engine In-Memory JDM Evaluator             │
+│ • Viewport-Locked Floating Card Drawers      │                              │ • Cryptographic UAS Auth & Role Enforcement      │
+└──────────────────────────────────────────────┘                              └───────────┬──────────────────────────┬───────────┘
+                                                                                          │                          │
+                                               ┌──────────────────────────────────────────┴──────────┐               │ Tasks
+                                               │                                                     │               ▼
+                                               ▼                                                     ▼  ┌─────────────────────────────┐
+                                ┌──────────────────────────────┐                      ┌───────────────┐ │  Celery Async Worker Queue  │
+                                │   PostgreSQL 16 (Port 5432)  │                      │    Redis 7    │ │ • Tesseract-OCR & OpenCV    │
+                                │ • Tenant Row-Level Security  │                      │ • SWR Cache   │ │ • Heavy Document Processing │
+                                │ • Dynamic Module Catalog     │                      │ • TokenBucket │ │ • Resend / SMTP Alerts      │
+                                │ • Audit Trail Ledger         │                      │ • Pub/Sub SSE │ └──────────────┬──────────────┘
+                                └──────────────────────────────┘                      └───────────────┘                │
+                                                                                                                       ▼
+                                                                                                        ┌─────────────────────────────┐
+                                                                                                        │   Flower Dashboard (:9007)  │
+                                                                                                        └─────────────────────────────┘
+```
+
+1. **Frontend Web Console (Next.js 16 & React 19)**:
+   - Standalone containerized deployment using Next.js standalone runner (< 120 MB image footprint).
+   - Component architecture powered by Tailwind CSS v4, Lucide icons, and decoupled Zustand stores (`useRoleHierarchyStore`, `useAuthStore`, `useSidebarStore`, `useModuleStore`, `useOnboardingStore`).
+   - Viewport-locked single-page experience with optimistic instant navigation, floating card slide-over drawers, and keyboard shortcuts (`Ctrl+B` rail toggle, `⌘K` / `Ctrl+K` quick search).
+
+2. **Nginx Edge Reverse Gateway**:
+   - Single entrypoint on port `9000` routing `/` to Next.js and `/api/` to FastAPI.
+   - Eliminates browser CORS issues and unifies authentication cookie contexts.
+   - Buffering disabled for real-time Server-Sent Events (SSE) notification streams (`/api/v1/notifications/events`).
+
+3. **FastAPI Core Engine & Decision Layer**:
+   - High-throughput asynchronous ASGI microservice running under Gunicorn with Uvicorn workers.
+   - Multi-stage compiled Rust domain binaries (`cibil-cli`, `payslip-cli`, `coi-cli`, `itr-cli`) executing PDF and financial data extraction in native machine code.
+   - RAM-compiled GoRules Zen-Engine AST decision trees evaluating multi-bank credit matrices in `< 0.5 ms`.
+
+4. **Document Extraction & Asynchronous Worker Subsystem**:
+   - Celery workers powered by Redis message broker for long-running document ingestion.
+   - Integrated Tesseract-OCR, OpenCV (`libgl1`, `libglib2.0-0`), and PyTorch CPU pipelines for Aadhaar/PAN identification.
+   - Flower web dashboard on port `9007` for real-time Celery task monitoring.
+
+5. **PostgreSQL 16 Multi-Tenant RLS & Redis 7**:
+   - Transactional PostgreSQL Row-Level Security (RLS) dynamically configured per session via `SELECT set_config('app.current_tenant_id', :tenant_id, true)`.
+   - Redis 7 cache handling Singleflight locking (preventing cache stampedes), tenant token-bucket rate limiting, and SSE pub/sub notification broadcasts.
 
 ---
 
-## 📐 System Sequence Diagram
+## 🚀 Key Functional Modules & Latest Implemented Capabilities
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Client as API Client / Partner Bank
-    participant Edge as FastAPI Router & CORS
-    participant Mw as Tenant Context Middleware
-    participant RL as Redis Rate Limiter
-    participant BRE as Zen-Engine AST (RAM)
-    participant Cache as Redis SWR Singleflight Cache
-    participant DB as PostgreSQL 16 (RLS)
+### 1. Credit Rule Engine (CRE) Phase 1 & Phase 2 (FOIR Engine)
+* **Comprehensive Multi-Bank Underwriting**: Evaluates loan applicant profiles against policy matrices for leading banks (`BOI`, `INDIAN_BANK`, `IOB`, `BOB`, `BOM`, `HDFC`, `AXIS`, `KOTAK`).
+* **CIBIL Live EMI & Bureau Aggregation**: Parses digital and scanned CIBIL PDFs via native Rust binaries to aggregate `Total_Active_EMI`, `Total_EMI`, DPD history, and write-offs.
+* **Phase 2 FOIR Underwriting**: Direct integration of extracted live EMIs and obligations into Fixed Obligation to Income Ratio (FOIR) calculations, establishing applicant loan ticket sizing and eligibility limits.
 
-    Client->>Edge: POST /api/v1/onboarding/evaluate (Header: X-Tenant-ID)
-    Edge->>Mw: Extract X-Tenant-ID & Initialize ContextVar
-    Mw->>RL: Check Token Bucket Limit (Redis INCR)
-    alt Rate Limit Exceeded
-        RL-->>Client: HTTP 429 Too Many Requests
-    else Rate Limit OK
-        RL->>BRE: Pass Application Payload
-        Note over BRE: Evaluate 64 Rules against AST in RAM (< 0.5 ms)
-        BRE-->>Cache: Singleflight Lock Lookup / SWR Read
-        BRE->>DB: Begin RLS Transaction
-        Note over DB: SELECT set_config('app.current_tenant_id', tenant_id, true)
-        DB->>DB: INSERT Application & RuleExecution Audit Records
-        DB-->>BRE: Transaction Commit
-        BRE-->>Client: Return Verdict Response (< 15 ms total SLA)
-    end
-```
+### 2. Multi-Tenant Governance & 7-Tier Strict Role Hierarchy (RBAC)
+* **Main Tenant vs. Sub-Tenant Isolation**:
+  * **Main Corporate Tenant (`Bank of India Channel`)**: Governs corporate leadership (`SUPER_ADMIN`, `REGIONAL_DIRECTOR`, `OPERATIONS_HEAD`, `ACCOUNTS_HEAD`, `AREA_MANAGER`, `TEAM_LEADER`, `SALES_MANAGER`) and oversees channel partners.
+  * **Partner Sub-Tenants (e.g., `Apex FinTech Punjab`, `Deloitte`)**: Strictly locked to their channel partner organization; hosts `CHANNEL_ADMIN` and `TRANSACTIONAL_USER` (Loan Officers) with zero cross-tenant leakage.
+* **Strict Hierarchical Visibility Matrix**:
+  * Visibility and assignment rule: `targetTier >= actorTier`. Superior tiers are automatically locked/hidden from subordinate tiers (e.g., `SUPER_ADMIN` is completely hidden from `REGIONAL_DIRECTOR`).
+  * Sub-tenant rosters are strictly isolated to authenticated tenant boundaries.
+
+### 3. Channel Partner Lifecycle State Machine
+* **End-to-End Governance**: `PENDING` $\to$ `ACTIVE` $\to$ `SUSPENDED` $\to$ `REINSTATED` / `REJECTED`.
+* **State Machine Actions**: Channel sponsorship drawer, one-click suspend/activate controls, and automatic credential activation for channel admins upon Super Admin approval.
+* **Immutable Audit Ledger**: Real-time expandable audit trail preserving state transition history, compliance justifications, operator identity, and ISO timestamps.
+
+### 4. Dynamic Navigation & Module Entitlement Studio
+* **Dynamic Database Catalog**: Database-backed navigation models (`ModuleCatalogModel`, `RoleModulePermissionModel`, `TenantModuleEntitlementModel`) seeded via Alembic.
+* **Entitlement Studio (`/platform/modules`)**: Interactive visual matrix allowing Super Admins to dynamically grant or revoke module access by role and override entitlements per tenant without code redeployments.
+
+### 5. Cryptographic UAS Authentication & Profile Management
+* **Challenge-Response Proof Flow**: Secure cryptographic authentication via `/api/v1/auth/challenge` and `/verify-challenge`.
+* **Profile Settings & Password Rotation**: Live profile management (`/profile`) with PBKDF2/SHA-256 salt rotation (`generate_salt(16)`) and client-side password strength validation.
+
+### 6. Enterprise UI/UX Architecture
+* **Unified Single-View Approval Queue**: Mathematical 100% container-fit layout eliminating horizontal scrollbars (`overflow-x-auto`) for rapid underwriter triage.
+* **Floating Card Slide-Over Drawers**: Polished inspector drawers (`rounded-3xl`, `shadow-2xl`) replacing disruptive modals across Add Role, Edit Role, Sponsor Channel, and Employee provisioning.
+* **Zero-Lag Optimistic Navigation**: Synchronous visual indicator feedback preventing module selection lag and flicker during asynchronous Next.js route transitions.
+* **4-Layer Viewport Lockdown**: Viewport anchoring across CSS, HTML, and layout components preventing scroll displacement during client-side navigation.
 
 ---
 
 ## 📂 Repository Directory Layout
 
 ```text
-c:\Projects\onboarding-bre-engine
-├── app/
-│   ├── main.py                # ASGI FastAPI application entrypoint with lifespan startup
-│   ├── constants/             # Centralized static values, enums, error codes, limits
-│   │   ├── __init__.py
-│   │   ├── enums.py           # BankCode, EntityType, OccupationType, ApplicationStatus
-│   │   ├── error_codes.py     # Custom application ErrorCode enums
-│   │   ├── limits.py          # Numeric SLA thresholds, rate limits, pagination caps
-│   │   ├── messages.py        # Human-readable UI and exception strings
-│   │   └── regex.py           # Regex strings for PAN, DOB, phone, Aadhaar validation
-│   ├── core/                  # Core infrastructure configuration
-│   │   ├── config.py          # Pydantic v2 BaseSettings environment loader
-│   │   ├── database.py        # Async SQLAlchemy 2.0 engine & session maker
-│   │   ├── exceptions.py      # Custom exception classes & global FastAPI handlers
-│   │   ├── logging.py         # PII redacting structured JSON logger
-│   │   ├── redis.py           # Redis connection pool management with fast failover
-│   │   └── security.py        # PyJWT token encoding/decoding & password hashing
-│   ├── middleware/            # Custom ASGI Middleware components
-│   │   ├── rate_limiter.py    # Redis sliding window per-tenant token bucket rate limiter
-│   │   ├── swr_cache_headers.py # HTTP Stale-While-Revalidate cache-control headers
-│   │   └── tenant_context.py # Multi-tenant ContextVar state injection
-│   ├── db/                    # Data Access & Database Layer
-│   │   ├── base_class.py      # Declarative Base ORM model
-│   │   ├── rls.py             # PostgreSQL Row-Level Security set_config helper
-│   │   └── models/            # SQLAlchemy ORM Data Models
-│   │       ├── application.py # ApplicationModel table definition
-│   │       ├── audit_log.py   # AuditLogModel table definition
-│   │       ├── rule_execution.py # RuleExecutionModel audit log table
-│   │       └── tenant.py      # TenantModel table definition
-│   ├── services/              # Business Logic & Rule Engine Services
-│   │   ├── bre_engine.py      # RAM-compiled GoRules Zen-Engine evaluator
-│   │   ├── cache_service.py   # Redis Singleflight lock & cache service
-│   │   └── tenant_service.py  # Tenant onboarding & metadata service
-│   ├── api/                   # API Controllers & Schemas
-│   │   ├── deps.py            # FastAPI dependency injectors (get_db, get_redis)
-│   │   ├── router.py          # Central API v1 router
-│   │   ├── schemas/           # Pydantic v2 validation schemas
-│   │   │   ├── common.py
-│   │   │   ├── onboarding.py
-│   │   │   └── rules.py
-│   │   └── v1/endpoints/      # API Endpoint Route Handlers
-│   │       ├── auth.py        # Authentication & JWT endpoints
-│   │       ├── health.py      # Liveness (/health) & Readiness (/ready) probes
-│   │       ├── onboarding.py  # Application evaluation (/evaluate) endpoint
-│   │       └── rules.py       # Hot-reload JDM rules (/reload) endpoint
-│   ├── zen_rules/             # Compiled AST Decision Trees (.json / .jdm)
-│   │   ├── default/           # System fallback default ruleset
-│   │   └── tenants/           # Per-tenant custom rulesets (tenant_alpha, etc.)
-│   └── tests/                 # Automated Test Suite
-│       ├── test_bre_engine.py # Rule engine & API endpoint integration tests
-│       ├── test_pii_redaction.py # Automated PII masking tests
-│       └── test_tenant_context.py # Multi-tenant isolation tests
-├── alembic/                   # Alembic Async Database Migrations
-│   ├── env.py
-│   └── versions/
-│       └── 0001_initial_schema.py # Multi-tenant tables migration script
-├── Dockerfile                 # Multi-stage security-hardened Docker container build
-├── docker-compose.yml         # Container orchestration with healthcheck ordering
-├── Makefile                   # Developer CLI shortcut commands
-├── alembic.ini                # Alembic migration configuration
-├── requirements.txt           # Formatted runtime python dependencies
-├── .env.example               # Environment variables configuration template
-└── .env                       # Local runtime environment file
+BRE-Flow-Engine/
+├── app/                                # FastAPI Core Application
+│   ├── main.py                         # ASGI application entrypoint & lifespan
+│   ├── api/
+│   │   ├── router.py                   # Central API v1 router
+│   │   └── v1/endpoints/               # Endpoints: auth, onboarding, tenants, navigation, rules
+│   ├── core/                           # Config, logging, security, redis, database
+│   ├── db/                             # SQLAlchemy async models & RLS helpers
+│   │   └── models/                     # application, tenant, audit_log, user_account, module
+│   ├── middleware/                     # Rate limiting, SWR caching, tenant context
+│   ├── services/                       # CRE business rules, cibil service, tenant service
+│   ├── worker/                         # Celery application & asynchronous document tasks
+│   └── tests/                          # Automated pytest suite
+├── frontend/                           # Next.js 16 Web Application
+│   ├── app/                            # App Router (pages: onboarding, dashboard, approvals, etc.)
+│   ├── components/                     # Sidebar, AppHeader, PortalShell, floating drawers
+│   ├── lib/                            # UAS auth client, API fetchers, utilities
+│   ├── store/                          # Zustand stores (auth, role hierarchy, module, onboarding)
+│   ├── Dockerfile.frontend             # Multi-stage standalone production Dockerfile
+│   └── next.config.ts                  # Standalone build & compiler optimization configuration
+├── cibil-pdf-scrapper/                 # Rust High-Performance PDF Scraping Engines
+│   ├── Cargo.toml                      # Workspace manifest
+│   ├── crates/                         # cibil-cli, payslip-cli, coi-cli, itr-cli, cibil-domain
+│   └── scripts/                        # Automated extraction benchmark scripts
+├── nginx/                              # Edge Reverse Proxy Configuration
+│   └── nginx.conf                      # Gateway routing (:9000), SSE buffering, upstream pools
+├── alembic/                            # Database schema migrations
+│   ├── env.py                          # Async migration runtime
+│   └── versions/                       # Migration history (0001 through dynamic module catalog)
+├── docker-compose.yml                  # 7-service container stack orchestration
+├── Dockerfile                          # Multi-stage Backend + Rust + Tesseract runner build
+├── Makefile                            # Developer shortcuts & commands
+└── README.md                           # Platform documentation
 ```
 
 ---
 
-## ⚡ Performance SLAs & SLA Budgets
+## 🛠️ Local Development & Deployment Workflows
 
-FlowBRE strictly enforces strict performance latency SLA ceilings across all layer operations:
+FlowBRE supports two development workflows: the **Hybrid Workflow** (recommended for day-to-day feature development) and the **Full Docker Workflow** (used for staging, CI/CD, and production).
+
+### Option A: Hybrid Workflow (Recommended for UI & Rapid Feature Dev)
+Run all stateful services, databases, workers, and FastAPI in Docker; run Next.js natively on your host machine for instant Fast Refresh and sub-second HMR:
+
+1. **Start Backend Infrastructure**:
+   ```powershell
+   docker compose up -d postgres redis web celery_worker flower nginx
+   ```
+2. **Run Alembic Migrations**:
+   ```powershell
+   docker compose exec web alembic upgrade head
+   ```
+3. **Launch Frontend Natively**:
+   ```powershell
+   cd frontend
+   pnpm install
+   pnpm dev
+   ```
+4. **Access Applications**:
+   * Frontend: `http://localhost:3000` (or through Nginx Gateway at `http://localhost:9000`)
+   * Backend REST Docs: `http://localhost:8000/docs`
+   * Celery Flower Dashboard: `http://localhost:9007`
+
+---
+
+### Option B: Full Docker Deployment (Staging & Production)
+Build and run all 7 services in isolated Alpine containers:
+
+```powershell
+# 1. Build and start complete stack
+docker compose up -d --build
+
+# 2. Run database migrations
+docker compose exec web alembic upgrade head
+
+# 3. Verify container health status
+docker compose ps
+```
+
+---
+
+## ⚡ Performance SLAs & Latency Budgets
 
 | Request Phase / Layer | SLA Target Ceiling | Empirical Benchmark | Description |
 |---|---|---|---|
-| **Simple GET Queries** | `< 30.0 ms` | **`0.001 ms`** | Liveness `/health` and status probes |
-| **Zen RAM Engine Evaluation** | `< 10.0 ms` | **`0.450 ms`** | In-memory 64-rule JDM AST evaluation |
-| **CRUD Evaluation & DB Audit** | `< 80.0 ms` | **`11.200 ms`** | End-to-end evaluation with RLS DB transaction |
-| **Total Round-Trip Budget** | `< 100.0 ms` | **`< 15.00 ms`** | Complete client HTTP round-trip latency ceiling |
+| **Liveness & Health Probes** | `< 30.0 ms` | **`0.001 ms`** | Liveness `/health` and status probes |
+| **Zen RAM Engine Evaluation** | `< 10.0 ms` | **`0.450 ms`** | In-memory JDM AST decision matrix evaluation |
+| **Rust PDF / Bureau Extraction** | `< 100.0 ms` | **`18.400 ms`** | Native CLI parsing of multi-page CIBIL documents |
+| **CRUD Evaluation & DB Audit** | `< 80.0 ms` | **`11.200 ms`** | Complete application evaluation with RLS DB commit |
+| **Total Gateway Round-Trip Budget**| `< 100.0 ms` | **`< 15.00 ms`** | Complete client HTTP round-trip latency ceiling |
 
 ---
 
-## 🔒 PII Data Security Standards
+## 🔒 Security & Data Compliance Standards
 
-To meet DPDP Act and RBI data governance compliance, all application logs redact sensitive Personally Identifiable Information (PII) before writing to output streams or log aggregation backends:
-
-```python
-# PII Redaction Mapping
-PAN Numbers    -> AB******4F  (Preserves first 2 and last 2 characters)
-Dates of Birth -> ****-**-15  (Masks birth year and month)
-Aadhaar IDs    -> ****-****-1234 (Preserves last 4 digits)
-```
-
----
-
-## 🧠 5-Stage Request Memory Lifecycle
-
-FlowBRE maintains a strict zero-leak memory management protocol across FastAPI ASGI worker processes:
-
-1. **Request Start**: Worker receives HTTP request; FastAPI instantiates isolated Pydantic validation objects.
-2. **Memory Allocation**: ContextVar binds `tenant_id` to the current async task context without mutating global state.
-3. **Memory Usage**: Zen-Engine evaluates payload against pre-compiled RAM JDM decision trees (zero heap reallocation).
-4. **Garbage Collection**: Database sessions and response objects are explicitly closed and flushed at request teardown.
-5. **Memory Release**: Async event loop releases request-scoped objects back to Python process memory pool.
+* **PostgreSQL Row-Level Security (RLS)**: Enforces tenant isolation at the database engine level, preventing any cross-tenant data leakage even in complex relational queries.
+* **PII Redaction Engine**: Masks Personally Identifiable Information across application log streams:
+  ```python
+  PAN Numbers    -> AB******4F       (Preserves first 2 and last 2 characters)
+  Dates of Birth -> ****-**-15       (Masks birth year and month)
+  Aadhaar IDs    -> ****-****-1234   (Preserves last 4 digits)
+  ```
+* **Cryptographic Token Store**: Stateless JWT authentication with tenant claim validation and PBKDF2/SHA-256 salted credentials.
 
 ---
 
-## 🛠️ Local Development Setup Guide
+## 📋 Recommended Next Steps & Post-Update Roadmap
 
-### 1. Prerequisites
-* **Python 3.11+** or **`uv`** package manager
-* **Docker Desktop** (WSL2 backend)
+Following the implementation of the core architecture, role hierarchy, and CRE Phase 2 engines, the following engineering initiatives are prioritized for the next development milestones:
 
-### 2. Environment Configuration
-Copy `.env.example` into `.env`:
-```bash
-cp .env.example .env
-```
-> **Windows Socket Conflict Fallback**:
-> The local `.env` file parameterizes host ports via `POSTGRES_HOST_PORT=5435` and `REDIS_HOST_PORT=6379`. This avoids port conflicts with native host PostgreSQL instances (`5432`) while allowing Docker containers to run isolated.
+### 1. Developer Experience & Hot-Reload Enhancement
+- [ ] **Docker Development Hot-Reload**: Add a dedicated `Dockerfile.dev` with volume mounting and `WATCHPACK_POLLING=true` in `docker-compose.override.yml` for developers who choose to run frontend strictly inside Docker on Windows.
+- [ ] **Dynamic Client API Base Configuration**: Refactor `NEXT_PUBLIC_API_BASE` in frontend environment configs to automatically route via `http://localhost:9000` (Nginx Gateway) for client-side fetches while using internal Docker DNS (`http://web:8000`) for SSR.
 
-### 3. Launch Container Stack
-Start PostgreSQL 16, Redis 7, and FastAPI containers in detached mode:
-```bash
-make up
-# or: docker-compose up -d --build
-```
+### 2. End-to-End (E2E) & Integration Testing
+- [ ] **Playwright Test Suite**: Implement automated browser E2E tests covering the 6-step Onboarding Wizard, underwriter approval queue decisions, and slide-over drawer forms.
+- [ ] **CRE Stress & Chaos Benchmarks**: Execute high-concurrency Locust/k6 load tests against `/api/v1/onboarding/evaluate` to validate RLS connection pooling and Redis rate-limiting under 1,000+ requests/sec.
+- [ ] **Celery Asynchronous OCR Pipeline Tests**: Expand pytest suites to validate end-to-end PDF upload $\to$ Celery task queue $\to$ Rust CLI extraction $\to$ database persistence.
 
-### 4. Run Database Migrations
-Execute Alembic migrations inside the container:
-```bash
-make migrate
-# or: docker-compose exec web alembic upgrade head
-```
+### 3. Production Hardening & Secrets Management
+- [ ] **Externalized Secrets Vault**: Move hardcoded JWT secret keys and database credentials from `.env` to a dedicated secrets manager (AWS Secrets Manager, HashiCorp Vault, or Doppler).
+- [ ] **SSL/TLS Termination in Nginx**: Configure automated Let's Encrypt / Certbot SSL certificate renewal or reverse proxy termination for HTTPS production traffic on port `443`.
+- [ ] **Database Connection Pool Tuning**: Configure PgBouncer ahead of PostgreSQL to manage micro-connections under high concurrent Celery and FastAPI loads.
 
-### 5. Check Container Liveness & Health Status
-```bash
-make status
-# or: docker-compose ps
-```
+### 4. Observability & Telemetry
+- [ ] **OpenTelemetry (OTel) Distributed Tracing**: Instrument FastAPI and Next.js with OTel tracing to track request latencies across Nginx $\to$ FastAPI $\to$ Redis $\to$ Postgres.
+- [ ] **Prometheus & Grafana Dashboards**: Create real-time monitoring panels for Celery queue depth, SLA breach counters (`SLA_ALERT_THRESHOLD_MS`), and PostgreSQL active connection pool saturation.
 
----
-
-## 🧪 Running Automated Tests & SLA Checks
-
-Run the automated test suite with detailed SLA benchmarks using `uv`:
-
-```bash
-# Run complete test suite (11/11 PASSED)
-make test
-# Command executed: uv run pytest app/tests/ -v
-
-# Run SLA performance latency check
-make check-sla
-```
-
----
-
-## 📡 API Endpoints Reference
-
-### 1. Liveness Probe
-`GET /api/v1/health`
-```bash
-curl -i http://127.0.0.1:8000/api/v1/health
-```
-
-### 2. Readiness Probe
-`GET /api/v1/ready`
-```bash
-curl -i http://127.0.0.1:8000/api/v1/ready
-```
-
-### 3. Evaluate Onboarding Application
-`POST /api/v1/onboarding/evaluate`  
-**Headers**: `Content-Type: application/json`, `X-Tenant-ID: tenant_alpha`
-
-**Request Body**:
-```json
-{
-  "entity_type": "Individual",
-  "occupation": "Salaried",
-  "applicant_name": "Jane Doe",
-  "net_monthly_salary": 60000.0,
-  "age": 32,
-  "selected_bank": "BOI",
-  "credit_bureau": {
-    "cibil_score": 750,
-    "dpd_history": [0, 0, 0],
-    "write_off_amount": 0.0
-  }
-}
-```
-
-**Response (`200 OK`)**:
-```json
-{
-  "success": true,
-  "status": "APPROVED",
-  "overall_eligible": true,
-  "executed_rules_count": 64,
-  "execution_time_ms": 50.411,
-  "rejection_reasons": [],
-  "bank_eligibility": {
-    "BOI": true,
-    "INDIAN_BANK": true,
-    "IOB": true,
-    "BOB": true,
-    "BOM": true,
-    "HDFC": true,
-    "AXIS": true,
-    "KOTAK": true
-  }
-}
-```
-
-### 4. Hot-Reload Decision Rules
-`POST /api/v1/rules/reload`
-```bash
-curl -X POST http://127.0.0.1:8000/api/v1/rules/reload -H "X-Tenant-ID: tenant_alpha"
-```
+### 5. Self-Service Business Rule Authoring
+- [ ] **Visual Decision Rule Editor**: Build a visual low-code rule configurator in the Next.js console allowing credit policy managers to modify bank cutoffs, DPD allowances, and FOIR percentages without code deployments.
 
 ---
 
 ## 📄 License
-Enterprise Proprietary — All Rights Reserved. FlowBRE Platform Team.
+Enterprise Proprietary — All Rights Reserved. FlowBRE Platform Engineering Team.
