@@ -50,9 +50,14 @@ class Settings(BaseSettings):
     CIBIL_ENGINE_BINARY: str = ""
     CIBIL_ENGINE_TIMEOUT_S: float = 25.0
 
-    # Payslip report parsing. Empty resolves to the workspace release build, then PATH.
-    PAYSLIP_ENGINE_BINARY: str = ""
-    PAYSLIP_ENGINE_TIMEOUT_S: float = 25.0
+    # Payslip reading: pdfium text layer, Tesseract OCR for scanned pages (no network).
+    PAYSLIP_OCR_TIMEOUT_S: float = 60.0
+    # The local model that reads every payslip. Runs in Ollama on this host or
+    # private network; no external API is used.
+    PAYSLIP_LLM_URL: str = "http://127.0.0.1:11434"
+    PAYSLIP_LLM_MODEL: str = "qwen2.5:7b-instruct"
+    # Covers a cold start that loads the model onto the GPU.
+    PAYSLIP_LLM_TIMEOUT_S: float = 180.0
 
     # COI report parsing. Empty resolves to the workspace release build, then PATH.
     COI_ENGINE_BINARY: str = ""

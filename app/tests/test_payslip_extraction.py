@@ -81,3 +81,19 @@ def test_payslip_extract_endpoint_validation():
         headers={"X-Tenant-ID": "tenant_alpha"},
     )
     assert response.status_code == 422
+
+
+def test_map_to_payslip_fields_surfaces_review_gate():
+    accepted = dict(SAMPLE_PAYSLIP_DATA, metadata={"extraction_status": "auto_accept", "review_reasons": []})
+    assert map_to_payslip_fields(accepted)["reviewRequired"] is False
+
+    flagged = dict(SAMPLE_PAYSLIP_DATA, metadata={
+        "extraction_status": "needs_review",
+        "review_reasons": ["earning_items_do_not_sum_to_gross"],
+    })
+    fields = map_to_payslip_fields(flagged)
+    assert fields["reviewRequired"] is True
+    assert fields["reviewReasons"] == ["earning_items_do_not_sum_to_gross"]
+
+    # Output without a gate verdict is never auto-accepted.
+    assert map_to_payslip_fields(SAMPLE_PAYSLIP_DATA)["reviewRequired"] is True

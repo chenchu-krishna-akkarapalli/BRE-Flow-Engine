@@ -1,0 +1,13 @@
+# GPU override for the local payslip model. Needs an NVIDIA driver and the NVIDIA
+# Container Toolkit on the host (Docker Desktop with WSL2 has it built in):
+#   docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
+# qwen2.5:7b-instruct needs ~5 GB of VRAM; without this file Ollama runs on CPU.
+services:
+  ollama:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

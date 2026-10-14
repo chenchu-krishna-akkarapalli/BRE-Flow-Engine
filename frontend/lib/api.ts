@@ -365,6 +365,10 @@ export async function extractPayslipReport(file: File): Promise<PayslipExtractio
     method: "POST",
     headers: { "X-Tenant-ID": TENANT_ID },
     body: form,
+    // Scanned slips are OCR'd and may reach the local model (cold start up to minutes);
+    // matches nginx/gunicorn's 240s. No retries: each one would redo the whole extraction.
+    timeoutMs: 240_000,
+    retries: 0,
   });
   if (!response.ok) {
     const body = await response.json().catch(() => null);

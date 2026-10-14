@@ -1,68 +1,34 @@
-"""Payslip PDF report extraction via the Rust payslip-cli engine.
+"""Payslip PDF extraction: local text/OCR reading, then a local model, verified.
 
-Transport is a short-lived subprocess framed over stdin, replicating the
-cibil-cli engine bridge: a wall-clock timeout is enforceable per call,
-PDF firewall inspection is performed before subprocess execution, and the
-uploaded PDF is framed over stdin without persisting to disk.
-
-stdin frame: [8-byte little-endian blocks-JSON length][blocks JSON][raw PDF]
+Everything runs on this host: pdfium reads the text layer (Tesseract OCRs scanned
+pages), a local Ollama model returns the figures as JSON, and the payslip's own
+arithmetic decides whether they are verified (payslip_llm, payslip_gate). PDF
+firewall inspection runs first, and the upload is never written to disk.
 """
 
 import asyncio
 import json
-import os
-import shutil
-import struct
-from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+
+import pypdfium2 as pdfium
+import pytesseract
 
 from app.core.config import settings
 from app.core.exceptions import InvalidPayloadError
 from app.core.logging import logger, redact_pii
+from app.services import payslip_llm, payslip_reader
 from app.services.pdf_firewall import inspect
 
 ACCEPTED_CONTENT_TYPES = frozenset({"application/pdf"})
 STATUS_SUCCESS = "SUCCESS"
 
-_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-_ENGINE_DEFAULT_RELATIVE = Path("cibil-pdf-scrapper/target/release/payslip-cli.exe")
-_ENGINE_DEFAULT_ABSOLUTE = _PROJECT_ROOT / "cibil-pdf-scrapper" / "target" / "release" / "payslip-cli.exe"
-
 
 class PayslipEngineError(RuntimeError):
-    """The payslip engine is unavailable: binary missing, timed out, or unusable output."""
+    """Payslip reading is unavailable on this server (model down, timeout)."""
 
 
 class PayslipDocumentError(InvalidPayloadError):
-    """The engine ran but could not read this document."""
-
-
-def _binary_path() -> Optional[str]:
-    """Configured binary, else workspace release build, else PATH."""
-    configured = getattr(settings, "PAYSLIP_ENGINE_BINARY", "") or os.getenv("PAYSLIP_ENGINE_BINARY", "")
-    if configured:
-        return configured if Path(configured).exists() else None
-
-    for candidate in (
-        _ENGINE_DEFAULT_ABSOLUTE,
-        _ENGINE_DEFAULT_ABSOLUTE.with_suffix(""),
-        _ENGINE_DEFAULT_RELATIVE,
-        _ENGINE_DEFAULT_RELATIVE.with_suffix(""),
-    ):
-        if candidate.exists():
-            return str(candidate)
-    return shutil.which("payslip-cli")
-
-
-def missing_component() -> Optional[str]:
-    """Name the missing engine, or None when present."""
-    if _binary_path() is None:
-        return (
-            "the payslip-cli engine binary was not found. Build it with "
-            "`cargo build --release --bin payslip-cli` inside cibil-pdf-scrapper/, "
-            "or set PAYSLIP_ENGINE_BINARY to its path."
-        )
-    return None
+    """The document could not be read as a payslip."""
 
 
 def validate_upload(content: bytes, content_type: Optional[str], filename: str) -> None:
@@ -105,43 +71,6 @@ def _to_rupees(amount_obj: Any) -> Optional[float]:
         except ValueError:
             pass
     return None
-
-
-async def _run_engine(pdf_bytes: bytes, doc_id: str) -> Dict[str, Any]:
-    """Spawn payslip-cli, frame request over stdin, return envelope dict."""
-    binary = _binary_path()
-    if binary is None:
-        raise PayslipEngineError(missing_component() or "The payslip engine is unavailable.")
-
-    frame = struct.pack("<Q", 2) + b"[]" + pdf_bytes
-    argv = [binary, "-"]
-    proc = await asyncio.create_subprocess_exec(
-        *argv,
-        stdin=asyncio.subprocess.PIPE,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
-    try:
-        stdout, stderr = await asyncio.wait_for(
-            proc.communicate(frame), timeout=settings.PAYSLIP_ENGINE_TIMEOUT_S
-        )
-    except asyncio.TimeoutError as exc:
-        proc.kill()
-        await proc.wait()
-        raise PayslipEngineError(
-            f"The payslip engine exceeded its {settings.PAYSLIP_ENGINE_TIMEOUT_S:.0f}s budget."
-        ) from exc
-
-    if proc.returncode != 0:
-        logger.error(f"payslip-cli exit={proc.returncode} stderr={redact_pii(stderr[:512].decode('utf-8', 'replace'))}")
-        raise PayslipDocumentError(
-            f"'{doc_id}' could not be read as a payslip report; the file appears damaged or invalid."
-        )
-
-    try:
-        return json.loads(stdout)
-    except json.JSONDecodeError as exc:
-        raise PayslipEngineError(f"'{doc_id}' output from payslip-cli was not valid JSON.") from exc
 
 
 def _detect_salary_payment_method(data: Dict[str, Any], employee_obj: Dict[str, Any]) -> str:
@@ -284,6 +213,11 @@ def map_to_payslip_fields(data: Dict[str, Any]) -> Dict[str, Any]:
 
     salary_payment_method = _detect_salary_payment_method(data, employee_obj)
 
+    # Engine's arithmetic gate; a missing status (older engine) is never trusted.
+    metadata_obj = data.get("metadata") if isinstance(data.get("metadata"), dict) else {}
+    review_reasons = metadata_obj.get("review_reasons") or []
+    review_required = metadata_obj.get("extraction_status") != "auto_accept"
+
     employer_name = employer_obj.get("name")
     applicant_name = employee_obj.get("name")
     pan_number = employee_obj.get("pan")
@@ -330,9 +264,57 @@ def map_to_payslip_fields(data: Dict[str, Any]) -> Dict[str, Any]:
         "professionalTax": pt_amount,
         "incomeTax": it_amount,
         "salaryPaymentMethod": salary_payment_method,
+        "reviewRequired": review_required,
+        "reviewReasons": review_reasons,
+        "extractionConfidence": metadata_obj.get("extraction_confidence_overall"),
+        "extractionSource": metadata_obj.get("extraction_source", "local_model"),
+        "textSource": metadata_obj.get("text_source", "pdf_text"),
+        "ocrLowConfidenceTokens": metadata_obj.get("ocr_low_confidence_tokens") or [],
         # Nested Relational payload
         "evaluated": evaluated,
         "transparentBreakdown": transparent_breakdown,
+    }
+
+
+async def _read(content: bytes, doc_id: str) -> payslip_reader.PdfText:
+    try:
+        return await asyncio.wait_for(
+            asyncio.to_thread(payslip_reader.read_pdf, content), timeout=settings.PAYSLIP_OCR_TIMEOUT_S
+        )
+    except asyncio.TimeoutError as exc:
+        raise PayslipEngineError(f"Reading the PDF exceeded its {settings.PAYSLIP_OCR_TIMEOUT_S:.0f}s budget.") from exc
+    except payslip_reader.OcrUnavailable as exc:
+        raise PayslipDocumentError(
+            f"'{doc_id}' is a scanned payslip and OCR is not installed on this server "
+            "(install Tesseract: `apt-get install tesseract-ocr` / `winget install UB-Mannheim.TesseractOCR`)."
+        ) from exc
+    except (pdfium.PdfiumError, pytesseract.TesseractError) as exc:
+        raise PayslipDocumentError(f"'{doc_id}' could not be read; the file appears damaged or password-protected.") from exc
+
+
+def _as_payslip_data(text: payslip_reader.PdfText, result: payslip_llm.Extraction) -> Dict[str, Any]:
+    """Shape a verified extraction like the payload map_to_payslip_fields reads."""
+    identity = result.identity
+    return {
+        "statements": [result.statement],
+        "employee": {
+            "name": identity.get("employee_name"),
+            "pan": identity.get("pan"),
+            "uan": identity.get("uan"),
+            "bank_account": identity.get("bank_account"),
+        },
+        "employer": {"name": identity.get("employer_name")},
+        "metadata": {
+            "page_count": text.pages,
+            "extraction_status": result.status,
+            "review_reasons": result.reasons,
+            "extraction_confidence_overall": result.confidence,
+            "extraction_source": "local_model",
+            "text_source": text.source,
+            "ocr_low_confidence_tokens": text.low_confidence_digits,
+        },
+        # The payment-method detector scans the slip text for bank keywords.
+        "raw": {"lines": [{"page": row.page, "segments": row.cells} for row in text.rows]},
     }
 
 
@@ -349,16 +331,24 @@ async def extract_payslip_report(
             f"{verdict.as_log_fields()}"
         )
 
-    data = await _run_engine(content, doc_id=filename)
-    if "error" in data:
-        status = "FAILED"
-        message = str(data["error"])
-        logger.warning(f"Payslip extraction error for '{redact_pii(filename)}': {message}")
-        return {}, status, message
+    text = await _read(content, filename)
+    if not text.rows:
+        return {}, "FAILED", "No text could be read from this PDF."
 
-    fields = map_to_payslip_fields(data)
+    try:
+        result = await payslip_llm.extract(text.rows, filename)
+    except payslip_llm.ModelUnavailable as exc:
+        raise PayslipEngineError(f"The payslip reader is unavailable: {exc}.") from exc
+    if result is None:
+        return {}, "FAILED", "The payslip could not be read. Please upload a clearer copy."
+
+    fields = map_to_payslip_fields(_as_payslip_data(text, result))
     logger.info(
-        f"Payslip extracted from '{redact_pii(filename)}' ({len(content)} bytes): "
-        f"{redact_pii(dict(fields))}"
+        f"Payslip extracted from '{redact_pii(filename)}' ({len(content)} bytes, {text.source}, "
+        f"attempts={result.attempts}): {redact_pii(dict(fields))}"
     )
+    if fields["reviewRequired"]:
+        return fields, STATUS_SUCCESS, (
+            "Payslip read, but its totals did not reconcile; check the figures against the payslip."
+        )
     return fields, STATUS_SUCCESS, "Payslip report parsed successfully."
