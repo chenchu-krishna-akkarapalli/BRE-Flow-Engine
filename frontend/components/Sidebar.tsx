@@ -632,7 +632,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
                   </button>
                 </div>
                 {/* Row 2: Role Name */}
-                <p className="text-[0.625rem] font-medium text-slate-400 truncate mt-0.5">
+                <p suppressHydrationWarning className="text-[0.625rem] font-medium text-slate-400 truncate mt-0.5">
                   {role ? role.replace(/_/g, " ") : "Credit Rule Engine"}
                 </p>
               </div>

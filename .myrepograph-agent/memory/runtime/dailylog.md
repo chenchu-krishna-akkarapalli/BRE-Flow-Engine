@@ -981,3 +981,19 @@ Append-only session close-outs. One entry per session: what changed, how it was 
   - Verified frontend container running cleanly on `127.0.0.1:3000`.
 - **Undone**: None.
 
+## [2026-10-01] Resolved React Hydration Mismatch & Backend fetchUsers AttributeError
+- **What Changed**:
+  - `app/api/v1/endpoints/tenants.py`:
+    - Fixed `get_tenant_users`: replaced `current_user: Optional[UserModel]` with `Optional[dict]` matching `get_current_user_optional`.
+    - Replaced dot-property access `current_user.role` with `current_user.get("role")` and `current_user.get("tenant_id") or current_user.get("tenant_uuid")`, eliminating the `AttributeError: 'dict' object has no attribute 'role'` that caused HTTP 500 and frontend `TypeError: Failed to fetch`.
+  - `frontend/app/layout.tsx`:
+    - Added `suppressHydrationWarning` to the root `<html>` tag to prevent browser extension and font hydration warnings.
+  - `frontend/components/Sidebar.tsx` & `frontend/components/AppHeader.tsx`:
+    - Added `suppressHydrationWarning` to client-hydrated dynamic role paragraphs and avatar initials elements, preventing the server/client text mismatch warning.
+- **Verification**:
+  - Tested backend endpoint `GET /api/v1/tenants/e4d9b2a1-87c3-4d8e-9f12-3a5b7c8d9e0f/users` with Authorization Bearer header: Returned 200 OK with real DB user records.
+  - Next.js production build (`npm --prefix frontend run build`): Compiled all 26 routes in 8.4s with 0 errors.
+  - Restarted Docker containers `flowbre_fastapi_app` and `flowbre_frontend`.
+- **Undone**: None.
+
+

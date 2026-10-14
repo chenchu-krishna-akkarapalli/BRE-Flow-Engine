@@ -2,6 +2,15 @@
 
 Working state for the current task. Kept here rather than in the context window so long sessions do not carry their own history as ballast.
 
+- [x] Resolved React Hydration Mismatch & Backend `Failed to fetch` AttributeError:
+  - **Failed to fetch (`store/useRoleHierarchyStore.ts:567:27 @ fetchUsers`)**:
+    - Root Cause: In `app/api/v1/endpoints/tenants.py` line 616-620, `current_user` was typed as `Optional[UserModel] = Depends(get_current_user_optional)` and accessed via `current_user.role` and `current_user.tenant_id`. However, `get_current_user_optional` decodes JWT and returns `Optional[dict]`. When an authenticated user called `GET /api/v1/tenants/{tenant_uuid}/users`, Python crashed with `AttributeError: 'dict' object has no attribute 'role'`, aborting with 500 and causing `fetch()` to fail with `TypeError: Failed to fetch`.
+    - Fix: Updated parameter to `current_user: Optional[dict] = Depends(get_current_user_optional)` and accessed claims safely via `.get("role")` and `.get("tenant_id") or .get("tenant_uuid")`. Verified endpoint returns 200 OK with real DB user records.
+  - **Hydration Failed (Server Rendered Text Mismatch)**:
+    - Root Cause: During SSR, `typeof window === 'undefined'`, so `useAuthStore` initializes with `role = null`, `user = null`. `Sidebar.tsx` rendered `<p>Credit Rule Engine</p>` and `AppHeader.tsx` rendered initials `TE` and `<p>User Profile</p>`. On the client, `useAuthStore` rehydrated from `localStorage` synchronously during bundle evaluation, rendering `<p>SUPER ADMIN</p>` and `SA`. React detected the mismatch between SSR HTML and Client VDOM and threw a hydration error.
+    - Fix: Added `suppressHydrationWarning` to `<html lang="en">` in `layout.tsx`, the role paragraph in `Sidebar.tsx`, and the avatar initials / role display in `AppHeader.tsx`.
+  - Verified with `npm --prefix frontend run build` (all 26 routes compiled in 8.4s with 0 errors).
+  - Restarted Docker containers `flowbre_fastapi_app` and `flowbre_frontend`.
 - [x] Dark Grey Dropdown Connecting Tree Guide Line in Sidebar (1px, Dark Grey):
   - Retained thin 1px border stroke (`border-l`), avoiding all extra thickness.
   - Set color to dark grey (`border-slate-500` / `border-slate-600`):

@@ -613,11 +613,13 @@ def is_main_tenant_identifier(identifier: Optional[str]) -> bool:
 async def get_tenant_users(
     tenant_uuid: str,
     db: AsyncSession = Depends(get_db),
-    current_user: Optional[UserModel] = Depends(get_current_user_optional),
+    current_user: Optional[dict] = Depends(get_current_user_optional),
 ):
     # Channel Admins and Transactional Users are strictly isolated to their own channel tenant
-    if current_user and current_user.role in ("CHANNEL_ADMIN", "TRANSACTIONAL_USER"):
-        tenant_uuid = current_user.tenant_id or tenant_uuid
+    user_role = current_user.get("role") if current_user else None
+    user_tenant = (current_user.get("tenant_id") or current_user.get("tenant_uuid")) if current_user else None
+    if user_role in ("CHANNEL_ADMIN", "TRANSACTIONAL_USER"):
+        tenant_uuid = user_tenant or tenant_uuid
 
     stmt = select(TenantModel).where(
         or_(

@@ -199,7 +199,10 @@ export function AppHeader() {
             aria-label="User profile menu"
             aria-expanded={isUserMenuOpen}
           >
-            <div className="h-7 w-7 rounded-md bg-slate-950 text-white flex items-center justify-center font-bold text-[11px] font-mono tracking-tight shadow-xs">
+            <div
+              suppressHydrationWarning
+              className="h-7 w-7 rounded-md bg-slate-950 text-white flex items-center justify-center font-bold text-[11px] font-mono tracking-tight shadow-xs"
+            >
               {avatarInitials}
             </div>
             <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
@@ -226,7 +229,7 @@ export function AppHeader() {
                     <p className="font-bold text-xs text-slate-900 group-hover:text-indigo-600 transition truncate">
                       Edit Profile
                     </p>
-                    <p className="text-[10px] text-slate-400 font-mono uppercase truncate">
+                    <p suppressHydrationWarning className="text-[10px] text-slate-400 font-mono uppercase truncate">
                       {role ? role.replace(/_/g, " ") : "User Profile"}
                     </p>
                   </div>
